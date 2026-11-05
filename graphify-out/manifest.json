@@ -52,9 +52,9 @@
     "semantic_hash": "1bcac1b08b99046f173d14e03480de62"
   },
   "services/infrastructure/bootstrap.py": {
-    "mtime": 1793919143.7016973,
-    "seen": 1793919174.1873631,
-    "ast_hash": "f4ee91ad79d6d7ee9b9628ce8736a995",
+    "mtime": 1793919596.6404402,
+    "seen": 1793919604.8120599,
+    "ast_hash": "cb7a49686f7affa00194016e4a14831e",
     "semantic_hash": ""
   },
   "services/infrastructure/certificate_authority.py": {
@@ -3056,9 +3056,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793919262.551885,
-    "seen": 1793919269.707656,
-    "ast_hash": "0071378ea18ff7c738a7098504806351",
+    "mtime": 1793919596.4474573,
+    "seen": 1793919604.8190029,
+    "ast_hash": "1ddfb69ea959706e24711969137877f7",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import secrets
@@ -13,8 +14,6 @@ import subprocess
 import sys
 import tempfile
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -330,14 +329,18 @@ def wait_identity() -> None:
     context = ssl.create_default_context(cafile=str(KEYCLOAK / "secrets/https/ca.crt"))
     deadline = time.monotonic() + 300
     while time.monotonic() < deadline:
+        connection = http.client.HTTPSConnection(
+            "127.0.0.1", 18443, context=context, timeout=5
+        )
         try:
-            with urllib.request.urlopen(
-                "https://127.0.0.1:18443/realms/master", context=context, timeout=5
-            ) as response:
-                if response.status < 500:
-                    return
-        except (OSError, urllib.error.URLError):
-            time.sleep(2)
+            connection.request("GET", "/realms/master")
+            if connection.getresponse().status < 500:
+                return
+        except (OSError, http.client.HTTPException):
+            pass
+        finally:
+            connection.close()
+        time.sleep(2)
     raise QuickstartError("local identity did not become ready")
 
 
