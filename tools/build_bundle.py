@@ -19,7 +19,17 @@ def build(root: Path, output: Path) -> dict:
         ["git", "rev-parse", "HEAD"], cwd=root, text=True
     ).strip()
     raw = subprocess.check_output(
-        ["git", "archive", "HEAD", "services/infrastructure"], cwd=root
+        [
+            "git",
+            "-c",
+            "core.autocrlf=false",
+            "-c",
+            "core.eol=lf",
+            "archive",
+            revision,
+            "services/infrastructure",
+        ],
+        cwd=root,
     )
     records = {}
     with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
@@ -54,7 +64,10 @@ def build(root: Path, output: Path) -> dict:
         "schema_version": 1,
         "repository": "sapogov1978/platform-infrastructure",
         "version": json.loads(
-            (root / "services/infrastructure/release.json").read_text()
+            subprocess.check_output(
+                ["git", "show", revision + ":services/infrastructure/release.json"],
+                cwd=root,
+            )
         )["version"],
         "source_commit": revision,
         "archive_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),

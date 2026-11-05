@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-06)
 
 ## Corpus Check
-- 973 files · ~616,555 words
+- 973 files · ~616,594 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 175 file(s) not represented in the graph (top: (none) 45, .whl 41, .example 21)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `315b3589`
+- Built from commit: `bca5432f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2936,13 +2936,13 @@ Nodes (5): Жизненный цикл вычислителя и давлени�
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `suspend` to `main`, `Store`, `public-egress-gateway/test/test_renewal.py`, `re`, `Any`, `test_infrastructure/test_recovery.py`, `json`, `Changelog`, `test_recovery_cli.py`, `typing`, `Delivery`, `INDEX.md`, `Диагностика listener и восстановление приёмника — 21 октября 2026`, `Keycloak — руководство пользователя`, `platform-ui/test/test_api.py`, `keycloak/test/test_status_publisher.py`, `test_authorization.py`, `MinIO — руководство пользователя`, `Восстановление входа при потере cookie — 2026-10-26`, `Проверка исправления счётчиков и управления Prometheus`, `Kafka — руководство пользователя`, `Руководство: метрики и панели нового владельца`, `Создание и подключение UI нового сервиса`, `Tempo — руководство пользователя`, `Blackbox Exporter — руководство пользователя`, `Loki — руководство пользователя`, `OpenTelemetry Collector — руководство пользователя`, `Prometheus — руководство пользователя`, `gateway.py`, `test_index_translation_provider.py`, `test_documentation.py`?**
-  _High betweenness centrality (0.111) - this node is a cross-community bridge._
+  _High betweenness centrality (0.112) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `re` be split into smaller, more focused modules?**
   _Cohesion score 0.042748091603053436 - nodes in this community are weakly interconnected._
 - **Why does `Platform UI — нормативная спецификация` connect `Changelog` to `platform-ui-injection.md`, `suspend`?**
-  _High betweenness centrality (0.060) - this node is a cross-community bridge._
+  _High betweenness centrality (0.061) - this node is a cross-community bridge._
 - **Should `os` be split into smaller, more focused modules?**
   _Cohesion score 0.02857142857142857 - nodes in this community are weakly interconnected._
 - **Why does `PlatformPage()` connect `Changelog` to `QueueServiceApp.tsx`, `Platform UI SDK`?**
