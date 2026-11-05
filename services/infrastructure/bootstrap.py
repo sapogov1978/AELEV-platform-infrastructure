@@ -44,7 +44,7 @@ CAPABILITIES = {
 BUILDS = {
     "postgresql": ("postgresql-1",),
     "kafka": ("kafka",),
-    "object-storage": (),
+    "object-storage": ("minio-site-a-1",),
     "identity": ("keycloak",),
     "platform-ui": ("platform-ui-api", "platform-ui", "platform-ui-configuration-init"),
 }
@@ -370,7 +370,8 @@ def execute(command: str, capabilities: list[str], no_build: bool = False) -> No
     initialize()
     if command == "init":
         return
-    verify_scope()
+    if command == "up":
+        verify_scope()
     if command == "build" or not no_build:
         builds = selected(capabilities, build=True)
         if builds:

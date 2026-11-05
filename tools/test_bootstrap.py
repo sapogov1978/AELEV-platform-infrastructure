@@ -65,6 +65,19 @@ class BootstrapTest(unittest.TestCase):
             provider.execute("build", ["kafka"])
         self.assertEqual([call.args[1] for call in compose.call_args_list], ["build"])
 
+    def test_image_build_does_not_require_runtime_ownership(self) -> None:
+        with (
+            mock.patch.object(provider, "initialize"),
+            mock.patch.object(
+                provider,
+                "verify_scope",
+                side_effect=provider.QuickstartError("foreign runtime"),
+            ) as scope,
+            mock.patch.object(provider, "compose"),
+        ):
+            provider.execute("build", ["kafka"])
+        scope.assert_not_called()
+
     def test_foreign_installation_blocks_before_start(self) -> None:
         with (
             mock.patch.object(
