@@ -52,9 +52,9 @@
     "semantic_hash": "1bcac1b08b99046f173d14e03480de62"
   },
   "services/infrastructure/bootstrap.py": {
-    "mtime": 1793919596.6404402,
-    "seen": 1793919604.8120599,
-    "ast_hash": "cb7a49686f7affa00194016e4a14831e",
+    "mtime": 1793920495.7677405,
+    "seen": 1793920504.0822458,
+    "ast_hash": "69764a2a889c7bee212444cdf6ac7c61",
     "semantic_hash": ""
   },
   "services/infrastructure/certificate_authority.py": {
@@ -2941,10 +2941,10 @@
     "semantic_hash": "ad2b43ce71d75e55e52aad98283cc174"
   },
   "tools/build_bundle.py": {
-    "mtime": 1793919078.868191,
-    "seen": 1793919104.152583,
-    "ast_hash": "63deee08d19f177f61628f9719f786c9",
-    "semantic_hash": "63deee08d19f177f61628f9719f786c9"
+    "mtime": 1793920495.9418073,
+    "seen": 1793920504.0889049,
+    "ast_hash": "b618f7e9e6b9743e6860160db631853c",
+    "semantic_hash": ""
   },
   "tools/build_ci_ui_image.py": {
     "mtime": 1793839981.8895507,
@@ -3044,10 +3044,10 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1793919078.8681908,
-    "seen": 1793919104.1527302,
-    "ast_hash": "48760b948f6b0651a8afa31c9eeedbae",
-    "semantic_hash": "48760b948f6b0651a8afa31c9eeedbae"
+    "mtime": 1793920495.9416611,
+    "seen": 1793920504.089067,
+    "ast_hash": "217bde41f7c48317da4cb2be81bd7760",
+    "semantic_hash": ""
   },
   "AGENTS.md": {
     "mtime": 1793920368.2974043,
@@ -3056,9 +3056,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793920368.2976735,
-    "seen": 1793920373.9554849,
-    "ast_hash": "6176114d188d696e83f455e425d55cd6",
+    "mtime": 1793920495.7698932,
+    "seen": 1793920504.089077,
+    "ast_hash": "a3ac4bdc262cd732c612f8bad49ea127",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3068,9 +3068,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793918816.2366652,
-    "seen": 1793919174.194463,
-    "ast_hash": "3f5ace40dcc647e65535327e9ab6c0ed",
+    "mtime": 1793920495.7696748,
+    "seen": 1793920504.089088,
+    "ast_hash": "eec3a20f1d85fac019dfff724e729933",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -6053,6 +6053,12 @@
     "mtime": 1793282598.0,
     "seen": 1793919174.1948538,
     "ast_hash": "5db44cd9e81bdcc1c20d68e78656b5fa",
+    "semantic_hash": ""
+  },
+  "services/infrastructure/release.json": {
+    "mtime": 1793920495.7683945,
+    "seen": 1793920504.086428,
+    "ast_hash": "68b97356f14b78ccdfe56638a6e8ac21",
     "semantic_hash": ""
   },
   "services/infrastructure/platform-ui/package-lock.json": {

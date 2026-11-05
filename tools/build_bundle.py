@@ -53,7 +53,9 @@ def build(root: Path, output: Path) -> dict:
     return {
         "schema_version": 1,
         "repository": "sapogov1978/platform-infrastructure",
-        "version": "0.1.0",
+        "version": json.loads(
+            (root / "services/infrastructure/release.json").read_text()
+        )["version"],
         "source_commit": revision,
         "archive_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "archive_url": None,

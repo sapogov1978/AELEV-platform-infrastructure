@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -18,6 +19,33 @@ SPEC.loader.exec_module(provider)
 
 
 class BootstrapTest(unittest.TestCase):
+    def test_first_run_minio_configuration_is_owned_by_its_generator(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            minio = root / "minio"
+            minio.mkdir()
+            (root / ".env.example").write_text("EXAMPLE=value\n")
+            (minio / ".env.example").write_text("MINIO_EXAMPLE=value\n")
+
+            def prepare_minio() -> None:
+                self.assertFalse((minio / ".env").exists())
+                (minio / ".env").write_text("MINIO_EXAMPLE=prepared\n")
+
+            with (
+                mock.patch.object(provider, "ROOT", root),
+                mock.patch.object(provider, "MINIO", minio),
+                mock.patch.object(provider.shutil, "which", return_value="available"),
+                mock.patch.object(provider, "initialize_keycloak"),
+                mock.patch.object(provider, "initialize_platform"),
+                mock.patch.object(provider, "initialize_postgresql"),
+                mock.patch.object(
+                    provider, "initialize_minio", side_effect=prepare_minio
+                ),
+                mock.patch.object(provider, "compose"),
+            ):
+                provider.initialize()
+            self.assertEqual((minio / ".env").read_text(), "MINIO_EXAMPLE=prepared\n")
+
     def test_platform_adds_identity_but_kafka_does_not(self) -> None:
         self.assertIn("keycloak", provider.selected(["platform-ui"]))
         self.assertEqual(provider.selected(["kafka"]), ("kafka",))

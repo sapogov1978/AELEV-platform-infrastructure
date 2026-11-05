@@ -22,7 +22,7 @@ PLATFORM = ROOT / "platform-ui"
 KEYCLOAK = ROOT / "keycloak"
 POSTGRESQL = ROOT / "postgresql"
 MINIO = ROOT / "minio"
-RELEASE = "0.1.0"
+RELEASE = json.loads((ROOT / "release.json").read_text())["version"]
 
 CAPABILITIES = {
     "postgresql": (
@@ -280,7 +280,7 @@ def initialize() -> None:
             raise QuickstartError(f"required tool unavailable: {executable}")
     initialize_env(ROOT / ".env")
     for example in sorted(ROOT.glob("**/.env.example")):
-        if example.parent not in {KEYCLOAK, PLATFORM}:
+        if example.parent not in {KEYCLOAK, PLATFORM, MINIO}:
             initialize_env(example.with_name(".env"))
     initialize_keycloak()
     initialize_minio()
