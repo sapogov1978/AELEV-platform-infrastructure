@@ -9,6 +9,9 @@ __pycache__/
 node_modules/
 dist/
 runtime/
+services/**/secrets/
+graphify-out/.graphify_root
+graphify-out/.graphify_python
 
 # Model entry points are tracked; their downloaded runtime and private state are not.
 /models/*/_files/python/
