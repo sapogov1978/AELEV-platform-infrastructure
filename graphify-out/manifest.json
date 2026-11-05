@@ -3056,9 +3056,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793919212.2981484,
-    "seen": 1793919217.887151,
-    "ast_hash": "71874a4a9cd3af71ebfa572ef71a7727",
+    "mtime": 1793919262.551885,
+    "seen": 1793919269.707656,
+    "ast_hash": "0071378ea18ff7c738a7098504806351",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3968,15 +3968,15 @@
     "semantic_hash": ""
   },
   "services/infrastructure/README.md": {
-    "mtime": 1793918501.132632,
-    "seen": 1793919174.194577,
-    "ast_hash": "e9a0fc0480bede2350d28104e5b0f277",
+    "mtime": 1793919262.5507004,
+    "seen": 1793919269.709347,
+    "ast_hash": "f24a6c03329be1a59183318bb92df4f5",
     "semantic_hash": ""
   },
   "services/infrastructure/SPEC.md": {
-    "mtime": 1793918501.133358,
-    "seen": 1793919174.194578,
-    "ast_hash": "ad62db4be91ce84c93c0b5e08ad8c2c6",
+    "mtime": 1793919262.5515387,
+    "seen": 1793919269.7093482,
+    "ast_hash": "6fe7101e2867ab8228c40b9fb723d447",
     "semantic_hash": ""
   },
   "services/infrastructure/STATS.md": {
