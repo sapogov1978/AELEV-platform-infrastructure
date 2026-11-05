@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aelev-public-egress-gateway"
+version = "1.0.0"
+description = "AELEV public egress gateway"
+requires-python = ">=3.13,<3.14"
+dynamic = ["dependencies"]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"}
+opentelemetry-api = "1.45.1"
+opentelemetry-exporter-otlp-proto-http = "1.45.1"
+opentelemetry-sdk = "1.45.1"
+
+[tool.poetry.group.dev.dependencies]
+pyright = { version = "1.1.403", extras = ["nodejs"] }
+pytest = "9.0.3"
+ruff = "0.12.9"
+black = "26.10.1"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["."]
+testpaths = ["test"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pyright]
+include = ["gateway.py", "telemetry.py", "api_contract.py", "documentation.py", "authorization.py", "provision.py", "prepare.py", "renewal.py", "renewal_schedule.py", "health.py", "status_publisher.py", "test"]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"

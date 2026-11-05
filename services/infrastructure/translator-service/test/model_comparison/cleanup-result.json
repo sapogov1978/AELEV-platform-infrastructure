@@ -1,0 +1,1221 @@
+{
+  "finished_at": "2026-10-11T15:22:30.953344+00:00",
+  "before": {
+    "containers": {
+      "a9e961350124967eeac766814f5d689b065a93bc16a6bebcb737e8166bcb1228": {
+        "name": "/aelev-infrastructure-observability-blackbox-exporter-operator-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.911559919Z",
+        "restart_count": 0,
+        "image": "sha256:4bc8cd9eadd57d7a7dfb8f6d6b4c78a807dbf52cc4544b77b229b4ee89339596"
+      },
+      "e8fa026a8f0b4f5067b5c1d129cae68e1db4c7c4cdd44ea412b98624d5e33097": {
+        "name": "/aelev-infrastructure-observability-prometheus-operator-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.905791169Z",
+        "restart_count": 0,
+        "image": "sha256:6708936f3a673f5530625bcaeda5e98d834183da37b4ed35ad4626a6bce27e84"
+      },
+      "69b177c2b0a18ccac320865a24df1825f871cc5e81f79a04cddb98e5acbc73fc": {
+        "name": "/aelev-infrastructure-observability-prometheus-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.912967336Z",
+        "restart_count": 0,
+        "image": "sha256:6708936f3a673f5530625bcaeda5e98d834183da37b4ed35ad4626a6bce27e84"
+      },
+      "b48f5b7be50ffb524123286ef248ae456baf9cbd92f2e8bb96ddd6dedbac699f": {
+        "name": "/aelev-infrastructure-observability-blackbox-exporter-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.919161961Z",
+        "restart_count": 0,
+        "image": "sha256:4bc8cd9eadd57d7a7dfb8f6d6b4c78a807dbf52cc4544b77b229b4ee89339596"
+      },
+      "0ad9568a80b042014894c27525df9e2b546f5382d337e7d34b32292ca34dc6d9": {
+        "name": "/aelev-infrastructure-platform-ui-platform-ui-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:52:59.756054505Z",
+        "restart_count": 0,
+        "image": "sha256:0d9f7646353d0518f8756b8a1bf0dc23ba38f8faae485548e5bd8ce913fa152d"
+      },
+      "1930b30d599483973df56708ce4b0e2d52160aff94bfd26dbde73169fc1568fe": {
+        "name": "/aelev-infrastructure-observability-loki-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.742263925Z",
+        "restart_count": 0,
+        "image": "sha256:5073efb463ed4dbb15ee63e2bea4fd94ef22720f3ed6235bba00dbba526e4b1c"
+      },
+      "39c0c1da712c30f42818154b7747c9a484b71b7d550160cc73ce1b046ec85338": {
+        "name": "/aelev-infrastructure-observability-grafana-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.7357503Z",
+        "restart_count": 0,
+        "image": "sha256:d60fcd31cb5c6c82219efd0823bb0b1a3e0d8d50c129aac7aca177cc44ddd84b"
+      },
+      "c6912c107fe3b3f1b2a6ed590d7744a9d5330cca2faef599d29e7b7147bb1da6": {
+        "name": "/aelev-infrastructure-observability-tempo-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.743032258Z",
+        "restart_count": 0,
+        "image": "sha256:9f961e86e8a5812c077d37d83bd4c40f2f071d8093411753b504e11cef9854fe"
+      },
+      "946ad78bd11511168678bc8f491de60ff0df10d5fc1e8c2d97818e32efe36a9f": {
+        "name": "/aelev-infrastructure-observability-otel-collector-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.744341592Z",
+        "restart_count": 0,
+        "image": "sha256:27d2e3db1af997a086f7d514f071b482b0215abd0bf505019d5b3c5e9d791bc5"
+      },
+      "b88a18c732dcdda5c3c2d47ff537d88af1d732c0d3a9e1ff09e85d74325e6cbe": {
+        "name": "/aelev-infrastructure-observability-delivery-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.741315967Z",
+        "restart_count": 0,
+        "image": "sha256:da7a029fce50bad6cd1ddd0aecc6d65ed4aa69ccaab6aa33d006bf5e72b70d09"
+      },
+      "fbd16c69a981a3f509aa327f6df1fe2abba8eef9310f4a5f725571cbc17728ae": {
+        "name": "/aelev-infrastructure-translator-translator-service-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.193680092Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "c7ab4acc524d08dc21daf11dc39a30a2921620bab423374b7acdfc36d4dc1b94": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:34.911390716Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "8a7b5ff22252abc82c8b2618d6e7ab017b4fef1600c73374f1caf32870274d8c": {
+        "name": "/aelev-infrastructure-keycloak-keycloak-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:29.840620339Z",
+        "restart_count": 0,
+        "image": "sha256:6efebd351eabe1bdbc6cd3b69da29abd1f50cda1b3a2a5577f8d3e5b8c08429a"
+      },
+      "16912fe13b6f577a6bd4256178915e82cdc4248e02aaae684576eb4a456f001b": {
+        "name": "/aelev-infrastructure-minio-minio-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:28.824238547Z",
+        "restart_count": 0,
+        "image": "sha256:272dce696d806a21f684c19b11c9fae0b3c76c7e093ff646180c13fa5670c053"
+      },
+      "bd07c5609eb1c9aadb614ebbbfb6be4f1fb6e1b92461acd382fc4460917d8520": {
+        "name": "/aelev-infrastructure-platform-ui-platform-ui-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:28.823808464Z",
+        "restart_count": 0,
+        "image": "sha256:0f0a9684b80682e711a0637eccb3d195ca8f8c0bc906d97fee48c7e204505995"
+      },
+      "414227e93a17ad2efb480039bac150bb50b6a24e25271c60c264e73efa8e7f51": {
+        "name": "/aelev-infrastructure-kafka-kafka-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:28.745267422Z",
+        "restart_count": 0,
+        "image": "sha256:b68cec03edffc3e68b1c91b90fca7fbaeb9938f5e1d759b80279ff2a5eb679e8"
+      },
+      "5587b46402fa2142fb09c7c0a60dfe35206e3c11192523333ce7fa454c700220": {
+        "name": "/aelev-infrastructure-translator-translator-api-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.849578804Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "4627db7dd521b57d2936d12ce4df921a3eb76cb5d6e944f6614f48463a4ede61": {
+        "name": "/aelev-infrastructure-translator-translator-outbox-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.850136971Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "0ffe4581bba540ea80286de5891ad35b1d6f281d652bd366d08591de8714e0cf": {
+        "name": "/aelev-infrastructure-translator-translator-worker-1",
+        "status": "running",
+        "started_at": "2026-10-11T15:16:22.568196169Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "44b22e97ca8e588696ce5561f4f57fc8dbf0b2e37df150487fd2cc0bf8e7db85": {
+        "name": "/aelev-infrastructure-translator-translator-normal-consumer-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.847487012Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "42f0fcda729cc655da0e89d254d68184023ebb333334325ee4060cdc7e9a5bd1": {
+        "name": "/aelev-infrastructure-translator-translator-priority-consumer-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.850714846Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "fe31f860a1f69d49c570e8f86732776f02dc1a45313f0041e72b11ec77f037ef": {
+        "name": "/aelev-infrastructure-translator-translator-migrator-1",
+        "status": "exited",
+        "started_at": "2026-10-11T07:26:35.641392925Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "36288866535a68152c930454aff79da7afb2b5d7732d0b8b39813093de3326f3": {
+        "name": "/aelev-infrastructure-translator-translator-database-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:33.455676507Z",
+        "restart_count": 0,
+        "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+      },
+      "d67272d50fdc36475ad3ad0a7d29079558a54d8de6b1a8e403777a09c8e06c02": {
+        "name": "/aelev-infrastructure-translator-translator-model-1",
+        "status": "running",
+        "started_at": "2026-10-11T15:16:10.165089511Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "96c341e2b5ce15731958d34182b5c4769f1eb01606a2f3fcdeeef7274fb880ee": {
+        "name": "/aelev-infrastructure-translator-translator-topic-provisioner-1",
+        "status": "exited",
+        "started_at": "2026-10-11T07:26:35.114718175Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "b3cc805cb1fb02b333f57d30bf2afa6490d0334f8a8966bfa002457af3b16e7b": {
+        "name": "/aelev-infrastructure-observability-grafana-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.655867971Z",
+        "restart_count": 0,
+        "image": "sha256:6ac590e7cabc2fbe8d7b8fc1ce9c9f0582177b334e0df9c927ebd9670469440f"
+      },
+      "7b4111983aefe86d510dad599464021cf09518557a3c9d927c78ea50b9a6675b": {
+        "name": "/aelev-infrastructure-observability-tempo-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.656918471Z",
+        "restart_count": 0,
+        "image": "sha256:bc9245fe3da4e63dc4c6862d9c2dad9bcd8be13d0ba4f7705fa6acda4c904d0e"
+      },
+      "6f1b8364c5d920b1dd7922557ec3b34d337686cb140bb9c03b1e35e5c08b1655": {
+        "name": "/aelev-infrastructure-observability-loki-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.661555762Z",
+        "restart_count": 0,
+        "image": "sha256:3165cecce301ce5b9b6e3530284b080934a05cd5cafac3d3d82edcb887b45ecd"
+      },
+      "71da4fd43a82551a40d9b352d9b8e0eafc2cecc277c48bdcf2bf60aa8773a31c": {
+        "name": "/aelev-infrastructure-observability-prometheus-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.664948929Z",
+        "restart_count": 0,
+        "image": "sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996"
+      },
+      "0e314beb513866f1cb491dbe29d401354cbe547fdf90777624ae4d95c1a81ece": {
+        "name": "/aelev-infrastructure-observability-delivery-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.655193637Z",
+        "restart_count": 0,
+        "image": "sha256:347f126a5af140627e439c489e1e515fa775d5b915ec0e8072a9e245f320bcf1"
+      },
+      "ce055b307afa79c4ebffb413c2ceca0484b6932cb48f94e9eef3f34af109819a": {
+        "name": "/aelev-infrastructure-observability-blackbox-exporter-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.578383971Z",
+        "restart_count": 0,
+        "image": "sha256:a50c4c0eda297baa1678cd4dc4712a67fdea713b832d43ce7fcc5f9bea05094d"
+      },
+      "5f50b656967800838899e238eb31fe9e42fbc8a42c260bf99ff59115af5ab306": {
+        "name": "/aelev-infrastructure-observability-otel-collector-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.661806096Z",
+        "restart_count": 0,
+        "image": "sha256:c06aa6d7833e9a2b81c6c394d67e40ae9864edec8dca8a8e8552df1316c96d9b"
+      },
+      "e589820eaa017e7be539bbd08767dc12293b4192cc63102d6903ddec4494de04": {
+        "name": "/aelev-infrastructure-platform-ui-platform-ui-api-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:12.579999428Z",
+        "restart_count": 0,
+        "image": "sha256:0f0a9684b80682e711a0637eccb3d195ca8f8c0bc906d97fee48c7e204505995"
+      },
+      "db1f2dd5036c52fed9aef1fca2d6c8571eaebbebabedb1af53d239133a50b999": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:53.127963377Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "7f2e398ce2e0a0fc262daf12aff1c7d2d30e416e58ca38d8441aa75da82862ea": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:53.128267294Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "591b58b5cfc3d49232d746ab2381de67fb59f0854a9ad0d4823b202dfd390deb": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:53.118304336Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "e6e939eb5ff8cceb5444fd56360404ae69930c4de7431e7024679fb11bdb4e5b": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-fencer-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.819343472Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "ad4338675dbae5e519b1e69f260bb71c20804c55fef74495eb8fb5580e60b018": {
+        "name": "/aelev-infrastructure-postgresql-etcd-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.818296222Z",
+        "restart_count": 0,
+        "image": "sha256:f65c61039e7b7fd6e651f7ec2459b880589892cb13cf79c2f71c92aa08fc5144"
+      },
+      "69c1ff3fbb4378903d3bbaf99da06a2e82de2421d90a908d1f1ddd0b23b7baf6": {
+        "name": "/aelev-infrastructure-postgresql-etcd-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.787912597Z",
+        "restart_count": 0,
+        "image": "sha256:f65c61039e7b7fd6e651f7ec2459b880589892cb13cf79c2f71c92aa08fc5144"
+      },
+      "1d043130286c2394dedd988a1874c55bff3361b0e042f78eb005581bdaeb9326": {
+        "name": "/aelev-infrastructure-postgresql-etcd-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.821766514Z",
+        "restart_count": 0,
+        "image": "sha256:f65c61039e7b7fd6e651f7ec2459b880589892cb13cf79c2f71c92aa08fc5144"
+      },
+      "91d39d2fce2cbee5eeb21fd7aa65b6ae631bd7ad16b21269c6344c9927090976": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.142586638Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "f084feebfa1844dafb2a754fa0bc6cc13ada45863d6ebe097d3326645ee4e4f3": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.141814221Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "4b52b4e4335cbfd34fbcdcd4bdc615ae84c9e4e61a279e9876c9290e3bfa3d0a": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.15301918Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "fc6d31d72e33f84f097cfba660f36169194d812b4463d67024f426367d838932": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.149767221Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "51e19933a4eb31644910976bb1833ecf8bb112ca7f63d0c1691fbffa2eae03bc": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.145822971Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "c7af25af1cc885ddc2cd8983747e96eab63c2b3c0087bccbc176804a2cebfc5f": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-4-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.105502055Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "6c8a06f5e73010b013144139a2d2572aa43628bca4afbfa9cf449caaa7d4eb6c": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-4-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.150661555Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "d47b6cff2f6e00387901dfe8b2ae6e6f399d6ab82ad849588d31f1be9aeed7c6": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.148267096Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "ed940aa568ce7f9f9c2622efb8f8e1bcb417b4d7104af32c3f57d877866a288c": {
+        "name": "/aelev-infrastructure-kafka-kafka-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:26.339208296Z",
+        "restart_count": 0,
+        "image": "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed"
+      },
+      "6e18755e218c5c484f70eb3d59b7296dc3576d4a8d7d823ee3d83f6b47b682de": {
+        "name": "/aelev-infrastructure-keycloak-keycloak-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:30.914803423Z",
+        "restart_count": 0,
+        "image": "sha256:d7eadbf2308972fe94b95c9159bad398620af623244becedf5b8a02a27a25425"
+      },
+      "987b39f20467c92e0209f532e622cc3ef6e257ec332b46ff67684a06aa305757": {
+        "name": "/aelev-infrastructure-keycloak-keycloak-database-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:25.282869129Z",
+        "restart_count": 0,
+        "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+      },
+      "a8e08b913df17b980c84278ced170e52c68afe3c62ce4a7bb43e5991e458735d": {
+        "name": "/sds-cas2126-redis",
+        "status": "exited",
+        "started_at": "2026-10-05T16:02:45.47894692Z",
+        "restart_count": 0,
+        "image": "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1"
+      },
+      "54f2562b5a8fdbaeae2c7aee85e0b72a1a05e99269bfc8152b8374b8561b8f92": {
+        "name": "/sds-cas2126-pg",
+        "status": "exited",
+        "started_at": "2026-10-05T16:02:44.716484294Z",
+        "restart_count": 0,
+        "image": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+      },
+      "653c59f638429a59d3c57bd7f24f634c7b2b6e2f116e1690a252ad2810b8583e": {
+        "name": "/sds-deps-redis",
+        "status": "exited",
+        "started_at": "2026-10-06T08:27:35.149152384Z",
+        "restart_count": 0,
+        "image": "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1"
+      },
+      "e776276732cb542bae3a2115385d3a793abb1ac50a4384d9802dc35dcf5286d7": {
+        "name": "/sds-deps-postgres",
+        "status": "exited",
+        "started_at": "2026-10-06T08:27:35.120246717Z",
+        "restart_count": 0,
+        "image": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+      },
+      "8d49b5f20663a5da0a7a4fcb8abf7d2fe803850894a7f11ea551c130dc7b8f80": {
+        "name": "/data-collector-celery",
+        "status": "running",
+        "started_at": "2026-10-11T14:24:36.381700135Z",
+        "restart_count": 49,
+        "image": "sha256:0065a686093c1754e24ec1fb94f0de13adb580e7c694083ad7f7ac2dd76f5817"
+      },
+      "637666510b95b7ff081235009a6249011bc0cd05c5d7f7d44fe8bdec243cbba7": {
+        "name": "/data-collector-fastapi",
+        "status": "running",
+        "started_at": "2026-10-08T16:32:29.900580458Z",
+        "restart_count": 0,
+        "image": "sha256:57af1bac162c301bb9045fbb89a434250647627e430a6922d6164367641da9c8"
+      },
+      "914c64f8f99d420fadcd51c551f202329c6753a17820b5a0b8dee1716d1b9998": {
+        "name": "/data-collector-postgres-test",
+        "status": "exited",
+        "started_at": "2026-09-24T08:01:18.865685886Z",
+        "restart_count": 0,
+        "image": "sha256:11a9d238fbb48bab14599c57e41123254452b1a2d93c6c8595bce96f346bd082"
+      },
+      "65057f791cd5ebd40e7047cac93ccf2e42c25d3ff6de314064ec55c2733ce4f7": {
+        "name": "/data-collector-migrate",
+        "status": "exited",
+        "started_at": "2026-09-18T10:24:13.522476889Z",
+        "restart_count": 0,
+        "image": "sha256:7c33fd4dcee99d60aa8a90b30ae6180bcf5f887ed24520ec5897f5507438d8e8"
+      },
+      "ce77e7108a93384196ad83b60ec35320a6d2365c8c274c514ba0e06b0e0e4e6f": {
+        "name": "/data-collector-redis",
+        "status": "exited",
+        "started_at": "2026-09-28T08:35:20.485582759Z",
+        "restart_count": 0,
+        "image": "sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529"
+      },
+      "cb8ebfa45a80349569442201bf85b6359bb7ee765e577e6cf13bfe1ac2a0b10a": {
+        "name": "/mpi-sync-beat",
+        "status": "exited",
+        "started_at": "2026-08-03T16:17:29.411246507Z",
+        "restart_count": 0,
+        "image": "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790"
+      },
+      "3d51064dbf6025634a756775ea2e57fe10958b4ff8c29123dee83c56aca3939b": {
+        "name": "/mpi-sync-fastapi",
+        "status": "exited",
+        "started_at": "2026-08-03T16:17:29.410204382Z",
+        "restart_count": 0,
+        "image": "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790"
+      },
+      "ce366245c839b85a1d2743e3c11f9cbde1f77e6bcf9226e98158f239354e8a47": {
+        "name": "/mpi-sync-celery",
+        "status": "exited",
+        "started_at": "2026-08-03T16:17:29.337390549Z",
+        "restart_count": 0,
+        "image": "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790"
+      },
+      "e656a486bd7f3d7ab6122df373876fda5717e0613e7184b92b627762e9d2b97b": {
+        "name": "/mpi-syncer-postgres-1",
+        "status": "exited",
+        "started_at": "2026-08-03T16:14:26.806827798Z",
+        "restart_count": 0,
+        "image": "sha256:3a82e1f56c8f0f5616a11103ac3d47e632c3938698946a7ad26da0df1334744a"
+      },
+      "59e71f2797d2e72babf322722d1d46dd9593a4666786d2826455719ff81bf91d": {
+        "name": "/mpi-syncer-redis-1",
+        "status": "exited",
+        "started_at": "2026-08-03T16:14:26.805389256Z",
+        "restart_count": 0,
+        "image": "sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529"
+      },
+      "073fce427c6e63690540fe9a05dee56f7027391ba9cf2727e075571d37912303": {
+        "name": "/schedule_service-celery-worker-1",
+        "status": "exited",
+        "started_at": "2026-08-03T12:51:58.591320299Z",
+        "restart_count": 0,
+        "image": "sha256:ac297d5730ebbfc14767d7c7bb6093dcf81787f5a6d366c8ed95d91a929367f6"
+      },
+      "948bf915c24df274b84f8908de299a9051becfaada0e9ce969f990177651275e": {
+        "name": "/schedule_service-schedule-service-1",
+        "status": "exited",
+        "started_at": "2026-08-03T12:51:58.590075174Z",
+        "restart_count": 0,
+        "image": "sha256:bd146052ea584aded9514ca5378779e772435d9a9d785a026f40218dc9414ce7"
+      },
+      "b34774b9461c6b8f5194c66493ba8730ca96429d487b5e0b3a1027877eb966e4": {
+        "name": "/sds-celery-worker",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:50.004534299Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "e017a06ed9edadf848b0d75ff53ce0fc1fb8c14629b69b8fc0ee6c2ef033ab3b": {
+        "name": "/sds-api",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:50.004210716Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "98f612e7abafdfb2095c3869bdd0bf4bc76a31a80cc200d41b71c83379e02080": {
+        "name": "/sds-celery-beat",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:50.002188632Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "5d4d3eb70e06f940519a50bf0618f311db6ef8d4f063e5d51b84da329f8bed5a": {
+        "name": "/sds-migrate",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:49.428717674Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "cf8a21b28fe18fbe21a56a0142f13f6840a25e5fc46a995dbe2be4932e5116f8": {
+        "name": "/sds-postgres",
+        "status": "exited",
+        "started_at": "2026-06-02T12:57:02.386118013Z",
+        "restart_count": 0,
+        "image": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+      },
+      "2a8a378bcd9023b9862716cde64a23b570dd925b77470abd0aa504d803315f05": {
+        "name": "/redis-sds",
+        "status": "exited",
+        "started_at": "2026-06-02T12:57:02.385566347Z",
+        "restart_count": 0,
+        "image": "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1"
+      }
+    },
+    "networks": [
+      "06e030f45f693325a142da389c9f985e605e21f268c32d170cdaeda4f261019a",
+      "0c944c188451c443785bbbdb74fbf2113c94a7909242f6b423deacb0725b5c85",
+      "34845c28ba2c641414c7108e0586cbdf8a29581097a0108ec72087bb38ef5fb4",
+      "391228347f6be979e41263ef359f04c176f318b033e68f6ac87f97cf0173eb62",
+      "3b4d72370c8afa995925c67cc6f8ecd91670c79fb4b26ae4e77cb197adf6c83e",
+      "3dc1dcb0622147fc4250f8dd9d0f67081b4e157e20ff643bcc7151d96019a3da",
+      "400c799161abc679b4179cb4141d31f1811628cf9509e20534b6473083ba3546",
+      "51164b270c87e2b295d363818083e2e66bf58581627540a722abf3f521855b8f",
+      "525bffa163cd25fcefc41b3394cd7c447da696ad15d107774e35fae7f2e5336c",
+      "60c1fae819cc065e0e48b5ff3d2c55dc84f6d053f804e4f2137f4c31b56e4684",
+      "765541c64bee332016355dba935358cb792f10cf77bed1c491807641a984b1c7",
+      "7662c2fec5fd6b3d46527625b3da2d1d99ceaf918bad711b9c366bd3e04c3629",
+      "78af4ef989c969bb68a403cabe3f2d6f343678ff1f7a91d795852a30dc79fb06",
+      "82cf4518db6db6c5289abca3bcdc80d4ce3052c5d11c08e413f5318f398ca408",
+      "8b3329361aaed7be2d984604f98941b5196f5dae3c1856626cfaadcdd93cd768",
+      "9208743a968f8eab90f6b80104b771affee6698273549d835a3a49fb3f925194",
+      "99956cf99b02d76206354178bd02c0b8506a13377efc83560c1a4d005fc7126c",
+      "b84730b4923ed0d4dccf5b7b131b88f3729560ee6334373a60eb9685c7e13b0c",
+      "c28d1d18939c1f3279dd21a2d6d1dbf73e34931a5592357a389ca7d22dcf3bb4",
+      "c44fbd1ae1603e5dd9b603756f2ab70cfdeb438fb0581b9738a4f62cee522e88",
+      "ca9613bb7e49bd551560bc7229a0c6429c6c088eecb355f85f57c20d6a6ddef5",
+      "cd438694c7afd25fb9c29b83335ef61693e73489ee154bf582625d9d9e8a4d69",
+      "ded66e2318dab57bb226ea80d7e6d4b332359d8368480b8a01566c99eeb3d6ca",
+      "e4628a8b3b4f730c4ee3bbabab553f22f5662a69be52ffd03723815b96e731a9",
+      "e9ec60e78bf8296fe62ba26b0c7e1149b5b47079706ed094038ca4c49328ff94",
+      "f1b963250b7c5e4bd23063e6dd301ecba26d13dee08cdaa9ac5e7734d4fa3c11",
+      "fd18d8beefa6d81c96d38dbef8dd2f890ccb65c6e38e047dfbba9806ce57d7f4"
+    ],
+    "volumes": [
+      "32807496392a76aa41bb6791a0e2d2da76258a0d0286f32eab965f6e59fee2f5",
+      "36ff35c8cc4e18c07c5c839909645de426283ca189b0e2d3ba69b16a17a95cbe",
+      "428113eff9669aa75de406d79c22b1237c4cc3cf11206884004922f93750d53b",
+      "4d320f8edea21b7a46ff0f824ccf7328a35f590a27b829c725783934687fa775",
+      "54c95804ac504ca65fc1abc4cff7196b7542a006a6d3fa823fcdbb4312fcda01",
+      "585ba26af714def646c1a04a679087bbd22478f8d84e3b0d235d17ca69783631",
+      "622d56b099c575b86dbdd4ba5abc3bba9e1ec42fcc8a231ca5428a800640f6a6",
+      "93a7a009b7a2f8034fdccb0eaff34edb94779f1f49c5c28974ce998b1e30895f",
+      "ae35f25e772be3371a4c0162a7ada91dde560f886a5ec70add62402db93a7e02",
+      "aelev-infrastructure-blackbox-exporter-status",
+      "aelev-infrastructure-delivery-status",
+      "aelev-infrastructure-grafana-status",
+      "aelev-infrastructure-kafka-data",
+      "aelev-infrastructure-kafka-status",
+      "aelev-infrastructure-keycloak-database",
+      "aelev-infrastructure-keycloak-status",
+      "aelev-infrastructure-loki-status",
+      "aelev-infrastructure-minio-site-a-1-data",
+      "aelev-infrastructure-minio-site-a-2-data",
+      "aelev-infrastructure-minio-site-a-3-data",
+      "aelev-infrastructure-minio-site-a-4-data",
+      "aelev-infrastructure-minio-site-b-1-data",
+      "aelev-infrastructure-minio-site-b-2-data",
+      "aelev-infrastructure-minio-site-b-3-data",
+      "aelev-infrastructure-minio-site-b-4-data",
+      "aelev-infrastructure-minio-status",
+      "aelev-infrastructure-observability-collector-data",
+      "aelev-infrastructure-observability-delivery-data",
+      "aelev-infrastructure-observability-grafana-data",
+      "aelev-infrastructure-observability-loki-data",
+      "aelev-infrastructure-observability-prometheus-data",
+      "aelev-infrastructure-observability-tempo-data",
+      "aelev-infrastructure-otel-collector-status",
+      "aelev-infrastructure-platform-ui-data",
+      "aelev-infrastructure-platform-ui-status",
+      "aelev-infrastructure-postgresql-1-data",
+      "aelev-infrastructure-postgresql-2-data",
+      "aelev-infrastructure-postgresql-3-data",
+      "aelev-infrastructure-postgresql-etcd-1-data",
+      "aelev-infrastructure-postgresql-etcd-2-data",
+      "aelev-infrastructure-postgresql-etcd-3-data",
+      "aelev-infrastructure-postgresql-fencing-data",
+      "aelev-infrastructure-postgresql-status",
+      "aelev-infrastructure-prometheus-status",
+      "aelev-infrastructure-tempo-status",
+      "aelev-infrastructure-translator-database",
+      "aelev-infrastructure-translator-service-status",
+      "aelev-infrastructure-translator_translator-model-socket",
+      "c832d4c8d7016a1aae7b4b3cf48320f76dce05c85a5e75ec0f4584c647ee78cf",
+      "cd94fc19f5ef0c60b3b23ad537a3d6fecb970d9ab67929913c090bd770d748e6",
+      "confluence-skill-sync_pgdata",
+      "d1a3c8f2a7e48835ad61469c81936bcfa17061d41f43074e4153fe973b5109d7",
+      "dagvis_postgres_data",
+      "dagvis_redis_data",
+      "e6f1aba8509f7be411a9577c22866434168b76fbb88c0daf7ac42802c4666888",
+      "ffdce1e5d497571db6dfbdf12d17155f77be059b696238c5a15b207f8a05fd26",
+      "fundamentals-to-tickdb_postgres_data",
+      "fundamentals-to-tickdb_redis_data",
+      "mpi-syncer_prom",
+      "sds-deps_sds-postgres-data"
+    ]
+  },
+  "after": {
+    "containers": {
+      "a9e961350124967eeac766814f5d689b065a93bc16a6bebcb737e8166bcb1228": {
+        "name": "/aelev-infrastructure-observability-blackbox-exporter-operator-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.911559919Z",
+        "restart_count": 0,
+        "image": "sha256:4bc8cd9eadd57d7a7dfb8f6d6b4c78a807dbf52cc4544b77b229b4ee89339596"
+      },
+      "e8fa026a8f0b4f5067b5c1d129cae68e1db4c7c4cdd44ea412b98624d5e33097": {
+        "name": "/aelev-infrastructure-observability-prometheus-operator-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.905791169Z",
+        "restart_count": 0,
+        "image": "sha256:6708936f3a673f5530625bcaeda5e98d834183da37b4ed35ad4626a6bce27e84"
+      },
+      "69b177c2b0a18ccac320865a24df1825f871cc5e81f79a04cddb98e5acbc73fc": {
+        "name": "/aelev-infrastructure-observability-prometheus-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.912967336Z",
+        "restart_count": 0,
+        "image": "sha256:6708936f3a673f5530625bcaeda5e98d834183da37b4ed35ad4626a6bce27e84"
+      },
+      "b48f5b7be50ffb524123286ef248ae456baf9cbd92f2e8bb96ddd6dedbac699f": {
+        "name": "/aelev-infrastructure-observability-blackbox-exporter-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T09:14:53.919161961Z",
+        "restart_count": 0,
+        "image": "sha256:4bc8cd9eadd57d7a7dfb8f6d6b4c78a807dbf52cc4544b77b229b4ee89339596"
+      },
+      "0ad9568a80b042014894c27525df9e2b546f5382d337e7d34b32292ca34dc6d9": {
+        "name": "/aelev-infrastructure-platform-ui-platform-ui-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:52:59.756054505Z",
+        "restart_count": 0,
+        "image": "sha256:0d9f7646353d0518f8756b8a1bf0dc23ba38f8faae485548e5bd8ce913fa152d"
+      },
+      "1930b30d599483973df56708ce4b0e2d52160aff94bfd26dbde73169fc1568fe": {
+        "name": "/aelev-infrastructure-observability-loki-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.742263925Z",
+        "restart_count": 0,
+        "image": "sha256:5073efb463ed4dbb15ee63e2bea4fd94ef22720f3ed6235bba00dbba526e4b1c"
+      },
+      "39c0c1da712c30f42818154b7747c9a484b71b7d550160cc73ce1b046ec85338": {
+        "name": "/aelev-infrastructure-observability-grafana-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.7357503Z",
+        "restart_count": 0,
+        "image": "sha256:d60fcd31cb5c6c82219efd0823bb0b1a3e0d8d50c129aac7aca177cc44ddd84b"
+      },
+      "c6912c107fe3b3f1b2a6ed590d7744a9d5330cca2faef599d29e7b7147bb1da6": {
+        "name": "/aelev-infrastructure-observability-tempo-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.743032258Z",
+        "restart_count": 0,
+        "image": "sha256:9f961e86e8a5812c077d37d83bd4c40f2f071d8093411753b504e11cef9854fe"
+      },
+      "946ad78bd11511168678bc8f491de60ff0df10d5fc1e8c2d97818e32efe36a9f": {
+        "name": "/aelev-infrastructure-observability-otel-collector-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.744341592Z",
+        "restart_count": 0,
+        "image": "sha256:27d2e3db1af997a086f7d514f071b482b0215abd0bf505019d5b3c5e9d791bc5"
+      },
+      "b88a18c732dcdda5c3c2d47ff537d88af1d732c0d3a9e1ff09e85d74325e6cbe": {
+        "name": "/aelev-infrastructure-observability-delivery-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.741315967Z",
+        "restart_count": 0,
+        "image": "sha256:da7a029fce50bad6cd1ddd0aecc6d65ed4aa69ccaab6aa33d006bf5e72b70d09"
+      },
+      "fbd16c69a981a3f509aa327f6df1fe2abba8eef9310f4a5f725571cbc17728ae": {
+        "name": "/aelev-infrastructure-translator-translator-service-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:35.193680092Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "c7ab4acc524d08dc21daf11dc39a30a2921620bab423374b7acdfc36d4dc1b94": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:34.911390716Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "8a7b5ff22252abc82c8b2618d6e7ab017b4fef1600c73374f1caf32870274d8c": {
+        "name": "/aelev-infrastructure-keycloak-keycloak-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:29.840620339Z",
+        "restart_count": 0,
+        "image": "sha256:6efebd351eabe1bdbc6cd3b69da29abd1f50cda1b3a2a5577f8d3e5b8c08429a"
+      },
+      "16912fe13b6f577a6bd4256178915e82cdc4248e02aaae684576eb4a456f001b": {
+        "name": "/aelev-infrastructure-minio-minio-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:28.824238547Z",
+        "restart_count": 0,
+        "image": "sha256:272dce696d806a21f684c19b11c9fae0b3c76c7e093ff646180c13fa5670c053"
+      },
+      "bd07c5609eb1c9aadb614ebbbfb6be4f1fb6e1b92461acd382fc4460917d8520": {
+        "name": "/aelev-infrastructure-platform-ui-platform-ui-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:28.823808464Z",
+        "restart_count": 0,
+        "image": "sha256:0f0a9684b80682e711a0637eccb3d195ca8f8c0bc906d97fee48c7e204505995"
+      },
+      "414227e93a17ad2efb480039bac150bb50b6a24e25271c60c264e73efa8e7f51": {
+        "name": "/aelev-infrastructure-kafka-kafka-status-publisher-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:26:28.745267422Z",
+        "restart_count": 0,
+        "image": "sha256:b68cec03edffc3e68b1c91b90fca7fbaeb9938f5e1d759b80279ff2a5eb679e8"
+      },
+      "5587b46402fa2142fb09c7c0a60dfe35206e3c11192523333ce7fa454c700220": {
+        "name": "/aelev-infrastructure-translator-translator-api-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.849578804Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "4627db7dd521b57d2936d12ce4df921a3eb76cb5d6e944f6614f48463a4ede61": {
+        "name": "/aelev-infrastructure-translator-translator-outbox-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.850136971Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "0ffe4581bba540ea80286de5891ad35b1d6f281d652bd366d08591de8714e0cf": {
+        "name": "/aelev-infrastructure-translator-translator-worker-1",
+        "status": "running",
+        "started_at": "2026-10-11T15:16:22.568196169Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "44b22e97ca8e588696ce5561f4f57fc8dbf0b2e37df150487fd2cc0bf8e7db85": {
+        "name": "/aelev-infrastructure-translator-translator-normal-consumer-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.847487012Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "42f0fcda729cc655da0e89d254d68184023ebb333334325ee4060cdc7e9a5bd1": {
+        "name": "/aelev-infrastructure-translator-translator-priority-consumer-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:43.850714846Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "fe31f860a1f69d49c570e8f86732776f02dc1a45313f0041e72b11ec77f037ef": {
+        "name": "/aelev-infrastructure-translator-translator-migrator-1",
+        "status": "exited",
+        "started_at": "2026-10-11T07:26:35.641392925Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "36288866535a68152c930454aff79da7afb2b5d7732d0b8b39813093de3326f3": {
+        "name": "/aelev-infrastructure-translator-translator-database-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:33.455676507Z",
+        "restart_count": 0,
+        "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+      },
+      "d67272d50fdc36475ad3ad0a7d29079558a54d8de6b1a8e403777a09c8e06c02": {
+        "name": "/aelev-infrastructure-translator-translator-model-1",
+        "status": "running",
+        "started_at": "2026-10-11T15:16:10.165089511Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "96c341e2b5ce15731958d34182b5c4769f1eb01606a2f3fcdeeef7274fb880ee": {
+        "name": "/aelev-infrastructure-translator-translator-topic-provisioner-1",
+        "status": "exited",
+        "started_at": "2026-10-11T07:26:35.114718175Z",
+        "restart_count": 0,
+        "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf"
+      },
+      "b3cc805cb1fb02b333f57d30bf2afa6490d0334f8a8966bfa002457af3b16e7b": {
+        "name": "/aelev-infrastructure-observability-grafana-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.655867971Z",
+        "restart_count": 0,
+        "image": "sha256:6ac590e7cabc2fbe8d7b8fc1ce9c9f0582177b334e0df9c927ebd9670469440f"
+      },
+      "7b4111983aefe86d510dad599464021cf09518557a3c9d927c78ea50b9a6675b": {
+        "name": "/aelev-infrastructure-observability-tempo-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.656918471Z",
+        "restart_count": 0,
+        "image": "sha256:bc9245fe3da4e63dc4c6862d9c2dad9bcd8be13d0ba4f7705fa6acda4c904d0e"
+      },
+      "6f1b8364c5d920b1dd7922557ec3b34d337686cb140bb9c03b1e35e5c08b1655": {
+        "name": "/aelev-infrastructure-observability-loki-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.661555762Z",
+        "restart_count": 0,
+        "image": "sha256:3165cecce301ce5b9b6e3530284b080934a05cd5cafac3d3d82edcb887b45ecd"
+      },
+      "71da4fd43a82551a40d9b352d9b8e0eafc2cecc277c48bdcf2bf60aa8773a31c": {
+        "name": "/aelev-infrastructure-observability-prometheus-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.664948929Z",
+        "restart_count": 0,
+        "image": "sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996"
+      },
+      "0e314beb513866f1cb491dbe29d401354cbe547fdf90777624ae4d95c1a81ece": {
+        "name": "/aelev-infrastructure-observability-delivery-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.655193637Z",
+        "restart_count": 0,
+        "image": "sha256:347f126a5af140627e439c489e1e515fa775d5b915ec0e8072a9e245f320bcf1"
+      },
+      "ce055b307afa79c4ebffb413c2ceca0484b6932cb48f94e9eef3f34af109819a": {
+        "name": "/aelev-infrastructure-observability-blackbox-exporter-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.578383971Z",
+        "restart_count": 0,
+        "image": "sha256:a50c4c0eda297baa1678cd4dc4712a67fdea713b832d43ce7fcc5f9bea05094d"
+      },
+      "5f50b656967800838899e238eb31fe9e42fbc8a42c260bf99ff59115af5ab306": {
+        "name": "/aelev-infrastructure-observability-otel-collector-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:13.661806096Z",
+        "restart_count": 0,
+        "image": "sha256:c06aa6d7833e9a2b81c6c394d67e40ae9864edec8dca8a8e8552df1316c96d9b"
+      },
+      "e589820eaa017e7be539bbd08767dc12293b4192cc63102d6903ddec4494de04": {
+        "name": "/aelev-infrastructure-platform-ui-platform-ui-api-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:25:12.579999428Z",
+        "restart_count": 0,
+        "image": "sha256:0f0a9684b80682e711a0637eccb3d195ca8f8c0bc906d97fee48c7e204505995"
+      },
+      "db1f2dd5036c52fed9aef1fca2d6c8571eaebbebabedb1af53d239133a50b999": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:53.127963377Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "7f2e398ce2e0a0fc262daf12aff1c7d2d30e416e58ca38d8441aa75da82862ea": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:53.128267294Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "591b58b5cfc3d49232d746ab2381de67fb59f0854a9ad0d4823b202dfd390deb": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:53.118304336Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "e6e939eb5ff8cceb5444fd56360404ae69930c4de7431e7024679fb11bdb4e5b": {
+        "name": "/aelev-infrastructure-postgresql-postgresql-fencer-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.819343472Z",
+        "restart_count": 0,
+        "image": "sha256:418e0c0e9010372047fee177bcf1c0c2c237d90e6b9824dd5789c441326bd825"
+      },
+      "ad4338675dbae5e519b1e69f260bb71c20804c55fef74495eb8fb5580e60b018": {
+        "name": "/aelev-infrastructure-postgresql-etcd-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.818296222Z",
+        "restart_count": 0,
+        "image": "sha256:f65c61039e7b7fd6e651f7ec2459b880589892cb13cf79c2f71c92aa08fc5144"
+      },
+      "69c1ff3fbb4378903d3bbaf99da06a2e82de2421d90a908d1f1ddd0b23b7baf6": {
+        "name": "/aelev-infrastructure-postgresql-etcd-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.787912597Z",
+        "restart_count": 0,
+        "image": "sha256:f65c61039e7b7fd6e651f7ec2459b880589892cb13cf79c2f71c92aa08fc5144"
+      },
+      "1d043130286c2394dedd988a1874c55bff3361b0e042f78eb005581bdaeb9326": {
+        "name": "/aelev-infrastructure-postgresql-etcd-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:46.821766514Z",
+        "restart_count": 0,
+        "image": "sha256:f65c61039e7b7fd6e651f7ec2459b880589892cb13cf79c2f71c92aa08fc5144"
+      },
+      "91d39d2fce2cbee5eeb21fd7aa65b6ae631bd7ad16b21269c6344c9927090976": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.142586638Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "f084feebfa1844dafb2a754fa0bc6cc13ada45863d6ebe097d3326645ee4e4f3": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.141814221Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "4b52b4e4335cbfd34fbcdcd4bdc615ae84c9e4e61a279e9876c9290e3bfa3d0a": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-1-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.15301918Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "fc6d31d72e33f84f097cfba660f36169194d812b4463d67024f426367d838932": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-2-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.149767221Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "51e19933a4eb31644910976bb1833ecf8bb112ca7f63d0c1691fbffa2eae03bc": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.145822971Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "c7af25af1cc885ddc2cd8983747e96eab63c2b3c0087bccbc176804a2cebfc5f": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-4-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.105502055Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "6c8a06f5e73010b013144139a2d2572aa43628bca4afbfa9cf449caaa7d4eb6c": {
+        "name": "/aelev-infrastructure-minio-minio-site-b-4-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.150661555Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "d47b6cff2f6e00387901dfe8b2ae6e6f399d6ab82ad849588d31f1be9aeed7c6": {
+        "name": "/aelev-infrastructure-minio-minio-site-a-3-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:45.148267096Z",
+        "restart_count": 0,
+        "image": "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38"
+      },
+      "ed940aa568ce7f9f9c2622efb8f8e1bcb417b4d7104af32c3f57d877866a288c": {
+        "name": "/aelev-infrastructure-kafka-kafka-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:26.339208296Z",
+        "restart_count": 0,
+        "image": "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed"
+      },
+      "6e18755e218c5c484f70eb3d59b7296dc3576d4a8d7d823ee3d83f6b47b682de": {
+        "name": "/aelev-infrastructure-keycloak-keycloak-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:30.914803423Z",
+        "restart_count": 0,
+        "image": "sha256:d7eadbf2308972fe94b95c9159bad398620af623244becedf5b8a02a27a25425"
+      },
+      "987b39f20467c92e0209f532e622cc3ef6e257ec332b46ff67684a06aa305757": {
+        "name": "/aelev-infrastructure-keycloak-keycloak-database-1",
+        "status": "running",
+        "started_at": "2026-10-11T07:24:25.282869129Z",
+        "restart_count": 0,
+        "image": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+      },
+      "a8e08b913df17b980c84278ced170e52c68afe3c62ce4a7bb43e5991e458735d": {
+        "name": "/sds-cas2126-redis",
+        "status": "exited",
+        "started_at": "2026-10-05T16:02:45.47894692Z",
+        "restart_count": 0,
+        "image": "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1"
+      },
+      "54f2562b5a8fdbaeae2c7aee85e0b72a1a05e99269bfc8152b8374b8561b8f92": {
+        "name": "/sds-cas2126-pg",
+        "status": "exited",
+        "started_at": "2026-10-05T16:02:44.716484294Z",
+        "restart_count": 0,
+        "image": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+      },
+      "653c59f638429a59d3c57bd7f24f634c7b2b6e2f116e1690a252ad2810b8583e": {
+        "name": "/sds-deps-redis",
+        "status": "exited",
+        "started_at": "2026-10-06T08:27:35.149152384Z",
+        "restart_count": 0,
+        "image": "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1"
+      },
+      "e776276732cb542bae3a2115385d3a793abb1ac50a4384d9802dc35dcf5286d7": {
+        "name": "/sds-deps-postgres",
+        "status": "exited",
+        "started_at": "2026-10-06T08:27:35.120246717Z",
+        "restart_count": 0,
+        "image": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+      },
+      "8d49b5f20663a5da0a7a4fcb8abf7d2fe803850894a7f11ea551c130dc7b8f80": {
+        "name": "/data-collector-celery",
+        "status": "running",
+        "started_at": "2026-10-11T14:24:36.381700135Z",
+        "restart_count": 49,
+        "image": "sha256:0065a686093c1754e24ec1fb94f0de13adb580e7c694083ad7f7ac2dd76f5817"
+      },
+      "637666510b95b7ff081235009a6249011bc0cd05c5d7f7d44fe8bdec243cbba7": {
+        "name": "/data-collector-fastapi",
+        "status": "running",
+        "started_at": "2026-10-08T16:32:29.900580458Z",
+        "restart_count": 0,
+        "image": "sha256:57af1bac162c301bb9045fbb89a434250647627e430a6922d6164367641da9c8"
+      },
+      "914c64f8f99d420fadcd51c551f202329c6753a17820b5a0b8dee1716d1b9998": {
+        "name": "/data-collector-postgres-test",
+        "status": "exited",
+        "started_at": "2026-09-24T08:01:18.865685886Z",
+        "restart_count": 0,
+        "image": "sha256:11a9d238fbb48bab14599c57e41123254452b1a2d93c6c8595bce96f346bd082"
+      },
+      "65057f791cd5ebd40e7047cac93ccf2e42c25d3ff6de314064ec55c2733ce4f7": {
+        "name": "/data-collector-migrate",
+        "status": "exited",
+        "started_at": "2026-09-18T10:24:13.522476889Z",
+        "restart_count": 0,
+        "image": "sha256:7c33fd4dcee99d60aa8a90b30ae6180bcf5f887ed24520ec5897f5507438d8e8"
+      },
+      "ce77e7108a93384196ad83b60ec35320a6d2365c8c274c514ba0e06b0e0e4e6f": {
+        "name": "/data-collector-redis",
+        "status": "exited",
+        "started_at": "2026-09-28T08:35:20.485582759Z",
+        "restart_count": 0,
+        "image": "sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529"
+      },
+      "cb8ebfa45a80349569442201bf85b6359bb7ee765e577e6cf13bfe1ac2a0b10a": {
+        "name": "/mpi-sync-beat",
+        "status": "exited",
+        "started_at": "2026-08-03T16:17:29.411246507Z",
+        "restart_count": 0,
+        "image": "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790"
+      },
+      "3d51064dbf6025634a756775ea2e57fe10958b4ff8c29123dee83c56aca3939b": {
+        "name": "/mpi-sync-fastapi",
+        "status": "exited",
+        "started_at": "2026-08-03T16:17:29.410204382Z",
+        "restart_count": 0,
+        "image": "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790"
+      },
+      "ce366245c839b85a1d2743e3c11f9cbde1f77e6bcf9226e98158f239354e8a47": {
+        "name": "/mpi-sync-celery",
+        "status": "exited",
+        "started_at": "2026-08-03T16:17:29.337390549Z",
+        "restart_count": 0,
+        "image": "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790"
+      },
+      "e656a486bd7f3d7ab6122df373876fda5717e0613e7184b92b627762e9d2b97b": {
+        "name": "/mpi-syncer-postgres-1",
+        "status": "exited",
+        "started_at": "2026-08-03T16:14:26.806827798Z",
+        "restart_count": 0,
+        "image": "sha256:3a82e1f56c8f0f5616a11103ac3d47e632c3938698946a7ad26da0df1334744a"
+      },
+      "59e71f2797d2e72babf322722d1d46dd9593a4666786d2826455719ff81bf91d": {
+        "name": "/mpi-syncer-redis-1",
+        "status": "exited",
+        "started_at": "2026-08-03T16:14:26.805389256Z",
+        "restart_count": 0,
+        "image": "sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529"
+      },
+      "073fce427c6e63690540fe9a05dee56f7027391ba9cf2727e075571d37912303": {
+        "name": "/schedule_service-celery-worker-1",
+        "status": "exited",
+        "started_at": "2026-08-03T12:51:58.591320299Z",
+        "restart_count": 0,
+        "image": "sha256:ac297d5730ebbfc14767d7c7bb6093dcf81787f5a6d366c8ed95d91a929367f6"
+      },
+      "948bf915c24df274b84f8908de299a9051becfaada0e9ce969f990177651275e": {
+        "name": "/schedule_service-schedule-service-1",
+        "status": "exited",
+        "started_at": "2026-08-03T12:51:58.590075174Z",
+        "restart_count": 0,
+        "image": "sha256:bd146052ea584aded9514ca5378779e772435d9a9d785a026f40218dc9414ce7"
+      },
+      "b34774b9461c6b8f5194c66493ba8730ca96429d487b5e0b3a1027877eb966e4": {
+        "name": "/sds-celery-worker",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:50.004534299Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "e017a06ed9edadf848b0d75ff53ce0fc1fb8c14629b69b8fc0ee6c2ef033ab3b": {
+        "name": "/sds-api",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:50.004210716Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "98f612e7abafdfb2095c3869bdd0bf4bc76a31a80cc200d41b71c83379e02080": {
+        "name": "/sds-celery-beat",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:50.002188632Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "5d4d3eb70e06f940519a50bf0618f311db6ef8d4f063e5d51b84da329f8bed5a": {
+        "name": "/sds-migrate",
+        "status": "exited",
+        "started_at": "2026-06-02T13:12:49.428717674Z",
+        "restart_count": 0,
+        "image": "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811"
+      },
+      "cf8a21b28fe18fbe21a56a0142f13f6840a25e5fc46a995dbe2be4932e5116f8": {
+        "name": "/sds-postgres",
+        "status": "exited",
+        "started_at": "2026-06-02T12:57:02.386118013Z",
+        "restart_count": 0,
+        "image": "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416"
+      },
+      "2a8a378bcd9023b9862716cde64a23b570dd925b77470abd0aa504d803315f05": {
+        "name": "/redis-sds",
+        "status": "exited",
+        "started_at": "2026-06-02T12:57:02.385566347Z",
+        "restart_count": 0,
+        "image": "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1"
+      }
+    },
+    "networks": [
+      "06e030f45f693325a142da389c9f985e605e21f268c32d170cdaeda4f261019a",
+      "0c944c188451c443785bbbdb74fbf2113c94a7909242f6b423deacb0725b5c85",
+      "34845c28ba2c641414c7108e0586cbdf8a29581097a0108ec72087bb38ef5fb4",
+      "391228347f6be979e41263ef359f04c176f318b033e68f6ac87f97cf0173eb62",
+      "3b4d72370c8afa995925c67cc6f8ecd91670c79fb4b26ae4e77cb197adf6c83e",
+      "3dc1dcb0622147fc4250f8dd9d0f67081b4e157e20ff643bcc7151d96019a3da",
+      "400c799161abc679b4179cb4141d31f1811628cf9509e20534b6473083ba3546",
+      "51164b270c87e2b295d363818083e2e66bf58581627540a722abf3f521855b8f",
+      "525bffa163cd25fcefc41b3394cd7c447da696ad15d107774e35fae7f2e5336c",
+      "60c1fae819cc065e0e48b5ff3d2c55dc84f6d053f804e4f2137f4c31b56e4684",
+      "765541c64bee332016355dba935358cb792f10cf77bed1c491807641a984b1c7",
+      "7662c2fec5fd6b3d46527625b3da2d1d99ceaf918bad711b9c366bd3e04c3629",
+      "78af4ef989c969bb68a403cabe3f2d6f343678ff1f7a91d795852a30dc79fb06",
+      "82cf4518db6db6c5289abca3bcdc80d4ce3052c5d11c08e413f5318f398ca408",
+      "8b3329361aaed7be2d984604f98941b5196f5dae3c1856626cfaadcdd93cd768",
+      "9208743a968f8eab90f6b80104b771affee6698273549d835a3a49fb3f925194",
+      "99956cf99b02d76206354178bd02c0b8506a13377efc83560c1a4d005fc7126c",
+      "b84730b4923ed0d4dccf5b7b131b88f3729560ee6334373a60eb9685c7e13b0c",
+      "c28d1d18939c1f3279dd21a2d6d1dbf73e34931a5592357a389ca7d22dcf3bb4",
+      "c44fbd1ae1603e5dd9b603756f2ab70cfdeb438fb0581b9738a4f62cee522e88",
+      "ca9613bb7e49bd551560bc7229a0c6429c6c088eecb355f85f57c20d6a6ddef5",
+      "cd438694c7afd25fb9c29b83335ef61693e73489ee154bf582625d9d9e8a4d69",
+      "ded66e2318dab57bb226ea80d7e6d4b332359d8368480b8a01566c99eeb3d6ca",
+      "e4628a8b3b4f730c4ee3bbabab553f22f5662a69be52ffd03723815b96e731a9",
+      "e9ec60e78bf8296fe62ba26b0c7e1149b5b47079706ed094038ca4c49328ff94",
+      "f1b963250b7c5e4bd23063e6dd301ecba26d13dee08cdaa9ac5e7734d4fa3c11",
+      "fd18d8beefa6d81c96d38dbef8dd2f890ccb65c6e38e047dfbba9806ce57d7f4"
+    ],
+    "volumes": [
+      "32807496392a76aa41bb6791a0e2d2da76258a0d0286f32eab965f6e59fee2f5",
+      "36ff35c8cc4e18c07c5c839909645de426283ca189b0e2d3ba69b16a17a95cbe",
+      "428113eff9669aa75de406d79c22b1237c4cc3cf11206884004922f93750d53b",
+      "4d320f8edea21b7a46ff0f824ccf7328a35f590a27b829c725783934687fa775",
+      "54c95804ac504ca65fc1abc4cff7196b7542a006a6d3fa823fcdbb4312fcda01",
+      "585ba26af714def646c1a04a679087bbd22478f8d84e3b0d235d17ca69783631",
+      "622d56b099c575b86dbdd4ba5abc3bba9e1ec42fcc8a231ca5428a800640f6a6",
+      "93a7a009b7a2f8034fdccb0eaff34edb94779f1f49c5c28974ce998b1e30895f",
+      "ae35f25e772be3371a4c0162a7ada91dde560f886a5ec70add62402db93a7e02",
+      "aelev-infrastructure-blackbox-exporter-status",
+      "aelev-infrastructure-delivery-status",
+      "aelev-infrastructure-grafana-status",
+      "aelev-infrastructure-kafka-data",
+      "aelev-infrastructure-kafka-status",
+      "aelev-infrastructure-keycloak-database",
+      "aelev-infrastructure-keycloak-status",
+      "aelev-infrastructure-loki-status",
+      "aelev-infrastructure-minio-site-a-1-data",
+      "aelev-infrastructure-minio-site-a-2-data",
+      "aelev-infrastructure-minio-site-a-3-data",
+      "aelev-infrastructure-minio-site-a-4-data",
+      "aelev-infrastructure-minio-site-b-1-data",
+      "aelev-infrastructure-minio-site-b-2-data",
+      "aelev-infrastructure-minio-site-b-3-data",
+      "aelev-infrastructure-minio-site-b-4-data",
+      "aelev-infrastructure-minio-status",
+      "aelev-infrastructure-observability-collector-data",
+      "aelev-infrastructure-observability-delivery-data",
+      "aelev-infrastructure-observability-grafana-data",
+      "aelev-infrastructure-observability-loki-data",
+      "aelev-infrastructure-observability-prometheus-data",
+      "aelev-infrastructure-observability-tempo-data",
+      "aelev-infrastructure-otel-collector-status",
+      "aelev-infrastructure-platform-ui-data",
+      "aelev-infrastructure-platform-ui-status",
+      "aelev-infrastructure-postgresql-1-data",
+      "aelev-infrastructure-postgresql-2-data",
+      "aelev-infrastructure-postgresql-3-data",
+      "aelev-infrastructure-postgresql-etcd-1-data",
+      "aelev-infrastructure-postgresql-etcd-2-data",
+      "aelev-infrastructure-postgresql-etcd-3-data",
+      "aelev-infrastructure-postgresql-fencing-data",
+      "aelev-infrastructure-postgresql-status",
+      "aelev-infrastructure-prometheus-status",
+      "aelev-infrastructure-tempo-status",
+      "aelev-infrastructure-translator-database",
+      "aelev-infrastructure-translator-service-status",
+      "aelev-infrastructure-translator_translator-model-socket",
+      "c832d4c8d7016a1aae7b4b3cf48320f76dce05c85a5e75ec0f4584c647ee78cf",
+      "cd94fc19f5ef0c60b3b23ad537a3d6fecb970d9ab67929913c090bd770d748e6",
+      "confluence-skill-sync_pgdata",
+      "d1a3c8f2a7e48835ad61469c81936bcfa17061d41f43074e4153fe973b5109d7",
+      "dagvis_postgres_data",
+      "dagvis_redis_data",
+      "e6f1aba8509f7be411a9577c22866434168b76fbb88c0daf7ac42802c4666888",
+      "ffdce1e5d497571db6dfbdf12d17155f77be059b696238c5a15b207f8a05fd26",
+      "fundamentals-to-tickdb_postgres_data",
+      "fundamentals-to-tickdb_redis_data",
+      "mpi-syncer_prom",
+      "sds-deps_sds-postgres-data"
+    ]
+  },
+  "baseline_preserved": true,
+  "experiment_cache_exists": false,
+  "experiment_containers": [],
+  "experiment_images": [],
+  "working_model_image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf",
+  "existing_test_image": "sha256:d58bec554346f523810e6bfb4219538e5f876ceddb0394dae04ced912479b28d"
+}

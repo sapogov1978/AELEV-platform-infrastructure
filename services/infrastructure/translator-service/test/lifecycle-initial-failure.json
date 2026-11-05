@@ -1,0 +1,211 @@
+{
+  "started_at": "2026-10-09T06:55:47.701791+00:00",
+  "project": "aelev-translator-test-df1fe7f747",
+  "status": "FAILED",
+  "phases": [
+    {
+      "name": "Start ALL roles including both initializers",
+      "status": "PASS",
+      "seconds": 26.49,
+      "output": " Network aelev-translator-test-df1fe7f747-kafka Creating \n Network aelev-translator-test-df1fe7f747-kafka Created \n Network aelev-translator-test-df1fe7f747-api Creating \n Network aelev-translator-test-df1fe7f747-api Created \n Network aelev-translator-test-df1fe7f747-data Creating \n Network aelev-translator-test-df1fe7f747-data Created \n Volume aelev-translator-test-df1fe7f747_translator-model-socket Creating \n Volume aelev-translator-test-df1fe7f747_translator-model-socket Created \n Volume aelev-translator-test-df1fe7f747-kafka-data Creating \n Volume aelev-translator-test-df1fe7f747-kafka-data Created \n Volume aelev-translator-test-df1fe7f747-data Creating \n Volume aelev-translator-test-df1fe7f747-data Created \n Container aelev-translator-test-df1fe7f747-translator-database-1 Creating \n Container aelev-translator-test-df1fe7f747-kafka-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-model-1 Creating \n Container aelev-translator-test-df1fe7f747-kafka-1 Created \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-model-1 Created \n Container aelev-translator-test-df1fe7f747-translator-database-1 Created \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Created \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Created \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-api-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Creating \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Created \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Created \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Created \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Created \n Container aelev-translator-test-df1fe7f747-translator-api-1 Created \n Container aelev-translator-test-df1fe7f747-translator-database-1 Starting \n Container aelev-translator-test-df1fe7f747-kafka-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Started \n Container aelev-translator-test-df1fe7f747-translator-database-1 Started \n Container aelev-translator-test-df1fe7f747-translator-database-1 Waiting \n Container aelev-translator-test-df1fe7f747-kafka-1 Started \n Container aelev-translator-test-df1fe7f747-kafka-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-database-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Started \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Waiting \n Container aelev-translator-test-df1fe7f747-kafka-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Started \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-model-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Started \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-api-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Started \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Started \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Started \n Container aelev-translator-test-df1fe7f747-translator-api-1 Started \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Waiting \n Container aelev-translator-test-df1fe7f747-kafka-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-database-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-api-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-database-1 Healthy \n Container aelev-translator-test-df1fe7f747-kafka-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-api-1 Healthy \n"
+    },
+    {
+      "name": "Container states",
+      "status": "PASS",
+      "seconds": 3.17,
+      "output": "sumer\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 08:55:48 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"2d53b94a6ebc\",\"Image\":\"aelev/translator-service:local\",\"Labels\":\"desktop.docker.io/mounts/1/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets/postgres-password,com.docker.compose.config-hash=ca3f64e95d9be7b3c50ba554568730b7dbe584c388c820bfd3d69e853354c6d2,com.docker.compose.depends_on=translator-migrator:service_completed_successfully:false,translator-topic-provisioner:service_completed_successfully:false,com.docker.compose.image=sha256:873cc82d49d92f79dd6a490f4d398f700e9fbfb1cbd13a3e0b7cd7c92a3cf381,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,com.docker.compose.service=translator-outbox,desktop.docker.io/mounts/0/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/0/SourceKind=hostFile,desktop.docker.io/mounts/1/Target=/run/secrets/translator-database-password,com.docker.compose.project=aelev-translator-test-df1fe7f747,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.yml,com.docker.compose.project.environment_file=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/translator.env,desktop.docker.io/mounts/0/Target=/run/secrets/translator,desktop.docker.io/mounts/1/SourceKind=hostFile\",\"LocalVolumes\":\"0\",\"Mounts\":\"/host_mnt/priv…,/host_mnt/priv…\",\"Name\":\"aelev-translator-test-df1fe7f747-translator-outbox-1\",\"Names\":\"aelev-translator-test-df1fe7f747-translator-outbox-1\",\"Networks\":\"aelev-translator-test-df1fe7f747-data,aelev-translator-test-df1fe7f747-kafka\",\"Ports\":\"\",\"Project\":\"aelev-translator-test-df1fe7f747\",\"Publishers\":[],\"RunningFor\":\"29 seconds ago\",\"Service\":\"translator-outbox\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 08:55:48 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"aea6ae8717d7\",\"Image\":\"aelev/translator-service:local\",\"Labels\":\"com.docker.compose.config-hash=cb4bfdc4f5ac2b7c778a0a6982e1266ce6c866025ee674e6182005bf47850615,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.yml,desktop.docker.io/mounts/0/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets,desktop.docker.io/mounts/0/Target=/run/secrets/translator,com.docker.compose.depends_on=translator-topic-provisioner:service_completed_successfully:false,translator-migrator:service_completed_successfully:false,com.docker.compose.project=aelev-translator-test-df1fe7f747,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/1/SourceKind=hostFile,desktop.docker.io/mounts/1/Target=/run/secrets/translator-database-password,desktop.docker.io/ports.scheme=v2,com.docker.compose.service=translator-priority-consumer,com.docker.compose.image=sha256:873cc82d49d92f79dd6a490f4d398f700e9fbfb1cbd13a3e0b7cd7c92a3cf381,com.docker.compose.project.environment_file=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/translator.env,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,desktop.docker.io/mounts/0/SourceKind=hostFile,desktop.docker.io/mounts/1/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets/postgres-password\",\"LocalVolumes\":\"0\",\"Mounts\":\"/host_mnt/priv…,/host_mnt/priv…\",\"Name\":\"aelev-translator-test-df1fe7f747-translator-priority-consumer-1\",\"Names\":\"aelev-translator-test-df1fe7f747-translator-priority-consumer-1\",\"Networks\":\"aelev-translator-test-df1fe7f747-data,aelev-translator-test-df1fe7f747-kafka\",\"Ports\":\"\",\"Project\":\"aelev-translator-test-df1fe7f747\",\"Publishers\":[],\"RunningFor\":\"29 seconds ago\",\"Service\":\"translator-priority-consumer\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 08:55:48 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"e00c8436abcf\",\"Image\":\"aelev/translator-service:local\",\"Labels\":\"desktop.docker.io/ports.scheme=v2,desktop.docker.io/mounts/0/SourceKind=hostFile,com.docker.compose.config-hash=164013f3102f587ade90627ea31f77178dcef4a5ebfdf588fe30ebe476d4bb99,com.docker.compose.version=5.3.0,com.docker.compose.project=aelev-translator-test-df1fe7f747,com.docker.compose.project.environment_file=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/translator.env,desktop.docker.io/mounts/0/Target=/run/secrets/translator,com.docker.compose.image=sha256:873cc82d49d92f79dd6a490f4d398f700e9fbfb1cbd13a3e0b7cd7c92a3cf381,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.yml,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,com.docker.compose.service=translator-topic-provisioner,desktop.docker.io/mounts/0/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets,com.docker.compose.container-number=1,com.docker.compose.depends_on=kafka:service_healthy:false\",\"LocalVolumes\":\"0\",\"Mounts\":\"/host_mnt/priv…\",\"Name\":\"aelev-translator-test-df1fe7f747-translator-topic-provisioner-1\",\"Names\":\"aelev-translator-test-df1fe7f747-translator-topic-provisioner-1\",\"Networks\":\"aelev-translator-test-df1fe7f747-kafka\",\"Ports\":\"\",\"Project\":\"aelev-translator-test-df1fe7f747\",\"Publishers\":[],\"RunningFor\":\"29 seconds ago\",\"Service\":\"translator-topic-provisioner\",\"Size\":\"0B\",\"State\":\"exited\",\"Status\":\"Exited (0) 12 seconds ago\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 08:55:48 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"0628322a293d\",\"Image\":\"aelev/translator-service:local\",\"Labels\":\"desktop.docker.io/mounts/0/SourceKind=hostFile,com.docker.compose.oneoff=False,com.docker.compose.project=aelev-translator-test-df1fe7f747,com.docker.compose.service=translator-worker,desktop.docker.io/mounts/1/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets/postgres-password,com.docker.compose.project.environment_file=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/translator.env,desktop.docker.io/mounts/0/Source=/var/folders/q2/mm402y2x65n_mf8x34bw2hlw0000gp/T/aelev-translator-test-qb6ra33m/secrets,desktop.docker.io/mounts/1/SourceKind=hostFile,desktop.docker.io/mounts/0/Target=/run/secrets/translator,com.docker.compose.config-hash=ff4869f9275d52e3d9c6e4370be3ad169442069d481abb2f4ebe26c298aafe19,com.docker.compose.depends_on=translator-migrator:service_completed_successfully:false,translator-model:service_healthy:false,com.docker.compose.image=sha256:873cc82d49d92f79dd6a490f4d398f700e9fbfb1cbd13a3e0b7cd7c92a3cf381,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.yml,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/1/Target=/run/secrets/translator-database-password\",\"LocalVolumes\":\"1\",\"Mounts\":\"/host_mnt/priv…,/host_mnt/priv…,aelev-translat…\",\"Name\":\"aelev-translator-test-df1fe7f747-translator-worker-1\",\"Names\":\"aelev-translator-test-df1fe7f747-translator-worker-1\",\"Networks\":\"aelev-translator-test-df1fe7f747-data\",\"Ports\":\"\",\"Project\":\"aelev-translator-test-df1fe7f747\",\"Publishers\":[],\"RunningFor\":\"29 seconds ago\",\"Service\":\"translator-worker\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 15 seconds\"}\n"
+    },
+    {
+      "name": "Exactly ten services",
+      "status": "PASS"
+    },
+    {
+      "name": "kafka running",
+      "status": "PASS"
+    },
+    {
+      "name": "kafka healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-api running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-api healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-database running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-database healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-migrator completed",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-model running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-model healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-normal-consumer running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-outbox running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-priority-consumer running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-topic-provisioner completed",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-worker running",
+      "status": "PASS"
+    },
+    {
+      "name": "API endpoint",
+      "status": "PASS",
+      "seconds": 0.07,
+      "output": "127.0.0.1:55000\n"
+    },
+    {
+      "name": "Readiness HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "name": "Kafka send",
+      "status": "PASS",
+      "seconds": 4.2,
+      "output": "{\"request_id\": \"0b2fa0f7-cbed-418b-b3d1-b076b571f441\", \"topic\": \"translation.requests.priority.v1\"}\n"
+    },
+    {
+      "name": "Kafka receive",
+      "status": "PASS",
+      "seconds": 6.3,
+      "output": "[{\"sha256\": \"sha256:02f3947bbfcb2b0661c78b97a76daae7894a7e5f156d2c62f8eb65615844bcdb\", \"translated_text\": \"Zentralbank von Deutschland\"}]\n"
+    },
+    {
+      "name": "Kafka send",
+      "status": "PASS",
+      "seconds": 4.52,
+      "output": "{\"request_id\": \"0b2fa0f7-cbed-418b-b3d1-b076b571f441\", \"topic\": \"translation.requests.priority.v1\"}\n"
+    },
+    {
+      "name": "Kafka receive",
+      "status": "PASS",
+      "seconds": 5.27,
+      "output": "[{\"sha256\": \"sha256:02f3947bbfcb2b0661c78b97a76daae7894a7e5f156d2c62f8eb65615844bcdb\", \"translated_text\": \"Zentralbank von Deutschland\"}, {\"sha256\": \"sha256:02f3947bbfcb2b0661c78b97a76daae7894a7e5f156d2c62f8eb65615844bcdb\", \"translated_text\": \"Zentralbank von Deutschland\"}]\n"
+    },
+    {
+      "name": "Duplicate republishes identical saved bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Kafka state",
+      "status": "PASS",
+      "seconds": 5.63,
+      "output": "{\"state\": \"SUCCEEDED\", \"priority\": 0, \"attempt_count\": 1, \"pending_outbox\": false}\n"
+    },
+    {
+      "name": "Priority computed once",
+      "status": "PASS"
+    },
+    {
+      "name": "Stop worker",
+      "status": "PASS",
+      "seconds": 0.41,
+      "output": " Container aelev-translator-test-df1fe7f747-translator-worker-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Stopped \n"
+    },
+    {
+      "name": "Kafka send",
+      "status": "PASS",
+      "seconds": 4.77,
+      "output": "{\"request_id\": \"fc4f1d67-4b45-4cb7-b2da-46fa4773268b\", \"topic\": \"translation.requests.v1\"}\n"
+    },
+    {
+      "name": "Kafka state",
+      "status": "PASS",
+      "seconds": 7.01,
+      "output": "{\"state\": \"PENDING\", \"priority\": 100, \"attempt_count\": 0, \"pending_outbox\": false}\n"
+    },
+    {
+      "name": "Normal queue stored while worker stopped",
+      "status": "PASS"
+    },
+    {
+      "name": "Stop every container preserving volumes",
+      "status": "PASS",
+      "seconds": 2.14,
+      "output": " Container aelev-translator-test-df1fe7f747-translator-api-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-model-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-model-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-api-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-database-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Stopped \n Container aelev-translator-test-df1fe7f747-kafka-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-database-1 Stopped \n Container aelev-translator-test-df1fe7f747-kafka-1 Stopped \n"
+    },
+    {
+      "name": "Restart ALL roles",
+      "status": "FAIL",
+      "seconds": 609.96,
+      "output": " Container aelev-translator-test-df1fe7f747-translator-database-1 Starting \n Container aelev-translator-test-df1fe7f747-kafka-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Started \n Container aelev-translator-test-df1fe7f747-kafka-1 Started \n Container aelev-translator-test-df1fe7f747-kafka-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-database-1 Started \n Container aelev-translator-test-df1fe7f747-translator-database-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-database-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Started \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Waiting \n Container aelev-translator-test-df1fe7f747-kafka-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Started \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-model-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Started \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Started \ntimeout waiting for dependencies\n"
+    },
+    {
+      "name": "Failure diagnostics",
+      "status": "PASS",
+      "seconds": 3.14,
+      "output": "09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-32 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-28 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-7 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-40 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-3 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-36 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-47 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,958] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-14 in 25 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,964] INFO Loaded member MemberMetadata(memberId=translator-service-aea6ae8717d7-ec7f130d-6e84-4ec0-8b94-5f04c4f63501, groupInstanceId=None, clientId=translator-service-aea6ae8717d7, clientHost=/172.18.0.3, sessionTimeoutMs=45000, rebalanceTimeoutMs=300000, supportedProtocols=List(range)) in group aelev-translator-priority-v1 with generation 1. (kafka.coordinator.group.GroupMetadata$)\nkafka-1                         | [2026-10-09 06:56:59,964] INFO [GroupCoordinator 1]: Loading group metadata for aelev-translator-priority-v1 with generation 2 (kafka.coordinator.group.GroupCoordinator)\nkafka-1                         | [2026-10-09 06:56:59,964] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-43 in 31 milliseconds for epoch 2, of which 25 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,964] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-10 in 31 milliseconds for epoch 2, of which 31 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,969] INFO Loaded member MemberMetadata(memberId=translator-service-3fa4a395faf5-3e673144-0e59-44ff-835e-8970e83f4785, groupInstanceId=None, clientId=translator-service-3fa4a395faf5, clientHost=/172.18.0.5, sessionTimeoutMs=45000, rebalanceTimeoutMs=300000, supportedProtocols=List(range)) in group test-cddd93bfded143c7b3754e3ed166d12a with generation 1. (kafka.coordinator.group.GroupMetadata$)\nkafka-1                         | [2026-10-09 06:56:59,969] INFO [GroupCoordinator 1]: Loading group metadata for test-cddd93bfded143c7b3754e3ed166d12a with generation 2 (kafka.coordinator.group.GroupCoordinator)\nkafka-1                         | [2026-10-09 06:56:59,969] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-22 in 36 milliseconds for epoch 2, of which 31 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,969] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-18 in 36 milliseconds for epoch 2, of which 36 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,969] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-31 in 36 milliseconds for epoch 2, of which 36 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,970] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-27 in 37 milliseconds for epoch 2, of which 37 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,970] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-39 in 37 milliseconds for epoch 2, of which 37 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,970] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-6 in 37 milliseconds for epoch 2, of which 37 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,974] INFO Loaded member MemberMetadata(memberId=translator-service-3fa4a395faf5-a696697a-cc56-4282-a74d-ca247a8a89ba, groupInstanceId=None, clientId=translator-service-3fa4a395faf5, clientHost=/172.18.0.5, sessionTimeoutMs=45000, rebalanceTimeoutMs=300000, supportedProtocols=List(range)) in group test-57bc7f31664c43c8a6f60175a3041961 with generation 1. (kafka.coordinator.group.GroupMetadata$)\nkafka-1                         | [2026-10-09 06:56:59,974] INFO [GroupCoordinator 1]: Loading group metadata for test-57bc7f31664c43c8a6f60175a3041961 with generation 2 (kafka.coordinator.group.GroupCoordinator)\nkafka-1                         | [2026-10-09 06:56:59,974] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-35 in 41 milliseconds for epoch 2, of which 37 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 06:56:59,974] INFO [GroupMetadataManager brokerId=1] Finished loading offsets and group metadata from __consumer_offsets-2 in 41 milliseconds for epoch 2, of which 41 milliseconds was spent in the scheduler. (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 07:06:59,725] INFO [NodeToControllerChannelManager id=1 name=registration] Node 1 disconnected. (org.apache.kafka.clients.NetworkClient)\nkafka-1                         | [2026-10-09 07:06:59,763] INFO [GroupMetadataManager brokerId=1] Group test-57bc7f31664c43c8a6f60175a3041961 transitioned to Dead in generation 2 (kafka.coordinator.group.GroupMetadataManager)\nkafka-1                         | [2026-10-09 07:06:59,766] INFO [GroupMetadataManager brokerId=1] Group test-cddd93bfded143c7b3754e3ed166d12a transitioned to Dead in generation 2 (kafka.coordinator.group.GroupMetadataManager)\n"
+    },
+    {
+      "name": "Delete only test resources",
+      "status": "PASS",
+      "seconds": 21.48,
+      "output": " Container aelev-translator-test-df1fe7f747-translator-worker-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-api-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-api-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-api-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-normal-consumer-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-outbox-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-api-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-model-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-model-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-model-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-model-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Removed \n Container aelev-translator-test-df1fe7f747-translator-database-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Removed \n Container aelev-translator-test-df1fe7f747-kafka-1 Stopping \n Container aelev-translator-test-df1fe7f747-translator-database-1 Stopped \n Container aelev-translator-test-df1fe7f747-translator-database-1 Removing \n Container aelev-translator-test-df1fe7f747-translator-database-1 Removed \n Container aelev-translator-test-df1fe7f747-kafka-1 Stopped \n Container aelev-translator-test-df1fe7f747-kafka-1 Removing \n Container aelev-translator-test-df1fe7f747-kafka-1 Removed \n Network aelev-translator-test-df1fe7f747-api Removing \n Volume aelev-translator-test-df1fe7f747-kafka-data Removing \n Network aelev-translator-test-df1fe7f747-data Removing \n Volume aelev-translator-test-df1fe7f747_translator-model-socket Removing \n Network aelev-translator-test-df1fe7f747-kafka Removing \n Volume aelev-translator-test-df1fe7f747-data Removing \n Volume aelev-translator-test-df1fe7f747-data Removed \n Volume aelev-translator-test-df1fe7f747-kafka-data Removed \n Volume aelev-translator-test-df1fe7f747_translator-model-socket Removed \n Network aelev-translator-test-df1fe7f747-kafka Removed \n Network aelev-translator-test-df1fe7f747-api Removed \n Network aelev-translator-test-df1fe7f747-data Removed \n"
+    },
+    {
+      "name": "Check cleanup: container",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "No remaining container",
+      "status": "PASS"
+    },
+    {
+      "name": "Check cleanup: network",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "No remaining network",
+      "status": "PASS"
+    },
+    {
+      "name": "Check cleanup: volume",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "No remaining volume",
+      "status": "PASS"
+    }
+  ],
+  "cleanup_ok": true,
+  "not_tested": [
+    "Remote TLS/mTLS and ACL",
+    "Multiple physical hosts",
+    "Load test"
+  ],
+  "failure": "Restart ALL roles: exit 1\n Container aelev-translator-test-df1fe7f747-translator-database-1 Starting \n Container aelev-translator-test-df1fe7f747-kafka-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Started \n Container aelev-translator-test-df1fe7f747-kafka-1 Started \n Container aelev-translator-test-df1fe7f747-kafka-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-database-1 Started \n Container aelev-translator-test-df1fe7f747-translator-database-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-database-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Started \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-model-1 Waiting \n Container aelev-translator-test-df1fe7f747-kafka-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Started \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-topic-provisioner-1 Waiting \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-model-1 Healthy \n Container aelev-translator-test-df1fe7f747-translator-migrator-1 Exited \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-worker-1 Started \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Starting \n Container aelev-translator-test-df1fe7f747-translator-priority-consumer-1 Started \ntimeout waiting for dependencies\n",
+  "finished_at": "2026-10-09T07:07:32.381239+00:00"
+}

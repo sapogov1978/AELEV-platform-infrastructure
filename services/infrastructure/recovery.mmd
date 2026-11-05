@@ -1,0 +1,47 @@
+stateDiagram-v2
+    state "Наблюдение" as Watching
+    state "Пауза между попытками" as Backoff
+    state "Редкая пробная попытка" as Cooldown
+    state "Проверка владельца и guard" as Guard
+    state "Устойчивое намерение и одна команда" as Action
+    state "Защитный отказ" as Blocked
+    state "Ручное удержание" as Held
+    state "Ручная остановка процесса" as Stopped
+    state "Точная opt-in регистрация" as Registration
+    state "Импорт проверенной прежней истории" as History
+    state "Проверка сохранённого TARGET_REPLACED" as Release
+    state "Пауза после resume" as Resume
+    state "Ожидание Compose-зависимостей" as Dependencies
+    state "Устойчивая передача новой Compose-инкарнации" as Handoff
+    [*] --> History: отдельное одобрение точной квитанции
+    History --> Blocked: прежние attempts сохранены, start не выполняется
+    Blocked --> Release: отдельное одобрение и здоровая точная инкарнация
+    Release --> Blocked: причина архивирована, обычный CIRCUIT_OPEN сохранён
+    Blocked --> Watching: явный auto-enable без защитного удержания
+    [*] --> Registration: полный fingerprint и healthy; без отдельного guard
+    Registration --> Watching: прежний auto-enable; история сохранена, старт не выполняется
+    [*] --> Watching: явный перевод точной живой цели
+    Watching --> Watching: 30 минут healthy завершают серию, история остаётся
+    Watching --> Watching: непрерывный поток сохраняет события, отставание откладывает запуск
+    Watching --> Watching: поздний die ожидается без сдвига начала интервала
+    Watching --> Resume: разрыв проходов больше 120 секунд
+    Resume --> Watching: 120 секунд без воздействий
+    Watching --> Handoff: тот же name/project/service, предшественник отсутствует
+    Handoff --> Watching: 30 секунд healthy, история и серия переданы
+    Backoff --> Dependencies: срок попытки наступил
+    Dependencies --> Backoff: зависимость ещё не готова, attempts неизменны
+    Dependencies --> Guard: граф готов
+    Watching --> Backoff: единственный die той же инкарнации; интервал полностью покрыт
+    Watching --> Backoff: подтверждённая неисправность
+    Backoff --> Guard: срок попытки наступил
+    Guard --> Backoff: временно не допущено
+    Guard --> Action: проверки положительны
+    Action --> Watching: новая инкарнация подтверждена
+    Action --> Cooldown: серия достигла трёх попыток
+    Cooldown --> Guard: не чаще раза в 15 минут
+    Guard --> Blocked: подмена или потеря доказательства
+    Action --> Blocked: исход не подтверждён, повтор запрещён
+    Watching --> Stopped: операторская остановка
+    Stopped --> Watching: внешний start и новая здоровая инкарнация
+    Watching --> Held: явное suspend
+    Backoff --> Held: операторское удержание

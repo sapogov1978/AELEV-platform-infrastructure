@@ -1,0 +1,37 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_DELIVERY_",
+  "role": "delivery",
+  "ports": [
+    "PORT",
+    "HEALTH_PORT"
+  ],
+  "integers": [
+    "CAPACITY_BYTES",
+    "REQUEST_BYTES",
+    "RETRY_SECONDS",
+    "TIMEOUT_SECONDS"
+  ],
+  "durations": [],
+  "https": [
+    "LOGS_URL",
+    "TRACES_URL",
+    "METRICS_URL",
+    "OTLP_METRICS_URL"
+  ],
+  "optional": [],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key",
+    "publisher-ca.crt"
+  ],
+  "templates": [
+    {
+      "source": "config/delivery.json",
+      "target": "delivery.json"
+    }
+  ],
+  "publisher_ca": true
+}

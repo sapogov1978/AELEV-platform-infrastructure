@@ -1,0 +1,7 @@
+.env
+.venv/
+runtime/
+secrets/
+__pycache__/
+.pytest_cache/
+.ruff_cache/

@@ -1,0 +1,95 @@
+{
+  "started_at": "2026-10-09T07:16:30.828551+00:00",
+  "status": "FAILED",
+  "phases": [
+    {
+      "name": "Resolve real Kafka",
+      "status": "PASS",
+      "seconds": 0.09,
+      "output": ""
+    },
+    {
+      "name": "Resolve real translator",
+      "status": "PASS",
+      "seconds": 0.05,
+      "output": ""
+    },
+    {
+      "name": "Kafka owns exactly one broker",
+      "status": "PASS"
+    },
+    {
+      "name": "Translator does not create a second broker",
+      "status": "PASS"
+    },
+    {
+      "name": "Translator uses the real Kafka network",
+      "status": "PASS"
+    },
+    {
+      "name": "Kafka before test",
+      "status": "PASS",
+      "seconds": 0.05,
+      "output": ""
+    },
+    {
+      "name": "Translator before test",
+      "status": "PASS",
+      "seconds": 0.05,
+      "output": ""
+    },
+    {
+      "name": "Start real infrastructure Kafka",
+      "status": "PASS",
+      "seconds": 9.75,
+      "output": " Network aelev-infrastructure-kafka Creating \n Network aelev-infrastructure-kafka Created \n Volume aelev-infrastructure-kafka-data Creating \n Volume aelev-infrastructure-kafka-data Created \n Container aelev-infrastructure-kafka-kafka-1 Creating \n Container aelev-infrastructure-kafka-kafka-1 Created \n Container aelev-infrastructure-kafka-kafka-1 Starting \n Container aelev-infrastructure-kafka-kafka-1 Started \n Container aelev-infrastructure-kafka-kafka-1 Waiting \n Container aelev-infrastructure-kafka-kafka-1 Healthy \n"
+    },
+    {
+      "name": "Start ALL real translator roles including both initializers",
+      "status": "FAIL",
+      "seconds": 1.5,
+      "output": " Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 Pulling \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Image aelev/translator-service:kafka-v3 pull access denied for aelev/translator-service, repository does not exist or may require 'docker login' \n Network aelev-infrastructure-translator-data Creating \n Network aelev-infrastructure-translator-data Created \n Network aelev-infrastructure-translator-ingress Creating \n Network aelev-infrastructure-translator-ingress Created \n Volume aelev-infrastructure-translator_translator-model-socket Creating \n Volume aelev-infrastructure-translator_translator-model-socket Created \n Volume aelev-infrastructure-translator-database Creating \n Volume aelev-infrastructure-translator-database Created \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Creating \n Container aelev-infrastructure-translator-translator-database-1 Creating \n Container aelev-infrastructure-translator-translator-model-1 Creating \n service:translator-model:1 Error response from daemon: No such image: aelev/translator-service:kafka-v3 \nError response from daemon: No such image: aelev/translator-service:kafka-v3\n"
+    },
+    {
+      "name": "Initializer diagnostics",
+      "status": "PASS",
+      "seconds": 0.07,
+      "output": ""
+    },
+    {
+      "name": "Stop translator; retain ALL data and resources",
+      "status": "PASS",
+      "seconds": 0.06,
+      "output": " Container aelev-infrastructure-translator-translator-database-1 Stopping \n Container aelev-infrastructure-translator-translator-database-1 Stopped \n"
+    },
+    {
+      "name": "Stop Kafka; retain ALL data and resources",
+      "status": "PASS",
+      "seconds": 0.69,
+      "output": " Container aelev-infrastructure-kafka-kafka-1 Stopping \n Container aelev-infrastructure-kafka-kafka-1 Stopped \n"
+    },
+    {
+      "name": "Translator final states",
+      "status": "PASS",
+      "seconds": 0.07,
+      "output": "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-10-09 09:16:42 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"a1c9b53c1323\",\"Image\":\"postgres:17.6-alpine\",\"Labels\":\"com.docker.compose.project=aelev-infrastructure-translator,desktop.docker.io/mounts/0/SourceKind=hostFile,com.docker.compose.config-hash=e90f489aaedeabce6c7c18ea39603a47c3195adadca4e1295aa7ec4a1cb7d46e,com.docker.compose.oneoff=False,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,com.docker.compose.service=translator-database,desktop.docker.io/mounts/1/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets/postgres-password,desktop.docker.io/mounts/1/SourceKind=hostFile,desktop.docker.io/mounts/1/Target=/run/secrets/translator-database-password,com.docker.compose.container-number=1,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.remote.yml,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/translator-service/.env,desktop.docker.io/mounts/0/Target=/run/secrets/translator,com.docker.compose.depends_on=,com.docker.compose.image=sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/0/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets,desktop.docker.io/ports.scheme=v2\",\"LocalVolumes\":\"1\",\"Mounts\":\"/host_mnt/User…,/host_mnt/User…,aelev-infrastr…\",\"Name\":\"aelev-infrastructure-translator-translator-database-1\",\"Names\":\"aelev-infrastructure-translator-translator-database-1\",\"Networks\":\"aelev-infrastructure-translator-data\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-translator\",\"Publishers\":[],\"RunningFor\":\"1 second ago\",\"Service\":\"translator-database\",\"Size\":\"0B\",\"State\":\"created\",\"Status\":\"Created\"}\n"
+    },
+    {
+      "name": "Kafka final state",
+      "status": "PASS",
+      "seconds": 0.04,
+      "output": "{\"Command\":\"\\\"/__cacert_entrypoin…\\\"\",\"CreatedAt\":\"2026-10-09 09:16:31 +0200 CEST\",\"ExitCode\":143,\"Health\":\"\",\"ID\":\"2aad0e91ecad\",\"Image\":\"apache/kafka:3.9.1\",\"Labels\":\"desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/9092/tcp=127.0.0.1:19092,org.label-schema.name=kafka,com.docker.compose.project=aelev-infrastructure-kafka,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/kafka/.env,com.docker.compose.service=kafka,maintainer=Apache Kafka,com.docker.compose.config-hash=ebba38d861429276d0d83afb6e93f0a52c185591776041d0b6bdc74ef9ec25fb,org.label-schema.build-date=2025-05-12,com.docker.compose.container-number=1,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/kafka/compose.yml,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/kafka,org.label-schema.description=Apache Kafka,org.label-schema.vcs-url=https://github.com/apache/kafka,com.docker.compose.depends_on=,com.docker.compose.image=sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed,com.docker.compose.oneoff=False,com.docker.compose.version=5.3.0\",\"LocalVolumes\":\"3\",\"Mounts\":\"0b4d4d2269e2ca…,b32012dd10fcc0…,aelev-infrastr…\",\"Name\":\"aelev-infrastructure-kafka-kafka-1\",\"Names\":\"aelev-infrastructure-kafka-kafka-1\",\"Networks\":\"aelev-infrastructure-kafka\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-kafka\",\"Publishers\":[],\"RunningFor\":\"12 seconds ago\",\"Service\":\"kafka\",\"Size\":\"0B\",\"State\":\"exited\",\"Status\":\"Exited (143) Less than a second ago\"}\n"
+    }
+  ],
+  "stopped": true,
+  "not_tested": [
+    "Remote TLS/mTLS and ACL",
+    "Multiple physical hosts",
+    "Load test"
+  ],
+  "resources": "Real Kafka and translator deliveries, working .env and persistent volumes",
+  "kafka_project": "aelev-infrastructure-kafka",
+  "translator_project": "aelev-infrastructure-translator",
+  "failure": "Start ALL real translator roles including both initializers: exit 1",
+  "finished_at": "2026-10-09T07:16:43.252409+00:00"
+}

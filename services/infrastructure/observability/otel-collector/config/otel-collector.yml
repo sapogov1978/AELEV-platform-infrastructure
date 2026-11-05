@@ -1,0 +1,90 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+        tls: &ingress_tls
+          cert_file: /run/secrets/observability/server.crt
+          key_file: /run/secrets/observability/server.key
+          client_ca_file: /run/secrets/observability/publisher-ca.crt
+          min_version: "1.2"
+      http:
+        endpoint: 0.0.0.0:4318
+        tls: *ingress_tls
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+    tls:
+      cert_file: /run/secrets/observability/server.crt
+      key_file: /run/secrets/observability/server.key
+      client_ca_file: /run/secrets/observability/ca.crt
+      min_version: "1.2"
+  file_storage:
+    directory: /var/lib/otelcol
+    create_directory: false
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: ${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_MEMORY_MIB}
+    spike_limit_mib: 48
+  batch:
+    timeout: 1s
+
+exporters:
+  otlp/tempo:
+    endpoint: ${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_TRACES_GRPC_ENDPOINT}
+    tls: &backend_tls
+      ca_file: /run/secrets/observability/ca.crt
+      cert_file: /run/secrets/observability/client.crt
+      key_file: /run/secrets/observability/client.key
+      min_version: "1.2"
+    sending_queue: &persistent_queue
+      storage: file_storage
+      queue_size: ${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_QUEUE_SIZE}
+    retry_on_failure:
+      max_elapsed_time: 0s
+  otlphttp/loki:
+    endpoint: ${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_LOGS_URL}
+    tls: *backend_tls
+    sending_queue: *persistent_queue
+    retry_on_failure:
+      max_elapsed_time: 0s
+  prometheus:
+    endpoint: 0.0.0.0:9464
+    tls:
+      cert_file: /run/secrets/observability/server.crt
+      key_file: /run/secrets/observability/server.key
+      client_ca_file: /run/secrets/observability/ca.crt
+      min_version: "1.2"
+
+service:
+  extensions: [health_check, file_storage]
+  telemetry:
+    logs:
+      encoding: json
+    metrics:
+      readers:
+        - periodic:
+            interval: 10000
+            exporter:
+              otlp:
+                protocol: http/protobuf
+                endpoint: ${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_SELF_OTLP_URL}
+                certificate: /run/secrets/observability/ca.crt
+                client_certificate: /run/secrets/observability/telemetry.crt
+                client_key: /run/secrets/observability/telemetry.key
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/tempo]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlphttp/loki]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus]

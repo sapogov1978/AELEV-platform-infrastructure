@@ -1,0 +1,394 @@
+name: ${AELEV_INFRASTRUCTURE_MINIO_COMPOSE_PROJECT:?set AELEV_INFRASTRUCTURE_MINIO_COMPOSE_PROJECT in the MinIO .env file}
+
+x-root-user-mount: &root-user-mount
+  type: bind
+  source: ./secrets/root-user
+  target: /run/secrets/minio-root-user
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-root-password-mount: &root-password-mount
+  type: bind
+  source: ./secrets/root-password
+  target: /run/secrets/minio-root-password
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-site-a-tls-mount: &site-a-tls-mount
+  type: bind
+  source: ./secrets/site-a
+  target: /certs
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-site-b-tls-mount: &site-b-tls-mount
+  type: bind
+  source: ./secrets/site-b
+  target: /certs
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-sites-ca-mount: &sites-ca-mount
+  type: bind
+  source: ./secrets/sites-ca.crt
+  target: /certs/CAs/aelev-minio-sites.crt
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-minio-image: &minio-image
+  image: aelev/minio-server:RELEASE.2025-04-22T22-12-26Z
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: runtime
+    args:
+      MINIO_RELEASE: RELEASE.2025-04-22T22-12-26Z
+      MINIO_COMMIT: 0d7408fc9969caf07de6a8c3a84f9fbb10a6739e
+      MC_RELEASE: RELEASE.2025-04-16T18-13-26Z
+      MC_COMMIT: b00526b153a31b36767991a4f5ce2cced435ee8e
+
+x-minio-node: &minio-node
+  <<: *minio-image
+  restart: "no"
+  environment:
+    MINIO_ROOT_USER_FILE: /run/secrets/minio-root-user
+    MINIO_ROOT_PASSWORD_FILE: /run/secrets/minio-root-password
+    MINIO_BROWSER: "off"
+    MINIO_STORAGE_CLASS_STANDARD: ${AELEV_INFRASTRUCTURE_MINIO_PARITY:?set AELEV_INFRASTRUCTURE_MINIO_PARITY in the MinIO .env file}
+  healthcheck:
+    test: ["CMD", "minio-healthcheck"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 20s
+  networks:
+    minio: {}
+    minio-ingress: {}
+
+x-minio-client: &minio-client
+  <<: *minio-image
+
+x-site-a-node: &site-a-node
+  <<: *minio-node
+  command:
+    - server
+    - --certs-dir
+    - /certs
+    - --anonymous
+    - --json
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT in the MinIO .env file}
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT in the MinIO .env file}
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT in the MinIO .env file}
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT in the MinIO .env file}
+
+x-site-b-node: &site-b-node
+  <<: *minio-node
+  command:
+    - server
+    - --certs-dir
+    - /certs
+    - --anonymous
+    - --json
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT in the MinIO .env file}
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT in the MinIO .env file}
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT in the MinIO .env file}
+    - ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT in the MinIO .env file}
+
+x-ui-status-environment: &ui-status-environment
+  AELEV_INFRASTRUCTURE_MINIO_UI_URL: ${AELEV_INFRASTRUCTURE_MINIO_UI_URL:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_MINIO_UI_IDENTITY_URL:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_REALM: ${AELEV_INFRASTRUCTURE_MINIO_UI_REALM:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_MINIO_UI_CLIENT_ID:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_MINIO_UI_AUDIENCE:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_MINIO_UI_MODULE_ID:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_MINIO_UI_INTERVAL_SECONDS:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_MINIO_UI_TIMEOUT_SECONDS:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT:?set in the minio .env file}
+  AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT:?set in the minio .env file}
+
+services:
+  minio-status-publisher:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_UI_IMAGE:?set in the minio .env file}
+    build: &status-build
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args:
+        PYTHON_IMAGE: ${AELEV_INFRASTRUCTURE_MINIO_UI_PYTHON_IMAGE:?set in the MinIO .env file}
+    profiles: [ui]
+    entrypoint: ["python", "/opt/aelev/status_publisher.py"]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_GID:?set in the minio .env file}"]
+    environment: *ui-status-environment
+    restart: ${AELEV_INFRASTRUCTURE_MINIO_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+    mem_limit: ${AELEV_INFRASTRUCTURE_MINIO_UI_MEMORY_LIMIT:?set in the minio .env file}
+    volumes:
+      - minio-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_ROOT:?set in the minio .env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [minio, minio-ingress]
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/publisher-health.py", "AELEV_INFRASTRUCTURE_MINIO_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  minio-status-provision:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_UI_IMAGE:?set in the minio .env file}
+    build: *status-build
+    profiles: [provision]
+    entrypoint: ["python", "/opt/aelev/status_publisher.py"]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_MINIO_UI_PROVISION_UID:?set in the minio .env file}:${AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_GID:?set in the minio .env file}"
+    environment: *ui-status-environment
+    restart: "no"
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_ROOT:?set in the minio .env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_MINIO_UI_ADMIN_ROOT:?set in the minio .env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [minio, minio-ingress]
+
+
+  minio-site-a-1:
+    <<: *site-a-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-a-1-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-a-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-a, minio-site-a-1]
+      minio-ingress: {}
+
+  minio-site-a-2:
+    <<: *site-a-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-a-2-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-a-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-a, minio-site-a-2]
+      minio-ingress: {}
+
+  minio-site-a-3:
+    <<: *site-a-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-a-3-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-a-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-a, minio-site-a-3]
+      minio-ingress: {}
+
+  minio-site-a-4:
+    <<: *site-a-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-a-4-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-a-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-a, minio-site-a-4]
+      minio-ingress: {}
+
+  minio-site-b-1:
+    <<: *site-b-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-b-1-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-b-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-b, minio-site-b-1]
+      minio-ingress: {}
+
+  minio-site-b-2:
+    <<: *site-b-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-b-2-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-b-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-b, minio-site-b-2]
+      minio-ingress: {}
+
+  minio-site-b-3:
+    <<: *site-b-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-b-3-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-b-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-b, minio-site-b-3]
+      minio-ingress: {}
+
+  minio-site-b-4:
+    <<: *site-b-node
+    ports:
+      - "${AELEV_INFRASTRUCTURE_MINIO_BIND:?set AELEV_INFRASTRUCTURE_MINIO_BIND in the MinIO .env file}:${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_PORT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_PORT in the MinIO .env file}:9000"
+    volumes:
+      - minio-site-b-4-data:/data
+      - *root-user-mount
+      - *root-password-mount
+      - *site-b-tls-mount
+    networks:
+      minio:
+        aliases: [minio-site-b, minio-site-b-4]
+      minio-ingress: {}
+
+  site-replication-applier:
+    <<: *minio-client
+    profiles: [provision]
+    entrypoint: ["/bin/sh", "/opt/aelev/configure-site-replication.sh"]
+    environment:
+      AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT in the MinIO .env file}
+      AELEV_INFRASTRUCTURE_MINIO_SITE_B_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_ENDPOINT in the MinIO .env file}
+      MC_CONFIG_DIR: /tmp/mc
+    depends_on:
+      minio-site-a-1: {condition: service_healthy}
+      minio-site-a-2: {condition: service_healthy}
+      minio-site-a-3: {condition: service_healthy}
+      minio-site-a-4: {condition: service_healthy}
+      minio-site-b-1: {condition: service_healthy}
+      minio-site-b-2: {condition: service_healthy}
+      minio-site-b-3: {condition: service_healthy}
+      minio-site-b-4: {condition: service_healthy}
+    volumes:
+      - type: bind
+        source: ./configure-site-replication.sh
+        target: /opt/aelev/configure-site-replication.sh
+        read_only: true
+        bind:
+          create_host_path: false
+      - *root-user-mount
+      - *root-password-mount
+      - type: bind
+        source: ./secrets/sites-ca.crt
+        target: /run/secrets/minio-sites-ca.crt
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    networks: [minio, minio-ingress]
+
+  bucket-provisioner:
+    <<: *minio-client
+    profiles: [provision]
+    entrypoint: ["/bin/sh", "/opt/aelev/provision-bucket.sh"]
+    environment:
+      AELEV_INFRASTRUCTURE_MINIO_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT in the MinIO .env file}
+      AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET: ${AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET:-}
+      AELEV_INFRASTRUCTURE_MINIO_PROVISION_ACCESS_KEY: ${AELEV_INFRASTRUCTURE_MINIO_PROVISION_ACCESS_KEY:-}
+      AELEV_INFRASTRUCTURE_MINIO_PROVISION_SECRET_KEY: ${AELEV_INFRASTRUCTURE_MINIO_PROVISION_SECRET_KEY:-}
+      AELEV_INFRASTRUCTURE_MINIO_PROVISION_POLICY: ${AELEV_INFRASTRUCTURE_MINIO_PROVISION_POLICY:-}
+      MC_CONFIG_DIR: /tmp/mc
+    depends_on:
+      site-replication-applier: {condition: service_completed_successfully}
+    volumes:
+      - type: bind
+        source: ./provision-bucket.sh
+        target: /opt/aelev/provision-bucket.sh
+        read_only: true
+        bind:
+          create_host_path: false
+      - *root-user-mount
+      - *root-password-mount
+      - type: bind
+        source: ./secrets/sites-ca.crt
+        target: /run/secrets/minio-ca.crt
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    networks: [minio, minio-ingress]
+
+volumes:
+  minio-status-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_UI_STATE_VOLUME:?set in the minio .env file}
+  minio-site-a-1-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_VOLUME in the MinIO .env file}
+  minio-site-a-2-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_VOLUME in the MinIO .env file}
+  minio-site-a-3-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_VOLUME in the MinIO .env file}
+  minio-site-a-4-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_VOLUME in the MinIO .env file}
+  minio-site-b-1-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_VOLUME in the MinIO .env file}
+  minio-site-b-2-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_VOLUME in the MinIO .env file}
+  minio-site-b-3-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_VOLUME in the MinIO .env file}
+  minio-site-b-4-data:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_VOLUME:?set AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_VOLUME in the MinIO .env file}
+
+networks:
+  minio:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_NETWORK:?set AELEV_INFRASTRUCTURE_MINIO_NETWORK in the MinIO .env file}
+    internal: true
+  minio-ingress:
+    name: ${AELEV_INFRASTRUCTURE_MINIO_INGRESS_NETWORK:?set AELEV_INFRASTRUCTURE_MINIO_INGRESS_NETWORK in the MinIO .env file}

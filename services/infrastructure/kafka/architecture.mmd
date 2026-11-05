@@ -1,0 +1,9 @@
+flowchart LR
+    Owners["Владельцы сервисов"] -->|owner-declared topics| Provisioner["Topic provisioner"]
+    Provisioner --> Broker["Kafka KRaft broker/controller"]
+    Producers["Производители"] -->|Kafka| Broker
+    Broker -->|read_committed| Consumers["Потребители"]
+    Broker --> Log[("Журнал сообщений и offsets")]
+    Broker --> Probe["Native broker/controller probe"]
+    Probe --> Status["Platform UI status publisher"]
+    Probe --> Telemetry["Telemetry sender"]

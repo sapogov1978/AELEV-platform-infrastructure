@@ -1,0 +1,7 @@
+name: ${AELEV_INFRASTRUCTURE_POSTGRESQL_COMPOSE_PROJECT:?set AELEV_INFRASTRUCTURE_POSTGRESQL_COMPOSE_PROJECT}
+
+# The owner selects its runtime recipe; the root includes this entry unchanged.
+include:
+  - path:
+      - compose.runtime.yml
+      - compose.${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE:?set AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE}.yml

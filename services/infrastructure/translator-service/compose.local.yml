@@ -1,0 +1,14 @@
+# Shared local recipe for the standalone bundle and infrastructure orchestration.
+# Paths are relative to compose.remote.yml; Kafka is supplied by the caller.
+services:
+  translator-database:
+    profiles: !reset []
+  translator-migrator:
+    depends_on:
+      translator-database: {condition: service_healthy, required: true}
+  translator-topic-provisioner:
+    depends_on:
+      kafka: {condition: service_healthy}
+networks:
+  # Use the network declared by the independently included Kafka provider.
+  kafka: !reset null

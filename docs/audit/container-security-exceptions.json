@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "dockerfiles": {
+    "services/infrastructure/Dockerfile.recovery": "The bounded host adapter is invoked with the numeric UID and GID of the existing journal owner; a fixed image user would break ownership verification.",
+    "services/infrastructure/minio/Dockerfile": "MinIO initializes its owner volume through the upstream entrypoint; rootless conversion requires a separate volume-migration decision and is not hidden as a safe edit.",
+    "services/infrastructure/minio/test/Dockerfile.publisher-context": "Build-only assertion image; it has no runtime entrypoint or deployed service.",
+    "services/infrastructure/observability/Dockerfile": "Checks-only build target; it is never used as a deployed runtime image.",
+    "services/infrastructure/observability/blackbox-exporter/Dockerfile.native": "The admitted upstream runtime image and its user are supplied by exact deployment input; this layer only copies a static health probe.",
+    "services/infrastructure/observability/loki/Dockerfile.native": "The admitted upstream runtime image and its user are supplied by exact deployment input; this layer only copies a static health probe.",
+    "services/infrastructure/observability/otel-collector/Dockerfile.native": "The admitted upstream runtime image and its user are supplied by exact deployment input; this layer only copies a static health probe.",
+    "services/infrastructure/observability/tempo/Dockerfile.native": "The admitted upstream runtime image and its user are supplied by exact deployment input; this layer only copies a static health probe.",
+    "services/infrastructure/postgresql/Dockerfile": "The official PostgreSQL entrypoint starts with bootstrap privileges and drops to postgres after volume ownership and initialization checks."
+  }
+}

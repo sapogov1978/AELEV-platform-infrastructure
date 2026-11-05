@@ -1,0 +1,26 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_LOKI_",
+  "role": "loki",
+  "ports": [
+    "PORT"
+  ],
+  "integers": [],
+  "durations": [
+    "RETENTION"
+  ],
+  "https": [],
+  "optional": [],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key"
+  ],
+  "templates": [
+    {
+      "source": "config/loki.yml",
+      "target": "loki.yml"
+    }
+  ]
+}

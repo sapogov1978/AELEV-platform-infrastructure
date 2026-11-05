@@ -1,0 +1,119 @@
+{
+  "apiVersion": 1,
+  "contactPoints": [
+    {
+      "orgId": 1,
+      "name": "infrastructure-email",
+      "receivers": [
+        {
+          "uid": "infrastructure-email",
+          "type": "email",
+          "settings": {
+            "addresses": "${AELEV_INFRASTRUCTURE_GRAFANA_SMTP_TO}",
+            "singleEmail": true
+          },
+          "disableResolveMessage": false
+        }
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "orgId": 1,
+      "receiver": "infrastructure-email",
+      "group_by": [
+        "grafana_folder",
+        "alertname"
+      ],
+      "group_wait": "5s",
+      "group_interval": "10s",
+      "repeat_interval": "4h"
+    }
+  ],
+  "groups": [
+    {
+      "orgId": 1,
+      "name": "infrastructure-health",
+      "folder": "Infrastructure",
+      "interval": "10s",
+      "rules": [
+        {
+          "uid": "infrastructure-unavailable",
+          "title": "Недоступен компонент инфраструктуры",
+          "condition": "C",
+          "for": "20s",
+          "noDataState": "Alerting",
+          "execErrState": "Alerting",
+          "annotations": {
+            "summary": "Техническая проверка обнаружила недоступный компонент"
+          },
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 60,
+                "to": 0
+              },
+              "datasourceUid": "aelev-prometheus",
+              "model": {
+                "refId": "A",
+                "expr": "aelev_component_availability{job=\"infrastructure-health\"}",
+                "instant": true,
+                "range": false,
+                "intervalMs": 1000,
+                "maxDataPoints": 1000
+              }
+            },
+            {
+              "refId": "B",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "refId": "B",
+                "type": "reduce",
+                "expression": "A",
+                "reducer": "last",
+                "settings": {
+                  "mode": "dropNN"
+                }
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "refId": "C",
+                "type": "threshold",
+                "expression": "B",
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "type": "lt",
+                      "params": [
+                        1
+                      ]
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "reducer": {
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

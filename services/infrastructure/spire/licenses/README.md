@@ -1,0 +1,5 @@
+# Публичные артефакты поставки
+
+- `aelev_platform_ui_client-1.1.1-py3-none-any.whl`: публичный клиент технической инъекции DRP, SHA-256 `6137c8f99afcbf317f9313b4ea739490564c8fe3a68892a811d323b0e29fb61b`; собственный Poetry lock закрепляет неизменяемые байты. Библиотека не содержит сведений о потребителях и не требует соседнего исходного дерева.
+- `SPIRE-LICENSE-1.15.4`: неизменённый [LICENSE официального SPIRE 1.15.4](https://github.com/spiffe/spire/blob/v1.15.4/LICENSE), SHA-256 `39ce806fa2687a8d8d6a8a8d57bfec8b2fc29fe2a9ae2023020390aabb2de82d`; включается в runtime как `/licenses/spire/LICENSE`. Нативные бинарные архивы и их SHA-256 определены только в `../artifacts.lock.json`.
+- SQLite 3.53.4 распространяется как [общественное достояние](https://sqlite.org/copyright.html). Официальный архив, его SHA-256 и опубликованный [SHA3 исходного `sqlite3.c`](https://sqlite.org/releaselog/3_53_4.html) закреплены в `artifacts.lock.json`; `build_sqlite.py` проверяет оба уровня до компиляции. Исходник не изменяется.

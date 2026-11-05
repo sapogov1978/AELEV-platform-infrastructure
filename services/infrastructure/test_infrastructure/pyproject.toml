@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "aelev-infrastructure-tests"
+version = "1.0.0"
+description = "Checks of the consumer-agnostic infrastructure composition"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+playwright = "1.56.0"
+pytest = "9.0.3"
+black = "26.10.1"
+ruff = "0.13.2"
+mypy = "1.18.2"
+
+[tool.black]
+target-version = ["py313"]
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+addopts = "-p no:cacheprovider"

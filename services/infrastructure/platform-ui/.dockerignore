@@ -1,0 +1,16 @@
+.env*
+!.env.example
+runtime
+node_modules
+dist
+*.tsbuildinfo
+**/__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+secrets/
+test/
+/test/*
+/secrets/*
+obsolete/
+/obsolete/*

@@ -1,0 +1,28 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_TEMPO_",
+  "role": "tempo",
+  "ports": [
+    "PORT",
+    "OTLP_HTTP_PORT",
+    "OTLP_GRPC_PORT"
+  ],
+  "integers": [],
+  "durations": [
+    "RETENTION"
+  ],
+  "https": [],
+  "optional": [],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key"
+  ],
+  "templates": [
+    {
+      "source": "config/tempo.yml",
+      "target": "tempo.yml"
+    }
+  ]
+}

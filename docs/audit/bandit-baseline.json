@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "bandit_version": "1.8.6",
+  "scope": "canonical non-test Python; generated runtime copies and test fixtures excluded",
+  "known_medium_findings": {
+    "services/infrastructure/observability/delivery/delivery.py|B608|cb821a815b19ef0a3c2a903f81a0ca07b54a321c8063fb55f782d5dd62c5fed1": 1,
+    "services/infrastructure/observability/delivery/delivery.py|B608|f5643d20bb5cbf203ed2bcadde5231394ccae53d70fb2ec06df540391b85cb4d": 1,
+    "services/infrastructure/observability/delivery/delivery_health.py|B108|bb6018c8ff9f53996b41ee3b5427885515fd41d06bf2d738b0207a1755613f79": 1,
+    "services/infrastructure/observability/grafana/examples/owner-metrics/exporter.py|B104|8d0d7138f80e93d2b91679d48b8b81bd4c7c36bcb71500e53f41a89d9b92b5c5": 1,
+    "services/infrastructure/platform-ui/api.py|B104|20e65e96234d193258f41f01f294245e9fe3849daae9d4d381f893124b0bd32e": 1,
+    "services/infrastructure/platform-ui/health.py|B310|8306b5710d62afca5ca5dda248d2fbb04ba2e13b7836b305f264c12df3a5522b": 1,
+    "services/infrastructure/postgresql/kubernetes/render-fencing.py|B108|4149b7514871ee2ac306c37b6c3d28ea9a203f862bd09a019af95b3426b87b13": 1,
+    "services/infrastructure/postgresql/renewal.py|B108|d934b378e14a0ffcec712480b5ca8c5c06d7a28dc3eb0b42097d5f16451714f1": 1,
+    "services/infrastructure/postgresql/src/aelev_postgresql/__main__.py|B310|95409fea6ef726ce22af8631435ab8a4538ff2e851592d607b9bc1197be2a8a5": 1,
+    "services/infrastructure/postgresql/src/aelev_postgresql/__main__.py|B310|e5a6df5146d4426d77275babcb6f5294d19537a4cd2fdeeba9dc35e41a54c8a8": 1,
+    "services/infrastructure/postgresql/src/aelev_postgresql/fencing.py|B104|676a01987440d92c42cc0e89f9e3fff9e9b8be9c7a5c3437cb452625bb0b92f0": 1,
+    "services/infrastructure/recovery.py|B314|311dbe816517d967df5b64e700014a3e6e016de7408da2f755eb986d0ed4d2c1": 1,
+    "services/infrastructure/recovery.py|B314|90f8187b3de6f47f4ef3d48507e50533135991f8d152995ee41942a6b012d4a3": 2,
+    "services/infrastructure/renewal_delivery.py|B108|aaf315eedb6b510a7f4a7b3923c9638e906b81bcbc1aad1b4d1559637ff4684c": 1,
+    "services/infrastructure/spire/build_artifacts.py|B310|75a459727a7b957676ccb72a49b54332bf509096b4ae70783c03b597463884a4": 1,
+    "services/infrastructure/spire/build_sqlite.py|B310|2073fc9273f1d86c8156996ac083e41a0ea9bafceaa94d0947c4bd14123c6bc5": 1,
+    "services/infrastructure/spire/src/aelev_spire/observation.py|B104|7c8e2a69c4fe8b358656cf8d63f0ecc55f0e982c660ca7c0c1ccc788bb261b8f": 1,
+    "services/infrastructure/spire/src/aelev_spire/observation_setup.py|B104|0a63d63c301c22ebd2fa7b5dde9babb7b259683acda4a1464084a1da5acf9615": 1,
+    "services/infrastructure/translator-service/deployment/check_state.py|B608|15a0185f81b7865b412c6046170682b0a30ba5be8bebaca7f38363fadfe28c9a": 1,
+    "services/infrastructure/translator-service/download-model.py|B310|e7db1c805f061d30084a9be46936d6ba08e50fc835aa32189e5c4d19826c8844": 1,
+    "services/infrastructure/translator-service/src/translator_service/api_server.py|B104|70ea8e387eafb6bff8f2e50d588667e711531fd1ef7a263cbb4aa16d6f757a4b": 2,
+    "services/infrastructure/translator-service/src/translator_service/api_server.py|B104|f922fb360c422b1deef55c11ec2c0d2cfeac2136b26e3aee22e2168c836f55a4": 1,
+    "services/infrastructure/translator-service/src/translator_service/local_health.py|B108|0a8df619b93ee50d25f779054dcb78a649e34176034260cc9ab41c68cf2383f2": 1
+  },
+  "maximum_medium_findings": {
+    "B104": {
+      "count": 22,
+      "disposition": "Explicit network listeners; admission is controlled by TLS, exact identity and deployment policy, not loopback-only binding."
+    },
+    "B108": {
+      "count": 17,
+      "disposition": "Private temporary paths are used inside isolated containers or are combined with owner and permission checks."
+    },
+    "B310": {
+      "count": 20,
+      "disposition": "URL inputs are validated against exact scheme, host, redirect and destination rules before retrieval."
+    },
+    "B314": {
+      "count": 4,
+      "disposition": "XML input is bounded and used for platform-owned launch metadata; no entity expansion or network resolution is admitted."
+    },
+    "B608": {
+      "count": 28,
+      "disposition": "Dynamic SQL fragments come only from fixed owner tables, inspected-and-quoted identifiers or closed internal enum fragments; values remain bound parameters."
+    },
+    "B615": {
+      "count": 1,
+      "disposition": "The model acquisition path verifies the immutable owner source lock and artifact digests before activation; model runtime remains outside the default product profile."
+    }
+  }
+}

@@ -1,0 +1,5 @@
+# No context data is copied into image layers; inspect only a read-only mount.
+ARG PYTHON_IMAGE
+FROM ${PYTHON_IMAGE}
+RUN --network=none --mount=type=bind,source=.,target=/context,readonly \
+    python -S -c 'from pathlib import Path; root = Path("/context"); files = sorted(str(p.relative_to(root / "secrets")) for p in (root / "secrets").rglob("*") if p.is_file()); assert files == ["README.md"], "MINIO_PUBLISHER_CONTEXT_NOT_PUBLIC"; assert (root / "USER_MANUAL.md").is_file(); print("MINIO_PUBLISHER_CONTEXT_PUBLIC_ONLY")'

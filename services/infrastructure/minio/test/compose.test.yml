@@ -1,0 +1,256 @@
+x-test-root-user-mount: &test-root-user-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_ROOT_USER_FILE:?set the test root-user file}
+  target: /run/secrets/minio-root-user
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-root-password-mount: &test-root-password-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_ROOT_PASSWORD_FILE:?set the test root-password file}
+  target: /run/secrets/minio-root-password
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-sites-ca-node-mount: &test-sites-ca-node-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_SITES_CA_FILE:?set the test sites CA file}
+  target: /certs/CAs/aelev-minio-sites.crt
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-site-a-certificate-mount: &test-site-a-certificate-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_SITE_A_CERTIFICATE:?set the test site A certificate}
+  target: /certs/public.crt
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-site-a-key-mount: &test-site-a-key-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_SITE_A_PRIVATE_KEY:?set the test site A private key}
+  target: /certs/private.key
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-site-b-certificate-mount: &test-site-b-certificate-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_SITE_B_CERTIFICATE:?set the test site B certificate}
+  target: /certs/public.crt
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-site-b-key-mount: &test-site-b-key-mount
+  type: bind
+  source: ${AELEV_MINIO_TEST_SITE_B_PRIVATE_KEY:?set the test site B private key}
+  target: /certs/private.key
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-test-node: &test-node
+  healthcheck:
+    test: ["CMD", "minio-healthcheck"]
+    interval: 2s
+    timeout: 5s
+    retries: 3
+    start_period: 2s
+
+services:
+  minio-site-a-lb:
+    image: nginx:1.29.1-alpine
+    profiles: [test]
+    volumes:
+      - type: bind
+        source: ./test/nginx-site-a.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+      - *test-site-a-certificate-mount
+      - *test-site-a-key-mount
+      - *test-sites-ca-node-mount
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:size=16m,mode=1777
+      - /var/run:size=1m,mode=1777
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    depends_on:
+      minio-site-a-1: {condition: service_healthy}
+      minio-site-a-2: {condition: service_healthy}
+      minio-site-a-3: {condition: service_healthy}
+      minio-site-a-4: {condition: service_healthy}
+    networks: [minio]
+
+  minio-site-b-lb:
+    image: nginx:1.29.1-alpine
+    profiles: [test]
+    volumes:
+      - type: bind
+        source: ./test/nginx-site-b.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+      - *test-site-b-certificate-mount
+      - *test-site-b-key-mount
+      - *test-sites-ca-node-mount
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:size=16m,mode=1777
+      - /var/run:size=1m,mode=1777
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    depends_on:
+      minio-site-b-1: {condition: service_healthy}
+      minio-site-b-2: {condition: service_healthy}
+      minio-site-b-3: {condition: service_healthy}
+      minio-site-b-4: {condition: service_healthy}
+    networks: [minio]
+
+  minio-site-a-1:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-a-certificate-mount
+      - *test-site-a-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-a-2:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-a-certificate-mount
+      - *test-site-a-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-a-3:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-a-certificate-mount
+      - *test-site-a-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-a-4:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-a-certificate-mount
+      - *test-site-a-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-b-1:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-b-certificate-mount
+      - *test-site-b-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-b-2:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-b-certificate-mount
+      - *test-site-b-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-b-3:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-b-certificate-mount
+      - *test-site-b-key-mount
+      - *test-sites-ca-node-mount
+
+  minio-site-b-4:
+    <<: *test-node
+    ports: !reset []
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - *test-site-b-certificate-mount
+      - *test-site-b-key-mount
+      - *test-sites-ca-node-mount
+
+  site-replication-applier:
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - type: bind
+        source: ${AELEV_MINIO_TEST_SITES_CA_FILE:?set the test sites CA file}
+        target: /run/secrets/minio-sites-ca.crt
+        read_only: true
+        bind:
+          create_host_path: false
+
+  bucket-provisioner:
+    volumes:
+      - *test-root-user-mount
+      - *test-root-password-mount
+      - type: bind
+        source: ${AELEV_MINIO_TEST_SITES_CA_FILE:?set the test sites CA file}
+        target: /run/secrets/minio-ca.crt
+        read_only: true
+        bind:
+          create_host_path: false
+
+  test-client:
+    image: aelev/minio-server:RELEASE.2025-04-22T22-12-26Z
+    profiles: [test]
+    entrypoint: ["/bin/sh", "/opt/aelev/test-client.sh"]
+    environment:
+      AELEV_MINIO_TEST_SITE_A_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT:?set the site A endpoint}
+      AELEV_MINIO_TEST_SITE_B_ENDPOINT: ${AELEV_INFRASTRUCTURE_MINIO_SITE_B_ENDPOINT:?set the site B endpoint}
+      AELEV_MINIO_TEST_ACCESS_KEY: ${AELEV_MINIO_TEST_ACCESS_KEY:?set the test access key}
+      AELEV_MINIO_TEST_SECRET_KEY: ${AELEV_MINIO_TEST_SECRET_KEY:?set the test secret key}
+      AELEV_MINIO_TEST_BUCKET: ${AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET:?set the test bucket}
+      AELEV_MINIO_TEST_OBJECT: ${AELEV_MINIO_TEST_OBJECT:?set the test object name}
+      AELEV_MINIO_TEST_UPLOAD_LIMIT: ${AELEV_MINIO_TEST_UPLOAD_LIMIT:?set the upload limit}
+      MC_CONFIG_DIR: /tmp/mc
+    volumes:
+      - type: bind
+        source: ./test/client.sh
+        target: /opt/aelev/test-client.sh
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${AELEV_MINIO_TEST_WORK_DIR:?set the test work directory}
+        target: /test
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${AELEV_MINIO_TEST_SITES_CA_FILE:?set the test sites CA file}
+        target: /run/secrets/minio-sites-ca.crt
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    networks: [minio]

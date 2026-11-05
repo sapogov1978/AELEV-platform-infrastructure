@@ -1,0 +1,2 @@
+export const PLATFORM_PRESENTATION_PATH = "/presentation/v6.css";
+export const PLATFORM_PRESENTATION_SHA256 = "16b5dbb04ce93570ca83750d71a14406624be4bd9c840cdd98a7c0e876e33496";

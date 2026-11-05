@@ -1,0 +1,31 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 5s
+  external_labels:
+    owner_id: public-egress-gateway
+    service: public-egress-gateway
+rule_files:
+  - /etc/aelev/rules.yml
+scrape_configs:
+  - job_name: public-egress-gateway
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      ca_file: /run/secrets/gateway/server-ca.pem
+      server_name: public-egress-gateway
+    static_configs:
+      - targets: [public-egress-gateway:8081]
+remote_write:
+  - url: https://localhost:4318/api/v1/write
+    protobuf_message: prometheus.WriteRequest
+    remote_timeout: 10s
+    tls_config:
+      ca_file: /run/secrets/telemetry/sender/sender-ca.crt
+      cert_file: /run/secrets/telemetry/sender/local-write.crt
+      key_file: /run/secrets/telemetry/sender/local-write.key
+    queue_config:
+      min_shards: 1
+      max_shards: 2
+      capacity: 5000
+      max_samples_per_send: 500
+      batch_send_deadline: 5s

@@ -1,0 +1,9 @@
+name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPOSE_PROJECT:?set AELEV_INFRASTRUCTURE_TRANSLATOR_COMPOSE_PROJECT in the translator-service .env file}
+
+include:
+  - path: ../kafka/compose.yml
+    env_file: ${AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ENV_FILE:?set AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ENV_FILE in the translator-service .env file}
+
+  - path:
+      - ./compose.remote.yml
+      - ./compose.local.yml

@@ -1,0 +1,7 @@
+# Repository Instructions
+
+Read CONVENTIONS.md, docs/00-vision.md, docs/01-axioms.md, docs/03-system-overview.md, applicable accepted ADRs, public API documentation, and affected owner README.md and SPEC.md before edits. This is an independent, domain-neutral infrastructure product. Preserve accepted technologies, owner boundaries, Kafka contracts, immutable data and journals. Application resources belong to consumers.
+
+Use apply_patch for manual edits, update root CHANGELOG.md, run narrow meaningful checks, preserve local secrets/runtime, and never commit them. Build does not start containers. Consumer shutdown never owns infrastructure shutdown. Commit only as sapogov1978 with 60944481+sapogov1978@users.noreply.github.com; origin is https://github.com/sapogov1978/platform-infrastructure.git.
+
+This repository owns graphify-out and .codex/skills/graphify. Query its graph before exploring source when graph.json exists; run graphify update . after code changes. Its Graphify graph and RMS vault must remain separate from consumers. RMS is curated only: no code index or repository import. Resolve the registered project key from rms_projects before using RMS; never reuse AELEV or DRP as this repository's vault.

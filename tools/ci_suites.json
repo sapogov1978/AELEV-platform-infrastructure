@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "python": [
+    {
+      "path": "services/infrastructure/kafka",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/keycloak",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/minio",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/blackbox-exporter",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/delivery",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/grafana",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/loki",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/otel-collector",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/prometheus",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/observability/tempo",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/platform-ui/client",
+      "mode": "lock-only"
+    },
+    {
+      "path": "services/infrastructure/platform-ui",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/postgresql",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/public-egress-gateway",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/spire",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/test_infrastructure",
+      "mode": "pytest"
+    },
+    {
+      "path": "services/infrastructure/translator-service/test/model_comparison",
+      "mode": "lock-only",
+      "test_owner": "services/infrastructure/translator-service"
+    },
+    {
+      "path": "services/infrastructure/translator-service",
+      "mode": "pytest"
+    }
+  ],
+  "ui": [
+    "services/infrastructure/platform-ui"
+  ]
+}

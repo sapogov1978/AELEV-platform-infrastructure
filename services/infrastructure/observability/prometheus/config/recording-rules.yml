@@ -1,0 +1,5 @@
+groups:
+  - name: infrastructure-availability
+    rules:
+      - record: aelev_component_availability
+        expr: probe_success{job=~"infrastructure-health|owner-http-health|owner-tcp-health"}

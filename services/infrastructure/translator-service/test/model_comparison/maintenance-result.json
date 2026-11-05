@@ -1,0 +1,63 @@
+{
+  "started_at": "2026-10-11T14:44:15.262819+00:00",
+  "project": "aelev-infrastructure-translator",
+  "before": {
+    "translator-model": {
+      "id": "d67272d50fdc36475ad3ad0a7d29079558a54d8de6b1a8e403777a09c8e06c02",
+      "name": "/aelev-infrastructure-translator-translator-model-1",
+      "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf",
+      "running": true,
+      "health": "healthy",
+      "started_at": "2026-10-11T07:25:33.422536132Z",
+      "restart_count": 0,
+      "mounts": [
+        "/var/lib/docker/volumes/aelev-infrastructure-translator_translator-model-socket/_data"
+      ]
+    },
+    "translator-worker": {
+      "id": "0ffe4581bba540ea80286de5891ad35b1d6f281d652bd366d08591de8714e0cf",
+      "name": "/aelev-infrastructure-translator-translator-worker-1",
+      "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf",
+      "running": true,
+      "health": null,
+      "started_at": "2026-10-11T07:25:44.375751596Z",
+      "restart_count": 0,
+      "mounts": [
+        "/Users/ksap/AELEV/services/infrastructure/translator-service/secrets",
+        "/Users/ksap/AELEV/services/infrastructure/translator-service/secrets/postgres-password",
+        "/var/lib/docker/volumes/aelev-infrastructure-translator_translator-model-socket/_data"
+      ]
+    }
+  },
+  "after": {
+    "translator-model": {
+      "id": "d67272d50fdc36475ad3ad0a7d29079558a54d8de6b1a8e403777a09c8e06c02",
+      "name": "/aelev-infrastructure-translator-translator-model-1",
+      "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf",
+      "running": true,
+      "health": "healthy",
+      "started_at": "2026-10-11T15:16:10.165089511Z",
+      "restart_count": 0,
+      "mounts": [
+        "/var/lib/docker/volumes/aelev-infrastructure-translator_translator-model-socket/_data"
+      ]
+    },
+    "translator-worker": {
+      "id": "0ffe4581bba540ea80286de5891ad35b1d6f281d652bd366d08591de8714e0cf",
+      "name": "/aelev-infrastructure-translator-translator-worker-1",
+      "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf",
+      "running": true,
+      "health": null,
+      "started_at": "2026-10-11T15:16:22.568196169Z",
+      "restart_count": 0,
+      "mounts": [
+        "/Users/ksap/AELEV/services/infrastructure/translator-service/secrets",
+        "/Users/ksap/AELEV/services/infrastructure/translator-service/secrets/postgres-password",
+        "/var/lib/docker/volumes/aelev-infrastructure-translator_translator-model-socket/_data"
+      ]
+    }
+  },
+  "restored": true,
+  "errors": [],
+  "finished_at": "2026-10-11T15:16:22.749263+00:00"
+}

@@ -1,0 +1,18 @@
+modules:
+  http_ready:
+    prober: http
+    timeout: 5s
+    http:
+      method: GET
+      preferred_ip_protocol: ip4
+      follow_redirects: false
+      fail_if_not_ssl: true
+      tls_config:
+        ca_file: /run/secrets/observability/ca.crt
+        cert_file: /run/secrets/observability/client.crt
+        key_file: /run/secrets/observability/client.key
+  tcp_connect:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: ip4

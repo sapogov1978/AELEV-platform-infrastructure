@@ -1,0 +1,132 @@
+name: ${AELEV_INFRASTRUCTURE_DELIVERY_COMPOSE_PROJECT:?set in the delivery env file}
+
+x-status-environment: &status-environment
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_URL: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_URL:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_IDENTITY_URL:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_REALM: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_REALM:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_CLIENT_ID:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_AUDIENCE:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_MODULE_ID:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_INTERVAL_SECONDS:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_TIMEOUT_SECONDS:?set in the delivery env file}
+  AELEV_INFRASTRUCTURE_DELIVERY_UI_HEALTH_URL: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_HEALTH_URL:?set in the delivery env file}
+
+x-status-runtime: &status-runtime
+  image: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_IMAGE:?set in the delivery env file}
+  build:
+    context: .
+    dockerfile: Dockerfile.status
+    target: runtime
+    args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE:?set in the delivery env file}"}
+  environment: *status-environment
+  read_only: true
+  tmpfs: ["/tmp:size=8m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+  networks: [delivery-ui]
+
+services:
+  delivery:
+    restart: ${AELEV_INFRASTRUCTURE_DELIVERY_RESTART_POLICY:?set remaining native restart budget}
+    stop_grace_period: 20s
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    group_add: ["${AELEV_INFRASTRUCTURE_DELIVERY_SECRET_GID:?set in the delivery env file}"]
+    networks: [delivery-ui]
+    image: ${AELEV_INFRASTRUCTURE_DELIVERY_IMAGE:?set in the delivery env file}
+    build: {context: ., dockerfile: Dockerfile.status, target: delivery, args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE:?set in the delivery env file}"}}
+    mem_limit: ${AELEV_INFRASTRUCTURE_DELIVERY_MEMORY_LIMIT:?set in the delivery env file}
+    command: ["run", "--config", "/etc/aelev/delivery.json"]
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/delivery_health.py"]
+      interval: 10s
+      timeout: 15s
+      retries: 6
+    volumes:
+      - delivery-data:/var/lib/delivery
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_DELIVERY_RUNTIME_ROOT:?set in the delivery env file}
+        target: /etc/aelev
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_DELIVERY_SECRET_ROOT:?set in the delivery env file}
+        target: /run/secrets/observability
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_DELIVERY_BIND:?set in the delivery env file}:${AELEV_INFRASTRUCTURE_DELIVERY_PORT:?set in the delivery env file}:4318"
+      - "${AELEV_INFRASTRUCTURE_DELIVERY_BIND:?set in the delivery env file}:${AELEV_INFRASTRUCTURE_DELIVERY_HEALTH_PORT:?set in the delivery env file}:13134"
+    extra_hosts: ["loki:host-gateway", "tempo:host-gateway", "prometheus:host-gateway"]
+
+  delivery-configuration-init:
+    image: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_IMAGE:?set own tools image}
+    build:
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE:?set own Python image}"}
+    profiles: [provision]
+    entrypoint: [python, -m, aelev_observability_tools]
+    command: [--owner, "${AELEV_INFRASTRUCTURE_DELIVERY_DATA_OWNER:?set immutable data owner}", --role, delivery, --uid, "10001"]
+    user: "0:0"
+    restart: "no"
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    volumes: [delivery-data:/data]
+
+  delivery-status-publisher:
+    <<: *status-runtime
+    profiles: [ui]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_GID:?set in the delivery env file}"]
+    restart: "no"
+    mem_limit: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_MEMORY_LIMIT:?set in the delivery env file}
+    volumes:
+      - delivery-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_ROOT:?set in the delivery env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/publisher-health.py, AELEV_INFRASTRUCTURE_DELIVERY_]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  delivery-status-provision:
+    <<: *status-runtime
+    profiles: [provision]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_DELIVERY_UI_PROVISION_UID:?set in the delivery env file}:${AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_GID:?set in the delivery env file}"
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_ROOT:?set in the delivery env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_ADMIN_ROOT:?set in the delivery env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+volumes:
+  delivery-data:
+    name: ${AELEV_INFRASTRUCTURE_DELIVERY_DATA_VOLUME:?set own data volume}
+  delivery-status-data:
+    name: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_STATE_VOLUME:?set in the delivery env file}
+
+networks:
+  delivery-ui:
+    name: ${AELEV_INFRASTRUCTURE_DELIVERY_UI_NETWORK:?set in the delivery env file}

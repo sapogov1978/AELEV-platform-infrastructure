@@ -1,0 +1,13 @@
+{
+  "index-2b": {
+    "source": "https://huggingface.co/IndexTeam/Index-Translate-2B-GGUF",
+    "revision": "3a0eca6ce931d88d00614d427ab3ed8ff0743902",
+    "integrity": "PASS_SIZE_AND_SHA256"
+  },
+  "index-9b": {
+    "source": "https://modelscope.cn/models/IndexTeam/Index-Translate-9B-GGUF",
+    "revision": "e86ec8b733c331ee393e3cd6b5fa732f8ae0b087",
+    "mirror_sha256_matches_pinned_huggingface_artifact": true,
+    "integrity": "PASS_SIZE_AND_SHA256"
+  }
+}

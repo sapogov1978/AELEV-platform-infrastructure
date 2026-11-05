@@ -1,0 +1,127 @@
+name: ${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}
+
+x-runtime: &runtime
+  image: ${AELEV_INFRASTRUCTURE_SPIRE_IMAGE:-aelev/infrastructure-spire:local}
+  entrypoint: [python, -m, aelev_spire.observation]
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:size=16m,mode=1777", "/run/spire:size=2m,uid=10001,gid=10001,mode=0700"]
+  restart: "on-failure:3"
+  stop_grace_period: 2m
+  pids_limit: 64
+  mem_limit: 128m
+  networks: [spire-observation-access]
+  profiles: [spire-observation]
+
+x-status: &status
+  AELEV_INFRASTRUCTURE_SPIRE_UI_URL: ${AELEV_INFRASTRUCTURE_SPIRE_UI_URL:-https://unconfigured.invalid}
+  AELEV_INFRASTRUCTURE_SPIRE_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_SPIRE_UI_IDENTITY_URL:-https://unconfigured.invalid}
+  AELEV_INFRASTRUCTURE_SPIRE_UI_REALM: ${AELEV_INFRASTRUCTURE_SPIRE_UI_REALM:-unconfigured}
+  AELEV_INFRASTRUCTURE_SPIRE_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_SPIRE_UI_CLIENT_ID:-unconfigured}
+  AELEV_INFRASTRUCTURE_SPIRE_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_SPIRE_UI_AUDIENCE:-aelev-platform-ui}
+  AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID:-00000000-0000-0000-0000-000000000000}
+  AELEV_INFRASTRUCTURE_SPIRE_UI_INTERVAL_SECONDS: "15"
+  AELEV_INFRASTRUCTURE_SPIRE_UI_TIMEOUT_SECONDS: "2"
+
+services:
+  spire-observer:
+    <<: *runtime
+    command: [serve]
+    environment:
+      AELEV_INFRASTRUCTURE_SPIRE_OTLP_ENDPOINT: https://spire-telemetry-sender:4318
+      AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID:-00000000-0000-0000-0000-000000000000}
+    volumes:
+      - spire-observation-public-source:/run/observation:ro
+      - spire-observer-data:/var/lib/observation
+      - spire-observer-secrets:/run/secrets/observation:ro
+      - spire-certificate-renewal-status:/run/certificate-renewal:ro
+    healthcheck:
+      test: [CMD, python, -S, -P, /opt/aelev/src/aelev_spire/health.py]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+  spire-status-publisher:
+    <<: *runtime
+    command: [publish]
+    environment: *status
+    volumes:
+      - spire-observation-public-source:/run/observation:ro
+      - spire-status-data:/var/lib/aelev-status
+      - spire-status-secrets:/run/secrets/status:ro
+      - spire-certificate-renewal-status:/run/certificate-renewal:ro
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/publisher-health.py, AELEV_INFRASTRUCTURE_SPIRE_]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+  spire-status-provision:
+    <<: *runtime
+    command: [provision]
+    restart: "no"
+    profiles: [spire-observation-provision]
+    environment:
+      <<: *status
+      # Initial IdP administration has a separate bounded budget. Runtime
+      # publication and heartbeat probes keep their short timeouts.
+      AELEV_INFRASTRUCTURE_SPIRE_UI_TIMEOUT_SECONDS: "30"
+    volumes:
+      - spire-status-secrets:/run/secrets/status
+      - spire-status-admin:/run/secrets/status-admin:ro
+  spire-dashboard-provision:
+    <<: *runtime
+    entrypoint: [python, -m, aelev_spire.observation_setup]
+    command: [dashboard]
+    restart: "no"
+    profiles: [spire-observation-provision]
+    volumes:
+      - spire-observation-configuration:/etc/aelev:ro
+      - spire-grafana-secrets:/run/secrets/grafana:ro
+  spire-telemetry-sender:
+    <<: *runtime
+    image: ${AELEV_INFRASTRUCTURE_SPIRE_SENDER_IMAGE:-unconfigured.invalid/owner-telemetry-sender:missing}
+    entrypoint: [python, /opt/aelev/delivery.py]
+    command: [run, --config, /etc/aelev/sender.json]
+    mem_limit: 384m
+    volumes:
+      - spire-observation-configuration:/etc/aelev:ro
+      - spire-sender-secrets:/run/secrets/telemetry:ro
+      - spire-telemetry-data:/var/lib/delivery
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/delivery_health.py]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+  spire-alert-provision:
+    <<: *runtime
+    entrypoint: [python, -m, aelev_spire.observation_setup]
+    command: [alert]
+    restart: "no"
+    profiles: [spire-observation-provision]
+    volumes:
+      - spire-observation-configuration:/etc/aelev:ro
+      - spire-grafana-admin:/run/secrets/grafana:ro
+
+networks:
+  spire-observation-access:
+    external: true
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_ACCESS_NETWORK:-aelev-infrastructure-spire}
+
+volumes:
+  spire-observation-public-source:
+    external: true
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_VOLUME:-aelev-infrastructure-spire_observation-source}
+  spire-observation-configuration: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_CONFIG_VOLUME:-aelev-infrastructure-spire_observation-configuration}"}
+  spire-observer-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVER_DATA_VOLUME:-aelev-infrastructure-spire_observation}"}
+  spire-status-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_DATA_VOLUME:-aelev-infrastructure-spire_status}"}
+  spire-telemetry-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_TELEMETRY_DATA_VOLUME:-aelev-infrastructure-spire_telemetry}"}
+  spire-observer-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVER_SECRETS_VOLUME:-aelev-infrastructure-spire_observer-secrets}"}
+  spire-status-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_SECRETS_VOLUME:-aelev-infrastructure-spire_status-secrets}"}
+  spire-sender-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_SENDER_SECRETS_VOLUME:-aelev-infrastructure-spire_sender-secrets}"}
+  spire-status-admin: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_ADMIN_VOLUME:-aelev-infrastructure-spire_status-admin}"}
+  spire-grafana-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_SECRETS_VOLUME:-aelev-infrastructure-spire_grafana-secrets}"}
+  spire-grafana-admin: {name: "${AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_ADMIN_VOLUME:-aelev-infrastructure-spire_grafana-admin}"}
+  spire-certificate-renewal-status: {name: "${AELEV_INFRASTRUCTURE_SPIRE_CERTIFICATE_RENEWAL_STATUS_VOLUME:-aelev-infrastructure-spire_certificate-renewal-status}"}

@@ -1,0 +1,8 @@
+# Only an explicitly selected watchdog recipe maps a host-resetting device.
+x-watchdog: &watchdog
+  devices: ["${AELEV_INFRASTRUCTURE_POSTGRESQL_WATCHDOG_DEVICE:?set AELEV_INFRASTRUCTURE_POSTGRESQL_WATCHDOG_DEVICE}:/dev/watchdog"]
+
+services:
+  postgresql-1: *watchdog
+  postgresql-2: *watchdog
+  postgresql-3: *watchdog

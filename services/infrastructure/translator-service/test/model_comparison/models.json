@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "purpose": "EXPERIMENT_ONLY_NOT_A_PRODUCTION_SELECTION",
+  "engine": {
+    "repository": "ggml-org/llama.cpp",
+    "version": "v0.6.0",
+    "revision": "d81235049384534c167caea52b85a694f6103d14",
+    "source_sha256": "6b58785f0a82898f4c3442417ff962e2d4b231b1bee5d033902ad90b27901e14"
+  },
+  "models": [
+    {
+      "id": "index-2b",
+      "repository": "IndexTeam/Index-Translate-2B-GGUF",
+      "revision": "3a0eca6ce931d88d00614d427ab3ed8ff0743902",
+      "file": "Index-Translate-2B.Q4_K_M.gguf",
+      "size_bytes": 1312164352,
+      "sha256": "044b313d29342bd3b2c77cbb64023ca0d209bd9b3247763f9d162767ef2d746a",
+      "license": "Apache-2.0",
+      "memory_limit": "3g"
+    },
+    {
+      "id": "index-9b",
+      "repository": "IndexTeam/Index-Translate-9B-GGUF",
+      "revision": "645939fbab839a656f1bc39975a872bc8ad749f8",
+      "file": "Index-Translate-9B.Q4_K_M.gguf",
+      "size_bytes": 5780090304,
+      "sha256": "9cc6758b0007f4cbf42ea3400768cbff91ae74ef8d640e467158348426d33713",
+      "license": "Apache-2.0",
+      "memory_limit": "6656m"
+    }
+  ]
+}

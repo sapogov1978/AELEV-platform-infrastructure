@@ -1,0 +1,10 @@
+flowchart LR
+    Owners["Владельцы объектов"] -->|TLS S3| SiteA["MinIO site A / 4 nodes"]
+    Owners -->|TLS S3| SiteB["MinIO site B / 4 nodes"]
+    SiteA <-->|site replication| SiteB
+    SiteA --> ObjectsA[("Owner buckets A")]
+    SiteB --> ObjectsB[("Owner buckets B")]
+    Certs["Owner TLS lifecycle"] --> SiteA
+    Certs --> SiteB
+    SiteA --> Status["Platform UI status publisher"]
+    SiteB --> Telemetry["Telemetry sender"]

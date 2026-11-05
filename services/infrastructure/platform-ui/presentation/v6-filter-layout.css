@@ -1,0 +1,93 @@
+/* Scoped to filter applications; the platform and Zones keep their layout. */
+.filter-app { --filter-gutter: 3vw; --filter-gap: 1.25rem; --filter-card-padding: 1.25rem; overflow-wrap: anywhere; }
+body:has(.filter-app) { min-width: 0; }
+.filter-app .filter-content { display: grid; gap: var(--filter-gap); max-width: 1440px; padding: 2rem var(--filter-gutter) 4rem; }
+.filter-app.owner-surface .filter-content { max-width: none; padding: var(--filter-card-padding); }
+.filter-app .filter-content > *, .filter-app .filter-panel-stack > * { min-width: 0; }
+.filter-app .filter-panel-stack { display: grid; gap: var(--filter-gap); min-width: 0; }
+.filter-app .filter-content > :is(.panel, .result-hero, .module-frame, .error), .filter-app .filter-panel-stack > :is(.panel, .operator-purpose, .error) { margin: 0; }
+.filter-app .filter-content > .overview { padding: 0; }
+.filter-app .overview { display: grid; gap: var(--filter-gap); }
+.filter-app .overview > :is(.overview-heading, .result-hero, .panel, .attention-panel, .notice) { margin: 0; }
+.filter-app .overview-heading { align-items: start; }
+.filter-app .overview-heading > button { flex: 0 0 auto; }
+.filter-app .process-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.filter-app .queue-state-summary .flow-card::after { display: none; }
+.filter-app :is(h2, h3, h4) { line-height: 1.3; overflow-wrap: anywhere; }
+.filter-app .panel { min-width: 0; padding: var(--filter-card-padding); }
+.filter-app .panel > :first-child { margin-top: 0; }
+.filter-app .filter-content .panel > * + * { margin-top: 1rem; }
+.filter-app .panel > :last-child { margin-bottom: 0; }
+.filter-app .panel h2 { font-size: 1.25rem; }
+.filter-app p { line-height: 1.55; }
+.filter-app .hint { font-size: .82rem; }
+.filter-app .error { overflow-wrap: anywhere; }
+.filter-app .decision-navigation { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.filter-app .decision-navigation > button { padding: .65rem 1rem; border-color: #24443a; background: transparent; color: #9ab4a9; }
+.filter-app .decision-navigation > button.active { border-color: #3bc99b; background: #3bc99b; color: #07110f; }
+.filter-app .decision-navigation > a { margin-left: auto; font-size: .82rem; line-height: 1.5; }
+.filter-app .service-surface { overflow: hidden; border: 1px solid #28443b; border-radius: 12px; background: #091512; }
+.filter-app .service-surface > .panel-heading { flex-wrap: wrap; align-items: center; padding: var(--filter-card-padding); border-bottom: 1px solid #203832; }
+.filter-app .service-surface > .panel-heading h2 { margin: 0; }
+.filter-app .service-surface > .panel-heading a { font-size: .82rem; }
+.filter-app .service-surface > iframe { border: 0; border-radius: 0; }
+.filter-app .workspace { grid-template-columns: minmax(16rem, 23rem) minmax(0, 1fr); align-items: start; gap: var(--filter-gap); min-height: 24rem; }
+.filter-app .workspace > aside { min-width: 0; padding: var(--filter-card-padding); border: 1px solid #1c3b32; border-radius: 10px; }
+.filter-app .workspace > aside > h3 { margin: 0 0 1rem; font-size: 1.05rem; }
+.filter-app .workspace > aside > form { display: grid; gap: .75rem; margin-bottom: 1rem; }
+.filter-app .workspace > aside > form > button { justify-self: start; }
+.filter-app .workspace > aside > .queue { max-height: 38rem; padding-right: .25rem; overflow-y: auto; }
+.filter-app .workspace > article { display: flex; flex-direction: column; gap: 1rem; min-width: 0; max-width: none; padding: 0; overflow: visible; }
+.filter-app .workspace > article > :is(.panel, .summary, .explanation, .empty) { margin: 0; }
+.filter-app .workspace .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.filter-app .workspace .tabs > button { min-width: 0; overflow-wrap: anywhere; }
+.filter-app .workspace .pagination { flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+.filter-app .workspace .card { overflow-wrap: anywhere; }
+.filter-app .model-decisions-workspace { height: auto; overflow: visible; }
+.filter-app .summary { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); }
+.filter-app .summary strong { overflow-wrap: anywhere; }
+.filter-app label { display: grid; gap: .5rem; line-height: 1.5; }
+.filter-app :is(input, textarea, select) { min-width: 0; margin: 0; }
+.filter-app label + label { margin-top: 1rem; }
+.filter-app .checkbox-field { display: flex; align-items: start; gap: .65rem; margin-bottom: 1rem; color: #a4b9b0; font-size: .8rem; }
+.filter-app input[type="checkbox"] { flex: 0 0 auto; width: 1rem; height: 1rem; margin: .1rem 0 0; padding: 0; }
+.filter-app .actions { align-items: center; gap: .75rem; }
+.filter-app .actions > :is(button, a) { max-width: 100%; line-height: 1.4; }
+.filter-app pre { max-width: 100%; max-height: 30rem; margin: 0; padding: .9rem; overflow: auto; border: 1px solid #183229; border-radius: .5rem; background: #06100d; font-size: .75rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.filter-app details > summary { cursor: pointer; color: #9bb2aa; line-height: 1.5; }
+.filter-app details[open] > summary { margin-bottom: 1rem; }
+.filter-app .policy-editor { display: flex; gap: var(--filter-gap); }
+.filter-app .policy-editor > * { order: 0; margin: 0; }
+.filter-app .filter-content .policy-editor > .panel { order: 0; }
+.filter-app fieldset.panel { width: 100%; min-inline-size: 0; margin-inline: 0; }
+.filter-app fieldset.panel > legend { padding: 0 .4rem; color: #afc7bd; font-weight: 700; }
+.filter-app .policy-terms { margin-bottom: 0; line-height: 1.5; }
+.filter-app .localization-card { padding: var(--filter-card-padding); }
+.filter-app .navigation-confirmation-area { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+.filter-app .navigation-confirmation { border-color: #765f30; background: #1b180c; }
+
+@media (max-width: 960px) {
+  .filter-app .process-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-app .workspace { grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr); }
+  .filter-app .bilingual-evidence { grid-template-columns: 1fr; }
+}
+@media (max-width: 800px) {
+  .filter-app .workspace { grid-template-columns: 1fr; }
+  .filter-app .workspace > aside > .queue { max-height: 24rem; }
+  .filter-app .overview-heading { display: grid; gap: 1rem; }
+  .filter-app .overview-heading > button { justify-self: start; }
+}
+@media (max-width: 560px) {
+  .filter-app { --filter-card-padding: 1rem; }
+  .filter-app .filter-content { padding-top: 1.25rem; }
+  .filter-app .process-flow { grid-template-columns: 1fr; }
+  .filter-app .decision-navigation > button { flex: 1 1 9rem; }
+  .filter-app .decision-navigation > a { flex-basis: 100%; margin-left: 0; }
+}
+/* Owner-local current-state cards reuse the base screening layout. */
+.filter-app .queue-current-state .queue-state-breakdown { display: grid; gap: .65rem; margin: 1rem 0 0; }
+.filter-app .queue-current-state .queue-state-breakdown > div { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.filter-app .queue-current-state .queue-state-breakdown dt { color: #a6b7b1; font-size: .82rem; line-height: 1.45; }
+.filter-app .queue-current-state .queue-state-breakdown dd { flex: 0 0 auto; margin: 0; font-variant-numeric: tabular-nums; }
+.filter-app .queue-current-state .queue-state-evidence { margin-top: 1rem; }
+.filter-app .queue-current-state .queue-state-evidence p { margin-bottom: .75rem; }

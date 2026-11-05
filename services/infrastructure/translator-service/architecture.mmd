@@ -1,0 +1,12 @@
+flowchart LR
+    Requesters["Сервисы-заказчики"] -->|translation requests| KafkaIn["Kafka request topics"]
+    KafkaIn --> Consumer["Priority / regular consumers"]
+    Consumer --> Jobs[("Owner PostgreSQL: jobs and attempts")]
+    Jobs --> Worker["Translation worker"]
+    Worker --> Model["Изолированный model runtime"]
+    Model --> Worker
+    Worker --> Outbox[("Transactional outbox")]
+    Outbox -->|translation results| KafkaOut["Kafka result topics"]
+    API["Operator / diagnostic API"] --> Jobs
+    Jobs --> Status["Platform UI status publisher"]
+    Worker --> Telemetry["Telemetry sender"]

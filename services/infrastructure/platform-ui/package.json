@@ -1,0 +1,25 @@
+{
+  "name": "@aelev/platform-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "dev": "vite --host 0.0.0.0",
+    "test": "vitest run",
+    "test:deployment": "python3.13 -m pytest test/test_configuration.py"
+  },
+  "dependencies": {
+    "keycloak-js": "26.2.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "@vitejs/plugin-react": "5.0.0",
+    "typescript": "5.9.2",
+    "vite": "7.3.7",
+    "vitest": "4.1.12"
+  }
+}

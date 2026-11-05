@@ -1,0 +1,7 @@
+flowchart LR
+    Collector["OpenTelemetry Collector"] -->|traces| Tempo["Tempo"]
+    Tempo --> Blocks[("Trace blocks")]
+    Grafana["Grafana"] -->|TraceQL| Tempo
+    Metrics["Prometheus exemplars"] --> Tempo
+    Retention["Retention policy"] --> Tempo
+    Tempo --> Status["Platform UI status publisher"]

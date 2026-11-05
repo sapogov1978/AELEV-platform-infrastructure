@@ -1,0 +1,9 @@
+{
+  "tls_server_config": {
+    "cert_file": "/run/secrets/observability/server.crt",
+    "key_file": "/run/secrets/observability/server.key",
+    "client_ca_file": "/run/secrets/observability/ca.crt",
+    "client_auth_type": "RequireAndVerifyClientCert",
+    "min_version": "TLS12"
+  }
+}

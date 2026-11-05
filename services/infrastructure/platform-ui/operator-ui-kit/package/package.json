@@ -1,0 +1,29 @@
+{
+  "name": "@aelev/operator-ui-kit",
+  "version": "0.1.4",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./DeliveryStatusPanel": "./src/DeliveryStatusPanel.tsx",
+    "./deliverySummary": "./src/deliverySummary.ts",
+    "./useDeliverySnapshot": "./src/useDeliverySnapshot.ts",
+    "./EvidenceDialog": "./src/EvidenceDialog.tsx",
+    "./QueueServiceApp": "./src/QueueServiceApp.tsx",
+    "./QueueResultHero": "./src/QueueResultHero.tsx",
+    "./QueueCurrentState": "./src/QueueCurrentState.tsx",
+    "./ServiceNavigation": "./src/ServiceNavigation.tsx",
+    "./ServiceSurfaceFrame": "./src/ServiceSurfaceFrame.tsx",
+    "./OwnedQueuePanel": "./src/OwnedQueuePanel.tsx",
+    "./polling": "./src/polling.ts",
+    "./dataRefresh": "./src/dataRefresh.ts",
+    "./DataRefreshIndicator": "./src/DataRefreshIndicator.tsx",
+    "./ProcessControlPanel": "./src/ProcessControlPanel.tsx",
+    "./PlatformPage": "./src/PlatformPage.tsx",
+    "./presentation": "./src/presentation.ts",
+    "./modules": "./src/modules.ts",
+    "./moduleRuntime": "./src/moduleRuntime.tsx",
+    "./moduleAuth": "./src/moduleAuth.ts",
+    "./presentation.css": "./generated/presentation-v6.css"
+  },
+  "peerDependencies": { "react": "19.1.1", "react-dom": "19.1.1", "keycloak-js": "26.2.0" }
+}

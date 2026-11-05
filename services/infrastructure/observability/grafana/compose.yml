@@ -1,0 +1,222 @@
+name: ${AELEV_INFRASTRUCTURE_GRAFANA_COMPOSE_PROJECT:?set in the grafana env file}
+
+x-status-environment: &status-environment
+  AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST: ${AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_PORT: ${AELEV_INFRASTRUCTURE_GRAFANA_PORT:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_URL:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_IDENTITY_URL:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_REALM: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_REALM:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_CLIENT_ID:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_AUDIENCE:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_MODULE_ID:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_INTERVAL_SECONDS:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_TIMEOUT_SECONDS:?set in the grafana env file}
+  AELEV_INFRASTRUCTURE_GRAFANA_UI_HEALTH_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_HEALTH_URL:?set in the grafana env file}
+
+x-status-runtime: &status-runtime
+  image: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE:?set in the grafana env file}
+  build:
+    context: .
+    dockerfile: Dockerfile.status
+    target: runtime
+    args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE:?set in the grafana env file}"}
+  environment: *status-environment
+  read_only: true
+  tmpfs: ["/tmp:size=8m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+  networks: [grafana-ui]
+
+services:
+  grafana:
+    restart: "no"
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    group_add: ["${AELEV_INFRASTRUCTURE_GRAFANA_SECRET_GID:?set in the grafana env file}"]
+    networks: [grafana-ui]
+    image: ${AELEV_INFRASTRUCTURE_GRAFANA_IMAGE:?set in the grafana env file}
+    mem_limit: ${AELEV_INFRASTRUCTURE_GRAFANA_MEMORY_LIMIT:?set in the grafana env file}
+    environment:
+      GF_SERVER_PROTOCOL: https
+      GF_SERVER_CERT_FILE: /run/secrets/observability/server.crt
+      GF_SERVER_CERT_KEY: /run/secrets/observability/server.key
+      GF_SERVER_DOMAIN: ${AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST:?set in the grafana env file}
+      GF_SERVER_ROOT_URL: https://${AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST:?set in the grafana env file}:${AELEV_INFRASTRUCTURE_GRAFANA_PORT:?set in the grafana env file}
+      GF_SERVER_MIN_TLS_VERSION: TLS1.2
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_AUTH_BASIC_ENABLED: "false"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
+      GF_AUTH_GENERIC_OAUTH_NAME: AELEV
+      GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: "true"
+      GF_AUTH_GENERIC_OAUTH_AUTO_LOGIN: "true"
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID:?set Grafana operator OIDC client}
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET__FILE: /run/secrets/oidc/client-secret
+      GF_AUTH_GENERIC_OAUTH_SCOPES: openid profile email roles
+      GF_AUTH_GENERIC_OAUTH_EMAIL_ATTRIBUTE_PATH: email
+      GF_AUTH_GENERIC_OAUTH_LOGIN_ATTRIBUTE_PATH: preferred_username
+      GF_AUTH_GENERIC_OAUTH_NAME_ATTRIBUTE_PATH: name
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(realm_access.roles[*], 'grafana.operator') && 'Admin'"
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT: "true"
+      GF_AUTH_GENERIC_OAUTH_ALLOW_ASSIGN_GRAFANA_ADMIN: "false"
+      GF_AUTH_GENERIC_OAUTH_SKIP_ORG_ROLE_SYNC: "false"
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_BROWSER_URL:?set browser OIDC origin}/realms/${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}/protocol/openid-connect/auth
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL:?set internal OIDC origin}/realms/${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}/protocol/openid-connect/token
+      GF_AUTH_GENERIC_OAUTH_API_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL:?set internal OIDC origin}/realms/${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}/protocol/openid-connect/userinfo
+      GF_AUTH_GENERIC_OAUTH_TLS_CLIENT_CA: /run/secrets/oidc/ca.crt
+      GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE: "false"
+      GF_AUTH_GENERIC_OAUTH_USE_PKCE: "true"
+      GF_AUTH_GENERIC_OAUTH_USE_REFRESH_TOKEN: "true"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SECURITY_ADMIN_USER: ${AELEV_INFRASTRUCTURE_GRAFANA_ADMIN_USER:?set in the grafana env file}
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/observability/admin-password
+      GF_SECURITY_SECRET_KEY__FILE: /run/secrets/observability/encryption-key
+      GF_SECURITY_COOKIE_SECURE: "true"
+      GF_SECURITY_COOKIE_SAMESITE: lax
+      GF_LOG_MODE: console
+      GF_LOG_CONSOLE_FORMAT: json
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_PLUGINS_PREINSTALL_DISABLED: "true"
+      GF_OBSERVABILITY_TLS_CA__FILE: /run/secrets/observability/ca.crt
+      GF_OBSERVABILITY_TLS_CERT__FILE: /run/secrets/observability/client.crt
+      GF_OBSERVABILITY_TLS_KEY__FILE: /run/secrets/observability/client.key
+      GF_SMTP_ENABLED: ${AELEV_INFRASTRUCTURE_GRAFANA_SMTP_ENABLED:?set in the grafana env file}
+      GF_SMTP_HOST: ${AELEV_INFRASTRUCTURE_GRAFANA_SMTP_HOST?define even when SMTP is disabled}
+      GF_SMTP_USER: ${AELEV_INFRASTRUCTURE_GRAFANA_SMTP_USER?define even when SMTP is disabled}
+      GF_SMTP_PASSWORD__FILE: /run/secrets/observability/smtp-password
+      GF_SMTP_FROM_ADDRESS: ${AELEV_INFRASTRUCTURE_GRAFANA_SMTP_FROM?define even when SMTP is disabled}
+      GF_SMTP_STARTTLS_POLICY: MandatoryStartTLS
+      GF_SMTP_SKIP_VERIFY: "false"
+      SSL_CERT_DIR: /run/secrets/observability/trusted-ca
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--cacert", "/run/secrets/observability/ca.crt", "https://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_RUNTIME_ROOT:?set in the grafana env file}
+        target: /etc/grafana/provisioning
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_SECRET_ROOT:?set in the grafana env file}
+        target: /run/secrets/observability
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_SECRET_ROOT:?set Grafana operator OIDC secret root}
+        target: /run/secrets/oidc
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_GRAFANA_BIND:?set in the grafana env file}:${AELEV_INFRASTRUCTURE_GRAFANA_PORT:?set in the grafana env file}:3000"
+    extra_hosts: ["prometheus:host-gateway", "loki:host-gateway", "tempo:host-gateway", "keycloak:host-gateway"]
+
+  grafana-configuration-init:
+    image: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE:?set own tools image}
+    build:
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE:?set own Python image}"}
+    profiles: [provision]
+    entrypoint: [python, -m, aelev_observability_tools]
+    command: [--owner, "${AELEV_INFRASTRUCTURE_GRAFANA_DATA_OWNER:?set immutable data owner}", --role, grafana, --uid, "472"]
+    user: "0:0"
+    restart: "no"
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    volumes: [grafana-data:/data]
+
+  grafana-status-publisher:
+    <<: *status-runtime
+    profiles: [ui]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_GID:?set in the grafana env file}"]
+    restart: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    mem_limit: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_MEMORY_LIMIT:?set in the grafana env file}
+    volumes:
+      - grafana-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_ROOT:?set in the grafana env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/publisher-health.py", "AELEV_INFRASTRUCTURE_GRAFANA_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  grafana-status-provision:
+    <<: *status-runtime
+    profiles: [provision]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_GRAFANA_UI_PROVISION_UID:?set in the grafana env file}:${AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_GID:?set in the grafana env file}"
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_ROOT:?set in the grafana env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_ADMIN_ROOT:?set in the grafana env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+  grafana-oidc-provision:
+    image: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE:?set own tools image}
+    build:
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE:?set own Python image}"}
+    profiles: [provision]
+    entrypoint: [python, /opt/aelev/oidc_provision.py]
+    user: "${AELEV_INFRASTRUCTURE_GRAFANA_UI_PROVISION_UID:?set provision UID}:${AELEV_INFRASTRUCTURE_GRAFANA_SECRET_GID:?set native secret GID}"
+    restart: "no"
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    extra_hosts: ["keycloak:host-gateway"]
+    networks: [grafana-ui]
+    environment:
+      AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL:?set internal OIDC origin}
+      AELEV_INFRASTRUCTURE_GRAFANA_OIDC_PUBLIC_URL: https://${AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST:?set Grafana public host}:${AELEV_INFRASTRUCTURE_GRAFANA_PORT:?set Grafana public port}
+      AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}
+      AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID:?set Grafana operator OIDC client}
+      AELEV_INFRASTRUCTURE_GRAFANA_OIDC_OPERATOR_USER: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_OPERATOR_USER:?set canonical operator user}
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_SECRET_ROOT:?set Grafana operator OIDC secret root}
+        target: /run/secrets/oidc
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_ADMIN_ROOT:?set deployment admin root}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+volumes:
+  grafana-data:
+    name: ${AELEV_INFRASTRUCTURE_GRAFANA_DATA_VOLUME:?set own data volume}
+  grafana-status-data:
+    name: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_STATE_VOLUME:?set in the grafana env file}
+
+networks:
+  grafana-ui:
+    name: ${AELEV_INFRASTRUCTURE_GRAFANA_UI_NETWORK:?set in the grafana env file}

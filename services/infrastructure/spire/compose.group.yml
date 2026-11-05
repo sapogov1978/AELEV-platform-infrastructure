@@ -1,0 +1,4 @@
+# Root integration reads this owner's optional .env, never provider defaults
+# substituted for an already installed composition.
+include:
+  - path: ${AELEV_INFRASTRUCTURE_SPIRE_INSTALLED_COMPOSE:-./compose.default.yml}

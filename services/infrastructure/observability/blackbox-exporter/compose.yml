@@ -1,0 +1,179 @@
+name: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_COMPOSE_PROJECT:?set in the blackbox-exporter env file}
+
+x-operator-environment: &operator-environment
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT:?set own operator port}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_UPSTREAM: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_UPSTREAM:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_REALM: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_REALM:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_USER: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_USER:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TIMEOUT_SECONDS:?set in the blackbox-exporter env file}
+
+x-status-environment: &status-environment
+  <<: *operator-environment
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REVISION: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REVISION:?set positive owner description revision}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_URL: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_URL:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IDENTITY_URL:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REALM: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REALM:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_CLIENT_ID:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_AUDIENCE:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_MODULE_ID:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_INTERVAL_SECONDS:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_TIMEOUT_SECONDS:?set in the blackbox-exporter env file}
+  AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_HEALTH_URL: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_HEALTH_URL:?set in the blackbox-exporter env file}
+
+x-status-runtime: &status-runtime
+  image: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IMAGE:?set in the blackbox-exporter env file}
+  build:
+    context: .
+    dockerfile: Dockerfile.status
+    target: runtime
+    args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE:?set in the blackbox-exporter env file}"}
+  environment: *status-environment
+  read_only: true
+  tmpfs: ["/tmp:size=8m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+  networks: [blackbox-exporter-ui]
+
+services:
+  blackbox-exporter-operator:
+    <<: *status-runtime
+    image: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IMAGE:?set own operator release}
+    entrypoint: [python, -m, aelev_observability_tools.operator]
+    command: [AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_]
+    environment: *operator-environment
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/operator-health.py]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    restart: "no"
+    user: "101:${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID:?set own operator secret group}"
+    group_add: ["${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_SECRET_GID:?set own native secret group}"]
+    mem_limit: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MEMORY_LIMIT:?set own operator memory limit}
+    ports: ["${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND:?set own operator bind}:${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT:?set own operator port}:8080"]
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_SECRET_ROOT:?set own operator secrets}
+        target: /run/secrets/operator
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TLS_ROOT:?set own operator TLS credentials}
+        target: /run/secrets/observability
+        read_only: true
+        bind: {create_host_path: false}
+
+  blackbox-exporter-operator-provision:
+    <<: *status-runtime
+    profiles: [provision]
+    entrypoint: [python, -m, aelev_observability_tools.operator_provision]
+    command: [AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_]
+    environment: *operator-environment
+    user: "${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PROVISION_UID:?set own provision uid}:${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID:?set own operator secret group}"
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_SECRET_ROOT:?set own operator secrets}
+        target: /run/secrets/operator
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_ADMIN_ROOT:?set own admin secrets}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+  blackbox-exporter:
+    restart: "no"
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    group_add: ["${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_SECRET_GID:?set in the blackbox-exporter env file}"]
+    networks: [blackbox-exporter-ui]
+    image: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_IMAGE:?set in the blackbox-exporter env file}
+    build:
+      context: .
+      dockerfile: Dockerfile.native
+      target: runtime
+      args:
+        BASE_IMAGE: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_BASE_IMAGE:?set exact existing native base image}
+        PYTHON_IMAGE: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE:?set own pinned build image}
+    healthcheck:
+      test: [CMD, /opt/aelev/native-health, "9115", "${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_PUBLIC_HOST:?set own certificate SAN}", /run/secrets/observability]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    mem_limit: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_MEMORY_LIMIT:?set in the blackbox-exporter env file}
+    command: ["--config.file=/etc/aelev/blackbox.yml","--web.config.file=/etc/aelev/web.yml","--log.format=json"]
+    user: "65534:65534"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_RUNTIME_ROOT:?set in the blackbox-exporter env file}
+        target: /etc/aelev
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_SECRET_ROOT:?set in the blackbox-exporter env file}
+        target: /run/secrets/observability
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_BIND:?set in the blackbox-exporter env file}:${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_PORT:?set in the blackbox-exporter env file}:9115"
+    extra_hosts: ["delivery:host-gateway", "otel-collector:host-gateway", "prometheus:host-gateway", "blackbox-exporter:host-gateway", "loki:host-gateway", "tempo:host-gateway", "grafana:host-gateway"]
+
+  blackbox-exporter-status-publisher:
+    <<: *status-runtime
+    profiles: [ui]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID:?set in the blackbox-exporter env file}"]
+    restart: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    mem_limit: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_MEMORY_LIMIT:?set in the blackbox-exporter env file}
+    volumes:
+      - blackbox-exporter-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_ROOT:?set in the blackbox-exporter env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/publisher-health.py", "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  blackbox-exporter-status-provision:
+    <<: *status-runtime
+    profiles: [provision]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PROVISION_UID:?set in the blackbox-exporter env file}:${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID:?set in the blackbox-exporter env file}"
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_ROOT:?set in the blackbox-exporter env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_ADMIN_ROOT:?set in the blackbox-exporter env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+volumes:
+  blackbox-exporter-status-data:
+    name: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_STATE_VOLUME:?set in the blackbox-exporter env file}
+
+networks:
+  blackbox-exporter-ui:
+    name: ${AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_NETWORK:?set in the blackbox-exporter env file}

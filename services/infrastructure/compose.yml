@@ -1,0 +1,35 @@
+name: ${AELEV_INFRASTRUCTURE_COMPOSE_PROJECT:?set AELEV_INFRASTRUCTURE_COMPOSE_PROJECT in infrastructure/.env}
+
+# Every included model reads its owner's env and resolves paths in its own folder.
+# Providers are included independently of the components which use them.
+include:
+  # The public SPIRE exporter binds an existing verified installation through
+  # its own optional .env. A fresh provider retains its opt-in templates.
+  - path: ./spire/compose.group.yml
+    project_directory: ./spire
+  - path: ./public-egress-gateway/compose.yml
+    project_directory: ./public-egress-gateway
+    env_file: ./public-egress-gateway/.env
+  - path: ./kafka/compose.yml
+    project_directory: ./kafka
+    env_file: ./kafka/.env
+  - path:
+      - ./translator-service/compose.remote.yml
+      - ./translator-service/compose.local.yml
+    project_directory: ./translator-service
+    env_file: ./translator-service/.env
+  - path: ./postgresql/compose.yml
+    project_directory: ./postgresql
+    env_file: ./postgresql/.env
+  - path: ./minio/compose.yml
+    project_directory: ./minio
+    env_file: ./minio/.env
+  - path: ./keycloak/compose.yml
+    project_directory: ./keycloak
+    env_file: ./keycloak/.env
+  - path: ./platform-ui/compose.yml
+    project_directory: ./platform-ui
+    env_file: ./platform-ui/.env
+  - path: ./observability/compose.yml
+    project_directory: ./observability
+    env_file: ./observability/.env

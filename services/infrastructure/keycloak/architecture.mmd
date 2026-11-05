@@ -1,0 +1,10 @@
+flowchart LR
+    Human["Оператор"] -->|OIDC / OAuth 2.0| Keycloak["Keycloak"]
+    Services["Служебные клиенты"] -->|client credentials| Keycloak
+    Realm["Realm bootstrap"] --> Keycloak
+    Keycloak --> Database[("Owner database")]
+    TLS["Owner TLS lifecycle"] --> Keycloak
+    Keycloak --> Tokens["Signed identity tokens"]
+    Backup["Export / restore"] --> Database
+    Keycloak --> Status["Platform UI status publisher"]
+    Keycloak --> Telemetry["Telemetry sender"]

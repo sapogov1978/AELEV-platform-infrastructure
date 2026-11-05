@@ -1,0 +1,136 @@
+name: ${AELEV_INFRASTRUCTURE_LOKI_COMPOSE_PROJECT:?set in the loki env file}
+
+x-status-environment: &status-environment
+  AELEV_INFRASTRUCTURE_LOKI_UI_URL: ${AELEV_INFRASTRUCTURE_LOKI_UI_URL:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_LOKI_UI_IDENTITY_URL:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_REALM: ${AELEV_INFRASTRUCTURE_LOKI_UI_REALM:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_LOKI_UI_CLIENT_ID:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_LOKI_UI_AUDIENCE:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_LOKI_UI_MODULE_ID:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_LOKI_UI_INTERVAL_SECONDS:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_LOKI_UI_TIMEOUT_SECONDS:?set in the loki env file}
+  AELEV_INFRASTRUCTURE_LOKI_UI_HEALTH_URL: ${AELEV_INFRASTRUCTURE_LOKI_UI_HEALTH_URL:?set in the loki env file}
+
+x-status-runtime: &status-runtime
+  image: ${AELEV_INFRASTRUCTURE_LOKI_UI_IMAGE:?set in the loki env file}
+  build:
+    context: .
+    dockerfile: Dockerfile.status
+    target: runtime
+    args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE:?set in the loki env file}"}
+  environment: *status-environment
+  read_only: true
+  tmpfs: ["/tmp:size=8m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+  networks: [loki-ui]
+
+services:
+  loki:
+    restart: "no"
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    group_add: ["${AELEV_INFRASTRUCTURE_LOKI_SECRET_GID:?set in the loki env file}"]
+    networks: [loki-ui]
+    image: ${AELEV_INFRASTRUCTURE_LOKI_IMAGE:?set in the loki env file}
+    build:
+      context: .
+      dockerfile: Dockerfile.native
+      target: runtime
+      args:
+        BASE_IMAGE: ${AELEV_INFRASTRUCTURE_LOKI_BASE_IMAGE:?set exact existing native base image}
+        PYTHON_IMAGE: ${AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE:?set own pinned build image}
+    healthcheck:
+      test: [CMD, /opt/aelev/native-health, "3100", "${AELEV_INFRASTRUCTURE_LOKI_PUBLIC_HOST:?set own certificate SAN}", /run/secrets/observability]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    mem_limit: ${AELEV_INFRASTRUCTURE_LOKI_MEMORY_LIMIT:?set in the loki env file}
+    command: ["-config.file=/etc/aelev/loki.yml","-log.format=json"]
+    volumes:
+      - loki-data:/loki
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_LOKI_RUNTIME_ROOT:?set in the loki env file}
+        target: /etc/aelev
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_LOKI_SECRET_ROOT:?set in the loki env file}
+        target: /run/secrets/observability
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_LOKI_BIND:?set in the loki env file}:${AELEV_INFRASTRUCTURE_LOKI_PORT:?set in the loki env file}:3100"
+
+  loki-configuration-init:
+    image: ${AELEV_INFRASTRUCTURE_LOKI_UI_IMAGE:?set own tools image}
+    build:
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE:?set own Python image}"}
+    profiles: [provision]
+    entrypoint: [python, -m, aelev_observability_tools]
+    command: [--owner, "${AELEV_INFRASTRUCTURE_LOKI_DATA_OWNER:?set immutable data owner}", --role, loki, --uid, "10001"]
+    user: "0:0"
+    restart: "no"
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    volumes: [loki-data:/data]
+
+  loki-status-publisher:
+    <<: *status-runtime
+    profiles: [ui]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_GID:?set in the loki env file}"]
+    restart: ${AELEV_INFRASTRUCTURE_LOKI_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    mem_limit: ${AELEV_INFRASTRUCTURE_LOKI_UI_MEMORY_LIMIT:?set in the loki env file}
+    volumes:
+      - loki-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_ROOT:?set in the loki env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/publisher-health.py", "AELEV_INFRASTRUCTURE_LOKI_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  loki-status-provision:
+    <<: *status-runtime
+    profiles: [provision]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_LOKI_UI_PROVISION_UID:?set in the loki env file}:${AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_GID:?set in the loki env file}"
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_ROOT:?set in the loki env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_LOKI_UI_ADMIN_ROOT:?set in the loki env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+volumes:
+  loki-data:
+    name: ${AELEV_INFRASTRUCTURE_LOKI_DATA_VOLUME:?set own data volume}
+  loki-status-data:
+    name: ${AELEV_INFRASTRUCTURE_LOKI_UI_STATE_VOLUME:?set in the loki env file}
+
+networks:
+  loki-ui:
+    name: ${AELEV_INFRASTRUCTURE_LOKI_UI_NETWORK:?set in the loki env file}

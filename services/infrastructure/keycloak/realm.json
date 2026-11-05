@@ -1,0 +1,8 @@
+{
+  "realm": "aelev",
+  "enabled": true,
+  "loginTheme": "aelev",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": false
+}

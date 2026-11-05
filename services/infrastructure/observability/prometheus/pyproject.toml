@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "aelev-prometheus-presentation"
+version = "1.1.0"
+description = "Owner-local technical status for Prometheus"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+aelev-observability-tools = {path = "vendor/aelev_observability_tools-1.1.2-py3-none-any.whl", extras = ["operator"]}
+aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "9.0.3"
+black = "26.10.1"
+ruff = "0.13.2"
+mypy = "1.18.2"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+pythonpath = ["."]

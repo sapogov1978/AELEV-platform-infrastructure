@@ -1,0 +1,17 @@
+name: ${AELEV_INFRASTRUCTURE_OBSERVABILITY_COMPOSE_PROJECT:?set the observability project}
+
+include:
+  - path: delivery/compose.yml
+    env_file: delivery/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}
+  - path: otel-collector/compose.yml
+    env_file: otel-collector/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}
+  - path: prometheus/compose.yml
+    env_file: prometheus/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}
+  - path: blackbox-exporter/compose.yml
+    env_file: blackbox-exporter/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}
+  - path: loki/compose.yml
+    env_file: loki/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}
+  - path: tempo/compose.yml
+    env_file: tempo/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}
+  - path: grafana/compose.yml
+    env_file: grafana/${AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE:?set the owner env filename}

@@ -1,0 +1,17 @@
+{
+  "owner": "infrastructure-spire",
+  "version": "1.15.4",
+  "source": "https://github.com/spiffe/spire/releases/tag/v1.15.4",
+  "python_sqlite": {
+    "version": "3.53.4",
+    "url": "https://sqlite.org/2026/sqlite-autoconf-3530400.tar.gz",
+    "member": "sqlite-autoconf-3530400/sqlite3.c",
+    "bytes": 3283177,
+    "sha256": "0e9483900e92cd5de8fd48d16bf9200145a61f7fd5be542a5ac81d8a9516eb9c",
+    "source_sha3_256": "67f423e9ebbbdc473cbc4772c872ee6b89f31fde4ed0279a5c25d5f65c043a16"
+  },
+  "linux": {
+    "amd64": {"bytes": 63831771, "sha256": "d8e3ee9a9d48636249484d91af37566dfc0a9d7e71edcbe7acd49cf18bc3c87c"},
+    "arm64": {"bytes": 56230200, "sha256": "81d9b69d662c7813f905805cafd9f2e6d2255639b65c9e1b7297deb2b1df3eb0"}
+  }
+}

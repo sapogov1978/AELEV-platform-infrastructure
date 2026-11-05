@@ -1,0 +1,11 @@
+flowchart LR
+    SRC[Platform Infrastructure repository] --> REL[Pinned source release and manifest]
+    REL --> ENV[Managed infrastructure installation]
+    APP[Independent consumer repository] -->|exact release requirement| REL
+    APP -->|public technical interfaces| ENV
+    ENV --> K[Kafka]
+    ENV --> S[Storage and identity]
+    ENV --> U[Platform UI]
+    click K "../../services/infrastructure/kafka/architecture.mmd" "Kafka"
+    click S "../../services/infrastructure/postgresql/architecture.mmd" "PostgreSQL"
+    click U "../../services/infrastructure/platform-ui/architecture.mmd" "Platform UI"

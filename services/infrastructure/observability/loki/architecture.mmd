@@ -1,0 +1,7 @@
+flowchart LR
+    Collector["OpenTelemetry Collector"] -->|logs| Loki["Loki"]
+    Loki --> Index[("Log index")]
+    Loki --> Chunks[("Log chunks")]
+    Grafana["Grafana"] -->|LogQL| Loki
+    Retention["Retention policy"] --> Loki
+    Loki --> Status["Platform UI status publisher"]

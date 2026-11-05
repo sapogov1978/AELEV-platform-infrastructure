@@ -1,0 +1,39 @@
+name: ${AELEV_INFRASTRUCTURE_SPIRE_AGENT_PROJECT:?set isolated agent project}
+
+services:
+  spire-agent:
+    image: ${AELEV_INFRASTRUCTURE_SPIRE_IMAGE:-aelev/infrastructure-spire:local}
+    command: [agent]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=8m,mode=1777", "/run/spire:size=8m,uid=10001,gid=10001,mode=0700"]
+    volumes:
+      - spire-agent-data:/var/lib/spire
+      - spire-agent-bootstrap:/run/bootstrap:ro
+      - spire-workload-svid:/run/svid
+    restart: "on-failure:3"
+    stop_grace_period: 30s
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 128
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    healthcheck:
+      test: [CMD, python, -S, -P, /opt/aelev/src/aelev_spire/health.py]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  spire-agent-data:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_AGENT_VOLUME:?set own persistent node state volume}
+  spire-agent-bootstrap:
+    external: true
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_AGENT_BOOTSTRAP_VOLUME:?set protected initial input volume}
+  spire-workload-svid:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_SVID_VOLUME:?set own ephemeral credential volume}
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=2m,uid=10001,gid=10001,mode=0700

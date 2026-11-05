@@ -1,0 +1,11 @@
+.env
+secrets/*
+!secrets/README.md
+!secrets/USER_MANUAL.md
+runtime/
+grants/*
+!grants/.gitkeep
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/

@@ -1,0 +1,7 @@
+flowchart LR
+    Collector["OpenTelemetry Collector"] -->|remote write| Prometheus["Prometheus"]
+    Probes["Blackbox probe metrics"] --> Prometheus
+    Rules["Alerting and recording rules"] --> Prometheus
+    Prometheus --> TSDB[("Owner TSDB")]
+    Grafana["Grafana"] -->|PromQL| Prometheus
+    Prometheus --> Status["Platform UI status publisher"]

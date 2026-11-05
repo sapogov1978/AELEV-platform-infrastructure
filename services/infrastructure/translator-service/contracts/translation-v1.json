@@ -1,0 +1,978 @@
+{
+  "artifact_version": "1.1.0",
+  "canonical_source": "service-owned standalone contract snapshot",
+  "schemas": {
+    "TranslationCompleted": {
+      "allOf": [
+        {
+          "properties": {
+            "causationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "correlationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "data": {
+              "type": "object"
+            },
+            "datacontenttype": {
+              "const": "application/json"
+            },
+            "dataschema": {
+              "format": "uri",
+              "type": "string"
+            },
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "signature": {
+              "additionalProperties": false,
+              "properties": {
+                "algorithm": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "canonicalization": {
+                  "const": "RFC8785"
+                },
+                "certificate_ref": {
+                  "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                  "type": "string"
+                },
+                "key_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "protected": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "signature": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "trust_domain": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "protected",
+                "signature",
+                "certificate_ref",
+                "trust_domain",
+                "algorithm",
+                "key_id",
+                "canonicalization"
+              ],
+              "type": "object"
+            },
+            "source": {
+              "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+              "type": "string"
+            },
+            "specversion": {
+              "const": "1.0"
+            },
+            "subject": {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "time": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "traceparent": {
+              "pattern": "^[0-9a-f]{2}-[0-9a-f]{32}-[0-9a-f]{16}-[0-9a-f]{2}$",
+              "type": "string"
+            },
+            "type": {
+              "pattern": "^com\\.aelev\\.[a-z0-9.-]+\\.v[1-9][0-9]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "specversion",
+            "id",
+            "source",
+            "type",
+            "time",
+            "subject",
+            "datacontenttype",
+            "dataschema",
+            "correlationid",
+            "causationid",
+            "traceparent",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "properties": {
+                "error_code": {
+                  "maxLength": 128,
+                  "type": "string"
+                },
+                "provenance": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "input_refs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "digest": {
+                            "pattern": "^sha256:[0-9a-f]{64}$",
+                            "type": "string"
+                          },
+                          "id": {
+                            "maxLength": 256,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "version": {
+                            "maxLength": 128,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "manifest_digest": {
+                      "pattern": "^sha256:[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "manifest_urn": {
+                      "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                      "type": "string"
+                    },
+                    "owner_context": {
+                      "const": "TRANSLATOR_SERVICE"
+                    },
+                    "producer_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "producer_version": {
+                      "maxLength": 128,
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "owner_context",
+                    "producer_id",
+                    "producer_version",
+                    "input_refs"
+                  ],
+                  "type": "object"
+                },
+                "recorded_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "request_digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "request_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "schema_version": {
+                  "const": "1.0.0"
+                },
+                "source_digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "source_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "SUCCEEDED",
+                    "FAILED"
+                  ]
+                },
+                "target_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "translated_text": {
+                  "maxLength": 48000,
+                  "type": "string"
+                },
+                "translator_ref": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "warnings": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "recorded_at",
+                "schema_version",
+                "provenance",
+                "request_id",
+                "request_digest",
+                "translator_ref",
+                "source_language",
+                "target_language",
+                "source_digest",
+                "status",
+                "translated_text",
+                "warnings",
+                "error_code"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "com.aelev.translation-completed.v1"
+            }
+          },
+          "required": [],
+          "type": "object"
+        }
+      ]
+    },
+    "TranslationCompletedV2": {
+      "allOf": [
+        {
+          "properties": {
+            "causationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "correlationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "data": {
+              "type": "object"
+            },
+            "datacontenttype": {
+              "const": "application/json"
+            },
+            "dataschema": {
+              "format": "uri",
+              "type": "string"
+            },
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "signature": {
+              "additionalProperties": false,
+              "properties": {
+                "algorithm": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "canonicalization": {
+                  "const": "RFC8785"
+                },
+                "certificate_ref": {
+                  "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                  "type": "string"
+                },
+                "key_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "protected": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "signature": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "trust_domain": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "protected",
+                "signature",
+                "certificate_ref",
+                "trust_domain",
+                "algorithm",
+                "key_id",
+                "canonicalization"
+              ],
+              "type": "object"
+            },
+            "source": {
+              "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+              "type": "string"
+            },
+            "specversion": {
+              "const": "1.0"
+            },
+            "subject": {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "time": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "traceparent": {
+              "pattern": "^[0-9a-f]{2}-[0-9a-f]{32}-[0-9a-f]{16}-[0-9a-f]{2}$",
+              "type": "string"
+            },
+            "type": {
+              "pattern": "^com\\.aelev\\.[a-z0-9.-]+\\.v[1-9][0-9]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "specversion",
+            "id",
+            "source",
+            "type",
+            "time",
+            "subject",
+            "datacontenttype",
+            "dataschema",
+            "correlationid",
+            "causationid",
+            "traceparent",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "properties": {
+                "error_code": {
+                  "maxLength": 128,
+                  "type": "string"
+                },
+                "execution_duration_ms": {
+                  "maximum": 9007199254740991,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "provenance": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "input_refs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "digest": {
+                            "pattern": "^sha256:[0-9a-f]{64}$",
+                            "type": "string"
+                          },
+                          "id": {
+                            "maxLength": 256,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "version": {
+                            "maxLength": 128,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "manifest_digest": {
+                      "pattern": "^sha256:[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "manifest_urn": {
+                      "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                      "type": "string"
+                    },
+                    "owner_context": {
+                      "const": "TRANSLATOR_SERVICE"
+                    },
+                    "producer_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "producer_version": {
+                      "maxLength": 128,
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "owner_context",
+                    "producer_id",
+                    "producer_version",
+                    "input_refs"
+                  ],
+                  "type": "object"
+                },
+                "recorded_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "request_digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "request_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "schema_version": {
+                  "const": "2.0.0"
+                },
+                "source_digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "source_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "SUCCEEDED",
+                    "FAILED"
+                  ]
+                },
+                "target_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "translated_text": {
+                  "maxLength": 48000,
+                  "type": "string"
+                },
+                "warnings": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "recorded_at",
+                "schema_version",
+                "provenance",
+                "request_id",
+                "request_digest",
+                "source_language",
+                "target_language",
+                "source_digest",
+                "status",
+                "translated_text",
+                "warnings",
+                "error_code"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "com.aelev.translation-completed.v2"
+            }
+          },
+          "required": [],
+          "type": "object"
+        }
+      ]
+    },
+    "TranslationRequested": {
+      "allOf": [
+        {
+          "properties": {
+            "causationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "correlationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "data": {
+              "type": "object"
+            },
+            "datacontenttype": {
+              "const": "application/json"
+            },
+            "dataschema": {
+              "format": "uri",
+              "type": "string"
+            },
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "signature": {
+              "additionalProperties": false,
+              "properties": {
+                "algorithm": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "canonicalization": {
+                  "const": "RFC8785"
+                },
+                "certificate_ref": {
+                  "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                  "type": "string"
+                },
+                "key_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "protected": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "signature": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "trust_domain": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "protected",
+                "signature",
+                "certificate_ref",
+                "trust_domain",
+                "algorithm",
+                "key_id",
+                "canonicalization"
+              ],
+              "type": "object"
+            },
+            "source": {
+              "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+              "type": "string"
+            },
+            "specversion": {
+              "const": "1.0"
+            },
+            "subject": {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "time": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "traceparent": {
+              "pattern": "^[0-9a-f]{2}-[0-9a-f]{32}-[0-9a-f]{16}-[0-9a-f]{2}$",
+              "type": "string"
+            },
+            "type": {
+              "pattern": "^com\\.aelev\\.[a-z0-9.-]+\\.v[1-9][0-9]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "specversion",
+            "id",
+            "source",
+            "type",
+            "time",
+            "subject",
+            "datacontenttype",
+            "dataschema",
+            "correlationid",
+            "causationid",
+            "traceparent",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "properties": {
+                "operation": {
+                  "enum": [
+                    "TRANSLATE_TEXT",
+                    "PROFILE_UNIT",
+                    "OPERATOR_REVIEW"
+                  ]
+                },
+                "provenance": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "input_refs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "digest": {
+                            "pattern": "^sha256:[0-9a-f]{64}$",
+                            "type": "string"
+                          },
+                          "id": {
+                            "maxLength": 256,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "version": {
+                            "maxLength": 128,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "manifest_digest": {
+                      "pattern": "^sha256:[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "manifest_urn": {
+                      "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                      "type": "string"
+                    },
+                    "owner_context": {
+                      "pattern": "^[A-Z][A-Z0-9_]{1,63}$",
+                      "type": "string"
+                    },
+                    "producer_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "producer_version": {
+                      "maxLength": 128,
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "owner_context",
+                    "producer_id",
+                    "producer_version",
+                    "input_refs"
+                  ],
+                  "type": "object"
+                },
+                "recorded_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "request_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "schema_version": {
+                  "const": "1.0.0"
+                },
+                "source_digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "source_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "target_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "text": {
+                  "maxLength": 12000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "translator_ref": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "recorded_at",
+                "schema_version",
+                "provenance",
+                "request_id",
+                "operation",
+                "translator_ref",
+                "source_language",
+                "target_language",
+                "source_digest",
+                "text"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "com.aelev.translation-requested.v1"
+            }
+          },
+          "required": [],
+          "type": "object"
+        }
+      ]
+    },
+    "TranslationRequestedV2": {
+      "allOf": [
+        {
+          "properties": {
+            "causationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "correlationid": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "data": {
+              "type": "object"
+            },
+            "datacontenttype": {
+              "const": "application/json"
+            },
+            "dataschema": {
+              "format": "uri",
+              "type": "string"
+            },
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "signature": {
+              "additionalProperties": false,
+              "properties": {
+                "algorithm": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "canonicalization": {
+                  "const": "RFC8785"
+                },
+                "certificate_ref": {
+                  "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                  "type": "string"
+                },
+                "key_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "protected": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "signature": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "trust_domain": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "protected",
+                "signature",
+                "certificate_ref",
+                "trust_domain",
+                "algorithm",
+                "key_id",
+                "canonicalization"
+              ],
+              "type": "object"
+            },
+            "source": {
+              "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+              "type": "string"
+            },
+            "specversion": {
+              "const": "1.0"
+            },
+            "subject": {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            "time": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "traceparent": {
+              "pattern": "^[0-9a-f]{2}-[0-9a-f]{32}-[0-9a-f]{16}-[0-9a-f]{2}$",
+              "type": "string"
+            },
+            "type": {
+              "pattern": "^com\\.aelev\\.[a-z0-9.-]+\\.v[1-9][0-9]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "specversion",
+            "id",
+            "source",
+            "type",
+            "time",
+            "subject",
+            "datacontenttype",
+            "dataschema",
+            "correlationid",
+            "causationid",
+            "traceparent",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "additionalProperties": false,
+              "properties": {
+                "provenance": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "input_refs": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "digest": {
+                            "pattern": "^sha256:[0-9a-f]{64}$",
+                            "type": "string"
+                          },
+                          "id": {
+                            "maxLength": 256,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "version": {
+                            "maxLength": 128,
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "version"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "manifest_digest": {
+                      "pattern": "^sha256:[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "manifest_urn": {
+                      "pattern": "^urn:[a-z0-9][a-z0-9-]{0,31}:.+$",
+                      "type": "string"
+                    },
+                    "owner_context": {
+                      "pattern": "^[A-Z][A-Z0-9_]{1,63}$",
+                      "type": "string"
+                    },
+                    "producer_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "producer_version": {
+                      "maxLength": 128,
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "owner_context",
+                    "producer_id",
+                    "producer_version",
+                    "input_refs"
+                  ],
+                  "type": "object"
+                },
+                "recorded_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "request_id": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "schema_version": {
+                  "const": "2.0.0"
+                },
+                "source_digest": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "source_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "target_language": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "text": {
+                  "maxLength": 12000,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "recorded_at",
+                "schema_version",
+                "provenance",
+                "request_id",
+                "source_language",
+                "target_language",
+                "source_digest",
+                "text"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "com.aelev.translation-requested.v2"
+            }
+          },
+          "required": [],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "source_digest": "sha256:0bd8a186b0309b4adae627201c5fa56f7cadd10a099a2b5e3d19e00574ab5561"
+}

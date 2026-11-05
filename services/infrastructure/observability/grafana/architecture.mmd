@@ -1,0 +1,8 @@
+flowchart LR
+    Operator["Оператор"] -->|OIDC| Grafana["Grafana"]
+    Provisioning["Versioned dashboards and datasources"] --> Grafana
+    Grafana --> Prometheus["Prometheus"]
+    Grafana --> Loki["Loki"]
+    Grafana --> Tempo["Tempo"]
+    Grafana --> State[("Owner database")]
+    Grafana --> Status["Platform UI status publisher"]

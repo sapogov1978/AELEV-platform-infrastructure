@@ -1,0 +1,129 @@
+name: ${AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT:?set AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT in the Kafka .env file}
+
+x-ui-status-environment: &ui-status-environment
+  AELEV_INFRASTRUCTURE_KAFKA_UI_URL: ${AELEV_INFRASTRUCTURE_KAFKA_UI_URL:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_KAFKA_UI_IDENTITY_URL:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_REALM: ${AELEV_INFRASTRUCTURE_KAFKA_UI_REALM:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_KAFKA_UI_CLIENT_ID:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_KAFKA_UI_AUDIENCE:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_KAFKA_UI_MODULE_ID:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_KAFKA_UI_INTERVAL_SECONDS:?set in the kafka .env file}
+  AELEV_INFRASTRUCTURE_KAFKA_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_KAFKA_UI_TIMEOUT_SECONDS:?set in the kafka .env file}
+
+services:
+  kafka-status-publisher:
+    image: ${AELEV_INFRASTRUCTURE_KAFKA_UI_IMAGE:?set in the kafka .env file}
+    build: &status-build
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args:
+        PYTHON_IMAGE: ${AELEV_INFRASTRUCTURE_KAFKA_UI_PYTHON_IMAGE:?set in the Kafka .env file}
+    profiles: [ui]
+    entrypoint: ["python", "/opt/aelev/status_publisher.py"]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_GID:?set in the kafka .env file}"]
+    environment: *ui-status-environment
+    restart: ${AELEV_INFRASTRUCTURE_KAFKA_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+    mem_limit: ${AELEV_INFRASTRUCTURE_KAFKA_UI_MEMORY_LIMIT:?set in the kafka .env file}
+    volumes:
+      - kafka-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_ROOT:?set in the kafka .env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [kafka, kafka-status-egress]
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/publisher-health.py", "AELEV_INFRASTRUCTURE_KAFKA_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  kafka-status-provision:
+    image: ${AELEV_INFRASTRUCTURE_KAFKA_UI_IMAGE:?set in the kafka .env file}
+    build: *status-build
+    profiles: [provision]
+    entrypoint: ["python", "/opt/aelev/status_publisher.py"]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_KAFKA_UI_PROVISION_UID:?set in the kafka .env file}:${AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_GID:?set in the kafka .env file}"
+    environment: *ui-status-environment
+    restart: "no"
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_ROOT:?set in the kafka .env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KAFKA_UI_ADMIN_ROOT:?set in the kafka .env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [kafka, kafka-status-egress]
+
+
+  kafka:
+    image: ${AELEV_INFRASTRUCTURE_KAFKA_IMAGE:?set approved native-probe Kafka image in the Kafka .env file}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    init: true
+    # The operator attaches the remaining lifetime budget after health verification.
+    restart: "no"
+    environment:
+      KAFKA_HEAP_OPTS: ${AELEV_INFRASTRUCTURE_KAFKA_HEAP_OPTS:?set AELEV_INFRASTRUCTURE_KAFKA_HEAP_OPTS in the Kafka .env file}
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: ${AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS:?set AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS in the Kafka .env file}
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_MESSAGE_MAX_BYTES: ${AELEV_INFRASTRUCTURE_KAFKA_MESSAGE_MAX_BYTES:?set AELEV_INFRASTRUCTURE_KAFKA_MESSAGE_MAX_BYTES in the Kafka .env file}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_KAFKA_BIND:?set AELEV_INFRASTRUCTURE_KAFKA_BIND in the Kafka .env file}:${AELEV_INFRASTRUCTURE_KAFKA_PORT:?set AELEV_INFRASTRUCTURE_KAFKA_PORT in the Kafka .env file}:9092"
+    volumes: [kafka-data:/var/lib/kafka/data]
+    healthcheck:
+      test: ["CMD", "/opt/aelev/kafka-health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      kafka:
+        aliases: [kafka]
+
+volumes:
+  kafka-status-data:
+    name: ${AELEV_INFRASTRUCTURE_KAFKA_UI_STATE_VOLUME:?set in the kafka .env file}
+  kafka-data:
+    name: ${AELEV_INFRASTRUCTURE_KAFKA_DATA_VOLUME:?set AELEV_INFRASTRUCTURE_KAFKA_DATA_VOLUME in the Kafka .env file}
+    external: ${AELEV_INFRASTRUCTURE_KAFKA_DATA_VOLUME_EXTERNAL:?set explicit existing-volume mode in the Kafka .env file}
+
+networks:
+  kafka-status-egress:
+    name: ${AELEV_INFRASTRUCTURE_KAFKA_UI_EGRESS_NETWORK:?set in the kafka .env file}
+  kafka:
+    name: ${AELEV_INFRASTRUCTURE_KAFKA_NETWORK:?set AELEV_INFRASTRUCTURE_KAFKA_NETWORK in the Kafka .env file}
+    internal: true

@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "aelev-postgresql"
+version = "0.1.0"
+description = "Consumer-agnostic PostgreSQL cluster delivery"
+authors = ["AELEV"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"}
+patroni = {version = "4.1.5", extras = ["etcd3", "jsonlogger"]}
+psycopg = {version = "3.2.10", extras = ["binary"]}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "9.0.3"
+ruff = "0.13.2"
+black = "26.10.1"
+mypy = "1.18.2"
+
+[tool.black]
+target-version = ["py313"]
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+pythonpath = ["src", "vendor/aelev-renewal-delivery-1.0.0.zip"]

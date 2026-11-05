@@ -1,0 +1,57 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_PROMETHEUS_",
+  "role": "prometheus",
+  "ports": [
+    "PORT",
+    "OPERATOR_PORT"
+  ],
+  "integers": [],
+  "durations": [
+    "SCRAPE_INTERVAL",
+    "RETENTION"
+  ],
+  "https": [
+    "DELIVERY_HEALTH_URL",
+    "PROMETHEUS_HEALTH_URL",
+    "COLLECTOR_HEALTH_URL",
+    "BLACKBOX_HEALTH_URL",
+    "LOKI_HEALTH_URL",
+    "TEMPO_HEALTH_URL",
+    "GRAFANA_HEALTH_URL"
+  ],
+  "optional": [],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key"
+  ],
+  "templates": [
+    {
+      "source": "config/prometheus.yml",
+      "target": "prometheus.yml"
+    },
+    {
+      "source": "config/alerts.yml",
+      "target": "rules/infrastructure.yml"
+    },
+    {
+      "source": "config/recording-rules.yml",
+      "target": "rules/availability.yml"
+    },
+    {
+      "source": "config/web.yml",
+      "target": "web.yml"
+    },
+    {
+      "source": "config/client.yml",
+      "target": "client.yml"
+    }
+  ],
+  "empty_targets": [
+    "targets/http/_empty.json",
+    "targets/tcp/_empty.json",
+    "targets/metrics/_empty.json"
+  ]
+}

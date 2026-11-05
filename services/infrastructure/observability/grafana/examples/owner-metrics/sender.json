@@ -1,0 +1,32 @@
+{
+  "mode": "sender",
+  "listen_host": "0.0.0.0",
+  "listen_port": 4318,
+  "health_port": 13134,
+  "journal": "/var/lib/delivery",
+  "capacity_bytes": 1073741824,
+  "request_bytes": 4194304,
+  "retry_seconds": 2,
+  "timeout_seconds": 5,
+  "server_cert": "/run/secrets/telemetry/sender.crt",
+  "server_key": "/run/secrets/telemetry/sender.key",
+  "client_ca": "/run/secrets/telemetry/local-write-ca.crt",
+  "ca": "/run/secrets/telemetry/central-ca.crt",
+  "client_cert": "/run/secrets/telemetry/central-write.crt",
+  "client_key": "/run/secrets/telemetry/central-write.key",
+  "health_ca": "/run/secrets/telemetry/local-query-ca.crt",
+  "health_cert": "/run/secrets/telemetry/local-query.crt",
+  "health_key": "/run/secrets/telemetry/local-query.key",
+  "destinations": {
+    "logs": "https://telemetry.example.invalid:4318/v1/logs",
+    "traces": "https://telemetry.example.invalid:4318/v1/traces",
+    "metrics": "https://telemetry.example.invalid:4318/api/v1/write",
+    "otlp_metrics": "https://telemetry.example.invalid:4318/v1/metrics"
+  },
+  "prometheus_command": [
+    "/bin/prometheus", "--config.file=/etc/aelev/prometheus.yml",
+    "--web.config.file=/etc/aelev/web.yml",
+    "--storage.tsdb.path=/var/lib/delivery/prometheus",
+    "--storage.tsdb.retention.time=30d", "--log.format=json"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_",
+  "role": "otel-collector",
+  "ports": [
+    "HEALTH_PORT",
+    "METRICS_PORT"
+  ],
+  "integers": [
+    "MEMORY_MIB",
+    "QUEUE_SIZE"
+  ],
+  "durations": [],
+  "https": [
+    "LOGS_URL",
+    "SELF_OTLP_URL"
+  ],
+  "optional": [],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key",
+    "publisher-ca.crt",
+    "telemetry.crt",
+    "telemetry.key"
+  ],
+  "templates": [
+    {
+      "source": "config/otel-collector.yml",
+      "target": "otel-collector.yml"
+    }
+  ],
+  "publisher_ca": true,
+  "telemetry_client": true
+}

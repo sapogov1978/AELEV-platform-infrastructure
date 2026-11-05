@@ -1,0 +1,71 @@
+#!/bin/sh
+
+set -eu
+
+if [ "${GRAPHIFY_SKIP_PRECOMMIT:-0}" = "1" ]; then
+    echo "[graphify pre-commit] skipped by GRAPHIFY_SKIP_PRECOMMIT=1"
+    exit 0
+fi
+
+repository_root=$(git rev-parse --show-toplevel)
+cd "$repository_root"
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACMRD)
+if [ -z "$staged_files" ]; then
+    exit 0
+fi
+
+if ! command -v graphify >/dev/null 2>&1; then
+    echo "[graphify pre-commit] graphify is not available in PATH." >&2
+    echo "Install the repository-local skill prerequisites, then retry the commit." >&2
+    exit 1
+fi
+
+if [ ! -f graphify-out/graph.json ]; then
+    echo "[graphify pre-commit] graphify-out/graph.json is missing." >&2
+    echo "Run 'graphify extract . --code-only' once, then retry the commit." >&2
+    exit 1
+fi
+
+is_structural_source() {
+    case "$1" in
+        graphify-out/*|*.md|*.mmd|*.rst|*.txt|*.pdf|*.png|*.jpg|*.jpeg|*.gif|*.svg|*.webp)
+            return 1
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+}
+
+unstaged_sources=""
+for path in $(git diff --name-only --diff-filter=ACMRD; git ls-files --others --exclude-standard); do
+    if is_structural_source "$path"; then
+        unstaged_sources="${unstaged_sources}${path}
+"
+    fi
+done
+
+if [ -n "$unstaged_sources" ]; then
+    echo "[graphify pre-commit] unstaged structural files would make the graph differ from the commit:" >&2
+    printf '%s' "$unstaged_sources" >&2
+    echo "Stage, stash, or remove those files before committing." >&2
+    exit 1
+fi
+
+echo "[graphify pre-commit] updating repository graph"
+graphify update .
+
+for artifact in \
+    graphify-out/graph.json \
+    graphify-out/GRAPH_REPORT.md \
+    graphify-out/graph.html \
+    graphify-out/manifest.json \
+    graphify-out/.graphify_analysis.json
+do
+    if [ -f "$artifact" ]; then
+        git add -- "$artifact"
+    fi
+done
+
+echo "[graphify pre-commit] graph updated and staged"

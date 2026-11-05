@@ -1,0 +1,10 @@
+flowchart LR
+    Operator["Операторский браузер"] -->|OIDC| Shell["Platform UI shell"]
+    Publishers["Owner status publishers"] -->|signed owner projection| Registry[("Owner-local published state")]
+    Registry --> Shell
+    Owners["Owner UI origins"] -->|isolated iframe| Shell
+    Shell <-->|exact postMessage contract| Owners
+    SDK["Platform UI SDK"] --> Publishers
+    SDK --> Owners
+    Shell --> Status["Self status publisher"]
+    Shell --> Telemetry["Telemetry sender"]

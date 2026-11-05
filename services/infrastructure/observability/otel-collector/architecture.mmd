@@ -1,0 +1,8 @@
+flowchart LR
+    Delivery["Telemetry Delivery"] -->|OTLP| Collector["OpenTelemetry Collector"]
+    Collector --> Queue[("Persistent exporter queue")]
+    Queue --> Prometheus["Prometheus metrics"]
+    Queue --> Loki["Loki logs"]
+    Queue --> Tempo["Tempo traces"]
+    Collector --> Status["Platform UI status publisher"]
+    Collector --> SelfTelemetry["Self telemetry"]

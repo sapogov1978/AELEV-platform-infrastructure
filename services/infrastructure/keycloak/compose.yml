@@ -1,0 +1,175 @@
+name: ${AELEV_INFRASTRUCTURE_KEYCLOAK_COMPOSE_PROJECT:?set AELEV_INFRASTRUCTURE_KEYCLOAK_COMPOSE_PROJECT in the Keycloak .env file}
+
+x-status-environment: &status-environment
+  AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL: ${AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_URL: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_URL:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT: ${AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_REALM: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_REALM:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_CLIENT_ID:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_AUDIENCE:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MODULE_ID:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_HEALTH_URL: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_HEALTH_URL:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_INTERVAL_SECONDS:?set in the Keycloak .env file}
+  AELEV_INFRASTRUCTURE_KEYCLOAK_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_TIMEOUT_SECONDS:?set in the Keycloak .env file}
+
+x-status-build: &status-build
+  context: .
+  dockerfile: Dockerfile.status
+  target: runtime
+  args:
+    PYTHON_IMAGE: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PYTHON_IMAGE:?set in the Keycloak .env file}
+
+services:
+  keycloak-status-publisher:
+    image: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_IMAGE:?set in the Keycloak .env file}
+    build: *status-build
+    environment: *status-environment
+    restart: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    stop_grace_period: 2m
+    group_add: ["${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_GID:?set in the Keycloak .env file}"]
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_ROOT:?set in the Keycloak .env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+      - keycloak-status-data:/var/lib/keycloak-status
+    mem_limit: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MEMORY_LIMIT:?set in the Keycloak .env file}
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    depends_on:
+      keycloak: {condition: service_healthy}
+    networks: [keycloak, keycloak-ingress]
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/keycloak-status/publisher-health.py", "AELEV_INFRASTRUCTURE_KEYCLOAK_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  keycloak-status-provision:
+    image: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_IMAGE:?set in the Keycloak .env file}
+    build: *status-build
+    profiles: [provision]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PROVISION_UID:?set in the Keycloak .env file}:${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_GID:?set in the Keycloak .env file}"
+    environment:
+      <<: *status-environment
+      AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER: ${AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER:?set in the Keycloak .env file}
+      AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloak-admin-password
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_ROOT:?set in the Keycloak .env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+    secrets: [keycloak-admin-password]
+    depends_on:
+      keycloak: {condition: service_healthy}
+    read_only: true
+    tmpfs: ["/tmp:size=8m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    networks: [keycloak]
+
+  keycloak-database:
+    image: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE in the Keycloak .env file}
+    restart: "no"
+    environment:
+      POSTGRES_DB: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME in the Keycloak .env file}
+      POSTGRES_USER: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER in the Keycloak .env file}
+      POSTGRES_PASSWORD_FILE: /run/secrets/keycloak-database-password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --data-checksums
+    volumes:
+      - keycloak-database-data:/var/lib/postgresql/data
+    secrets: [keycloak-database-password]
+    mem_limit: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_MEMORY_LIMIT:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_MEMORY_LIMIT in the Keycloak .env file}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    networks: [keycloak]
+
+  keycloak:
+    image: ${AELEV_INFRASTRUCTURE_KEYCLOAK_IMAGE:?set AELEV_INFRASTRUCTURE_KEYCLOAK_IMAGE in the Keycloak .env file}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    group_add: ["${AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID:?set in the Keycloak .env file}"]
+    command: ["start", "--optimized", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER:?set AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER in the Keycloak .env file}
+      AELEV_KEYCLOAK_ADMIN_PASSWORD_FILE: /run/secrets/keycloak-admin-password
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-database:5432/${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME in the Keycloak .env file}
+      KC_DB_USERNAME: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER in the Keycloak .env file}
+      AELEV_KEYCLOAK_DATABASE_PASSWORD_FILE: /run/secrets/keycloak-database-password
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_HTTP_ENABLED: "false"
+      KC_HTTPS_CERTIFICATE_FILE: /run/secrets/keycloak-https/tls.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /run/secrets/keycloak-https/tls.key
+      KC_HOSTNAME: ${AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL:?set AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL in the Keycloak .env file}
+    depends_on:
+      keycloak-database: {condition: service_healthy}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_KEYCLOAK_BIND:?set AELEV_INFRASTRUCTURE_KEYCLOAK_BIND in the Keycloak .env file}:${AELEV_INFRASTRUCTURE_KEYCLOAK_HTTPS_PORT:?set AELEV_INFRASTRUCTURE_KEYCLOAK_HTTPS_PORT in the Keycloak .env file}:8443"
+    volumes:
+      - type: bind
+        source: ./secrets/https
+        target: /run/secrets/keycloak-https
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./realm.json
+        target: /opt/keycloak/data/import/aelev-realm.json
+        read_only: true
+        bind:
+          create_host_path: false
+    secrets: [keycloak-admin-password, keycloak-database-password]
+    mem_limit: ${AELEV_INFRASTRUCTURE_KEYCLOAK_MEMORY_LIMIT:?set AELEV_INFRASTRUCTURE_KEYCLOAK_MEMORY_LIMIT in the Keycloak .env file}
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/8443
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 30s
+    networks:
+      keycloak:
+        aliases: [keycloak]
+      keycloak-ingress: {}
+
+volumes:
+  keycloak-status-data:
+    name: ${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_STATE_VOLUME:?set in the Keycloak .env file}
+  keycloak-database-data:
+    name: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_VOLUME:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_VOLUME in the Keycloak .env file}
+
+networks:
+  keycloak:
+    name: ${AELEV_INFRASTRUCTURE_KEYCLOAK_NETWORK:?set AELEV_INFRASTRUCTURE_KEYCLOAK_NETWORK in the Keycloak .env file}
+    internal: true
+    ipam:
+      config:
+        - subnet: ${AELEV_INFRASTRUCTURE_KEYCLOAK_NETWORK_SUBNET:?set AELEV_INFRASTRUCTURE_KEYCLOAK_NETWORK_SUBNET in the Keycloak .env file}
+  keycloak-ingress:
+    name: ${AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK:?set AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK in the Keycloak .env file}
+    ipam:
+      config:
+        - subnet: ${AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK_SUBNET:?set AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK_SUBNET in the Keycloak .env file}
+
+secrets:
+  keycloak-admin-password:
+    file: ${AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_PASSWORD_FILE:?set AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_PASSWORD_FILE in the Keycloak .env file}
+  keycloak-database-password:
+    file: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PASSWORD_FILE:?set AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PASSWORD_FILE in the Keycloak .env file}

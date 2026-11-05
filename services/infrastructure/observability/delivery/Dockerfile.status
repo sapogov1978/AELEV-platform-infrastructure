@@ -1,0 +1,41 @@
+ARG PYTHON_IMAGE
+ARG DELIVERY_SDK_IMAGE=aelev/observability-sender:1.0.6@sha256:ccccd35ed4c36e614ccb4d13938581b455e764a393ed361b0c7d24ce69c2ad4a
+FROM ${DELIVERY_SDK_IMAGE} AS sqlite
+FROM ${PYTHON_IMAGE} AS builder
+RUN pip install --no-cache-dir poetry==2.2.1
+WORKDIR /work
+COPY pyproject.toml poetry.lock ./
+COPY vendor ./vendor
+RUN python -m venv /opt/venv
+ENV VIRTUAL_ENV=/opt/venv PATH=/opt/venv/bin:$PATH
+RUN poetry install --only main --no-interaction --no-ansi
+
+FROM builder AS checks
+RUN apk add --no-cache docker-cli docker-cli-compose openssl
+RUN poetry install --with dev --no-interaction --no-ansi
+COPY status_publisher.py prepare.py deployment.json compose.yml .env.example README.md .dockerignore ./
+COPY config ./config
+COPY delivery.py delivery_health.py delivery_snapshot.py renewal.py Dockerfile.sender Dockerfile.status sender.json.example ./
+COPY --from=tests / ./test/
+
+FROM ${PYTHON_IMAGE} AS runtime
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH=/opt/venv/bin:$PATH PYTHONDONTWRITEBYTECODE=1
+RUN mkdir -p /var/lib/aelev-status && chown 101:101 /var/lib/aelev-status
+COPY status_publisher.py /opt/aelev/status_publisher.py
+COPY --from=builder /opt/venv/lib/python3.13/site-packages/aelev_platform_ui_client/health.py /opt/aelev/publisher-health.py
+USER 101:101
+ENTRYPOINT ["python", "/opt/aelev/status_publisher.py"]
+CMD ["run"]
+
+FROM runtime AS delivery
+COPY --from=sqlite /usr/local/lib/libsqlite3.so.0 /usr/local/lib/libsqlite3.so.0
+ENV LD_LIBRARY_PATH=/usr/local/lib
+USER 0:0
+RUN python -S -c "import sqlite3; assert sqlite3.sqlite_version_info == (3, 53, 4), sqlite3.sqlite_version"
+COPY delivery.py /opt/aelev/delivery.py
+COPY delivery_health.py /opt/aelev/delivery_health.py
+COPY delivery_snapshot.py /opt/aelev/delivery_snapshot.py
+USER 10001:10001
+ENTRYPOINT ["python", "/opt/aelev/delivery.py"]
+CMD ["run", "--config", "/etc/aelev/delivery.json"]

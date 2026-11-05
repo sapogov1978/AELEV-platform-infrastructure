@@ -1,0 +1,17 @@
+groups:
+  - name: translator-service
+    rules:
+      - alert: TranslatorServiceUnavailable
+        expr: up{job="translator-service"} != 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: translator-service API is unavailable
+      - alert: TranslatorServicePendingBacklog
+        expr: sum(aelev_translator_jobs{state="PENDING"}) > 0
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: translator-service has a persistent pending backlog

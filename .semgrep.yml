@@ -1,0 +1,29 @@
+rules:
+  - id: drp-python-eval
+    message: Dynamic eval is forbidden in product code.
+    severity: ERROR
+    languages: [python]
+    pattern: eval(...)
+  - id: drp-python-exec
+    message: Dynamic exec is forbidden in product code.
+    severity: ERROR
+    languages: [python]
+    pattern: exec(...)
+  - id: drp-subprocess-shell
+    message: Shell expansion in subprocess calls is forbidden.
+    severity: ERROR
+    languages: [python]
+    patterns:
+      - pattern-either:
+          - pattern: subprocess.run(..., shell=True, ...)
+          - pattern: subprocess.Popen(..., shell=True, ...)
+          - pattern: subprocess.call(..., shell=True, ...)
+  - id: drp-tls-verification-disabled
+    message: TLS verification cannot be disabled.
+    severity: ERROR
+    languages: [python]
+    patterns:
+      - pattern-either:
+          - pattern: requests.get(..., verify=False, ...)
+          - pattern: requests.post(..., verify=False, ...)
+          - pattern: requests.request(..., verify=False, ...)

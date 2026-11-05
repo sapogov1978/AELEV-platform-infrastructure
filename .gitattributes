@@ -1,0 +1,2 @@
+# Preserve runnable Windows entry points in both Git clones and source ZIPs.
+models/*/*.cmd -text whitespace=trailing-space,space-before-tab,cr-at-eol

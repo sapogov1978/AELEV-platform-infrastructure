@@ -1,0 +1,29 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_",
+  "role": "blackbox-exporter",
+  "ports": [
+    "PORT",
+    "OPERATOR_PORT"
+  ],
+  "integers": [],
+  "durations": [],
+  "https": [],
+  "optional": [],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key"
+  ],
+  "templates": [
+    {
+      "source": "config/blackbox.yml",
+      "target": "blackbox.yml"
+    },
+    {
+      "source": "config/web.yml",
+      "target": "web.yml"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": null,
+  "uid": "owner-demo-metrics",
+  "title": "Учебный владелец: техническая метрика",
+  "schemaVersion": 41,
+  "version": 0,
+  "tags": ["owner-demo"],
+  "timezone": "utc",
+  "refresh": "10s",
+  "time": {"from": "now-15m", "to": "now"},
+  "panels": [{
+    "id": 1,
+    "type": "timeseries",
+    "title": "Счётчик учебного экспортёра",
+    "description": "Технический пример. Не бизнес-метрика и не контроль доступности.",
+    "gridPos": {"x": 0, "y": 0, "w": 24, "h": 10},
+    "datasource": {"type": "prometheus", "uid": "aelev-prometheus"},
+    "targets": [{
+      "refId": "A",
+      "datasource": {"type": "prometheus", "uid": "aelev-prometheus"},
+      "expr": "aelev_demo_ticks_total{owner_id=\"owner-demo\"}",
+      "legendFormat": "{{owner_id}}",
+      "range": true,
+      "instant": false
+    }],
+    "fieldConfig": {"defaults": {"unit": "short", "min": 0}, "overrides": []},
+    "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "single", "sort": "none"}}
+  }]
+}

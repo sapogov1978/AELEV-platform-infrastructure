@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+.venv
+__pycache__
+*.pyc
+.*_cache
+secrets/
+test/
+/test/*
+/secrets/*
+obsolete/
+/obsolete/*

@@ -1,0 +1,12 @@
+FROM python:3.13.7-slim-bookworm@sha256:adafcc17694d715c905b4c7bebd96907a1fd5cf183395f0ebc4d3428bd22d92d
+
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+LABEL io.aelev.egress.renewal-interface="1"
+RUN groupadd --system --gid 10001 aelev \
+    && useradd --system --uid 10001 --gid aelev --home-dir /nonexistent aelev
+WORKDIR /opt/aelev-egress
+COPY renewal.py provision.py authorization.py ./
+RUN sha256sum renewal.py provision.py authorization.py > renewal.sha256
+USER 10001:10001
+ENTRYPOINT ["python", "renewal.py"]
+CMD ["--help"]

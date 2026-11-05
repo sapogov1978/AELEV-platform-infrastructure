@@ -1,0 +1,141 @@
+name: ${AELEV_INFRASTRUCTURE_TEMPO_COMPOSE_PROJECT:?set in the tempo env file}
+
+x-status-environment: &status-environment
+  AELEV_INFRASTRUCTURE_TEMPO_UI_URL: ${AELEV_INFRASTRUCTURE_TEMPO_UI_URL:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_TEMPO_UI_IDENTITY_URL:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_REALM: ${AELEV_INFRASTRUCTURE_TEMPO_UI_REALM:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_TEMPO_UI_CLIENT_ID:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_TEMPO_UI_AUDIENCE:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_TEMPO_UI_MODULE_ID:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_TEMPO_UI_INTERVAL_SECONDS:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TEMPO_UI_TIMEOUT_SECONDS:?set in the tempo env file}
+  AELEV_INFRASTRUCTURE_TEMPO_UI_HEALTH_URL: ${AELEV_INFRASTRUCTURE_TEMPO_UI_HEALTH_URL:?set in the tempo env file}
+
+x-status-runtime: &status-runtime
+  image: ${AELEV_INFRASTRUCTURE_TEMPO_UI_IMAGE:?set in the tempo env file}
+  build:
+    context: .
+    dockerfile: Dockerfile.status
+    target: runtime
+    args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE:?set in the tempo env file}"}
+  environment: *status-environment
+  read_only: true
+  tmpfs: ["/tmp:size=8m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+  networks: [tempo-ui]
+
+services:
+  tempo:
+    restart: "no"
+    stop_grace_period: 1m
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    group_add: ["${AELEV_INFRASTRUCTURE_TEMPO_SECRET_GID:?set in the tempo env file}"]
+    networks: [tempo-ui]
+    image: ${AELEV_INFRASTRUCTURE_TEMPO_IMAGE:?set in the tempo env file}
+    build:
+      context: .
+      dockerfile: Dockerfile.native
+      target: runtime
+      args:
+        BASE_IMAGE: ${AELEV_INFRASTRUCTURE_TEMPO_BASE_IMAGE:?set exact existing native base image}
+        PYTHON_IMAGE: ${AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE:?set own pinned build image}
+    healthcheck:
+      test: [CMD, /opt/aelev/native-health, "3200", "${AELEV_INFRASTRUCTURE_TEMPO_PUBLIC_HOST:?set own certificate SAN}", /run/secrets/observability]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    mem_limit: ${AELEV_INFRASTRUCTURE_TEMPO_MEMORY_LIMIT:?set in the tempo env file}
+    environment:
+      GOMEMLIMIT: ${AELEV_INFRASTRUCTURE_TEMPO_GO_MEMORY_LIMIT:?set in the tempo env file}
+    command: ["-config.file=/etc/aelev/tempo.yml"]
+    volumes:
+      - tempo-data:/var/tempo
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TEMPO_RUNTIME_ROOT:?set in the tempo env file}
+        target: /etc/aelev
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TEMPO_SECRET_ROOT:?set in the tempo env file}
+        target: /run/secrets/observability
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_TEMPO_BIND:?set in the tempo env file}:${AELEV_INFRASTRUCTURE_TEMPO_PORT:?set in the tempo env file}:3200"
+      - "${AELEV_INFRASTRUCTURE_TEMPO_BIND:?set BIND}:${AELEV_INFRASTRUCTURE_TEMPO_OTLP_HTTP_PORT:?set OTLP_HTTP_PORT}:4318"
+      - "${AELEV_INFRASTRUCTURE_TEMPO_BIND:?set BIND}:${AELEV_INFRASTRUCTURE_TEMPO_OTLP_GRPC_PORT:?set OTLP_GRPC_PORT}:4317"
+
+  tempo-configuration-init:
+    image: ${AELEV_INFRASTRUCTURE_TEMPO_UI_IMAGE:?set own tools image}
+    build:
+      context: .
+      dockerfile: Dockerfile.status
+      target: runtime
+      args: {PYTHON_IMAGE: "${AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE:?set own Python image}"}
+    profiles: [provision]
+    entrypoint: [python, -m, aelev_observability_tools]
+    command: [--owner, "${AELEV_INFRASTRUCTURE_TEMPO_DATA_OWNER:?set immutable data owner}", --role, tempo, --uid, "10001"]
+    user: "0:0"
+    restart: "no"
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    volumes: [tempo-data:/data]
+
+  tempo-status-publisher:
+    <<: *status-runtime
+    profiles: [ui]
+    command: [run]
+    stop_grace_period: 2m
+    user: "101:101"
+    group_add: ["${AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_GID:?set in the tempo env file}"]
+    restart: ${AELEV_INFRASTRUCTURE_TEMPO_UI_RESTART_POLICY:?set finite publisher policy in own env}
+    mem_limit: ${AELEV_INFRASTRUCTURE_TEMPO_UI_MEMORY_LIMIT:?set in the tempo env file}
+    volumes:
+      - tempo-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_ROOT:?set in the tempo env file}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: ["CMD", "python", "-S", "/opt/aelev/publisher-health.py", "AELEV_INFRASTRUCTURE_TEMPO_"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  tempo-status-provision:
+    <<: *status-runtime
+    profiles: [provision]
+    command: [provision]
+    user: "${AELEV_INFRASTRUCTURE_TEMPO_UI_PROVISION_UID:?set in the tempo env file}:${AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_GID:?set in the tempo env file}"
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_ROOT:?set in the tempo env file}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TEMPO_UI_ADMIN_ROOT:?set in the tempo env file}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+
+volumes:
+  tempo-data:
+    name: ${AELEV_INFRASTRUCTURE_TEMPO_DATA_VOLUME:?set own data volume}
+  tempo-status-data:
+    name: ${AELEV_INFRASTRUCTURE_TEMPO_UI_STATE_VOLUME:?set in the tempo env file}
+
+networks:
+  tempo-ui:
+    name: ${AELEV_INFRASTRUCTURE_TEMPO_UI_NETWORK:?set in the tempo env file}

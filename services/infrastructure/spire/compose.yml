@@ -1,0 +1,78 @@
+name: ${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}
+
+x-runtime: &runtime
+  image: ${AELEV_INFRASTRUCTURE_SPIRE_IMAGE:-aelev/infrastructure-spire:local}
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:size=16m,mode=1777", "/run/spire:size=8m,uid=10001,gid=10001,mode=0700"]
+  pids_limit: 128
+  mem_limit: 384m
+  restart: "on-failure:3"
+  stop_grace_period: 30s
+
+services:
+  spire-server:
+    <<: *runtime
+    profiles: [workload-identity]
+    command: [server]
+    environment:
+      AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_ROOT: /run/observation
+    volumes:
+      - spire-server-data:/var/lib/spire
+      - spire-server-configuration:/run/bootstrap:ro
+      - spire-server-admin:/run/spire/admin
+      - spire-observation-source:/run/observation
+    ports:
+      - "${AELEV_INFRASTRUCTURE_SPIRE_BIND_ADDRESS:-127.0.0.1}:${AELEV_INFRASTRUCTURE_SPIRE_PORT:-18081}:8081"
+    networks:
+      spire-access:
+        aliases: [spire-server]
+    cpus: 0.5
+    healthcheck:
+      test: [CMD, python, -S, -P, /opt/aelev/src/aelev_spire/health.py]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+  spire-operator:
+    <<: *runtime
+    profiles: [identity-provision]
+    command: [inspect, --plan, /run/request/request.json]
+    restart: "no"
+    network_mode: none
+    volumes:
+      - spire-operator-data:/var/lib/spire
+      - spire-server-admin:/run/spire/admin
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_SPIRE_REQUEST_ROOT:-./runtime/request}
+        target: /run/request
+        read_only: true
+        bind: {create_host_path: false}
+      - spire-bootstrap-output:/run/svid
+
+networks:
+  spire-access:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_ACCESS_NETWORK:-aelev-infrastructure-spire}
+
+volumes:
+  spire-server-data:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_SERVER_VOLUME:-aelev-infrastructure-spire_server}
+  spire-server-configuration:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_CONFIGURATION_VOLUME:-aelev-infrastructure-spire_configuration}
+  spire-operator-data:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_OPERATOR_VOLUME:-aelev-infrastructure-spire_operator}
+  spire-server-admin:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_ADMIN_VOLUME:-aelev-infrastructure-spire_admin}
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1m,uid=10001,gid=10001,mode=0700
+  spire-bootstrap-output:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_BOOTSTRAP_VOLUME:-aelev-infrastructure-spire_bootstrap-output}
+  spire-observation-source:
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_VOLUME:-aelev-infrastructure-spire_observation-source}
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=2m,uid=10001,gid=10001,mode=0700

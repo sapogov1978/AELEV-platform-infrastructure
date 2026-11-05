@@ -1,0 +1,9 @@
+.env*
+!.env.example
+secrets/
+runtime/
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

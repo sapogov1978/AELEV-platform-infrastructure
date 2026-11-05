@@ -1,0 +1,2941 @@
+{
+  "model": {
+    "id": "index-2b",
+    "repository": "IndexTeam/Index-Translate-2B-GGUF",
+    "revision": "3a0eca6ce931d88d00614d427ab3ed8ff0743902",
+    "file": "Index-Translate-2B.Q4_K_M.gguf",
+    "size_bytes": 1312164352,
+    "sha256": "044b313d29342bd3b2c77cbb64023ca0d209bd9b3247763f9d162767ef2d746a",
+    "license": "Apache-2.0",
+    "memory_limit": "3g"
+  },
+  "image": "sha256:c08767c87af8dd5dd3ac93a1ec837120666a826745cf8e769aed68f00ae26be0",
+  "container_id": "edf9fd8c0dbd5611175c542cc73e16ae4066e64ea58a0f6aaec117b141154e1e",
+  "cpu_limit": 2,
+  "memory_limit": "3g",
+  "events": [
+    {
+      "event": "ready",
+      "seconds": 2.0679775419994257,
+      "command": [
+        "/opt/llama/llama-server",
+        "--model",
+        "/weights/Index-Translate-2B.Q4_K_M.gguf",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8080",
+        "--alias",
+        "index-translate",
+        "--threads",
+        "2",
+        "--threads-batch",
+        "2",
+        "--ctx-size",
+        "2048",
+        "--parallel",
+        "1",
+        "--cache-ram",
+        "0",
+        "--fit",
+        "off",
+        "--n-gpu-layers",
+        "0",
+        "--jinja",
+        "--chat-template-kwargs",
+        "{\"enable_thinking\":false}",
+        "--no-webui",
+        "--no-warmup"
+      ],
+      "python": "3.13.7 (main, Sep 30 2025, 00:40:59) [GCC 12.2.0]",
+      "memory": {
+        "cgroup_current_bytes": 1487065088,
+        "cgroup_peak_bytes": 1487065088,
+        "process_peak_rss_bytes": 1422020608,
+        "process_rss_bytes": 1422020608
+      }
+    },
+    {
+      "event": "warmup",
+      "seconds": null,
+      "result": {
+        "translated_text": "Документ готов.",
+        "finish_reason": "stop",
+        "usage": {
+          "completion_tokens": 6,
+          "prompt_tokens": 36,
+          "total_tokens": 42,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 36,
+          "prompt_ms": 2147.163,
+          "prompt_per_token_ms": 59.64341666666667,
+          "prompt_per_second": 16.766309777133827,
+          "predicted_n": 6,
+          "predicted_ms": 790.088,
+          "predicted_per_token_ms": 158.0176,
+          "predicted_per_second": 6.328408987353308
+        },
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Документ готов."
+              }
+            }
+          ],
+          "created": 1791718542,
+          "model": "index-translate",
+          "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 6,
+            "prompt_tokens": 36,
+            "total_tokens": 42,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "id": "chatcmpl-MfU2dMG5l9vpfcxNq0DvZk5fBLRt9g7K",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 36,
+            "prompt_ms": 2147.163,
+            "prompt_per_token_ms": 59.64341666666667,
+            "prompt_per_second": 16.766309777133827,
+            "predicted_n": 6,
+            "predicted_ms": 790.088,
+            "predicted_per_token_ms": 158.0176,
+            "predicted_per_second": 6.328408987353308
+          }
+        }
+      },
+      "elapsed_seconds": 2.942494958988391,
+      "memory": {
+        "cgroup_current_bytes": 1521733632,
+        "cgroup_peak_bytes": 1521999872,
+        "process_peak_rss_bytes": 1457405952,
+        "process_rss_bytes": 1457405952
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-term",
+      "repetition": 1,
+      "seconds": 3.4157421679992694,
+      "translated_text": "Klimaobservatorium",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 4,
+        "prompt_tokens": 33,
+        "total_tokens": 37,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 33,
+        "prompt_ms": 3027.741,
+        "prompt_per_token_ms": 91.74972727272727,
+        "prompt_per_second": 10.899214959271616,
+        "predicted_n": 4,
+        "predicted_ms": 384.014,
+        "predicted_per_token_ms": 128.00466666666668,
+        "predicted_per_second": 7.812215179654908
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Klimaobservatorium"
+            }
+          }
+        ],
+        "created": 1791718545,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 4,
+          "prompt_tokens": 33,
+          "total_tokens": 37,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-abt30EB8qyGWUtZOR9bUsg6rD1JQXcrr",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 33,
+          "prompt_ms": 3027.741,
+          "prompt_per_token_ms": 91.74972727272727,
+          "prompt_per_second": 10.899214959271616,
+          "predicted_n": 4,
+          "predicted_ms": 384.014,
+          "predicted_per_token_ms": 128.00466666666668,
+          "predicted_per_second": 7.812215179654908
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1522262016,
+        "cgroup_peak_bytes": 1522262016,
+        "process_peak_rss_bytes": 1457508352,
+        "process_rss_bytes": 1457508352
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-sentence",
+      "repetition": 1,
+      "seconds": 4.404244834993733,
+      "translated_text": "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 40,
+        "total_tokens": 51,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 40,
+        "prompt_ms": 3013.54,
+        "prompt_per_token_ms": 75.3385,
+        "prompt_per_second": 13.273425937601624,
+        "predicted_n": 11,
+        "predicted_ms": 1387.31,
+        "predicted_per_token_ms": 138.731,
+        "predicted_per_second": 7.208194275252106
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht."
+            }
+          }
+        ],
+        "created": 1791718550,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 11,
+          "prompt_tokens": 40,
+          "total_tokens": 51,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-ybm7CzGubKILlmMlkVuj5x9x1572RoVc",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 40,
+          "prompt_ms": 3013.54,
+          "prompt_per_token_ms": 75.3385,
+          "prompt_per_second": 13.273425937601624,
+          "predicted_n": 11,
+          "predicted_ms": 1387.31,
+          "predicted_per_token_ms": 138.731,
+          "predicted_per_second": 7.208194275252106
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1522651136,
+        "cgroup_peak_bytes": 1523347456,
+        "process_peak_rss_bytes": 1458053120,
+        "process_rss_bytes": 1458053120
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-negation",
+      "repetition": 1,
+      "seconds": 4.9742984189942945,
+      "translated_text": "Сервис не должен удалять оригинальный документ после перевода.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 14,
+        "prompt_tokens": 42,
+        "total_tokens": 56,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 42,
+        "prompt_ms": 3533.373,
+        "prompt_per_token_ms": 84.12792857142857,
+        "prompt_per_second": 11.886659008262077,
+        "predicted_n": 14,
+        "predicted_ms": 1436.861,
+        "predicted_per_token_ms": 110.52776923076924,
+        "predicted_per_second": 9.047500071336058
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Сервис не должен удалять оригинальный документ после перевода."
+            }
+          }
+        ],
+        "created": 1791718555,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 14,
+          "prompt_tokens": 42,
+          "total_tokens": 56,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-lFfVzuxKvI65YdYh1I1qcmfkfK3vPyyq",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 42,
+          "prompt_ms": 3533.373,
+          "prompt_per_token_ms": 84.12792857142857,
+          "prompt_per_second": 11.886659008262077,
+          "predicted_n": 14,
+          "predicted_ms": 1436.861,
+          "predicted_per_token_ms": 110.52776923076924,
+          "predicted_per_second": 9.047500071336058
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1522720768,
+        "cgroup_peak_bytes": 1523347456,
+        "process_peak_rss_bytes": 1458376704,
+        "process_rss_bytes": 1458376704
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-negation",
+      "repetition": 1,
+      "seconds": 7.278252544987481,
+      "translated_text": "Payment has not been confirmed. You cannot repeat the money transfer until the verification is complete.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 19,
+        "prompt_tokens": 55,
+        "total_tokens": 74,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4419.427,
+        "prompt_per_token_ms": 80.35321818181818,
+        "prompt_per_second": 12.445052265825412,
+        "predicted_n": 19,
+        "predicted_ms": 2841.827,
+        "predicted_per_token_ms": 157.8792777777778,
+        "predicted_per_second": 6.33395347429664
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Payment has not been confirmed. You cannot repeat the money transfer until the verification is complete."
+            }
+          }
+        ],
+        "created": 1791718562,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 19,
+          "prompt_tokens": 55,
+          "total_tokens": 74,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-1OPNN7XSHshdPkEyfrLkG6ed3G4Dcerm",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4419.427,
+          "prompt_per_token_ms": 80.35321818181818,
+          "prompt_per_second": 12.445052265825412,
+          "predicted_n": 19,
+          "predicted_ms": 2841.827,
+          "predicted_per_token_ms": 157.8792777777778,
+          "predicted_per_second": 6.33395347429664
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1524482048,
+        "cgroup_peak_bytes": 1524699136,
+        "process_peak_rss_bytes": 1459884032,
+        "process_rss_bytes": 1459884032
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-numbers",
+      "repetition": 1,
+      "seconds": 10.142767172015738,
+      "translated_text": "11 октября 2026 года склад принял 17 ящиков и отклонил 3. Общий вес составил 1250 кг.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 34,
+        "prompt_tokens": 67,
+        "total_tokens": 101,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 67,
+        "prompt_ms": 5880.982,
+        "prompt_per_token_ms": 87.77585074626866,
+        "prompt_per_second": 11.392655172214436,
+        "predicted_n": 34,
+        "predicted_ms": 4230.426,
+        "predicted_per_token_ms": 128.19472727272728,
+        "predicted_per_second": 7.800632844068185
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "11 октября 2026 года склад принял 17 ящиков и отклонил 3. Общий вес составил 1250 кг."
+            }
+          }
+        ],
+        "created": 1791718572,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 34,
+          "prompt_tokens": 67,
+          "total_tokens": 101,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-21fWXxLfPerU49SQQTdHANxwXwf3RRUA",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 67,
+          "prompt_ms": 5880.982,
+          "prompt_per_token_ms": 87.77585074626866,
+          "prompt_per_second": 11.392655172214436,
+          "predicted_n": 34,
+          "predicted_ms": 4230.426,
+          "predicted_per_token_ms": 128.19472727272728,
+          "predicted_per_second": 7.800632844068185
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1525895168,
+        "cgroup_peak_bytes": 1526099968,
+        "process_peak_rss_bytes": 1461284864,
+        "process_rss_bytes": 1461284864
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-numbers",
+      "repetition": 1,
+      "seconds": 12.640815962979104,
+      "translated_text": "The temperature dropped from 12 to 7 degrees in 24 hours. Samples A-17 and B-03 are undamaged.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 68,
+        "total_tokens": 100,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 68,
+        "prompt_ms": 8250.405,
+        "prompt_per_token_ms": 121.32948529411766,
+        "prompt_per_second": 8.242019634187654,
+        "predicted_n": 32,
+        "predicted_ms": 4377.542,
+        "predicted_per_token_ms": 141.21103225806453,
+        "predicted_per_second": 7.081599673972288
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The temperature dropped from 12 to 7 degrees in 24 hours. Samples A-17 and B-03 are undamaged."
+            }
+          }
+        ],
+        "created": 1791719486,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 32,
+          "prompt_tokens": 68,
+          "total_tokens": 100,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-7pPodTV0Zbzj57fey3j992jxzLnPJNHQ",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 68,
+          "prompt_ms": 8250.405,
+          "prompt_per_token_ms": 121.32948529411766,
+          "prompt_per_second": 8.242019634187654,
+          "predicted_n": 32,
+          "predicted_ms": 4377.542,
+          "predicted_per_token_ms": 141.21103225806453,
+          "predicted_per_second": 7.081599673972288
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526222848,
+        "cgroup_peak_bytes": 1526296576,
+        "process_peak_rss_bytes": 1461624832,
+        "process_rss_bytes": 1461624832
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-uncertainty",
+      "repetition": 1,
+      "seconds": 7.443978544994025,
+      "translated_text": "В отчете предполагается, что спрос может снизиться, но имеющиеся данные не позволяют установить причинную связь.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 24,
+        "prompt_tokens": 49,
+        "total_tokens": 73,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 49,
+        "prompt_ms": 4299.889,
+        "prompt_per_token_ms": 87.75283673469389,
+        "prompt_per_second": 11.395643003807773,
+        "predicted_n": 24,
+        "predicted_ms": 3125.642,
+        "predicted_per_token_ms": 135.89747826086955,
+        "predicted_per_second": 7.358488272169366
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "В отчете предполагается, что спрос может снизиться, но имеющиеся данные не позволяют установить причинную связь."
+            }
+          }
+        ],
+        "created": 1791719493,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 49,
+          "total_tokens": 73,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-ZgRTRUgnDr2NRYLUOiCOFXsat9HdESFV",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 49,
+          "prompt_ms": 4299.889,
+          "prompt_per_token_ms": 87.75283673469389,
+          "prompt_per_second": 11.395643003807773,
+          "predicted_n": 24,
+          "predicted_ms": 3125.642,
+          "predicted_per_token_ms": 135.89747826086955,
+          "predicted_per_second": 7.358488272169366
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526501376,
+        "cgroup_peak_bytes": 1526501376,
+        "process_peak_rss_bytes": 1461637120,
+        "process_rss_bytes": 1461637120
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-ambiguity",
+      "repetition": 1,
+      "seconds": 7.2533060450223275,
+      "translated_text": "The castle door is broken, but the old castle on the hill is open to visitors.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 19,
+        "prompt_tokens": 51,
+        "total_tokens": 70,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 51,
+        "prompt_ms": 3968.271,
+        "prompt_per_token_ms": 77.80923529411766,
+        "prompt_per_second": 12.851944839452749,
+        "predicted_n": 19,
+        "predicted_ms": 3278.703,
+        "predicted_per_token_ms": 182.15016666666668,
+        "predicted_per_second": 5.489975761757012
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The castle door is broken, but the old castle on the hill is open to visitors."
+            }
+          }
+        ],
+        "created": 1791719500,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 19,
+          "prompt_tokens": 51,
+          "total_tokens": 70,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-gl45Bd5kGKxSEyEOo5Bexbj9NSmu9Wni",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 51,
+          "prompt_ms": 3968.271,
+          "prompt_per_token_ms": 77.80923529411766,
+          "prompt_per_second": 12.851944839452749,
+          "predicted_n": 19,
+          "predicted_ms": 3278.703,
+          "predicted_per_token_ms": 182.15016666666668,
+          "predicted_per_second": 5.489975761757012
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526517760,
+        "cgroup_peak_bytes": 1526759424,
+        "process_peak_rss_bytes": 1461653504,
+        "process_rss_bytes": 1461653504
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "de-en-negation",
+      "repetition": 1,
+      "seconds": 5.896009585994761,
+      "translated_text": "The delivery has not been canceled. It will only be released after the security check.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 18,
+        "prompt_tokens": 51,
+        "total_tokens": 69,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 51,
+        "prompt_ms": 3383.668,
+        "prompt_per_token_ms": 66.34643137254902,
+        "prompt_per_second": 15.072400720165216,
+        "predicted_n": 18,
+        "predicted_ms": 2505.78,
+        "predicted_per_token_ms": 147.39882352941177,
+        "predicted_per_second": 6.784314664495685
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The delivery has not been canceled. It will only be released after the security check."
+            }
+          }
+        ],
+        "created": 1791719506,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 51,
+          "total_tokens": 69,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-nX0BKzTNRCM1kASEkgEr8yolTPBo5Evk",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 51,
+          "prompt_ms": 3383.668,
+          "prompt_per_token_ms": 66.34643137254902,
+          "prompt_per_second": 15.072400720165216,
+          "predicted_n": 18,
+          "predicted_ms": 2505.78,
+          "predicted_per_token_ms": 147.39882352941177,
+          "predicted_per_second": 6.784314664495685
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526022144,
+        "cgroup_peak_bytes": 1526771712,
+        "process_peak_rss_bytes": 1461669888,
+        "process_rss_bytes": 1461669888
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-de-technical",
+      "repetition": 1,
+      "seconds": 6.976799252995988,
+      "translated_text": "Starte den Worker erst wieder, nachdem die Datenbank bereit ist. Halte die request_id unverändert.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 22,
+        "prompt_tokens": 47,
+        "total_tokens": 69,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 47,
+        "prompt_ms": 3815.015,
+        "prompt_per_token_ms": 81.17053191489362,
+        "prompt_per_second": 12.319741862089666,
+        "predicted_n": 22,
+        "predicted_ms": 3153.03,
+        "predicted_per_token_ms": 150.14428571428573,
+        "predicted_per_second": 6.660260130731391
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Starte den Worker erst wieder, nachdem die Datenbank bereit ist. Halte die request_id unverändert."
+            }
+          }
+        ],
+        "created": 1791719513,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 47,
+          "total_tokens": 69,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-TLwgZrraMjpmzQChNcC0NvOpMqA0J8un",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 47,
+          "prompt_ms": 3815.015,
+          "prompt_per_token_ms": 81.17053191489362,
+          "prompt_per_second": 12.319741862089666,
+          "predicted_n": 22,
+          "predicted_ms": 3153.03,
+          "predicted_per_token_ms": 150.14428571428573,
+          "predicted_per_second": 6.660260130731391
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526300672,
+        "cgroup_peak_bytes": 1526771712,
+        "process_peak_rss_bytes": 1461690368,
+        "process_rss_bytes": 1461690368
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "fr-en",
+      "repetition": 1,
+      "seconds": 7.252686045016162,
+      "translated_text": "The contract is valid until December 31, unless both parties decide to terminate it earlier.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 20,
+        "prompt_tokens": 58,
+        "total_tokens": 78,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 58,
+        "prompt_ms": 4733.983,
+        "prompt_per_token_ms": 81.62039655172414,
+        "prompt_per_second": 12.25183951864635,
+        "predicted_n": 20,
+        "predicted_ms": 2512.524,
+        "predicted_per_token_ms": 132.23810526315788,
+        "predicted_per_second": 7.562116819580629
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The contract is valid until December 31, unless both parties decide to terminate it earlier."
+            }
+          }
+        ],
+        "created": 1791719520,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 20,
+          "prompt_tokens": 58,
+          "total_tokens": 78,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-XNGsH2g10F5AUYrE2Z9xIDs38GPAG0vX",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 58,
+          "prompt_ms": 4733.983,
+          "prompt_per_token_ms": 81.62039655172414,
+          "prompt_per_second": 12.25183951864635,
+          "predicted_n": 20,
+          "predicted_ms": 2512.524,
+          "predicted_per_token_ms": 132.23810526315788,
+          "predicted_per_second": 7.562116819580629
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526571008,
+        "cgroup_peak_bytes": 1526771712,
+        "process_peak_rss_bytes": 1461706752,
+        "process_rss_bytes": 1461706752
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "es-ru",
+      "repetition": 1,
+      "seconds": 7.5809807109762914,
+      "translated_text": "Хотя сервер доступен, данные еще не обновлены. Не путайте доступность с актуальностью.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 55,
+        "total_tokens": 78,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 3848.358,
+        "prompt_per_token_ms": 69.97014545454546,
+        "prompt_per_second": 14.291809649725932,
+        "predicted_n": 23,
+        "predicted_ms": 3724.844,
+        "predicted_per_token_ms": 169.31109090909092,
+        "predicted_per_second": 5.906287619025119
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Хотя сервер доступен, данные еще не обновлены. Не путайте доступность с актуальностью."
+            }
+          }
+        ],
+        "created": 1791719528,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 55,
+          "total_tokens": 78,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-7lqA8iWb8c7d6SYJ3zNg8bsv4zeKVda9",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 3848.358,
+          "prompt_per_token_ms": 69.97014545454546,
+          "prompt_per_second": 14.291809649725932,
+          "predicted_n": 23,
+          "predicted_ms": 3724.844,
+          "predicted_per_token_ms": 169.31109090909092,
+          "predicted_per_second": 5.906287619025119
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526325248,
+        "cgroup_peak_bytes": 1526829056,
+        "process_peak_rss_bytes": 1461723136,
+        "process_rss_bytes": 1461723136
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "zh-en",
+      "repetition": 1,
+      "seconds": 8.235280046006665,
+      "translated_text": "The original file has been saved by the system, but the translation is not yet complete. Processing will continue after the network is restored; no history will be deleted.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 34,
+        "prompt_tokens": 52,
+        "total_tokens": 86,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 52,
+        "prompt_ms": 3990.271,
+        "prompt_per_token_ms": 76.73598076923078,
+        "prompt_per_second": 13.031696343431312,
+        "predicted_n": 34,
+        "predicted_ms": 4235.031,
+        "predicted_per_token_ms": 128.33427272727272,
+        "predicted_per_second": 7.792150754032261
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The original file has been saved by the system, but the translation is not yet complete. Processing will continue after the network is restored; no history will be deleted."
+            }
+          }
+        ],
+        "created": 1791719536,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 34,
+          "prompt_tokens": 52,
+          "total_tokens": 86,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-37j32gyZv0rtzn4VbT1oQVRDqSvcp9gh",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 3990.271,
+          "prompt_per_token_ms": 76.73598076923078,
+          "prompt_per_second": 13.031696343431312,
+          "predicted_n": 34,
+          "predicted_ms": 4235.031,
+          "predicted_per_token_ms": 128.33427272727272,
+          "predicted_per_second": 7.792150754032261
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526349824,
+        "cgroup_peak_bytes": 1526829056,
+        "process_peak_rss_bytes": 1461743616,
+        "process_rss_bytes": 1461743616
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-zh",
+      "repetition": 1,
+      "seconds": 5.749411794007756,
+      "translated_text": "备份包含三个独立的副本。成功上传并不意味着文件能够被恢复。",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 15,
+        "prompt_tokens": 51,
+        "total_tokens": 66,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 51,
+        "prompt_ms": 4094.948,
+        "prompt_per_token_ms": 80.29309803921568,
+        "prompt_per_second": 12.454370604950295,
+        "predicted_n": 15,
+        "predicted_ms": 1649.776,
+        "predicted_per_token_ms": 117.84114285714286,
+        "predicted_per_second": 8.48600052370746
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "备份包含三个独立的副本。成功上传并不意味着文件能够被恢复。"
+            }
+          }
+        ],
+        "created": 1791719542,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 15,
+          "prompt_tokens": 51,
+          "total_tokens": 66,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-O4twPnquDavn1L1ynl23ZhNYTp3HSNh9",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 51,
+          "prompt_ms": 4094.948,
+          "prompt_per_token_ms": 80.29309803921568,
+          "prompt_per_second": 12.454370604950295,
+          "predicted_n": 15,
+          "predicted_ms": 1649.776,
+          "predicted_per_token_ms": 117.84114285714286,
+          "predicted_per_second": 8.48600052370746
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526362112,
+        "cgroup_peak_bytes": 1526829056,
+        "process_peak_rss_bytes": 1461755904,
+        "process_rss_bytes": 1461755904
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-identifier",
+      "repetition": 1,
+      "seconds": 8.709736795979552,
+      "translated_text": "Выполните запрос GET /v1/status перед развертыванием версии 2.4.1. Не изменяйте код ERR_TIMEOUT.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 30,
+        "prompt_tokens": 55,
+        "total_tokens": 85,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4771.97,
+        "prompt_per_token_ms": 86.76309090909092,
+        "prompt_per_second": 11.525638258413192,
+        "predicted_n": 30,
+        "predicted_ms": 3933.29,
+        "predicted_per_token_ms": 135.6306896551724,
+        "predicted_per_second": 7.372962583486089
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Выполните запрос GET /v1/status перед развертыванием версии 2.4.1. Не изменяйте код ERR_TIMEOUT."
+            }
+          }
+        ],
+        "created": 1791719551,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 30,
+          "prompt_tokens": 55,
+          "total_tokens": 85,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-M227S6shrRMJtQD6ItDrrnNF20Uqkk4l",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4771.97,
+          "prompt_per_token_ms": 86.76309090909092,
+          "prompt_per_second": 11.525638258413192,
+          "predicted_n": 30,
+          "predicted_ms": 3933.29,
+          "predicted_per_token_ms": 135.6306896551724,
+          "predicted_per_second": 7.372962583486089
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526370304,
+        "cgroup_peak_bytes": 1526829056,
+        "process_peak_rss_bytes": 1461764096,
+        "process_rss_bytes": 1461764096
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-placeholder",
+      "repetition": 1,
+      "seconds": 8.929267962987069,
+      "translated_text": "Здравствуйте, {user_name}. Ваш запрос {{request_id}} находится в ожидании; пожалуйста, не отправляйте его повторно.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 28,
+        "prompt_tokens": 53,
+        "total_tokens": 81,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 53,
+        "prompt_ms": 4649.95,
+        "prompt_per_token_ms": 87.73490566037735,
+        "prompt_per_second": 11.397972021204529,
+        "predicted_n": 28,
+        "predicted_ms": 4254.927,
+        "predicted_per_token_ms": 157.58988888888888,
+        "predicted_per_second": 6.345584777365159
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Здравствуйте, {user_name}. Ваш запрос {{request_id}} находится в ожидании; пожалуйста, не отправляйте его повторно."
+            }
+          }
+        ],
+        "created": 1791719560,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 28,
+          "prompt_tokens": 53,
+          "total_tokens": 81,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-vDEw6NlAUiCO9fv7Ms5yag94vAnlP9Nz",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 4649.95,
+          "prompt_per_token_ms": 87.73490566037735,
+          "prompt_per_second": 11.397972021204529,
+          "predicted_n": 28,
+          "predicted_ms": 4254.927,
+          "predicted_per_token_ms": 157.58988888888888,
+          "predicted_per_second": 6.345584777365159
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526366208,
+        "cgroup_peak_bytes": 1526829056,
+        "process_peak_rss_bytes": 1461768192,
+        "process_rss_bytes": 1461768192
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-list",
+      "repetition": 1,
+      "seconds": 7.928525294992141,
+      "translated_text": "1. Save the document.\n2. Check the checksum.\n3. Do not delete the original.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 58,
+        "total_tokens": 81,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 58,
+        "prompt_ms": 4693.214,
+        "prompt_per_token_ms": 80.9174827586207,
+        "prompt_per_second": 12.358268768481471,
+        "predicted_n": 23,
+        "predicted_ms": 3207.758,
+        "predicted_per_token_ms": 145.80718181818182,
+        "predicted_per_second": 6.858372732606387
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "1. Save the document.\n2. Check the checksum.\n3. Do not delete the original."
+            }
+          }
+        ],
+        "created": 1791719568,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 58,
+          "total_tokens": 81,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-tVsaBRoKlzoDmXhDO9Az44R4ZYe2bNCK",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 58,
+          "prompt_ms": 4693.214,
+          "prompt_per_token_ms": 80.9174827586207,
+          "prompt_per_second": 12.358268768481471,
+          "predicted_n": 23,
+          "predicted_ms": 3207.758,
+          "predicted_per_token_ms": 145.80718181818182,
+          "predicted_per_second": 6.858372732606387
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526640640,
+        "cgroup_peak_bytes": 1526829056,
+        "process_peak_rss_bytes": 1461776384,
+        "process_rss_bytes": 1461776384
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-context",
+      "repetition": 1,
+      "seconds": 10.721325463004177,
+      "translated_text": "Малое производственное предприятие перенесло свой завод ближе к порту. Новый объект не является электростанцией, и дополнительная генерация электроэнергии не планируется.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 38,
+        "prompt_tokens": 60,
+        "total_tokens": 98,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 60,
+        "prompt_ms": 5354.984,
+        "prompt_per_token_ms": 89.24973333333334,
+        "prompt_per_second": 11.204515270260378,
+        "predicted_n": 38,
+        "predicted_ms": 5358.285,
+        "predicted_per_token_ms": 144.81851351351352,
+        "predicted_per_second": 6.9051944792037006
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Малое производственное предприятие перенесло свой завод ближе к порту. Новый объект не является электростанцией, и дополнительная генерация электроэнергии не планируется."
+            }
+          }
+        ],
+        "created": 1791719578,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 38,
+          "prompt_tokens": 60,
+          "total_tokens": 98,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-bCjReutKJUOFhKFOvItB8TJKNi0zcxZ0",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 60,
+          "prompt_ms": 5354.984,
+          "prompt_per_token_ms": 89.24973333333334,
+          "prompt_per_second": 11.204515270260378,
+          "predicted_n": 38,
+          "predicted_ms": 5358.285,
+          "predicted_per_token_ms": 144.81851351351352,
+          "predicted_per_second": 6.9051944792037006
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1526648832,
+        "cgroup_peak_bytes": 1526898688,
+        "process_peak_rss_bytes": 1461784576,
+        "process_rss_bytes": 1461784576
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-context",
+      "repetition": 1,
+      "seconds": 11.254725588980364,
+      "translated_text": "The employee reported an error but did not claim that the data was lost. Recovery cannot be considered successful until the backup has been checked. Even if the server responds to requests, the queue may not advance.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 42,
+        "prompt_tokens": 78,
+        "total_tokens": 120,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 78,
+        "prompt_ms": 5860.252,
+        "prompt_per_token_ms": 75.1314358974359,
+        "prompt_per_second": 13.310007829014861,
+        "predicted_n": 42,
+        "predicted_ms": 5385.338,
+        "predicted_per_token_ms": 131.34970731707315,
+        "predicted_per_second": 7.613264014255002
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The employee reported an error but did not claim that the data was lost. Recovery cannot be considered successful until the backup has been checked. Even if the server responds to requests, the queue may not advance."
+            }
+          }
+        ],
+        "created": 1791719590,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 42,
+          "prompt_tokens": 78,
+          "total_tokens": 120,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-08qB1giQqjS9F1CxXwlIrpJr3vBE2AM9",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 78,
+          "prompt_ms": 5860.252,
+          "prompt_per_token_ms": 75.1314358974359,
+          "prompt_per_second": 13.310007829014861,
+          "predicted_n": 42,
+          "predicted_ms": 5385.338,
+          "predicted_per_token_ms": 131.34970731707315,
+          "predicted_per_second": 7.613264014255002
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527181312,
+        "cgroup_peak_bytes": 1527660544,
+        "process_peak_rss_bytes": 1462829056,
+        "process_rss_bytes": 1462829056
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-newlines",
+      "repetition": 1,
+      "seconds": 7.921913128986489,
+      "translated_text": "Первая реплика в порядке.\nВторая реплика недоступна.\nНе перезапускайте обе реплики одновременно.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 27,
+        "prompt_tokens": 55,
+        "total_tokens": 82,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4252.528,
+        "prompt_per_token_ms": 77.31869090909092,
+        "prompt_per_second": 12.933483330386066,
+        "predicted_n": 27,
+        "predicted_ms": 3664.976,
+        "predicted_per_token_ms": 140.96061538461538,
+        "predicted_per_second": 7.0941801528850394
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Первая реплика в порядке.\nВторая реплика недоступна.\nНе перезапускайте обе реплики одновременно."
+            }
+          }
+        ],
+        "created": 1791719597,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 27,
+          "prompt_tokens": 55,
+          "total_tokens": 82,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-UcNcy3ff1bRBGyoUmHps88ZgAxHWETcL",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4252.528,
+          "prompt_per_token_ms": 77.31869090909092,
+          "prompt_per_second": 12.933483330386066,
+          "predicted_n": 27,
+          "predicted_ms": 3664.976,
+          "predicted_per_token_ms": 140.96061538461538,
+          "predicted_per_second": 7.0941801528850394
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527701504,
+        "cgroup_peak_bytes": 1527705600,
+        "process_peak_rss_bytes": 1462837248,
+        "process_rss_bytes": 1462837248
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-term",
+      "repetition": 2,
+      "seconds": 2.9968652089883108,
+      "translated_text": "Klimaobservatorium",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 4,
+        "prompt_tokens": 33,
+        "total_tokens": 37,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 33,
+        "prompt_ms": 2605.389,
+        "prompt_per_token_ms": 78.95118181818182,
+        "prompt_per_second": 12.666054857835048,
+        "predicted_n": 4,
+        "predicted_ms": 388.223,
+        "predicted_per_token_ms": 129.40766666666667,
+        "predicted_per_second": 7.727517431991407
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Klimaobservatorium"
+            }
+          }
+        ],
+        "created": 1791719600,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 4,
+          "prompt_tokens": 33,
+          "total_tokens": 37,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-NQq5lzjC1uXkbJouYmUSZRfta7zaYb0G",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 33,
+          "prompt_ms": 2605.389,
+          "prompt_per_token_ms": 78.95118181818182,
+          "prompt_per_second": 12.666054857835048,
+          "predicted_n": 4,
+          "predicted_ms": 388.223,
+          "predicted_per_token_ms": 129.40766666666667,
+          "predicted_per_second": 7.727517431991407
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527701504,
+        "cgroup_peak_bytes": 1527705600,
+        "process_peak_rss_bytes": 1462837248,
+        "process_rss_bytes": 1462837248
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-sentence",
+      "repetition": 2,
+      "seconds": 3.9084472520044073,
+      "translated_text": "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 40,
+        "total_tokens": 51,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 40,
+        "prompt_ms": 2638.615,
+        "prompt_per_token_ms": 65.965375,
+        "prompt_per_second": 15.159468130060658,
+        "predicted_n": 11,
+        "predicted_ms": 1266.108,
+        "predicted_per_token_ms": 126.6108,
+        "predicted_per_second": 7.898220372985559
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht."
+            }
+          }
+        ],
+        "created": 1791719604,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 11,
+          "prompt_tokens": 40,
+          "total_tokens": 51,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-iF4hnJzmnJ6SS0LT4Lt05EKATPtEE6uP",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 40,
+          "prompt_ms": 2638.615,
+          "prompt_per_token_ms": 65.965375,
+          "prompt_per_second": 15.159468130060658,
+          "predicted_n": 11,
+          "predicted_ms": 1266.108,
+          "predicted_per_token_ms": 126.6108,
+          "predicted_per_second": 7.898220372985559
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527447552,
+        "cgroup_peak_bytes": 1527955456,
+        "process_peak_rss_bytes": 1462841344,
+        "process_rss_bytes": 1462841344
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-negation",
+      "repetition": 2,
+      "seconds": 5.3693578359961975,
+      "translated_text": "Сервис не должен удалять оригинальный документ после перевода.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 14,
+        "prompt_tokens": 42,
+        "total_tokens": 56,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 42,
+        "prompt_ms": 3666.24,
+        "prompt_per_token_ms": 87.29142857142857,
+        "prompt_per_second": 11.455878502225714,
+        "predicted_n": 14,
+        "predicted_ms": 1699.588,
+        "predicted_per_token_ms": 130.73753846153846,
+        "predicted_per_second": 7.648912559985126
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Сервис не должен удалять оригинальный документ после перевода."
+            }
+          }
+        ],
+        "created": 1791719610,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 14,
+          "prompt_tokens": 42,
+          "total_tokens": 56,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-S3d4i3wJYQgp6XJ5DsYaIyKnHzLaPV99",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 42,
+          "prompt_ms": 3666.24,
+          "prompt_per_token_ms": 87.29142857142857,
+          "prompt_per_second": 11.455878502225714,
+          "predicted_n": 14,
+          "predicted_ms": 1699.588,
+          "predicted_per_token_ms": 130.73753846153846,
+          "predicted_per_second": 7.648912559985126
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527713792,
+        "cgroup_peak_bytes": 1527955456,
+        "process_peak_rss_bytes": 1462849536,
+        "process_rss_bytes": 1462849536
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-negation",
+      "repetition": 2,
+      "seconds": 6.049628210981609,
+      "translated_text": "Payment has not been confirmed. You cannot repeat the money transfer until the verification is complete.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 19,
+        "prompt_tokens": 55,
+        "total_tokens": 74,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4108.76,
+        "prompt_per_token_ms": 74.70472727272728,
+        "prompt_per_second": 13.386033742540327,
+        "predicted_n": 19,
+        "predicted_ms": 1934.273,
+        "predicted_per_token_ms": 107.4596111111111,
+        "predicted_per_second": 9.305821877263448
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Payment has not been confirmed. You cannot repeat the money transfer until the verification is complete."
+            }
+          }
+        ],
+        "created": 1791719616,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 19,
+          "prompt_tokens": 55,
+          "total_tokens": 74,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-CuEBGUnxtLqTs2xp18sIKO24GXzafo3V",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4108.76,
+          "prompt_per_token_ms": 74.70472727272728,
+          "prompt_per_second": 13.386033742540327,
+          "predicted_n": 19,
+          "predicted_ms": 1934.273,
+          "predicted_per_token_ms": 107.4596111111111,
+          "predicted_per_second": 9.305821877263448
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527459840,
+        "cgroup_peak_bytes": 1527955456,
+        "process_peak_rss_bytes": 1462853632,
+        "process_rss_bytes": 1462853632
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-numbers",
+      "repetition": 2,
+      "seconds": 8.435202503984328,
+      "translated_text": "11 октября 2026 года склад принял 17 ящиков и отклонил 3. Общий вес составил 1250 кг.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 34,
+        "prompt_tokens": 67,
+        "total_tokens": 101,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 67,
+        "prompt_ms": 5111.676,
+        "prompt_per_token_ms": 76.29367164179105,
+        "prompt_per_second": 13.107247016438443,
+        "predicted_n": 34,
+        "predicted_ms": 3316.782,
+        "predicted_per_token_ms": 100.50854545454546,
+        "predicted_per_second": 9.949402764486782
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "11 октября 2026 года склад принял 17 ящиков и отклонил 3. Общий вес составил 1250 кг."
+            }
+          }
+        ],
+        "created": 1791719624,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 34,
+          "prompt_tokens": 67,
+          "total_tokens": 101,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-EWgLkwSiYQIMy9RwEbfv1mwRTeQBwUvw",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 67,
+          "prompt_ms": 5111.676,
+          "prompt_per_token_ms": 76.29367164179105,
+          "prompt_per_second": 13.107247016438443,
+          "predicted_n": 34,
+          "predicted_ms": 3316.782,
+          "predicted_per_token_ms": 100.50854545454546,
+          "predicted_per_second": 9.949402764486782
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527721984,
+        "cgroup_peak_bytes": 1527955456,
+        "process_peak_rss_bytes": 1462857728,
+        "process_rss_bytes": 1462857728
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-numbers",
+      "repetition": 2,
+      "seconds": 9.604870879004011,
+      "translated_text": "The temperature dropped from 12 to 7 degrees in 24 hours. Samples A-17 and B-03 are undamaged.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 68,
+        "total_tokens": 100,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 68,
+        "prompt_ms": 5689.64,
+        "prompt_per_token_ms": 83.67117647058824,
+        "prompt_per_second": 11.95154702230721,
+        "predicted_n": 32,
+        "predicted_ms": 3910.377,
+        "predicted_per_token_ms": 126.1411935483871,
+        "predicted_per_second": 7.927624369721896
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The temperature dropped from 12 to 7 degrees in 24 hours. Samples A-17 and B-03 are undamaged."
+            }
+          }
+        ],
+        "created": 1791719634,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 32,
+          "prompt_tokens": 68,
+          "total_tokens": 100,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-L7qyTy95jHKxuE7SQKFwxrKXex7NW4WY",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 68,
+          "prompt_ms": 5689.64,
+          "prompt_per_token_ms": 83.67117647058824,
+          "prompt_per_second": 11.95154702230721,
+          "predicted_n": 32,
+          "predicted_ms": 3910.377,
+          "predicted_per_token_ms": 126.1411935483871,
+          "predicted_per_second": 7.927624369721896
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527463936,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462857728,
+        "process_rss_bytes": 1462857728
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-uncertainty",
+      "repetition": 2,
+      "seconds": 6.857675045001088,
+      "translated_text": "В отчете предполагается, что спрос может снизиться, но имеющиеся данные не позволяют установить причинную связь.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 24,
+        "prompt_tokens": 49,
+        "total_tokens": 73,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 49,
+        "prompt_ms": 3880.866,
+        "prompt_per_token_ms": 79.20134693877552,
+        "prompt_per_second": 12.626047897556887,
+        "predicted_n": 24,
+        "predicted_ms": 2972.324,
+        "predicted_per_token_ms": 129.23147826086958,
+        "predicted_per_second": 7.738052782940217
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "В отчете предполагается, что спрос может снизиться, но имеющиеся данные не позволяют установить причинную связь."
+            }
+          }
+        ],
+        "created": 1791719641,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 49,
+          "total_tokens": 73,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-g5i04t5KKdEX7D88PBM7OrnYxt0np9tx",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 49,
+          "prompt_ms": 3880.866,
+          "prompt_per_token_ms": 79.20134693877552,
+          "prompt_per_second": 12.626047897556887,
+          "predicted_n": 24,
+          "predicted_ms": 2972.324,
+          "predicted_per_token_ms": 129.23147826086958,
+          "predicted_per_second": 7.738052782940217
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527463936,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462861824,
+        "process_rss_bytes": 1462861824
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-ambiguity",
+      "repetition": 2,
+      "seconds": 6.649524378008209,
+      "translated_text": "The castle door is broken, but the old castle on the hill is open to visitors.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 19,
+        "prompt_tokens": 51,
+        "total_tokens": 70,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 51,
+        "prompt_ms": 4100.256,
+        "prompt_per_token_ms": 80.39717647058824,
+        "prompt_per_second": 12.438247758188755,
+        "predicted_n": 19,
+        "predicted_ms": 2543.615,
+        "predicted_per_token_ms": 141.31194444444444,
+        "predicted_per_second": 7.076542637152243
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The castle door is broken, but the old castle on the hill is open to visitors."
+            }
+          }
+        ],
+        "created": 1791719647,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 19,
+          "prompt_tokens": 51,
+          "total_tokens": 70,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-j7nTNaZ9QvAhj6uupu0IFzETuflSN5Pg",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 51,
+          "prompt_ms": 4100.256,
+          "prompt_per_token_ms": 80.39717647058824,
+          "prompt_per_second": 12.438247758188755,
+          "predicted_n": 19,
+          "predicted_ms": 2543.615,
+          "predicted_per_token_ms": 141.31194444444444,
+          "predicted_per_second": 7.076542637152243
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527730176,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462865920,
+        "process_rss_bytes": 1462865920
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "de-en-negation",
+      "repetition": 2,
+      "seconds": 5.482949252997059,
+      "translated_text": "The delivery has not been canceled. It will only be released after the security check.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 18,
+        "prompt_tokens": 51,
+        "total_tokens": 69,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 51,
+        "prompt_ms": 3541.536,
+        "prompt_per_token_ms": 69.44188235294118,
+        "prompt_per_second": 14.400531294895773,
+        "predicted_n": 18,
+        "predicted_ms": 1937.207,
+        "predicted_per_token_ms": 113.95335294117648,
+        "predicted_per_second": 8.77552063357194
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The delivery has not been canceled. It will only be released after the security check."
+            }
+          }
+        ],
+        "created": 1791719653,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 51,
+          "total_tokens": 69,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-lafFNWOHFdPSW2YxacJSXOUjQSglyCXU",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 51,
+          "prompt_ms": 3541.536,
+          "prompt_per_token_ms": 69.44188235294118,
+          "prompt_per_second": 14.400531294895773,
+          "predicted_n": 18,
+          "predicted_ms": 1937.207,
+          "predicted_per_token_ms": 113.95335294117648,
+          "predicted_per_second": 8.77552063357194
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527472128,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462870016,
+        "process_rss_bytes": 1462870016
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-de-technical",
+      "repetition": 2,
+      "seconds": 6.563092253025388,
+      "translated_text": "Starte den Worker erst wieder, nachdem die Datenbank bereit ist. Halte die request_id unverändert.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 22,
+        "prompt_tokens": 47,
+        "total_tokens": 69,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 47,
+        "prompt_ms": 3670.372,
+        "prompt_per_token_ms": 78.09302127659574,
+        "prompt_per_second": 12.80524153954967,
+        "predicted_n": 22,
+        "predicted_ms": 2888.469,
+        "predicted_per_token_ms": 137.54614285714285,
+        "predicted_per_second": 7.270287477552987
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Starte den Worker erst wieder, nachdem die Datenbank bereit ist. Halte die request_id unverändert."
+            }
+          }
+        ],
+        "created": 1791719659,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 47,
+          "total_tokens": 69,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-hHxtps3En7JN1t6bwZ9AWVpDfjw9trjT",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 47,
+          "prompt_ms": 3670.372,
+          "prompt_per_token_ms": 78.09302127659574,
+          "prompt_per_second": 12.80524153954967,
+          "predicted_n": 22,
+          "predicted_ms": 2888.469,
+          "predicted_per_token_ms": 137.54614285714285,
+          "predicted_per_second": 7.270287477552987
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527476224,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462874112,
+        "process_rss_bytes": 1462874112
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "fr-en",
+      "repetition": 2,
+      "seconds": 7.1073535030009225,
+      "translated_text": "The contract is valid until December 31, unless both parties decide to terminate it earlier.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 20,
+        "prompt_tokens": 58,
+        "total_tokens": 78,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 58,
+        "prompt_ms": 4280.46,
+        "prompt_per_token_ms": 73.80103448275862,
+        "prompt_per_second": 13.549945566597982,
+        "predicted_n": 20,
+        "predicted_ms": 2821.342,
+        "predicted_per_token_ms": 148.49168421052633,
+        "predicted_per_second": 6.734383849955092
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The contract is valid until December 31, unless both parties decide to terminate it earlier."
+            }
+          }
+        ],
+        "created": 1791719666,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 20,
+          "prompt_tokens": 58,
+          "total_tokens": 78,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-fnIH1ZZP8QJdb9yFeItuUmH5boPBq3PL",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 58,
+          "prompt_ms": 4280.46,
+          "prompt_per_token_ms": 73.80103448275862,
+          "prompt_per_second": 13.549945566597982,
+          "predicted_n": 20,
+          "predicted_ms": 2821.342,
+          "predicted_per_token_ms": 148.49168421052633,
+          "predicted_per_second": 6.734383849955092
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527484416,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462878208,
+        "process_rss_bytes": 1462878208
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "es-ru",
+      "repetition": 2,
+      "seconds": 7.27769358700607,
+      "translated_text": "Хотя сервер доступен, данные еще не обновлены. Не путайте доступность с актуальностью.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 55,
+        "total_tokens": 78,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4397.309,
+        "prompt_per_token_ms": 79.95107272727273,
+        "prompt_per_second": 12.507649564767906,
+        "predicted_n": 23,
+        "predicted_ms": 2858.823,
+        "predicted_per_token_ms": 129.9465,
+        "predicted_per_second": 7.69547467611671
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Хотя сервер доступен, данные еще не обновлены. Не путайте доступность с актуальностью."
+            }
+          }
+        ],
+        "created": 1791719674,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 55,
+          "total_tokens": 78,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-zLPWWKDhfafFcjrcT3wKAnyO9mTcKq1g",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4397.309,
+          "prompt_per_token_ms": 79.95107272727273,
+          "prompt_per_second": 12.507649564767906,
+          "predicted_n": 23,
+          "predicted_ms": 2858.823,
+          "predicted_per_token_ms": 129.9465,
+          "predicted_per_second": 7.69547467611671
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527488512,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462882304,
+        "process_rss_bytes": 1462882304
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "zh-en",
+      "repetition": 2,
+      "seconds": 8.850029088003794,
+      "translated_text": "The original file has been saved by the system, but the translation is not yet complete. Processing will continue after the network is restored; no history will be deleted.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 34,
+        "prompt_tokens": 52,
+        "total_tokens": 86,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 52,
+        "prompt_ms": 4900.217,
+        "prompt_per_token_ms": 94.23494230769231,
+        "prompt_per_second": 10.611774947925776,
+        "predicted_n": 34,
+        "predicted_ms": 3902.097,
+        "predicted_per_token_ms": 118.24536363636365,
+        "predicted_per_second": 8.456991202422698
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The original file has been saved by the system, but the translation is not yet complete. Processing will continue after the network is restored; no history will be deleted."
+            }
+          }
+        ],
+        "created": 1791719683,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 34,
+          "prompt_tokens": 52,
+          "total_tokens": 86,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-UK4Fw3lMWdVCLGVpwPuKv2qNOynBGbHW",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 52,
+          "prompt_ms": 4900.217,
+          "prompt_per_token_ms": 94.23494230769231,
+          "prompt_per_second": 10.611774947925776,
+          "predicted_n": 34,
+          "predicted_ms": 3902.097,
+          "predicted_per_token_ms": 118.24536363636365,
+          "predicted_per_second": 8.456991202422698
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527750656,
+        "cgroup_peak_bytes": 1527975936,
+        "process_peak_rss_bytes": 1462886400,
+        "process_rss_bytes": 1462886400
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-zh",
+      "repetition": 2,
+      "seconds": 5.700848961016163,
+      "translated_text": "备份包含三个独立的副本。成功上传并不意味着文件能够被恢复。",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 15,
+        "prompt_tokens": 51,
+        "total_tokens": 66,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 51,
+        "prompt_ms": 3811.327,
+        "prompt_per_token_ms": 74.73190196078431,
+        "prompt_per_second": 13.381166192247477,
+        "predicted_n": 15,
+        "predicted_ms": 1882.837,
+        "predicted_per_token_ms": 134.48835714285715,
+        "predicted_per_second": 7.435587892101122
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "备份包含三个独立的副本。成功上传并不意味着文件能够被恢复。"
+            }
+          }
+        ],
+        "created": 1791719688,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 15,
+          "prompt_tokens": 51,
+          "total_tokens": 66,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-LegJu7W4L35ZjeaHEgJymOodhbsLdvj5",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 51,
+          "prompt_ms": 3811.327,
+          "prompt_per_token_ms": 74.73190196078431,
+          "prompt_per_second": 13.381166192247477,
+          "predicted_n": 15,
+          "predicted_ms": 1882.837,
+          "predicted_per_token_ms": 134.48835714285715,
+          "predicted_per_second": 7.435587892101122
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527496704,
+        "cgroup_peak_bytes": 1528004608,
+        "process_peak_rss_bytes": 1462890496,
+        "process_rss_bytes": 1462890496
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-identifier",
+      "repetition": 2,
+      "seconds": 8.568985796009656,
+      "translated_text": "Выполните запрос GET /v1/status перед развертыванием версии 2.4.1. Не изменяйте код ERR_TIMEOUT.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 30,
+        "prompt_tokens": 55,
+        "total_tokens": 85,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4904.929,
+        "prompt_per_token_ms": 89.18052727272728,
+        "prompt_per_second": 11.213210221799336,
+        "predicted_n": 30,
+        "predicted_ms": 3656.764,
+        "predicted_per_token_ms": 126.0953103448276,
+        "predicted_per_second": 7.93050905117202
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Выполните запрос GET /v1/status перед развертыванием версии 2.4.1. Не изменяйте код ERR_TIMEOUT."
+            }
+          }
+        ],
+        "created": 1791719697,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 30,
+          "prompt_tokens": 55,
+          "total_tokens": 85,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-MxcOs5LKRgGTbSv188I966tGEZeNbasF",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4904.929,
+          "prompt_per_token_ms": 89.18052727272728,
+          "prompt_per_second": 11.213210221799336,
+          "predicted_n": 30,
+          "predicted_ms": 3656.764,
+          "predicted_per_token_ms": 126.0953103448276,
+          "predicted_per_second": 7.93050905117202
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527758848,
+        "cgroup_peak_bytes": 1528004608,
+        "process_peak_rss_bytes": 1462894592,
+        "process_rss_bytes": 1462894592
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-placeholder",
+      "repetition": 2,
+      "seconds": 7.455493795016082,
+      "translated_text": "Здравствуйте, {user_name}. Ваш запрос {{request_id}} находится в ожидании; пожалуйста, не отправляйте его повторно.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 28,
+        "prompt_tokens": 53,
+        "total_tokens": 81,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 53,
+        "prompt_ms": 4512.781,
+        "prompt_per_token_ms": 85.14681132075472,
+        "prompt_per_second": 11.744421012231705,
+        "predicted_n": 28,
+        "predicted_ms": 2938.223,
+        "predicted_per_token_ms": 108.82307407407407,
+        "predicted_per_second": 9.18922763861014
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Здравствуйте, {user_name}. Ваш запрос {{request_id}} находится в ожидании; пожалуйста, не отправляйте его повторно."
+            }
+          }
+        ],
+        "created": 1791719704,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 28,
+          "prompt_tokens": 53,
+          "total_tokens": 81,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-wmBZ7jByTOQyGCwqYylCWsAIJXimOKcT",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 53,
+          "prompt_ms": 4512.781,
+          "prompt_per_token_ms": 85.14681132075472,
+          "prompt_per_second": 11.744421012231705,
+          "predicted_n": 28,
+          "predicted_ms": 2938.223,
+          "predicted_per_token_ms": 108.82307407407407,
+          "predicted_per_second": 9.18922763861014
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527762944,
+        "cgroup_peak_bytes": 1528004608,
+        "process_peak_rss_bytes": 1462898688,
+        "process_rss_bytes": 1462898688
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-list",
+      "repetition": 2,
+      "seconds": 6.735385545005556,
+      "translated_text": "1. Save the document.\n2. Check the checksum.\n3. Do not delete the original.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 58,
+        "total_tokens": 81,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 58,
+        "prompt_ms": 4373.368,
+        "prompt_per_token_ms": 75.40289655172414,
+        "prompt_per_second": 13.262089995628083,
+        "predicted_n": 23,
+        "predicted_ms": 2357.439,
+        "predicted_per_token_ms": 107.15631818181818,
+        "predicted_per_second": 9.332160874576182
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "1. Save the document.\n2. Check the checksum.\n3. Do not delete the original."
+            }
+          }
+        ],
+        "created": 1791719711,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 58,
+          "total_tokens": 81,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-7BwY6FsvrQckA0oIYwOtPpalEnljhANt",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 58,
+          "prompt_ms": 4373.368,
+          "prompt_per_token_ms": 75.40289655172414,
+          "prompt_per_second": 13.262089995628083,
+          "predicted_n": 23,
+          "predicted_ms": 2357.439,
+          "predicted_per_token_ms": 107.15631818181818,
+          "predicted_per_second": 9.332160874576182
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527508992,
+        "cgroup_peak_bytes": 1528020992,
+        "process_peak_rss_bytes": 1462906880,
+        "process_rss_bytes": 1462906880
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-context",
+      "repetition": 2,
+      "seconds": 8.95680187799735,
+      "translated_text": "Малое производственное предприятие перенесло свой завод ближе к порту. Новый объект не является электростанцией, и дополнительная генерация электроэнергии не планируется.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 38,
+        "prompt_tokens": 60,
+        "total_tokens": 98,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 60,
+        "prompt_ms": 4409.924,
+        "prompt_per_token_ms": 73.49873333333333,
+        "prompt_per_second": 13.60567665111689,
+        "predicted_n": 38,
+        "predicted_ms": 4541.592,
+        "predicted_per_token_ms": 122.74572972972972,
+        "predicted_per_second": 8.146922929228342
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Малое производственное предприятие перенесло свой завод ближе к порту. Новый объект не является электростанцией, и дополнительная генерация электроэнергии не планируется."
+            }
+          }
+        ],
+        "created": 1791719720,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 38,
+          "prompt_tokens": 60,
+          "total_tokens": 98,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-ILdJl1ShBrxMBJdLWM9fhhQ9Kp4EdmbG",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 60,
+          "prompt_ms": 4409.924,
+          "prompt_per_token_ms": 73.49873333333333,
+          "prompt_per_second": 13.60567665111689,
+          "predicted_n": 38,
+          "predicted_ms": 4541.592,
+          "predicted_per_token_ms": 122.74572972972972,
+          "predicted_per_second": 8.146922929228342
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527775232,
+        "cgroup_peak_bytes": 1528020992,
+        "process_peak_rss_bytes": 1462910976,
+        "process_rss_bytes": 1462910976
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-context",
+      "repetition": 2,
+      "seconds": 11.518774172000121,
+      "translated_text": "The employee reported an error but did not claim that the data was lost. Recovery cannot be considered successful until the backup has been checked. Even if the server responds to requests, the queue may not advance.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 42,
+        "prompt_tokens": 78,
+        "total_tokens": 120,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 78,
+        "prompt_ms": 6403.597,
+        "prompt_per_token_ms": 82.09739743589743,
+        "prompt_per_second": 12.180654091754995,
+        "predicted_n": 42,
+        "predicted_ms": 5106.069,
+        "predicted_per_token_ms": 124.53826829268294,
+        "predicted_per_second": 8.029660390409921
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "The employee reported an error but did not claim that the data was lost. Recovery cannot be considered successful until the backup has been checked. Even if the server responds to requests, the queue may not advance."
+            }
+          }
+        ],
+        "created": 1791719732,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 42,
+          "prompt_tokens": 78,
+          "total_tokens": 120,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-Y40eIfQLjEbpZUKCMsZWYjj5Vmun1u25",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 78,
+          "prompt_ms": 6403.597,
+          "prompt_per_token_ms": 82.09739743589743,
+          "prompt_per_second": 12.180654091754995,
+          "predicted_n": 42,
+          "predicted_ms": 5106.069,
+          "predicted_per_token_ms": 124.53826829268294,
+          "predicted_per_second": 8.029660390409921
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527529472,
+        "cgroup_peak_bytes": 1528029184,
+        "process_peak_rss_bytes": 1462923264,
+        "process_rss_bytes": 1462923264
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-newlines",
+      "repetition": 2,
+      "seconds": 7.388115670008119,
+      "translated_text": "Первая реплика в порядке.\nВторая реплика недоступна.\nНе перезапускайте обе реплики одновременно.",
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 27,
+        "prompt_tokens": 55,
+        "total_tokens": 82,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 55,
+        "prompt_ms": 4390.111,
+        "prompt_per_token_ms": 79.8202,
+        "prompt_per_second": 12.528157032931514,
+        "predicted_n": 27,
+        "predicted_ms": 2991.934,
+        "predicted_per_token_ms": 115.07438461538462,
+        "predicted_per_second": 8.690031264058632
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "Первая реплика в порядке.\nВторая реплика недоступна.\nНе перезапускайте обе реплики одновременно."
+            }
+          }
+        ],
+        "created": 1791719739,
+        "model": "index-translate",
+        "system_fingerprint": "b0-d81235049384534c167caea52b85a694f6103d14",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 27,
+          "prompt_tokens": 55,
+          "total_tokens": 82,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-y8XJZMgU4tA2Pej4BA0o8e4ul8eqGaVN",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 55,
+          "prompt_ms": 4390.111,
+          "prompt_per_token_ms": 79.8202,
+          "prompt_per_second": 12.528157032931514,
+          "predicted_n": 27,
+          "predicted_ms": 2991.934,
+          "predicted_per_token_ms": 115.07438461538462,
+          "predicted_per_second": 8.690031264058632
+        }
+      },
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 1527533568,
+        "cgroup_peak_bytes": 1528029184,
+        "process_peak_rss_bytes": 1462927360,
+        "process_rss_bytes": 1462927360
+      }
+    }
+  ],
+  "resource_preflight": {
+    "vm_bytes": 16748113920,
+    "current_container_bytes": 8828712099,
+    "model_limit_bytes": 3221225472,
+    "reserved_headroom_bytes": 536870912
+  },
+  "exit_state": {
+    "ExitCode": 0,
+    "OOMKilled": false,
+    "Error": ""
+  },
+  "execution_pass": true
+}

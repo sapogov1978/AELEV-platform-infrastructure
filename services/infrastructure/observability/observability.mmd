@@ -1,0 +1,19 @@
+flowchart LR
+    Owners["Owner telemetry senders"] --> Delivery["Telemetry Delivery"]
+    Delivery --> OTel["OpenTelemetry Collector"]
+    OTel --> Prometheus["Prometheus"]
+    OTel --> Loki["Loki"]
+    OTel --> Tempo["Tempo"]
+    Prometheus --> Blackbox["Blackbox Exporter"]
+    Blackbox --> Targets["Declared technical endpoints"]
+    Grafana["Grafana"] --> Prometheus
+    Grafana --> Loki
+    Grafana --> Tempo
+
+    click Delivery "delivery/architecture.mmd" "Подробная диаграмма Telemetry Delivery"
+    click OTel "otel-collector/architecture.mmd" "Подробная диаграмма OpenTelemetry Collector"
+    click Prometheus "prometheus/architecture.mmd" "Подробная диаграмма Prometheus"
+    click Blackbox "blackbox-exporter/architecture.mmd" "Подробная диаграмма Blackbox Exporter"
+    click Loki "loki/architecture.mmd" "Подробная диаграмма Loki"
+    click Tempo "tempo/architecture.mmd" "Подробная диаграмма Tempo"
+    click Grafana "grafana/architecture.mmd" "Подробная диаграмма Grafana"

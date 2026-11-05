@@ -1,0 +1,859 @@
+{
+  "model": {
+    "id": "madlad"
+  },
+  "image": "sha256:1ec74b25adc07333894ecd7bc73e60b9802d104a0ddae7d8d76a19eec5c032bf",
+  "container_id": "bace1fcb4d49f9a67fea43fd5d7e6eb5c2e80d6f3bde4d3a4755dee00db833a7",
+  "cpu_limit": 2,
+  "memory_limit": "4g",
+  "events": [
+    {
+      "event": "ready",
+      "seconds": 3.9301280439831316,
+      "command": [
+        "/usr/local/bin/aelev-madlad-runtime",
+        "/opt/aelev/model"
+      ],
+      "python": "3.13.7 (main, Sep 30 2025, 00:40:59) [GCC 12.2.0]",
+      "memory": {
+        "cgroup_current_bytes": 2961850368,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "warmup",
+      "seconds": null,
+      "result": {
+        "translated_text": "Документ готов.",
+        "raw_response": [
+          {
+            "translations": [
+              "Документ готов."
+            ]
+          }
+        ]
+      },
+      "elapsed_seconds": 0.9143402090121526,
+      "memory": {
+        "cgroup_current_bytes": 2962767872,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-term",
+      "repetition": 1,
+      "seconds": 0.6864852920116391,
+      "translated_text": "Klimaobservatorium von Deutschland",
+      "raw_response": [
+        {
+          "translations": [
+            "Klimaobservatorium von Deutschland"
+          ]
+        }
+      ],
+      "literal_failures": [
+        "added:Deutschland"
+      ],
+      "memory": {
+        "cgroup_current_bytes": 2962771968,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-sentence",
+      "repetition": 1,
+      "seconds": 3.858339084981708,
+      "translated_text": "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht.",
+      "raw_response": [
+        {
+          "translations": [
+            "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2962792448,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-negation",
+      "repetition": 1,
+      "seconds": 2.8477519180160016,
+      "translated_text": "Служба не должна удалять оригинальный документ после перевода.",
+      "raw_response": [
+        {
+          "translations": [
+            "Служба не должна удалять оригинальный документ после перевода."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2962821120,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-negation",
+      "repetition": 1,
+      "seconds": 8.385974920005538,
+      "translated_text": "The payment is not confirmed. You cannot re-transfer the money until the reconciliation is completed.",
+      "raw_response": [
+        {
+          "translations": [
+            "The payment is not confirmed. You cannot re-transfer the money until the reconciliation is completed."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2962866176,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-numbers",
+      "repetition": 1,
+      "seconds": 16.630054175009718,
+      "translated_text": "В 2026-10-11 на склад поступило 17 ящиков и отклонено 3. Общий вес составил 1250 кг.",
+      "raw_response": [
+        {
+          "translations": [
+            "В 2026-10-11 на склад поступило 17 ящиков и отклонено 3. Общий вес составил 1250 кг."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2962915328,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-numbers",
+      "repetition": 1,
+      "seconds": 15.56712200702168,
+      "translated_text": "The temperature decreased from 12 to 7 degrees in 24 hours. Specimens A-17 and B-03 are undamaged.",
+      "raw_response": [
+        {
+          "translations": [
+            "The temperature decreased from 12 to 7 degrees in 24 hours. Specimens A-17 and B-03 are undamaged."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2962972672,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-uncertainty",
+      "repetition": 1,
+      "seconds": 9.996591796021676,
+      "translated_text": "В докладе высказывается предположение о том, что спрос может сократиться, однако имеющиеся данные не позволяют установить причину этого.",
+      "raw_response": [
+        {
+          "translations": [
+            "В докладе высказывается предположение о том, что спрос может сократиться, однако имеющиеся данные не позволяют установить причину этого."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963005440,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-ambiguity",
+      "repetition": 1,
+      "seconds": 6.797737378015881,
+      "translated_text": "The lock on the door is broken, but the old castle on the hill is open to visitors.",
+      "raw_response": [
+        {
+          "translations": [
+            "The lock on the door is broken, but the old castle on the hill is open to visitors."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963034112,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "de-en-negation",
+      "repetition": 1,
+      "seconds": 5.284718794020591,
+      "translated_text": "The shipment has not been cancelled and will be released after the security check.",
+      "raw_response": [
+        {
+          "translations": [
+            "The shipment has not been cancelled and will be released after the security check."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963058688,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-de-technical",
+      "repetition": 1,
+      "seconds": 9.399749212985625,
+      "translated_text": "Starten Sie den Worker erst neu, nachdem die Datenbank bereit ist. Lassen Sie die request_id unverändert.",
+      "raw_response": [
+        {
+          "translations": [
+            "Starten Sie den Worker erst neu, nachdem die Datenbank bereit ist. Lassen Sie die request_id unverändert."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963079168,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "fr-en",
+      "repetition": 1,
+      "seconds": 9.86765054697753,
+      "translated_text": "The contract is valid until December 31, unless both parties decide to terminate it earlier.",
+      "raw_response": [
+        {
+          "translations": [
+            "The contract is valid until December 31, unless both parties decide to terminate it earlier."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963189760,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "es-ru",
+      "repetition": 1,
+      "seconds": 8.242456837004283,
+      "translated_text": "Хотя сервер доступен, данные еще не обновлены, не путать доступность с актуальностью.",
+      "raw_response": [
+        {
+          "translations": [
+            "Хотя сервер доступен, данные еще не обновлены, не путать доступность с актуальностью."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963234816,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "zh-en",
+      "repetition": 1,
+      "seconds": 13.356407382001635,
+      "translated_text": "The original documents have been saved in the system but translation has not been completed. Processing will continue after the network recovery and the history will not be deleted.",
+      "raw_response": [
+        {
+          "translations": [
+            "The original documents have been saved in the system but translation has not been completed. Processing will continue after the network recovery and the history will not be deleted."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963234816,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-zh",
+      "repetition": 1,
+      "seconds": 7.90055066999048,
+      "translated_text": "备份包含三个独立的副本,成功上传并不意味着文件可以恢复。",
+      "raw_response": [
+        {
+          "translations": [
+            "备份包含三个独立的副本,成功上传并不意味着文件可以恢复。"
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963267584,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-identifier",
+      "repetition": 1,
+      "seconds": 11.018002505006734,
+      "translated_text": "Вызовите GET /v1/status перед развертыванием версии 2.4.1. Не меняйте код ERR_TIMEOUT.",
+      "raw_response": [
+        {
+          "translations": [
+            "Вызовите GET /v1/status перед развертыванием версии 2.4.1. Не меняйте код ERR_TIMEOUT."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963288064,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-placeholder",
+      "repetition": 1,
+      "seconds": 10.986918422015151,
+      "translated_text": "Здравствуйте, {user_name}. Ваш запрос {{request_id}} отложен; пожалуйста, не отправляйте его повторно.",
+      "raw_response": [
+        {
+          "translations": [
+            "Здравствуйте, {user_name}. Ваш запрос {{request_id}} отложен; пожалуйста, не отправляйте его повторно."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963304448,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-list",
+      "repetition": 1,
+      "seconds": 5.365482419001637,
+      "translated_text": "1. Save the document.\n2. Check the checksum.\n3. Do not delete the original.",
+      "raw_response": [
+        {
+          "translations": [
+            "1. Save the document."
+          ]
+        },
+        {
+          "translations": [
+            "2. Check the checksum."
+          ]
+        },
+        {
+          "translations": [
+            "3. Do not delete the original."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963316736,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-context",
+      "repetition": 1,
+      "seconds": 14.210574465017999,
+      "translated_text": "Небольшая промышленная компания переместила свой завод ближе к порту. Новый объект не является электростанцией, и никакого дополнительного производства электроэнергии на нем не планируется.",
+      "raw_response": [
+        {
+          "translations": [
+            "Небольшая промышленная компания переместила свой завод ближе к порту. Новый объект не является электростанцией, и никакого дополнительного производства электроэнергии на нем не планируется."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2963333120,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-context",
+      "repetition": 1,
+      "seconds": 25.758376095007407,
+      "translated_text": "The employee reported an error, but did not claim that data was lost. Until the backup is checked, the recovery cannot be considered successful. Even if the server responds to requests, the queue may not move.",
+      "raw_response": [
+        {
+          "translations": [
+            "The employee reported an error, but did not claim that data was lost. Until the backup is checked, the recovery cannot be considered successful. Even if the server responds to requests, the queue may not move."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965495808,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-newlines",
+      "repetition": 1,
+      "seconds": 5.7141344620031305,
+      "translated_text": "Первая копия здорова.\nВторая реплика недоступна.\nНе перезапускайте обе реплики одновременно.",
+      "raw_response": [
+        {
+          "translations": [
+            "Первая копия здорова."
+          ]
+        },
+        {
+          "translations": [
+            "Вторая реплика недоступна."
+          ]
+        },
+        {
+          "translations": [
+            "Не перезапускайте обе реплики одновременно."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-term",
+      "repetition": 2,
+      "seconds": 0.7472890419885516,
+      "translated_text": "Klimaobservatorium von Deutschland",
+      "raw_response": [
+        {
+          "translations": [
+            "Klimaobservatorium von Deutschland"
+          ]
+        }
+      ],
+      "literal_failures": [
+        "added:Deutschland"
+      ],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "climate-observatory-sentence",
+      "repetition": 2,
+      "seconds": 2.3989741260011215,
+      "translated_text": "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht.",
+      "raw_response": [
+        {
+          "translations": [
+            "Die Klimaobservatorium hat die Temperaturwerte nicht erhöht."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-negation",
+      "repetition": 2,
+      "seconds": 2.8636346679995768,
+      "translated_text": "Служба не должна удалять оригинальный документ после перевода.",
+      "raw_response": [
+        {
+          "translations": [
+            "Служба не должна удалять оригинальный документ после перевода."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-negation",
+      "repetition": 2,
+      "seconds": 7.212195128988242,
+      "translated_text": "The payment is not confirmed. You cannot re-transfer the money until the reconciliation is completed.",
+      "raw_response": [
+        {
+          "translations": [
+            "The payment is not confirmed. You cannot re-transfer the money until the reconciliation is completed."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-numbers",
+      "repetition": 2,
+      "seconds": 14.864969213987933,
+      "translated_text": "В 2026-10-11 на склад поступило 17 ящиков и отклонено 3. Общий вес составил 1250 кг.",
+      "raw_response": [
+        {
+          "translations": [
+            "В 2026-10-11 на склад поступило 17 ящиков и отклонено 3. Общий вес составил 1250 кг."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-numbers",
+      "repetition": 2,
+      "seconds": 13.460497630992904,
+      "translated_text": "The temperature decreased from 12 to 7 degrees in 24 hours. Specimens A-17 and B-03 are undamaged.",
+      "raw_response": [
+        {
+          "translations": [
+            "The temperature decreased from 12 to 7 degrees in 24 hours. Specimens A-17 and B-03 are undamaged."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-uncertainty",
+      "repetition": 2,
+      "seconds": 8.09120537902345,
+      "translated_text": "В докладе высказывается предположение о том, что спрос может сократиться, однако имеющиеся данные не позволяют установить причину этого.",
+      "raw_response": [
+        {
+          "translations": [
+            "В докладе высказывается предположение о том, что спрос может сократиться, однако имеющиеся данные не позволяют установить причину этого."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-ambiguity",
+      "repetition": 2,
+      "seconds": 5.890438292990439,
+      "translated_text": "The lock on the door is broken, but the old castle on the hill is open to visitors.",
+      "raw_response": [
+        {
+          "translations": [
+            "The lock on the door is broken, but the old castle on the hill is open to visitors."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "de-en-negation",
+      "repetition": 2,
+      "seconds": 5.0130413779988885,
+      "translated_text": "The shipment has not been cancelled and will be released after the security check.",
+      "raw_response": [
+        {
+          "translations": [
+            "The shipment has not been cancelled and will be released after the security check."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-de-technical",
+      "repetition": 2,
+      "seconds": 7.162100879009813,
+      "translated_text": "Starten Sie den Worker erst neu, nachdem die Datenbank bereit ist. Lassen Sie die request_id unverändert.",
+      "raw_response": [
+        {
+          "translations": [
+            "Starten Sie den Worker erst neu, nachdem die Datenbank bereit ist. Lassen Sie die request_id unverändert."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "fr-en",
+      "repetition": 2,
+      "seconds": 7.937333169975318,
+      "translated_text": "The contract is valid until December 31, unless both parties decide to terminate it earlier.",
+      "raw_response": [
+        {
+          "translations": [
+            "The contract is valid until December 31, unless both parties decide to terminate it earlier."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "es-ru",
+      "repetition": 2,
+      "seconds": 6.841093294991879,
+      "translated_text": "Хотя сервер доступен, данные еще не обновлены, не путать доступность с актуальностью.",
+      "raw_response": [
+        {
+          "translations": [
+            "Хотя сервер доступен, данные еще не обновлены, не путать доступность с актуальностью."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "zh-en",
+      "repetition": 2,
+      "seconds": 12.900638213992352,
+      "translated_text": "The original documents have been saved in the system but translation has not been completed. Processing will continue after the network recovery and the history will not be deleted.",
+      "raw_response": [
+        {
+          "translations": [
+            "The original documents have been saved in the system but translation has not been completed. Processing will continue after the network recovery and the history will not be deleted."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-zh",
+      "repetition": 2,
+      "seconds": 7.087504794995766,
+      "translated_text": "备份包含三个独立的副本,成功上传并不意味着文件可以恢复。",
+      "raw_response": [
+        {
+          "translations": [
+            "备份包含三个独立的副本,成功上传并不意味着文件可以恢复。"
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-identifier",
+      "repetition": 2,
+      "seconds": 10.77060446300311,
+      "translated_text": "Вызовите GET /v1/status перед развертыванием версии 2.4.1. Не меняйте код ERR_TIMEOUT.",
+      "raw_response": [
+        {
+          "translations": [
+            "Вызовите GET /v1/status перед развертыванием версии 2.4.1. Не меняйте код ERR_TIMEOUT."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-placeholder",
+      "repetition": 2,
+      "seconds": 10.79488950400264,
+      "translated_text": "Здравствуйте, {user_name}. Ваш запрос {{request_id}} отложен; пожалуйста, не отправляйте его повторно.",
+      "raw_response": [
+        {
+          "translations": [
+            "Здравствуйте, {user_name}. Ваш запрос {{request_id}} отложен; пожалуйста, не отправляйте его повторно."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-list",
+      "repetition": 2,
+      "seconds": 5.522668586025247,
+      "translated_text": "1. Save the document.\n2. Check the checksum.\n3. Do not delete the original.",
+      "raw_response": [
+        {
+          "translations": [
+            "1. Save the document."
+          ]
+        },
+        {
+          "translations": [
+            "2. Check the checksum."
+          ]
+        },
+        {
+          "translations": [
+            "3. Do not delete the original."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-context",
+      "repetition": 2,
+      "seconds": 17.673518091003643,
+      "translated_text": "Небольшая промышленная компания переместила свой завод ближе к порту. Новый объект не является электростанцией, и никакого дополнительного производства электроэнергии на нем не планируется.",
+      "raw_response": [
+        {
+          "translations": [
+            "Небольшая промышленная компания переместила свой завод ближе к порту. Новый объект не является электростанцией, и никакого дополнительного производства электроэнергии на нем не планируется."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "ru-en-context",
+      "repetition": 2,
+      "seconds": 27.619367428007536,
+      "translated_text": "The employee reported an error, but did not claim that data was lost. Until the backup is checked, the recovery cannot be considered successful. Even if the server responds to requests, the queue may not move.",
+      "raw_response": [
+        {
+          "translations": [
+            "The employee reported an error, but did not claim that data was lost. Until the backup is checked, the recovery cannot be considered successful. Even if the server responds to requests, the queue may not move."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    },
+    {
+      "event": "translation",
+      "case_id": "en-ru-newlines",
+      "repetition": 2,
+      "seconds": 7.146109669993166,
+      "translated_text": "Первая копия здорова.\nВторая реплика недоступна.\nНе перезапускайте обе реплики одновременно.",
+      "raw_response": [
+        {
+          "translations": [
+            "Первая копия здорова."
+          ]
+        },
+        {
+          "translations": [
+            "Вторая реплика недоступна."
+          ]
+        },
+        {
+          "translations": [
+            "Не перезапускайте обе реплики одновременно."
+          ]
+        }
+      ],
+      "literal_failures": [],
+      "memory": {
+        "cgroup_current_bytes": 2965508096,
+        "cgroup_peak_bytes": 3133628416
+      }
+    }
+  ],
+  "resource_preflight": {
+    "vm_bytes": 16748113920,
+    "current_container_bytes": 8711376445,
+    "model_limit_bytes": 4294967296,
+    "reserved_headroom_bytes": 536870912
+  },
+  "exit_state": {
+    "ExitCode": 0,
+    "OOMKilled": false,
+    "Error": ""
+  },
+  "execution_pass": true
+}

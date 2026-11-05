@@ -1,0 +1,3 @@
+# Fresh deployments still use the canonical provider-owned templates.
+include:
+  - path: [./compose.yml, ./compose.observation.yml]

@@ -1,0 +1,11 @@
+.env
+**/.env
+secrets/
+**/secrets/
+test/
+__pycache__/
+.venv/
+
+runtime/
+
+dist/

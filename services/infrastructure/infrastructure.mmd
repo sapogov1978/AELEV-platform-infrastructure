@@ -1,0 +1,46 @@
+flowchart TB
+    %% ADR-0113 защищает план; ADR-0114 явно согласует добавление gateway.
+    %% ADR-0115: SQLite встроена у владельца; общего SQLite-сервера/тома нет.
+    ROOT["infrastructure/compose.yml<br/>Совместный запуск на одном Docker host"]
+    CONFIG["Каждая поставка владеет своим env,<br/>образом, секретами, данными и test"]
+    CONFIG ~~~ ROOT
+    RECOVERY["Операторская задача хоста, ADR-0148<br/>LaunchAgent / systemd user / Task Scheduler<br/>Только зарегистрированные exact ID<br/>Общий бюджет 3; затем блокировка<br/>Без Docker socket в runtime"] -. "ограниченный жизненный цикл" .-> ROOT
+
+    ROOT --> KAFKA["kafka/compose.yml<br/>Межсервисное взаимодействие<br/>1 broker/controller KRaft"]
+    ROOT --> EGRESS["public-egress-gateway/compose.yml<br/>Контролируемый публичный HTTP(S)-доступ<br/>mTLS, отдельные права и квоты identities<br/>Собственный Swagger /docs"]
+    ROOT --> IDP["keycloak/compose.yml<br/>Идентификация и доступ<br/>Keycloak + собственная PostgreSQL"]
+    ROOT --> SPIRE["spire/compose.yml + compose.observation.yml, ADR-0154<br/>Отдельно включаемая выдача X.509-SVID<br/>Собственные operator/node state и наблюдение<br/>Зашифрованное offline backup/restore"]
+    ROOT --> MINIO["minio/compose.yml<br/>Хранилище артефактов<br/>2 площадки по 4 узла, site replication"]
+    ROOT --> PG["postgresql/compose.yml<br/>Хранилище структурированных данных<br/>3 Patroni/PostgreSQL + 3 etcd<br/>Ограждение: docker / kubernetes / watchdog"]
+    ROOT --> TR["translator-service/compose.remote.yml<br/>+ compose.local.yml<br/>Собственная БД, миграция, topics,<br/>2 consumer, Index 9B/worker, outbox, API"]
+    TR -. "Provisioning и readiness требуют Kafka" .-> KAFKA
+    ROOT --> UI["platform-ui/compose.yml<br/>Интерфейс платформы<br/>HTTPS nginx + API<br/>Локальная техническая SQLite, ADR-0115"]
+    ROOT --> OBS["observability/compose.yml<br/>Только композиция семи владельцев"]
+
+    OBS --> DELIVERY["delivery/compose.yml<br/>Устойчивый приём и исходный архив<br/>Собственный SQLite-журнал"]
+    OBS --> OTEL["otel-collector/compose.yml<br/>Обработка телеметрии и очереди"]
+    OBS --> PROM["prometheus/compose.yml<br/>Хранилище метрик + операторский вход"]
+    OBS --> BLACKBOX["blackbox-exporter/compose.yml<br/>Технические пробы + операторский вход"]
+    OBS --> LOKI["loki/compose.yml<br/>Хранение и поиск журналов"]
+    OBS --> TEMPO["tempo/compose.yml<br/>Хранение и поиск трасс"]
+    OBS --> GRAFANA["grafana/compose.yml<br/>Панели, запросы и уведомления<br/>Собственная служебная SQLite"]
+
+    NOTE["Сплошные стрелки: Compose include, не сетевой транспорт.<br/>У каждого владельца свой издатель состояния и журнал.<br/>UI-публикации: HTTPS, JWT/mTLS, подтверждение и отписка.<br/>Между машинами: маршрутизируемые endpoints, не общий bridge.<br/>Функциональные потребители в состав не входят."]
+    OBS ~~~ NOTE
+
+    click KAFKA "kafka/architecture.mmd" "Подробная диаграмма Kafka"
+    click EGRESS "public-egress-gateway/architecture.mmd" "Подробная диаграмма Public Egress Gateway"
+    click IDP "keycloak/architecture.mmd" "Подробная диаграмма Keycloak"
+    click SPIRE "spire/architecture.mmd" "Подробная диаграмма SPIRE"
+    click MINIO "minio/architecture.mmd" "Подробная диаграмма MinIO"
+    click PG "postgresql/architecture.mmd" "Подробная диаграмма PostgreSQL"
+    click TR "translator-service/architecture.mmd" "Подробная диаграмма Translator Service"
+    click UI "platform-ui/architecture.mmd" "Подробная диаграмма Platform UI"
+    click OBS "observability/observability.mmd" "Композиция Observability"
+    click DELIVERY "observability/delivery/architecture.mmd" "Подробная диаграмма Telemetry Delivery"
+    click OTEL "observability/otel-collector/architecture.mmd" "Подробная диаграмма OpenTelemetry Collector"
+    click PROM "observability/prometheus/architecture.mmd" "Подробная диаграмма Prometheus"
+    click BLACKBOX "observability/blackbox-exporter/architecture.mmd" "Подробная диаграмма Blackbox Exporter"
+    click LOKI "observability/loki/architecture.mmd" "Подробная диаграмма Loki"
+    click TEMPO "observability/tempo/architecture.mmd" "Подробная диаграмма Tempo"
+    click GRAFANA "observability/grafana/architecture.mmd" "Подробная диаграмма Grafana"

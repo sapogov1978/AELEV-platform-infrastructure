@@ -1,0 +1,15 @@
+groups:
+  - name: infrastructure-health
+    rules:
+      - alert: InfrastructureComponentUnavailable
+        expr: aelev_component_availability == 0
+        for: 30s
+        labels: {severity: critical}
+        annotations:
+          summary: "Недоступен компонент {{ $labels.component_id }}"
+      - alert: InfrastructureScrapeUnavailable
+        expr: up{job=~"prometheus|otel-collector|blackbox-exporter|loki|tempo"} == 0
+        for: 30s
+        labels: {severity: critical}
+        annotations:
+          summary: "Не поступают метрики {{ $labels.job }}"

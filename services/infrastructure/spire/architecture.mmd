@@ -1,0 +1,10 @@
+flowchart LR
+    Operator["Оператор доверия"] --> Server["SPIRE Server"]
+    Server --> State[("Состояние SPIRE")]
+    Server --> Agent["SPIRE Agent"]
+    Agent --> Workload["Workload API / X.509-SVID"]
+    Workload --> Consumers["Владельцы рабочих нагрузок"]
+    Observer["Identity observer"] --> Server
+    Observer --> Status["Platform UI status publisher"]
+    Observer --> Telemetry["Telemetry sender"]
+    Backup["Зашифрованная копия"] --> State

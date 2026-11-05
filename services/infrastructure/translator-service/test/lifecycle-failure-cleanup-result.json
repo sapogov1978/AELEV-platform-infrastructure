@@ -1,0 +1,1139 @@
+{
+  "started_at": "2026-10-09T08:06:19.411387+00:00",
+  "status": "FAILED",
+  "phases": [
+    {
+      "name": "Resolve real Kafka",
+      "status": "PASS",
+      "seconds": 0.13,
+      "output": ""
+    },
+    {
+      "name": "Resolve real translator",
+      "status": "PASS",
+      "seconds": 0.05,
+      "output": ""
+    },
+    {
+      "name": "Kafka owns exactly one broker",
+      "status": "PASS"
+    },
+    {
+      "name": "Translator does not create a second broker",
+      "status": "PASS"
+    },
+    {
+      "name": "Translator uses the real Kafka network",
+      "status": "PASS"
+    },
+    {
+      "name": "Requests can only reach this run's bundled PostgreSQL and Kafka",
+      "status": "PASS"
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.08,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.16,
+      "output": ""
+    },
+    {
+      "name": "Clean storage and prepared real images",
+      "status": "PASS"
+    },
+    {
+      "name": "Start real infrastructure Kafka",
+      "status": "PASS",
+      "seconds": 9.74,
+      "output": " Network aelev-infrastructure-kafka Creating \n Network aelev-infrastructure-kafka Created \n Volume aelev-infrastructure-kafka-data Creating \n Volume aelev-infrastructure-kafka-data Created \n Container aelev-infrastructure-kafka-kafka-1 Creating \n Container aelev-infrastructure-kafka-kafka-1 Created \n Container aelev-infrastructure-kafka-kafka-1 Starting \n Container aelev-infrastructure-kafka-kafka-1 Started \n Container aelev-infrastructure-kafka-kafka-1 Waiting \n Container aelev-infrastructure-kafka-kafka-1 Healthy \n"
+    },
+    {
+      "name": "Start ALL real translator roles including both initializers",
+      "status": "PASS",
+      "seconds": 23.19,
+      "output": " Network aelev-infrastructure-translator-data Creating \n Network aelev-infrastructure-translator-data Created \n Network aelev-infrastructure-translator-ingress Creating \n Network aelev-infrastructure-translator-ingress Created \n Volume aelev-infrastructure-translator-database Creating \n Volume aelev-infrastructure-translator-database Created \n Volume aelev-infrastructure-translator_translator-model-socket Creating \n Volume aelev-infrastructure-translator_translator-model-socket Created \n Container aelev-infrastructure-translator-translator-database-1 Creating \n Container aelev-infrastructure-translator-translator-model-1 Creating \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Creating \n Container aelev-infrastructure-translator-translator-model-1 Created \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Created \n Container aelev-infrastructure-translator-translator-database-1 Created \n Container aelev-infrastructure-translator-translator-migrator-1 Creating \n Container aelev-infrastructure-translator-translator-migrator-1 Created \n Container aelev-infrastructure-translator-translator-worker-1 Creating \n Container aelev-infrastructure-translator-translator-outbox-1 Creating \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Creating \n Container aelev-infrastructure-translator-translator-api-1 Creating \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Creating \n Container aelev-infrastructure-translator-translator-api-1 Created \n Container aelev-infrastructure-translator-translator-outbox-1 Created \n Container aelev-infrastructure-translator-translator-worker-1 Created \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Created \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Created \n Container aelev-infrastructure-translator-translator-database-1 Starting \n Container aelev-infrastructure-translator-translator-model-1 Starting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Starting \n Container aelev-infrastructure-translator-translator-model-1 Started \n Container aelev-infrastructure-translator-translator-database-1 Started \n Container aelev-infrastructure-translator-translator-database-1 Waiting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Started \n Container aelev-infrastructure-translator-translator-database-1 Healthy \n Container aelev-infrastructure-translator-translator-migrator-1 Starting \n Container aelev-infrastructure-translator-translator-migrator-1 Started \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Waiting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Waiting \n Container aelev-infrastructure-translator-translator-migrator-1 Waiting \n Container aelev-infrastructure-translator-translator-migrator-1 Waiting \n Container aelev-infrastructure-translator-translator-model-1 Waiting \n Container aelev-infrastructure-translator-translator-migrator-1 Waiting \n Container aelev-infrastructure-translator-translator-migrator-1 Waiting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Waiting \n Container aelev-infrastructure-translator-translator-migrator-1 Waiting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Waiting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Exited \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Exited \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Exited \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Exited \n Container aelev-infrastructure-translator-translator-migrator-1 Exited \n Container aelev-infrastructure-translator-translator-migrator-1 Exited \n Container aelev-infrastructure-translator-translator-model-1 Healthy \n Container aelev-infrastructure-translator-translator-api-1 Starting \n Container aelev-infrastructure-translator-translator-worker-1 Starting \n Container aelev-infrastructure-translator-translator-migrator-1 Exited \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Starting \n Container aelev-infrastructure-translator-translator-migrator-1 Exited \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Starting \n Container aelev-infrastructure-translator-translator-migrator-1 Exited \n Container aelev-infrastructure-translator-translator-outbox-1 Starting \n Container aelev-infrastructure-translator-translator-worker-1 Started \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Started \n Container aelev-infrastructure-translator-translator-outbox-1 Started \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Started \n Container aelev-infrastructure-translator-translator-api-1 Started \n Container aelev-infrastructure-translator-translator-worker-1 Waiting \n Container aelev-infrastructure-translator-translator-database-1 Waiting \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Waiting \n Container aelev-infrastructure-translator-translator-api-1 Waiting \n Container aelev-infrastructure-translator-translator-migrator-1 Waiting \n Container aelev-infrastructure-translator-translator-model-1 Waiting \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Waiting \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Waiting \n Container aelev-infrastructure-translator-translator-outbox-1 Waiting \n Container aelev-infrastructure-translator-translator-outbox-1 Healthy \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Healthy \n Container aelev-infrastructure-translator-translator-worker-1 Healthy \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Healthy \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Exited \n Container aelev-infrastructure-translator-translator-migrator-1 Exited \n Container aelev-infrastructure-translator-translator-database-1 Healthy \n Container aelev-infrastructure-translator-translator-model-1 Healthy \n Container aelev-infrastructure-translator-translator-api-1 Healthy \n"
+    },
+    {
+      "name": "Real translator states",
+      "status": "PASS",
+      "seconds": 0.08,
+      "output": "nsumer-1\",\"Names\":\"aelev-infrastructure-translator-translator-normal-consumer-1\",\"Networks\":\"aelev-infrastructure-kafka,aelev-infrastructure-translator-data\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-translator\",\"Publishers\":[],\"RunningFor\":\"23 seconds ago\",\"Service\":\"translator-normal-consumer\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 10:06:29 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"e4690afd9478\",\"Image\":\"aelev/translator-service:kafka-v3\",\"Labels\":\"com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.remote.yml,com.docker.compose.service=translator-outbox,desktop.docker.io/mounts/0/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets,com.docker.compose.project=aelev-infrastructure-translator,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/translator-service/.env,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,desktop.docker.io/mounts/0/Target=/run/secrets/translator,desktop.docker.io/mounts/1/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets/postgres-password,desktop.docker.io/mounts/1/Target=/run/secrets/translator-database-password,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.depends_on=translator-migrator:service_completed_successfully:false,translator-topic-provisioner:service_completed_successfully:false,com.docker.compose.image=sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c,desktop.docker.io/mounts/0/SourceKind=hostFile,desktop.docker.io/mounts/1/SourceKind=hostFile,com.docker.compose.config-hash=28c45c864530b68550cb6a782d1712b8d39d8945615bc61d947308219db67f4e,com.docker.compose.version=5.3.0\",\"LocalVolumes\":\"0\",\"Mounts\":\"/host_mnt/User…,/host_mnt/User…\",\"Name\":\"aelev-infrastructure-translator-translator-outbox-1\",\"Names\":\"aelev-infrastructure-translator-translator-outbox-1\",\"Networks\":\"aelev-infrastructure-kafka,aelev-infrastructure-translator-data\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-translator\",\"Publishers\":[],\"RunningFor\":\"23 seconds ago\",\"Service\":\"translator-outbox\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 10:06:29 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"a284da12b8f3\",\"Image\":\"aelev/translator-service:kafka-v3\",\"Labels\":\"com.docker.compose.config-hash=329458782575243687df01390187f1f9e39ecfed9935cb53cbd1c3e4f5abc4e0,com.docker.compose.image=sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.remote.yml,desktop.docker.io/mounts/1/Target=/run/secrets/translator,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.project=aelev-infrastructure-translator,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/translator-service/.env,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/0/SourceKind=hostFile,desktop.docker.io/mounts/1/SourceKind=hostFile,com.docker.compose.depends_on=translator-migrator:service_completed_successfully:false,translator-topic-provisioner:service_completed_successfully:false,com.docker.compose.oneoff=False,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,desktop.docker.io/mounts/0/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets/postgres-password,desktop.docker.io/mounts/0/Target=/run/secrets/translator-database-password,com.docker.compose.service=translator-priority-consumer,desktop.docker.io/mounts/1/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets\",\"LocalVolumes\":\"0\",\"Mounts\":\"/host_mnt/User…,/host_mnt/User…\",\"Name\":\"aelev-infrastructure-translator-translator-priority-consumer-1\",\"Names\":\"aelev-infrastructure-translator-translator-priority-consumer-1\",\"Networks\":\"aelev-infrastructure-kafka,aelev-infrastructure-translator-data\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-translator\",\"Publishers\":[],\"RunningFor\":\"23 seconds ago\",\"Service\":\"translator-priority-consumer\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 10:06:29 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"9e8c9cff3b65\",\"Image\":\"aelev/translator-service:kafka-v3\",\"Labels\":\"com.docker.compose.image=sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c,com.docker.compose.project=aelev-infrastructure-translator,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.remote.yml,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/0/SourceKind=hostFile,desktop.docker.io/ports.scheme=v2,desktop.docker.io/mounts/0/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets,com.docker.compose.depends_on=,com.docker.compose.oneoff=False,desktop.docker.io/mounts/0/Target=/run/secrets/translator,com.docker.compose.config-hash=59e1742c8ec6ebaaabd419333c3f170814646b19342a1d53bc151a70103b9479,com.docker.compose.container-number=1,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/translator-service/.env,com.docker.compose.service=translator-topic-provisioner\",\"LocalVolumes\":\"0\",\"Mounts\":\"/host_mnt/User…\",\"Name\":\"aelev-infrastructure-translator-translator-topic-provisioner-1\",\"Names\":\"aelev-infrastructure-translator-translator-topic-provisioner-1\",\"Networks\":\"aelev-infrastructure-kafka\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-translator\",\"Publishers\":[],\"RunningFor\":\"23 seconds ago\",\"Service\":\"translator-topic-provisioner\",\"Size\":\"0B\",\"State\":\"exited\",\"Status\":\"Exited (0) 19 seconds ago\"}\n{\"Command\":\"\\\"python -m translato…\\\"\",\"CreatedAt\":\"2026-10-09 10:06:29 +0200 CEST\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"75d52e21e28d\",\"Image\":\"aelev/translator-service:kafka-v3\",\"Labels\":\"com.docker.compose.container-number=1,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/translator-service/compose.remote.yml,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/translator-service/.env,com.docker.compose.service=translator-worker,desktop.docker.io/mounts/0/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets,desktop.docker.io/ports.scheme=v2,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/translator-service,com.docker.compose.version=5.3.0,desktop.docker.io/mounts/0/Target=/run/secrets/translator,desktop.docker.io/mounts/1/SourceKind=hostFile,com.docker.compose.config-hash=a6bb2347fa6d71c3bca971b5598e211eddd453ff6d9a35c34e2a53660bb3160a,com.docker.compose.oneoff=False,desktop.docker.io/mounts/1/Target=/run/secrets/translator-database-password,com.docker.compose.depends_on=translator-model:service_healthy:false,translator-migrator:service_completed_successfully:false,com.docker.compose.image=sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c,com.docker.compose.project=aelev-infrastructure-translator,desktop.docker.io/mounts/0/SourceKind=hostFile,desktop.docker.io/mounts/1/Source=/Users/ksap/AELEV/services/infrastructure/translator-service/secrets/postgres-password\",\"LocalVolumes\":\"1\",\"Mounts\":\"aelev-infrastr…,/host_mnt/User…,/host_mnt/User…\",\"Name\":\"aelev-infrastructure-translator-translator-worker-1\",\"Names\":\"aelev-infrastructure-translator-translator-worker-1\",\"Networks\":\"aelev-infrastructure-translator-data\",\"Ports\":\"\",\"Project\":\"aelev-infrastructure-translator\",\"Publishers\":[],\"RunningFor\":\"23 seconds ago\",\"Service\":\"translator-worker\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 12 seconds\"}\n"
+    },
+    {
+      "name": "Exactly nine translator roles, no broker",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-api running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-api healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-database running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-database healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-migrator completed",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-model running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-model healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-normal-consumer running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-outbox running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-priority-consumer running",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-topic-provisioner completed",
+      "status": "PASS"
+    },
+    {
+      "name": "translator-worker running",
+      "status": "PASS"
+    },
+    {
+      "name": "Real Kafka state",
+      "status": "PASS",
+      "seconds": 3.07,
+      "output": "{\"Command\":\"\\\"/__cacert_entrypoin…\\\"\",\"CreatedAt\":\"2026-10-09 10:06:19 +0200 CEST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"05cc3210a1bb\",\"Image\":\"apache/kafka:3.9.1\",\"Labels\":\"desktop.docker.io/ports/9092/tcp=127.0.0.1:19092,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed,com.docker.compose.project.config_files=/Users/ksap/AELEV/services/infrastructure/kafka/compose.yml,desktop.docker.io/ports.scheme=v2,org.label-schema.description=Apache Kafka,org.label-schema.vcs-url=https://github.com/apache/kafka,com.docker.compose.config-hash=ebba38d861429276d0d83afb6e93f0a52c185591776041d0b6bdc74ef9ec25fb,com.docker.compose.service=kafka,com.docker.compose.version=5.3.0,org.label-schema.build-date=2025-05-12,org.label-schema.name=kafka,com.docker.compose.oneoff=False,com.docker.compose.project=aelev-infrastructure-kafka,com.docker.compose.project.working_dir=/Users/ksap/AELEV/services/infrastructure/kafka,com.docker.compose.project.environment_file=/Users/ksap/AELEV/services/infrastructure/kafka/.env,maintainer=Apache Kafka\",\"LocalVolumes\":\"3\",\"Mounts\":\"374c46eefc807b…,ef6d63c0e78a8d…,aelev-infrastr…\",\"Name\":\"aelev-infrastructure-kafka-kafka-1\",\"Names\":\"aelev-infrastructure-kafka-kafka-1\",\"Networks\":\"aelev-infrastructure-kafka\",\"Ports\":\"9092/tcp\",\"Project\":\"aelev-infrastructure-kafka\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":9092,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"36 seconds ago\",\"Service\":\"kafka\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 32 seconds (healthy)\"}\n"
+    },
+    {
+      "name": "Real Kafka healthy",
+      "status": "PASS"
+    },
+    {
+      "name": "API endpoint",
+      "status": "PASS",
+      "seconds": 0.08,
+      "output": "127.0.0.1:8096\n"
+    },
+    {
+      "name": "Readiness HTTP 200",
+      "status": "PASS"
+    },
+    {
+      "name": "Initializer diagnostics",
+      "status": "PASS",
+      "seconds": 0.1,
+      "output": "translator-topic-provisioner-1  | {\"event\": \"TRANSLATOR_TOPIC_CREATED:translation.requests.priority.v1\", \"level\": \"INFO\"}\ntranslator-topic-provisioner-1  | {\"event\": \"TRANSLATOR_TOPIC_CREATED:translation.requests.v1\", \"level\": \"INFO\"}\ntranslator-topic-provisioner-1  | {\"event\": \"TRANSLATOR_TOPIC_CREATED:translation.results.v1\", \"level\": \"INFO\"}\n"
+    },
+    {
+      "name": "Stop translator before cleanup",
+      "status": "PASS",
+      "seconds": 1.14,
+      "output": " Container aelev-infrastructure-translator-translator-worker-1 Stopping \n Container aelev-infrastructure-translator-translator-api-1 Stopping \n Container aelev-infrastructure-translator-translator-outbox-1 Stopping \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Stopping \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Stopping \n Container aelev-infrastructure-translator-translator-worker-1 Stopped \n Container aelev-infrastructure-translator-translator-model-1 Stopping \n Container aelev-infrastructure-translator-translator-outbox-1 Stopped \n Container aelev-infrastructure-translator-translator-model-1 Stopped \n Container aelev-infrastructure-translator-translator-priority-consumer-1 Stopped \n Container aelev-infrastructure-translator-translator-normal-consumer-1 Stopped \n Container aelev-infrastructure-translator-translator-api-1 Stopped \n Container aelev-infrastructure-translator-translator-migrator-1 Stopping \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Stopping \n Container aelev-infrastructure-translator-translator-topic-provisioner-1 Stopped \n Container aelev-infrastructure-translator-translator-migrator-1 Stopped \n Container aelev-infrastructure-translator-translator-database-1 Stopping \n Container aelev-infrastructure-translator-translator-database-1 Stopped \n"
+    },
+    {
+      "name": "Stop Kafka before cleanup",
+      "status": "PASS",
+      "seconds": 0.97,
+      "output": " Container aelev-infrastructure-kafka-kafka-1 Stopping \n Container aelev-infrastructure-kafka-kafka-1 Stopped \n"
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.1,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.16,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": ""
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "05cc3210a1bb145b100d3a97ebd0eb8e70d356c50fd8a6edcd73c9a74951a3af\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "27de2000857a6e46c7d5396b723ea934a278fac3e7ca7b126783f0360a446db7\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "62b6f3bbdbea7d18b00694bf13a55211af266dd573a339b2e8ce0cb9067f5c47\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "753774b64e76cc5720edd16b56f965dc09d6e032a109efec6c77e27419089730\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "75d52e21e28dee598629e4c7b6de0a06805e653468bad07cb487f4bbf40e83d7\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "9e8c9cff3b6545bfae06417c0049c9ffde9191c18a7c700186e4468788bab8d3\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "a284da12b8f3821098364f43545f529294bae200b9cdaf98df78326f937a1358\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "af48803a7de2af597de85e17fb1167001f454ee1bbc90e711b46e547b6bab19e\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "bb82fb32fca3b14773fb7cf4d61c77da49e1fb16402031e3a6c468c2cbcb0117\n"
+    },
+    {
+      "name": "Remove test-created container",
+      "status": "PASS",
+      "seconds": 0.03,
+      "output": "e4690afd94786df9887dd9264c41e6e1b1c3b01051b0dba0af8ca4c94d51d3bc\n"
+    },
+    {
+      "name": "Remove test-created volume",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": "374c46eefc807ba0278a8e2c15fb6d6f5d5561f3cbbd54ba0f1abd498253bba4\n"
+    },
+    {
+      "name": "Remove test-created volume",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": "aelev-infrastructure-kafka-data\n"
+    },
+    {
+      "name": "Remove test-created volume",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": "aelev-infrastructure-translator-database\n"
+    },
+    {
+      "name": "Remove test-created volume",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": "aelev-infrastructure-translator_translator-model-socket\n"
+    },
+    {
+      "name": "Remove test-created volume",
+      "status": "PASS",
+      "seconds": 0.01,
+      "output": "ef6d63c0e78a8d2ca4f65ed7d74df5f705a3aa4453ef9b72996249927c41d17a\n"
+    },
+    {
+      "name": "Remove test-created network",
+      "status": "PASS",
+      "seconds": 0.13,
+      "output": "3a69d68230684a022f38304731a88a44826a491e209cb53405a574a178b2d2da\n"
+    },
+    {
+      "name": "Remove test-created network",
+      "status": "PASS",
+      "seconds": 0.1,
+      "output": "669f152b4da39b05a56450e3cb6412fc180d0b36753f9809d35ffc382e6f63ea\n"
+    },
+    {
+      "name": "Remove test-created network",
+      "status": "PASS",
+      "seconds": 0.12,
+      "output": "9a25f9b77120e00a2d9ae9aa17f209feeac1d5fac7ff51dc2bb2137b2619c24d\n"
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.07,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.02,
+      "output": ""
+    },
+    {
+      "name": "Docker inventory",
+      "status": "PASS",
+      "seconds": 0.16,
+      "output": ""
+    },
+    {
+      "name": "Anonymous/named test volume removed",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous/named test volume removed",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous/named test volume removed",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous/named test volume removed",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous/named test volume removed",
+      "status": "PASS"
+    },
+    {
+      "name": "All pre-existing resources unchanged",
+      "status": "PASS"
+    }
+  ],
+  "stopped": true,
+  "not_tested": [
+    "Semantic fidelity of translations",
+    "Remote TLS/mTLS and ACL",
+    "Multiple physical hosts",
+    "Load test"
+  ],
+  "resources": "Real Kafka and translator deliveries, working .env and persistent volumes",
+  "mode": "failure_cleanup",
+  "kafka_project": "aelev-infrastructure-kafka",
+  "translator_project": "aelev-infrastructure-translator",
+  "inventory_before": {
+    "containers": {
+      "a8e08b913df17b980c84278ced170e52c68afe3c62ce4a7bb43e5991e458735d": {
+        "name": "sds-cas2126-redis",
+        "project": "",
+        "state": "exited"
+      },
+      "54f2562b5a8fdbaeae2c7aee85e0b72a1a05e99269bfc8152b8374b8561b8f92": {
+        "name": "sds-cas2126-pg",
+        "project": "",
+        "state": "exited"
+      },
+      "653c59f638429a59d3c57bd7f24f634c7b2b6e2f116e1690a252ad2810b8583e": {
+        "name": "sds-deps-redis",
+        "project": "sds-deps",
+        "state": "exited"
+      },
+      "e776276732cb542bae3a2115385d3a793abb1ac50a4384d9802dc35dcf5286d7": {
+        "name": "sds-deps-postgres",
+        "project": "sds-deps",
+        "state": "exited"
+      },
+      "8d49b5f20663a5da0a7a4fcb8abf7d2fe803850894a7f11ea551c130dc7b8f80": {
+        "name": "data-collector-celery",
+        "project": "data_collector",
+        "state": "running"
+      },
+      "637666510b95b7ff081235009a6249011bc0cd05c5d7f7d44fe8bdec243cbba7": {
+        "name": "data-collector-fastapi",
+        "project": "data_collector",
+        "state": "running"
+      },
+      "914c64f8f99d420fadcd51c551f202329c6753a17820b5a0b8dee1716d1b9998": {
+        "name": "data-collector-postgres-test",
+        "project": "data_collector",
+        "state": "exited"
+      },
+      "65057f791cd5ebd40e7047cac93ccf2e42c25d3ff6de314064ec55c2733ce4f7": {
+        "name": "data-collector-migrate",
+        "project": "data_collector",
+        "state": "exited"
+      },
+      "ce77e7108a93384196ad83b60ec35320a6d2365c8c274c514ba0e06b0e0e4e6f": {
+        "name": "data-collector-redis",
+        "project": "data_collector",
+        "state": "exited"
+      },
+      "cb8ebfa45a80349569442201bf85b6359bb7ee765e577e6cf13bfe1ac2a0b10a": {
+        "name": "mpi-sync-beat",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "3d51064dbf6025634a756775ea2e57fe10958b4ff8c29123dee83c56aca3939b": {
+        "name": "mpi-sync-fastapi",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "ce366245c839b85a1d2743e3c11f9cbde1f77e6bcf9226e98158f239354e8a47": {
+        "name": "mpi-sync-celery",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "e656a486bd7f3d7ab6122df373876fda5717e0613e7184b92b627762e9d2b97b": {
+        "name": "mpi-syncer-postgres-1",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "59e71f2797d2e72babf322722d1d46dd9593a4666786d2826455719ff81bf91d": {
+        "name": "mpi-syncer-redis-1",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "073fce427c6e63690540fe9a05dee56f7027391ba9cf2727e075571d37912303": {
+        "name": "schedule_service-celery-worker-1",
+        "project": "schedule_service",
+        "state": "exited"
+      },
+      "948bf915c24df274b84f8908de299a9051becfaada0e9ce969f990177651275e": {
+        "name": "schedule_service-schedule-service-1",
+        "project": "schedule_service",
+        "state": "exited"
+      },
+      "b34774b9461c6b8f5194c66493ba8730ca96429d487b5e0b3a1027877eb966e4": {
+        "name": "sds-celery-worker",
+        "project": "sds",
+        "state": "exited"
+      },
+      "e017a06ed9edadf848b0d75ff53ce0fc1fb8c14629b69b8fc0ee6c2ef033ab3b": {
+        "name": "sds-api",
+        "project": "sds",
+        "state": "exited"
+      },
+      "98f612e7abafdfb2095c3869bdd0bf4bc76a31a80cc200d41b71c83379e02080": {
+        "name": "sds-celery-beat",
+        "project": "sds",
+        "state": "exited"
+      },
+      "5d4d3eb70e06f940519a50bf0618f311db6ef8d4f063e5d51b84da329f8bed5a": {
+        "name": "sds-migrate",
+        "project": "sds",
+        "state": "exited"
+      },
+      "cf8a21b28fe18fbe21a56a0142f13f6840a25e5fc46a995dbe2be4932e5116f8": {
+        "name": "sds-postgres",
+        "project": "sds",
+        "state": "exited"
+      },
+      "2a8a378bcd9023b9862716cde64a23b570dd925b77470abd0aa504d803315f05": {
+        "name": "redis-sds",
+        "project": "sds",
+        "state": "exited"
+      }
+    },
+    "networks": {
+      "410ed27a87ee97e5cf6399a5b4ad666375de2c0c593364698f1e330724cc16d1": {
+        "name": "aelev-events",
+        "project": "aelev-infrastructure",
+        "state": ""
+      },
+      "4a789712984c433f40895c5737acdf179a966187483d95184efc9ad080ee7948": {
+        "name": "aelev-observability",
+        "project": "aelev-infrastructure",
+        "state": ""
+      },
+      "956f357e8ab08dae44ea09392a8708bfce1d232ae34882837d53639ac7a967d2": {
+        "name": "aelev-zone-data",
+        "project": "aelev-infrastructure",
+        "state": ""
+      },
+      "f1b963250b7c5e4bd23063e6dd301ecba26d13dee08cdaa9ac5e7734d4fa3c11": {
+        "name": "bridge",
+        "project": "",
+        "state": ""
+      },
+      "525bffa163cd25fcefc41b3394cd7c447da696ad15d107774e35fae7f2e5336c": {
+        "name": "data_collector_default",
+        "project": "data_collector",
+        "state": ""
+      },
+      "9208743a968f8eab90f6b80104b771affee6698273549d835a3a49fb3f925194": {
+        "name": "host",
+        "project": "",
+        "state": ""
+      },
+      "51164b270c87e2b295d363818083e2e66bf58581627540a722abf3f521855b8f": {
+        "name": "kind",
+        "project": "",
+        "state": ""
+      },
+      "3dc1dcb0622147fc4250f8dd9d0f67081b4e157e20ff643bcc7151d96019a3da": {
+        "name": "mpi-syncer_default",
+        "project": "mpi-syncer",
+        "state": ""
+      },
+      "b84730b4923ed0d4dccf5b7b131b88f3729560ee6334373a60eb9685c7e13b0c": {
+        "name": "none",
+        "project": "",
+        "state": ""
+      },
+      "391228347f6be979e41263ef359f04c176f318b033e68f6ac87f97cf0173eb62": {
+        "name": "schedule_service_app-net",
+        "project": "schedule_service",
+        "state": ""
+      },
+      "400c799161abc679b4179cb4141d31f1811628cf9509e20534b6473083ba3546": {
+        "name": "sds_sds-network",
+        "project": "sds",
+        "state": ""
+      },
+      "78af4ef989c969bb68a403cabe3f2d6f343678ff1f7a91d795852a30dc79fb06": {
+        "name": "velea-backplane",
+        "project": "services",
+        "state": ""
+      }
+    },
+    "volumes": {
+      "4d320f8edea21b7a46ff0f824ccf7328a35f590a27b829c725783934687fa775": {
+        "name": "4d320f8edea21b7a46ff0f824ccf7328a35f590a27b829c725783934687fa775",
+        "project": "",
+        "state": ""
+      },
+      "36ff35c8cc4e18c07c5c839909645de426283ca189b0e2d3ba69b16a17a95cbe": {
+        "name": "36ff35c8cc4e18c07c5c839909645de426283ca189b0e2d3ba69b16a17a95cbe",
+        "project": "",
+        "state": ""
+      },
+      "54c95804ac504ca65fc1abc4cff7196b7542a006a6d3fa823fcdbb4312fcda01": {
+        "name": "54c95804ac504ca65fc1abc4cff7196b7542a006a6d3fa823fcdbb4312fcda01",
+        "project": "",
+        "state": ""
+      },
+      "93a7a009b7a2f8034fdccb0eaff34edb94779f1f49c5c28974ce998b1e30895f": {
+        "name": "93a7a009b7a2f8034fdccb0eaff34edb94779f1f49c5c28974ce998b1e30895f",
+        "project": "",
+        "state": ""
+      },
+      "428113eff9669aa75de406d79c22b1237c4cc3cf11206884004922f93750d53b": {
+        "name": "428113eff9669aa75de406d79c22b1237c4cc3cf11206884004922f93750d53b",
+        "project": "",
+        "state": ""
+      },
+      "confluence-skill-sync_pgdata": {
+        "name": "confluence-skill-sync_pgdata",
+        "project": "confluence-skill-sync",
+        "state": ""
+      },
+      "dagvis_postgres_data": {
+        "name": "dagvis_postgres_data",
+        "project": "dagvis",
+        "state": ""
+      },
+      "dagvis_redis_data": {
+        "name": "dagvis_redis_data",
+        "project": "dagvis",
+        "state": ""
+      },
+      "fundamentals-to-tickdb_postgres_data": {
+        "name": "fundamentals-to-tickdb_postgres_data",
+        "project": "fundamentals-to-tickdb",
+        "state": ""
+      },
+      "fundamentals-to-tickdb_redis_data": {
+        "name": "fundamentals-to-tickdb_redis_data",
+        "project": "fundamentals-to-tickdb",
+        "state": ""
+      },
+      "mpi-syncer_prom": {
+        "name": "mpi-syncer_prom",
+        "project": "mpi-syncer",
+        "state": ""
+      },
+      "sds-deps_sds-postgres-data": {
+        "name": "sds-deps_sds-postgres-data",
+        "project": "sds-deps",
+        "state": ""
+      }
+    },
+    "images": {
+      "sha256:684bc6b514a41ad736efd8f508ef7472b9f679092c23466da752a2b12a77ef5e": {
+        "references": "aelev/translator-service:test"
+      },
+      "sha256:e437106b7f33d4d2d4aa4e669f6d1e64e37e8468fb2ee8ba14789c62cc980f66": {
+        "references": "aelev/translator-service:local"
+      },
+      "sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c": {
+        "references": "aelev/translator-service:kafka-v3"
+      },
+      "sha256:72b027174a9c58b9ffefa058a7b896f0c76b2a364d3cb4b5e5311bc3ece590ae": {
+        "references": "aelev/translator-service:dependencies-check"
+      },
+      "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38": {
+        "references": "aelev/minio-server:RELEASE.2025-04-22T22-12-26Z"
+      },
+      "sha256:da1489c0f912e48f59d1126b207615b557f1693ecba2fdb82c042f952c630754": {
+        "references": "aelev-translator-infrastructure-test:latest"
+      },
+      "sha256:0065a686093c1754e24ec1fb94f0de13adb580e7c694083ad7f7ac2dd76f5817": {
+        "references": "data-collector:latest"
+      },
+      "sha256:4794f9a858e05cb034bbc769029d007077aedd7561389ed83beb893bca964e77": {
+        "references": "schedule_service-schedule-service:latest"
+      },
+      "sha256:9bb79cb85f9daaf65e05e0746fe1ef8e421eab85aca0b7d37488c5a5db1d2bfc": {
+        "references": "schedule_service-celery-worker:latest"
+      },
+      "sha256:8df1c15f1069ada11bc469f53a6652e674e31ddceac3604fb42a9a02c8586321": {
+        "references": "fundamentals-to-tickdb-ftt:latest"
+      },
+      "sha256:fe0f66d7afb04b7dce8d24b3aca3f77a6538b1ca6efc72587085588a55d27371": {
+        "references": "fundamentals-to-tickdb-celery_worker:latest"
+      },
+      "sha256:488db1d126f9e27223ac0aa7f747e3d291c8df0845f76cc0595728c60f556ff4": {
+        "references": "fundamentals-to-tickdb-celery_flower:latest"
+      },
+      "sha256:f3f8dfc3833ede848e15dd4a7bd32552b0176d378855f432b4ac741d65c95739": {
+        "references": "fundamentals-to-tickdb-migrate:latest"
+      },
+      "sha256:ae19a71143696f1e7d6e2c9b41ec880331b4949ae8b3a4b192913664d98cd04c": {
+        "references": "fundamentals-to-tickdb-celery_beat:latest"
+      },
+      "sha256:11a9d238fbb48bab14599c57e41123254452b1a2d93c6c8595bce96f346bd082": {
+        "references": "postgres:16"
+      },
+      "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790": {
+        "references": "mpi-sync:latest"
+      },
+      "sha256:3a82e1f56c8f0f5616a11103ac3d47e632c3938698946a7ad26da0df1334744a": {
+        "references": "postgres:latest"
+      },
+      "sha256:cfb2fb25895360ab928ca484cc4d59f1f74a4f2f62e2dc779984ce192afa4c28": {
+        "references": "dagvis-flower:latest"
+      },
+      "sha256:b2cf60d06553441c642497af87197e123949cefd1a1422c8ab81da66d8c78410": {
+        "references": "dagvis-alembic_migrate:latest"
+      },
+      "sha256:5aa84b7a0f74a64d598dbf14758e3b07796f0528927fb0564ff7864ab6ff4cee": {
+        "references": "dagvis-api:latest"
+      },
+      "sha256:c12fe74b070c202cc4ea758a52944de54dfa01355cbe47d0eccda30506fdf3f2": {
+        "references": "dagvis-celery_worker:latest"
+      },
+      "sha256:ec423eba1b39b638e0629b872b7873018a108ad01ee478fa9239764e2a649990": {
+        "references": "dagvis-celery_beat:latest"
+      },
+      "sha256:ebe053f7baf0dc731b268056eae61e9b7995a29469828280f7f5a8ac3c4d833f": {
+        "references": "dagvis-frontend:latest"
+      },
+      "sha256:a15f2e94b0b27e87ac9073efc8673a3b465e550096fb1348bb9a433deb8b135c": {
+        "references": "liquid_updater-app:latest"
+      },
+      "sha256:4725e17a93538bd4f3bf0d8af405722ddc042eaa8ec38a6bf7afb38fcbaed42f": {
+        "references": "liquid_updater-migrate:latest"
+      },
+      "sha256:f198279c8674f9e21f3665ca126701c2ede309188b58479ff844f19ccb659712": {
+        "references": "confluence-skill-sync:latest"
+      },
+      "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811": {
+        "references": "sds-api:latest,sds-celery-beat:latest,sds-celery-worker:latest,sds-migrate:latest"
+      },
+      "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1": {
+        "references": "redis:alpine"
+      },
+      "sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529": {
+        "references": "redis:latest"
+      },
+      "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416": {
+        "references": "postgres:16-alpine"
+      },
+      "sha256:8b81dd37ff027bec4e516d41acfbe9fe2460070dc6d4a4570a2ac5b9d59df065": {
+        "references": "redis:7-alpine"
+      },
+      "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94": {
+        "references": "postgres:17.6-alpine"
+      },
+      "sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996": {
+        "references": "prom/prometheus:<none>"
+      },
+      "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed": {
+        "references": "apache/kafka:3.9.1"
+      }
+    }
+  },
+  "images": {
+    "aelev/translator-service:kafka-v3": "sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c",
+    "postgres:17.6-alpine": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "apache/kafka:3.9.1": "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed"
+  },
+  "failure": "Injected failure after all real roles became healthy",
+  "created_resources": {
+    "containers": [
+      "05cc3210a1bb145b100d3a97ebd0eb8e70d356c50fd8a6edcd73c9a74951a3af",
+      "27de2000857a6e46c7d5396b723ea934a278fac3e7ca7b126783f0360a446db7",
+      "62b6f3bbdbea7d18b00694bf13a55211af266dd573a339b2e8ce0cb9067f5c47",
+      "753774b64e76cc5720edd16b56f965dc09d6e032a109efec6c77e27419089730",
+      "75d52e21e28dee598629e4c7b6de0a06805e653468bad07cb487f4bbf40e83d7",
+      "9e8c9cff3b6545bfae06417c0049c9ffde9191c18a7c700186e4468788bab8d3",
+      "a284da12b8f3821098364f43545f529294bae200b9cdaf98df78326f937a1358",
+      "af48803a7de2af597de85e17fb1167001f454ee1bbc90e711b46e547b6bab19e",
+      "bb82fb32fca3b14773fb7cf4d61c77da49e1fb16402031e3a6c468c2cbcb0117",
+      "e4690afd94786df9887dd9264c41e6e1b1c3b01051b0dba0af8ca4c94d51d3bc"
+    ],
+    "volumes": [
+      "374c46eefc807ba0278a8e2c15fb6d6f5d5561f3cbbd54ba0f1abd498253bba4",
+      "aelev-infrastructure-kafka-data",
+      "aelev-infrastructure-translator-database",
+      "aelev-infrastructure-translator_translator-model-socket",
+      "ef6d63c0e78a8d2ca4f65ed7d74df5f705a3aa4453ef9b72996249927c41d17a"
+    ],
+    "networks": [
+      "3a69d68230684a022f38304731a88a44826a491e209cb53405a574a178b2d2da",
+      "669f152b4da39b05a56450e3cb6412fc180d0b36753f9809d35ffc382e6f63ea",
+      "9a25f9b77120e00a2d9ae9aa17f209feeac1d5fac7ff51dc2bb2137b2619c24d"
+    ]
+  },
+  "inventory_after": {
+    "containers": {
+      "a8e08b913df17b980c84278ced170e52c68afe3c62ce4a7bb43e5991e458735d": {
+        "name": "sds-cas2126-redis",
+        "project": "",
+        "state": "exited"
+      },
+      "54f2562b5a8fdbaeae2c7aee85e0b72a1a05e99269bfc8152b8374b8561b8f92": {
+        "name": "sds-cas2126-pg",
+        "project": "",
+        "state": "exited"
+      },
+      "653c59f638429a59d3c57bd7f24f634c7b2b6e2f116e1690a252ad2810b8583e": {
+        "name": "sds-deps-redis",
+        "project": "sds-deps",
+        "state": "exited"
+      },
+      "e776276732cb542bae3a2115385d3a793abb1ac50a4384d9802dc35dcf5286d7": {
+        "name": "sds-deps-postgres",
+        "project": "sds-deps",
+        "state": "exited"
+      },
+      "8d49b5f20663a5da0a7a4fcb8abf7d2fe803850894a7f11ea551c130dc7b8f80": {
+        "name": "data-collector-celery",
+        "project": "data_collector",
+        "state": "running"
+      },
+      "637666510b95b7ff081235009a6249011bc0cd05c5d7f7d44fe8bdec243cbba7": {
+        "name": "data-collector-fastapi",
+        "project": "data_collector",
+        "state": "running"
+      },
+      "914c64f8f99d420fadcd51c551f202329c6753a17820b5a0b8dee1716d1b9998": {
+        "name": "data-collector-postgres-test",
+        "project": "data_collector",
+        "state": "exited"
+      },
+      "65057f791cd5ebd40e7047cac93ccf2e42c25d3ff6de314064ec55c2733ce4f7": {
+        "name": "data-collector-migrate",
+        "project": "data_collector",
+        "state": "exited"
+      },
+      "ce77e7108a93384196ad83b60ec35320a6d2365c8c274c514ba0e06b0e0e4e6f": {
+        "name": "data-collector-redis",
+        "project": "data_collector",
+        "state": "exited"
+      },
+      "cb8ebfa45a80349569442201bf85b6359bb7ee765e577e6cf13bfe1ac2a0b10a": {
+        "name": "mpi-sync-beat",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "3d51064dbf6025634a756775ea2e57fe10958b4ff8c29123dee83c56aca3939b": {
+        "name": "mpi-sync-fastapi",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "ce366245c839b85a1d2743e3c11f9cbde1f77e6bcf9226e98158f239354e8a47": {
+        "name": "mpi-sync-celery",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "e656a486bd7f3d7ab6122df373876fda5717e0613e7184b92b627762e9d2b97b": {
+        "name": "mpi-syncer-postgres-1",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "59e71f2797d2e72babf322722d1d46dd9593a4666786d2826455719ff81bf91d": {
+        "name": "mpi-syncer-redis-1",
+        "project": "mpi-syncer",
+        "state": "exited"
+      },
+      "073fce427c6e63690540fe9a05dee56f7027391ba9cf2727e075571d37912303": {
+        "name": "schedule_service-celery-worker-1",
+        "project": "schedule_service",
+        "state": "exited"
+      },
+      "948bf915c24df274b84f8908de299a9051becfaada0e9ce969f990177651275e": {
+        "name": "schedule_service-schedule-service-1",
+        "project": "schedule_service",
+        "state": "exited"
+      },
+      "b34774b9461c6b8f5194c66493ba8730ca96429d487b5e0b3a1027877eb966e4": {
+        "name": "sds-celery-worker",
+        "project": "sds",
+        "state": "exited"
+      },
+      "e017a06ed9edadf848b0d75ff53ce0fc1fb8c14629b69b8fc0ee6c2ef033ab3b": {
+        "name": "sds-api",
+        "project": "sds",
+        "state": "exited"
+      },
+      "98f612e7abafdfb2095c3869bdd0bf4bc76a31a80cc200d41b71c83379e02080": {
+        "name": "sds-celery-beat",
+        "project": "sds",
+        "state": "exited"
+      },
+      "5d4d3eb70e06f940519a50bf0618f311db6ef8d4f063e5d51b84da329f8bed5a": {
+        "name": "sds-migrate",
+        "project": "sds",
+        "state": "exited"
+      },
+      "cf8a21b28fe18fbe21a56a0142f13f6840a25e5fc46a995dbe2be4932e5116f8": {
+        "name": "sds-postgres",
+        "project": "sds",
+        "state": "exited"
+      },
+      "2a8a378bcd9023b9862716cde64a23b570dd925b77470abd0aa504d803315f05": {
+        "name": "redis-sds",
+        "project": "sds",
+        "state": "exited"
+      }
+    },
+    "networks": {
+      "410ed27a87ee97e5cf6399a5b4ad666375de2c0c593364698f1e330724cc16d1": {
+        "name": "aelev-events",
+        "project": "aelev-infrastructure",
+        "state": ""
+      },
+      "4a789712984c433f40895c5737acdf179a966187483d95184efc9ad080ee7948": {
+        "name": "aelev-observability",
+        "project": "aelev-infrastructure",
+        "state": ""
+      },
+      "956f357e8ab08dae44ea09392a8708bfce1d232ae34882837d53639ac7a967d2": {
+        "name": "aelev-zone-data",
+        "project": "aelev-infrastructure",
+        "state": ""
+      },
+      "f1b963250b7c5e4bd23063e6dd301ecba26d13dee08cdaa9ac5e7734d4fa3c11": {
+        "name": "bridge",
+        "project": "",
+        "state": ""
+      },
+      "525bffa163cd25fcefc41b3394cd7c447da696ad15d107774e35fae7f2e5336c": {
+        "name": "data_collector_default",
+        "project": "data_collector",
+        "state": ""
+      },
+      "9208743a968f8eab90f6b80104b771affee6698273549d835a3a49fb3f925194": {
+        "name": "host",
+        "project": "",
+        "state": ""
+      },
+      "51164b270c87e2b295d363818083e2e66bf58581627540a722abf3f521855b8f": {
+        "name": "kind",
+        "project": "",
+        "state": ""
+      },
+      "3dc1dcb0622147fc4250f8dd9d0f67081b4e157e20ff643bcc7151d96019a3da": {
+        "name": "mpi-syncer_default",
+        "project": "mpi-syncer",
+        "state": ""
+      },
+      "b84730b4923ed0d4dccf5b7b131b88f3729560ee6334373a60eb9685c7e13b0c": {
+        "name": "none",
+        "project": "",
+        "state": ""
+      },
+      "391228347f6be979e41263ef359f04c176f318b033e68f6ac87f97cf0173eb62": {
+        "name": "schedule_service_app-net",
+        "project": "schedule_service",
+        "state": ""
+      },
+      "400c799161abc679b4179cb4141d31f1811628cf9509e20534b6473083ba3546": {
+        "name": "sds_sds-network",
+        "project": "sds",
+        "state": ""
+      },
+      "78af4ef989c969bb68a403cabe3f2d6f343678ff1f7a91d795852a30dc79fb06": {
+        "name": "velea-backplane",
+        "project": "services",
+        "state": ""
+      }
+    },
+    "volumes": {
+      "4d320f8edea21b7a46ff0f824ccf7328a35f590a27b829c725783934687fa775": {
+        "name": "4d320f8edea21b7a46ff0f824ccf7328a35f590a27b829c725783934687fa775",
+        "project": "",
+        "state": ""
+      },
+      "36ff35c8cc4e18c07c5c839909645de426283ca189b0e2d3ba69b16a17a95cbe": {
+        "name": "36ff35c8cc4e18c07c5c839909645de426283ca189b0e2d3ba69b16a17a95cbe",
+        "project": "",
+        "state": ""
+      },
+      "54c95804ac504ca65fc1abc4cff7196b7542a006a6d3fa823fcdbb4312fcda01": {
+        "name": "54c95804ac504ca65fc1abc4cff7196b7542a006a6d3fa823fcdbb4312fcda01",
+        "project": "",
+        "state": ""
+      },
+      "93a7a009b7a2f8034fdccb0eaff34edb94779f1f49c5c28974ce998b1e30895f": {
+        "name": "93a7a009b7a2f8034fdccb0eaff34edb94779f1f49c5c28974ce998b1e30895f",
+        "project": "",
+        "state": ""
+      },
+      "428113eff9669aa75de406d79c22b1237c4cc3cf11206884004922f93750d53b": {
+        "name": "428113eff9669aa75de406d79c22b1237c4cc3cf11206884004922f93750d53b",
+        "project": "",
+        "state": ""
+      },
+      "confluence-skill-sync_pgdata": {
+        "name": "confluence-skill-sync_pgdata",
+        "project": "confluence-skill-sync",
+        "state": ""
+      },
+      "dagvis_postgres_data": {
+        "name": "dagvis_postgres_data",
+        "project": "dagvis",
+        "state": ""
+      },
+      "dagvis_redis_data": {
+        "name": "dagvis_redis_data",
+        "project": "dagvis",
+        "state": ""
+      },
+      "fundamentals-to-tickdb_postgres_data": {
+        "name": "fundamentals-to-tickdb_postgres_data",
+        "project": "fundamentals-to-tickdb",
+        "state": ""
+      },
+      "fundamentals-to-tickdb_redis_data": {
+        "name": "fundamentals-to-tickdb_redis_data",
+        "project": "fundamentals-to-tickdb",
+        "state": ""
+      },
+      "mpi-syncer_prom": {
+        "name": "mpi-syncer_prom",
+        "project": "mpi-syncer",
+        "state": ""
+      },
+      "sds-deps_sds-postgres-data": {
+        "name": "sds-deps_sds-postgres-data",
+        "project": "sds-deps",
+        "state": ""
+      }
+    },
+    "images": {
+      "sha256:684bc6b514a41ad736efd8f508ef7472b9f679092c23466da752a2b12a77ef5e": {
+        "references": "aelev/translator-service:test"
+      },
+      "sha256:e437106b7f33d4d2d4aa4e669f6d1e64e37e8468fb2ee8ba14789c62cc980f66": {
+        "references": "aelev/translator-service:local"
+      },
+      "sha256:0a11dfd950e31543b9da3823e70120c51658cd81bf80fa47099124e401fde11c": {
+        "references": "aelev/translator-service:kafka-v3"
+      },
+      "sha256:72b027174a9c58b9ffefa058a7b896f0c76b2a364d3cb4b5e5311bc3ece590ae": {
+        "references": "aelev/translator-service:dependencies-check"
+      },
+      "sha256:7fb209a14a06f8e6b91de3ef8f3fd7dc14e178d4212cc613ce838632e7ec6e38": {
+        "references": "aelev/minio-server:RELEASE.2025-04-22T22-12-26Z"
+      },
+      "sha256:da1489c0f912e48f59d1126b207615b557f1693ecba2fdb82c042f952c630754": {
+        "references": "aelev-translator-infrastructure-test:latest"
+      },
+      "sha256:0065a686093c1754e24ec1fb94f0de13adb580e7c694083ad7f7ac2dd76f5817": {
+        "references": "data-collector:latest"
+      },
+      "sha256:4794f9a858e05cb034bbc769029d007077aedd7561389ed83beb893bca964e77": {
+        "references": "schedule_service-schedule-service:latest"
+      },
+      "sha256:9bb79cb85f9daaf65e05e0746fe1ef8e421eab85aca0b7d37488c5a5db1d2bfc": {
+        "references": "schedule_service-celery-worker:latest"
+      },
+      "sha256:8df1c15f1069ada11bc469f53a6652e674e31ddceac3604fb42a9a02c8586321": {
+        "references": "fundamentals-to-tickdb-ftt:latest"
+      },
+      "sha256:fe0f66d7afb04b7dce8d24b3aca3f77a6538b1ca6efc72587085588a55d27371": {
+        "references": "fundamentals-to-tickdb-celery_worker:latest"
+      },
+      "sha256:f3f8dfc3833ede848e15dd4a7bd32552b0176d378855f432b4ac741d65c95739": {
+        "references": "fundamentals-to-tickdb-migrate:latest"
+      },
+      "sha256:ae19a71143696f1e7d6e2c9b41ec880331b4949ae8b3a4b192913664d98cd04c": {
+        "references": "fundamentals-to-tickdb-celery_beat:latest"
+      },
+      "sha256:488db1d126f9e27223ac0aa7f747e3d291c8df0845f76cc0595728c60f556ff4": {
+        "references": "fundamentals-to-tickdb-celery_flower:latest"
+      },
+      "sha256:11a9d238fbb48bab14599c57e41123254452b1a2d93c6c8595bce96f346bd082": {
+        "references": "postgres:16"
+      },
+      "sha256:ee81be5a20f8e6133af8165d89d8d8fe5b734947b002ced1e629cc3bd7944790": {
+        "references": "mpi-sync:latest"
+      },
+      "sha256:3a82e1f56c8f0f5616a11103ac3d47e632c3938698946a7ad26da0df1334744a": {
+        "references": "postgres:latest"
+      },
+      "sha256:b2cf60d06553441c642497af87197e123949cefd1a1422c8ab81da66d8c78410": {
+        "references": "dagvis-alembic_migrate:latest"
+      },
+      "sha256:cfb2fb25895360ab928ca484cc4d59f1f74a4f2f62e2dc779984ce192afa4c28": {
+        "references": "dagvis-flower:latest"
+      },
+      "sha256:5aa84b7a0f74a64d598dbf14758e3b07796f0528927fb0564ff7864ab6ff4cee": {
+        "references": "dagvis-api:latest"
+      },
+      "sha256:c12fe74b070c202cc4ea758a52944de54dfa01355cbe47d0eccda30506fdf3f2": {
+        "references": "dagvis-celery_worker:latest"
+      },
+      "sha256:ec423eba1b39b638e0629b872b7873018a108ad01ee478fa9239764e2a649990": {
+        "references": "dagvis-celery_beat:latest"
+      },
+      "sha256:ebe053f7baf0dc731b268056eae61e9b7995a29469828280f7f5a8ac3c4d833f": {
+        "references": "dagvis-frontend:latest"
+      },
+      "sha256:4725e17a93538bd4f3bf0d8af405722ddc042eaa8ec38a6bf7afb38fcbaed42f": {
+        "references": "liquid_updater-migrate:latest"
+      },
+      "sha256:a15f2e94b0b27e87ac9073efc8673a3b465e550096fb1348bb9a433deb8b135c": {
+        "references": "liquid_updater-app:latest"
+      },
+      "sha256:f198279c8674f9e21f3665ca126701c2ede309188b58479ff844f19ccb659712": {
+        "references": "confluence-skill-sync:latest"
+      },
+      "sha256:eb14e8b06ee86115dbd9eaaccc4b24ffcbb213dfb19c7444c4b76dfe322a2811": {
+        "references": "sds-api:latest,sds-celery-beat:latest,sds-celery-worker:latest,sds-migrate:latest"
+      },
+      "sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1": {
+        "references": "redis:alpine"
+      },
+      "sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529": {
+        "references": "redis:latest"
+      },
+      "sha256:20edbde7749f822887a1a022ad526fde0a47d6b2be9a8364433605cf65099416": {
+        "references": "postgres:16-alpine"
+      },
+      "sha256:8b81dd37ff027bec4e516d41acfbe9fe2460070dc6d4a4570a2ac5b9d59df065": {
+        "references": "redis:7-alpine"
+      },
+      "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94": {
+        "references": "postgres:17.6-alpine"
+      },
+      "sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996": {
+        "references": "prom/prometheus:<none>"
+      },
+      "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed": {
+        "references": "apache/kafka:3.9.1"
+      }
+    }
+  },
+  "cleanup": "PASS",
+  "finished_at": "2026-10-09T08:06:59.753129+00:00"
+}

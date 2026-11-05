@@ -1,0 +1,103 @@
+name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT:?set a dedicated compute project}
+
+x-compute-image: &compute-image
+  image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE:?set exact admitted compute image by digest}
+
+x-database-environment: &database-environment
+  AELEV_TRANSLATOR_PRESENCE_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS:?set presence interval}
+  AELEV_TRANSLATOR_PRESENCE_TTL_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS:?set presence TTL}
+  AELEV_ENVIRONMENT: ${AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT:?set environment}
+  AELEV_TRANSLATOR_DATABASE_HOST: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST:?set routed database host}
+  AELEV_TRANSLATOR_DATABASE_PORT: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT:?set database port}
+  AELEV_TRANSLATOR_DATABASE_NAME: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME:?set database name}
+  AELEV_TRANSLATOR_DATABASE_USER: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER:?set database user}
+  AELEV_TRANSLATOR_DATABASE_PASSWORD_FILE: /run/secrets/database/postgres-password
+  AELEV_TRANSLATOR_DATABASE_SSLMODE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE:?set database sslmode}
+  AELEV_TRANSLATOR_DATABASE_CA_FILE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE:?set database CA filename}
+  AELEV_TRANSLATOR_DATABASE_CLIENT_CERT_FILE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE:?set database client certificate filename}
+  AELEV_TRANSLATOR_DATABASE_CLIENT_KEY_FILE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE:?set database client key filename}
+  AELEV_TRANSLATOR_DATABASE_SECRET_ROOT: /run/secrets/database
+  AELEV_TRANSLATOR_OTLP_HTTP_ENDPOINT: ${AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT:?set HTTPS durable sender endpoint}
+  AELEV_TRANSLATOR_TELEMETRY_CA_FILE: /run/secrets/telemetry/client/sender-ca.crt
+  AELEV_TRANSLATOR_TELEMETRY_CLIENT_CERT_FILE: /run/secrets/telemetry/client/runtime.crt
+  AELEV_TRANSLATOR_TELEMETRY_CLIENT_KEY_FILE: /run/secrets/telemetry/client/runtime.key
+
+x-database-identity: &database-identity
+  type: bind
+  source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT:?set database secret root}
+  target: /run/secrets/database
+  read_only: true
+  bind: {create_host_path: false}
+
+x-telemetry-identity: &telemetry-identity
+  type: bind
+  source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT:?set telemetry secret root}/client
+  target: /run/secrets/telemetry/client
+  read_only: true
+  bind: {create_host_path: false}
+
+services:
+  translator-model:
+    <<: *compute-image
+    command: [python, -m, translator_service.index_translation_provider, serve]
+    environment:
+      AELEV_TRANSLATOR_HEALTH_ROLE: model
+      AELEV_TRANSLATOR_BATCH_SIZE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_BATCH_SIZE:?set model batch size}
+      AELEV_TRANSLATOR_REQUEST_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_REQUEST_TIMEOUT_SECONDS:?set request timeout}
+      AELEV_TRANSLATOR_SEGMENT_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_SEGMENT_TIMEOUT_SECONDS:?set segment timeout}
+      AELEV_TRANSLATOR_STARTUP_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_STARTUP_TIMEOUT_SECONDS:-600}
+    volumes: [translator-model-socket:/run/aelev-translator]
+    network_mode: none
+    restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_RESTART_POLICY:-on-failure:3}
+    read_only: true
+    tmpfs: [/tmp:size=64m,mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_MEMORY_LIMIT:?set model memory limit}
+    cpus: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_CPUS:?set model CPU limit}
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/src/translator_service/local_health.py]
+      start_period: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_STARTUP_TIMEOUT_SECONDS:-600}s
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  translator-worker:
+    <<: *compute-image
+    command: [python, -m, translator_service.runtime, worker]
+    environment:
+      <<: *database-environment
+      AELEV_TRANSLATOR_SOCKET_PATH: /run/aelev-translator/translator.sock
+      AELEV_TRANSLATOR_HEALTH_ROLE: worker
+      AELEV_TRANSLATOR_HIGH_PRIORITY_BURST: ${AELEV_INFRASTRUCTURE_TRANSLATOR_HIGH_PRIORITY_BURST:?set high priority burst}
+    volumes:
+      - translator-model-socket:/run/aelev-translator:ro
+      - *database-identity
+      - *telemetry-identity
+    depends_on:
+      translator-model: {condition: service_healthy}
+    restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY:-on-failure:3}
+    read_only: true
+    tmpfs: [/tmp:size=64m,mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT:?set worker memory limit}
+    cpus: ${AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS:?set worker CPU limit}
+    stop_grace_period: 250s
+    networks: [translator-data, translator-telemetry]
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/src/translator_service/local_health.py]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  translator-model-socket:
+
+networks:
+  translator-data:
+    name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK:?set routed database network}
+    external: true
+  translator-telemetry:
+    name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_NETWORK:?set routed telemetry network}
+    external: true

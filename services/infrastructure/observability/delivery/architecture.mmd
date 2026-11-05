@@ -1,0 +1,9 @@
+flowchart LR
+    OwnerSender["Owner telemetry sender"] -->|mTLS batches| Receiver["Telemetry Delivery receiver"]
+    OwnerSender --> SenderJournal[("Durable sender journal")]
+    Receiver --> ReceiverJournal[("Durable receiver journal")]
+    Receiver --> OTel["OpenTelemetry Collector"]
+    Receiver --> Ack["Verified acknowledgement"]
+    Ack --> OwnerSender
+    Receiver --> Status["Platform UI status publisher"]
+    Receiver --> SelfMetrics["Delivery metrics"]

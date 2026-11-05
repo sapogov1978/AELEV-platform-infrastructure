@@ -1,0 +1,33 @@
+ARG PYTHON_IMAGE
+ARG SQLITE_IMAGE=aelev/observability-sender:1.0.7@sha256:44e5063c37fd5268d221bf7886a66abb4a256a595190604470bbf1c5e5500739
+FROM ${SQLITE_IMAGE} AS sqlite
+FROM ${PYTHON_IMAGE} AS builder
+RUN pip install --no-cache-dir poetry==2.2.1
+WORKDIR /work
+COPY pyproject.toml poetry.lock ./
+COPY vendor ./vendor
+RUN python -m venv /opt/venv
+ENV VIRTUAL_ENV=/opt/venv PATH=/opt/venv/bin:$PATH
+RUN poetry install --only main --no-interaction --no-ansi
+
+FROM builder AS checks
+COPY Dockerfile.status ./
+RUN apk add --no-cache docker-cli docker-cli-compose
+RUN poetry install --with dev --no-interaction --no-ansi
+COPY status_publisher.py prepare.py deployment.json compose.yml .env.example README.md .dockerignore ./
+COPY config ./config
+COPY --from=tests / ./test/
+
+FROM ${PYTHON_IMAGE} AS runtime
+COPY --from=sqlite /usr/local/lib/libsqlite3.so.0 /usr/local/lib/libsqlite3.so.0
+ENV LD_LIBRARY_PATH=/usr/local/lib
+RUN python -S -c "import sqlite3; assert sqlite3.sqlite_version_info == (3, 53, 4), sqlite3.sqlite_version"
+COPY --from=builder /opt/venv /opt/venv
+COPY --from=builder /opt/venv/lib/python3.13/site-packages/aelev_platform_ui_client/health.py /opt/aelev/publisher-health.py
+COPY --from=builder /opt/venv/lib/python3.13/site-packages/aelev_observability_tools/operator_health.py /opt/aelev/operator-health.py
+ENV PATH=/opt/venv/bin:$PATH PYTHONDONTWRITEBYTECODE=1
+RUN mkdir -p /var/lib/aelev-status && chown 101:101 /var/lib/aelev-status
+COPY status_publisher.py /opt/aelev/status_publisher.py
+USER 101:101
+ENTRYPOINT ["python", "/opt/aelev/status_publisher.py"]
+CMD ["run"]

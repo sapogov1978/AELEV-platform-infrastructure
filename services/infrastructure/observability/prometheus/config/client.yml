@@ -1,0 +1,7 @@
+{
+  "tls_config": {
+    "ca_file": "/run/secrets/observability/ca.crt",
+    "cert_file": "/run/secrets/observability/client.crt",
+    "key_file": "/run/secrets/observability/client.key"
+  }
+}

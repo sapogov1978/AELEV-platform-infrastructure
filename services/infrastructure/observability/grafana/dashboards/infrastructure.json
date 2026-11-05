@@ -1,0 +1,14 @@
+{
+  "uid": "aelev-infrastructure",
+  "title": "Observability — собственное техническое состояние",
+  "schemaVersion": 41,
+  "version": 3,
+  "refresh": "10s",
+  "time": {"from": "now-1h", "to": "now"},
+  "panels": [
+    {"id": 1, "title": "Доступность компонентов observability", "type": "stat", "gridPos": {"x": 0, "y": 0, "w": 24, "h": 5}, "datasource": {"type": "prometheus", "uid": "aelev-prometheus"}, "targets": [{"refId": "A", "expr": "aelev_component_availability{job=\"infrastructure-health\"}", "legendFormat": "{{component_id}}", "instant": true}], "fieldConfig": {"defaults": {"min": 0, "max": 1, "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}}, "overrides": []}},
+    {"id": 2, "title": "Сбор собственных технических метрик", "type": "timeseries", "gridPos": {"x": 0, "y": 5, "w": 24, "h": 8}, "datasource": {"type": "prometheus", "uid": "aelev-prometheus"}, "targets": [{"refId": "A", "expr": "up{job=~\"prometheus|delivery|otel-collector|blackbox-exporter|loki|tempo\"}", "legendFormat": "{{job}} / {{instance}}"}]},
+    {"id": 3, "title": "Задолженность центральной доставки", "type": "timeseries", "gridPos": {"x": 0, "y": 13, "w": 12, "h": 8}, "datasource": {"type": "prometheus", "uid": "aelev-prometheus"}, "targets": [{"refId": "A", "expr": "aelev_telemetry_delivery_pending{job=\"delivery\"}", "legendFormat": "Пакеты"}, {"refId": "B", "expr": "aelev_telemetry_delivery_failed{job=\"delivery\"}", "legendFormat": "Ошибки"}]},
+    {"id": 4, "title": "Заполнение исходного журнала", "type": "gauge", "gridPos": {"x": 12, "y": 13, "w": 12, "h": 8}, "datasource": {"type": "prometheus", "uid": "aelev-prometheus"}, "targets": [{"refId": "A", "expr": "aelev_telemetry_delivery_bytes{job=\"delivery\"} / aelev_telemetry_delivery_capacity{job=\"delivery\"}", "instant": true}], "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}, "overrides": []}}
+  ]
+}

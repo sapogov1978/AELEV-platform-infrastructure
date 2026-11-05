@@ -1,0 +1,68 @@
+{
+  "prefix": "AELEV_INFRASTRUCTURE_GRAFANA_",
+  "role": "grafana",
+  "ports": [
+    "PORT"
+  ],
+  "integers": [],
+  "durations": [],
+  "https": [
+    "OIDC_BROWSER_URL",
+    "OIDC_INTERNAL_URL",
+    "PROMETHEUS_URL",
+    "LOKI_URL",
+    "TEMPO_URL"
+  ],
+  "optional": [
+    "SMTP_HOST",
+    "SMTP_USER",
+    "SMTP_FROM",
+    "SMTP_TO"
+  ],
+  "required_secrets": [
+    "server.crt",
+    "server.key",
+    "ca.crt",
+    "client.crt",
+    "client.key",
+    "admin-password",
+    "encryption-key",
+    "smtp-password"
+  ],
+  "templates": [
+    {
+      "source": "config/grafana-datasources.yml",
+      "target": "datasources/aelev.yml"
+    },
+    {
+      "source": "config/grafana-dashboards.yml",
+      "target": "dashboards/aelev.yml"
+    },
+    {
+      "source": "dashboards/infrastructure.json",
+      "target": "dashboards/files/infrastructure.json"
+    },
+    {
+      "source": "config/notifications-enabled.json",
+      "target": "alerting/infrastructure.yml",
+      "when": [
+        "SMTP_ENABLED",
+        "true"
+      ]
+    },
+    {
+      "source": "config/notifications-disabled.json",
+      "target": "alerting/infrastructure.yml",
+      "when": [
+        "SMTP_ENABLED",
+        "false"
+      ]
+    }
+  ],
+  "generated_secrets": [
+    "admin-password",
+    "encryption-key",
+    "smtp-password"
+  ],
+  "trusted_ca": true
+}

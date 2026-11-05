@@ -1,0 +1,159 @@
+{
+  "status": "PASS",
+  "at": "2026-10-11T20:02:58.851004+00:00",
+  "translator_ref": "IndexTeam/Index-Translate-9B-q4km@sha256:808969589f1baa1b236428c30a4338182ed70c746c0b17861d4b91f700ceee2c",
+  "stages": [
+    "Настоящие Kafka/БД пусты, установленная 9B healthy; отдельные компоненты не создаются",
+    "Обычная очередь: полный путь Kafka → БД → 9B → outbox ACK",
+    "Повтор точных байтов: тот же результат без нового вычисления",
+    "Приоритетная очередь и явный исходный язык: castle, не lock",
+    "Текст длиннее одного фрагмента: финальный маркер сохранён",
+    "Неподдерживаемый язык: FAILED, не ошибочный успешный перевод",
+    "Остановка модели не теряет задание; после запуска перевод завершён",
+    "Удалены только созданные тестом записи; пустые topics и прежние ресурсы сохранены"
+  ],
+  "translations": [
+    {
+      "state": "SUCCEEDED",
+      "priority": 100,
+      "attempt_count": 1,
+      "request_digest": "sha256:3a316b3bbf84fc804010f29a8457c1627480538918067c870871cff3a23268a7",
+      "outbox_state": "PUBLISHED",
+      "result": {
+        "error_code": "",
+        "provenance": {
+          "input_refs": [
+            {
+              "digest": "sha256:3a316b3bbf84fc804010f29a8457c1627480538918067c870871cff3a23268a7",
+              "id": "urn:aelev:translation-request:84ab3dbe-ae26-4ab7-ab1e-692f6bcc497c",
+              "version": "1.0.0"
+            }
+          ],
+          "owner_context": "TRANSLATOR_SERVICE",
+          "producer_id": "translator-service",
+          "producer_version": "0.1.0"
+        },
+        "recorded_at": "2026-10-11T19:57:57.634778+00:00",
+        "request_digest": "sha256:3a316b3bbf84fc804010f29a8457c1627480538918067c870871cff3a23268a7",
+        "request_id": "84ab3dbe-ae26-4ab7-ab1e-692f6bcc497c",
+        "schema_version": "1.0.0",
+        "source_digest": "sha256:5a476eb8486cc5b0384b2a6de75700d8611885a0f1a028b64786fa6f9a252055",
+        "source_language": "en",
+        "status": "SUCCEEDED",
+        "target_language": "de",
+        "translated_text": "Die Zentralbank hat den Zinssatz nicht erhöht.",
+        "translator_ref": "IndexTeam/Index-Translate-9B-q4km@sha256:808969589f1baa1b236428c30a4338182ed70c746c0b17861d4b91f700ceee2c",
+        "warnings": [
+          "MACHINE_TRANSLATION_UNVERIFIED"
+        ]
+      }
+    },
+    {
+      "state": "SUCCEEDED",
+      "priority": 0,
+      "attempt_count": 1,
+      "request_digest": "sha256:06d26cb1ac7a61459c5d6d5fe86434e0cedfe64f38fe8ecfcd95963f82947417",
+      "outbox_state": "PUBLISHED",
+      "result": {
+        "error_code": "",
+        "provenance": {
+          "input_refs": [
+            {
+              "digest": "sha256:06d26cb1ac7a61459c5d6d5fe86434e0cedfe64f38fe8ecfcd95963f82947417",
+              "id": "urn:aelev:translation-request:22fcac38-e961-4c8b-b109-02ae7f004e8c",
+              "version": "1.0.0"
+            }
+          ],
+          "owner_context": "TRANSLATOR_SERVICE",
+          "producer_id": "translator-service",
+          "producer_version": "0.1.0"
+        },
+        "recorded_at": "2026-10-11T19:58:35.827805+00:00",
+        "request_digest": "sha256:06d26cb1ac7a61459c5d6d5fe86434e0cedfe64f38fe8ecfcd95963f82947417",
+        "request_id": "22fcac38-e961-4c8b-b109-02ae7f004e8c",
+        "schema_version": "1.0.0",
+        "source_digest": "sha256:83919d431d9b51abeccdf65db83d8762511a832dba668115dd33dff28ed8b410",
+        "source_language": "ru",
+        "status": "SUCCEEDED",
+        "target_language": "en",
+        "translated_text": "The castle on top of the hill belonged to the family.",
+        "translator_ref": "IndexTeam/Index-Translate-9B-q4km@sha256:808969589f1baa1b236428c30a4338182ed70c746c0b17861d4b91f700ceee2c",
+        "warnings": [
+          "MACHINE_TRANSLATION_UNVERIFIED"
+        ]
+      }
+    },
+    {
+      "state": "SUCCEEDED",
+      "priority": 100,
+      "attempt_count": 1,
+      "request_digest": "sha256:32e5cfe36d1495fc4c13b8b3676da83de6e56989280898928366bc05e8444a71",
+      "outbox_state": "PUBLISHED",
+      "result": {
+        "error_code": "",
+        "provenance": {
+          "input_refs": [
+            {
+              "digest": "sha256:32e5cfe36d1495fc4c13b8b3676da83de6e56989280898928366bc05e8444a71",
+              "id": "urn:aelev:translation-request:79765388-9227-4196-a76a-9d7c479b86af",
+              "version": "1.0.0"
+            }
+          ],
+          "owner_context": "TRANSLATOR_SERVICE",
+          "producer_id": "translator-service",
+          "producer_version": "0.1.0"
+        },
+        "recorded_at": "2026-10-11T20:01:13.830665+00:00",
+        "request_digest": "sha256:32e5cfe36d1495fc4c13b8b3676da83de6e56989280898928366bc05e8444a71",
+        "request_id": "79765388-9227-4196-a76a-9d7c479b86af",
+        "schema_version": "1.0.0",
+        "source_digest": "sha256:501d04976c25102d5d72201ccbfb1c6e54ff22398f6c0f84a1dc962aca2bec73",
+        "source_language": "en",
+        "status": "SUCCEEDED",
+        "target_language": "ru",
+        "translated_text": "В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются неопределёнными. В докладе зафиксировано 42 подтверждённых случая; неопределённые наблюдения остаются\nНеопределенно. В отчете зафиксировано 42 подтвержденных случая; неопределенные наблюдения остаются неопределенными. В отчете зафиксировано 42 подтвержденных случая; неопределенные наблюдения остаются неопределенными. Окончательная ссылка: FINAL_MARKER_9B.",
+        "translator_ref": "IndexTeam/Index-Translate-9B-q4km@sha256:808969589f1baa1b236428c30a4338182ed70c746c0b17861d4b91f700ceee2c",
+        "warnings": [
+          "MACHINE_TRANSLATION_UNVERIFIED"
+        ]
+      }
+    },
+    {
+      "state": "SUCCEEDED",
+      "priority": 0,
+      "attempt_count": 2,
+      "request_digest": "sha256:2c2dc77998c5e3fafdacc07afce52543d300d20064c248423904115d7143398f",
+      "outbox_state": "PUBLISHED",
+      "result": {
+        "error_code": "",
+        "provenance": {
+          "input_refs": [
+            {
+              "digest": "sha256:2c2dc77998c5e3fafdacc07afce52543d300d20064c248423904115d7143398f",
+              "id": "urn:aelev:translation-request:cf480480-28a5-474b-82b7-eac5eefb945a",
+              "version": "1.0.0"
+            }
+          ],
+          "owner_context": "TRANSLATOR_SERVICE",
+          "producer_id": "translator-service",
+          "producer_version": "0.1.0"
+        },
+        "recorded_at": "2026-10-11T20:02:20.995153+00:00",
+        "request_digest": "sha256:2c2dc77998c5e3fafdacc07afce52543d300d20064c248423904115d7143398f",
+        "request_id": "cf480480-28a5-474b-82b7-eac5eefb945a",
+        "schema_version": "1.0.0",
+        "source_digest": "sha256:4c3d5f00eef05759e66ee9dff2595a7ccd487aa175f4caca498ddeab3506e6c5",
+        "source_language": "en",
+        "status": "SUCCEEDED",
+        "target_language": "fr",
+        "translated_text": "Le service s'est rétabli après le redémarrage.",
+        "translator_ref": "IndexTeam/Index-Translate-9B-q4km@sha256:808969589f1baa1b236428c30a4338182ed70c746c0b17861d4b91f700ceee2c",
+        "warnings": [
+          "MACHINE_TRANSLATION_UNVERIFIED"
+        ]
+      }
+    }
+  ],
+  "cleanup": true,
+  "failure": ""
+}

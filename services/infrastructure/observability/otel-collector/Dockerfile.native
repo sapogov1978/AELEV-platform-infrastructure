@@ -1,0 +1,12 @@
+ARG BASE_IMAGE
+ARG PYTHON_IMAGE
+FROM ${PYTHON_IMAGE} AS health-build
+RUN apk add --no-cache gcc musl-dev openssl-dev openssl-libs-static
+WORKDIR /work
+COPY vendor/aelev-native-health-1.0.0.tar.gz ./
+RUN echo "92aa8eae454c57fab1e217bdd7ae7bfb7bde2cf4705c335ab240f682be3d399b  aelev-native-health-1.0.0.tar.gz" | sha256sum -c - \
+    && tar -xzf aelev-native-health-1.0.0.tar.gz \
+    && cc -std=c11 -Wall -Wextra -Werror -Os -static -s health.c -o native-health -lssl -lcrypto -pthread
+
+FROM ${BASE_IMAGE} AS runtime
+COPY --from=health-build --chmod=0555 /work/native-health /opt/aelev/native-health

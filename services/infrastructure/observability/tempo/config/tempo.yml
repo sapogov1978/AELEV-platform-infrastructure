@@ -1,0 +1,47 @@
+server:
+  http_listen_port: 3200
+  log_format: json
+  grpc_listen_address: 127.0.0.1
+  tls_min_version: VersionTLS12
+  http_tls_config:
+    cert_file: /run/secrets/observability/server.crt
+    key_file: /run/secrets/observability/server.key
+    client_ca_file: /run/secrets/observability/ca.crt
+    client_auth_type: RequireAndVerifyClientCert
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          endpoint: 0.0.0.0:4318
+          tls:
+            cert_file: /run/secrets/observability/server.crt
+            key_file: /run/secrets/observability/server.key
+            client_ca_file: /run/secrets/observability/ca.crt
+            min_version: "1.2"
+        grpc:
+          endpoint: 0.0.0.0:4317
+          tls:
+            cert_file: /run/secrets/observability/server.crt
+            key_file: /run/secrets/observability/server.key
+            client_ca_file: /run/secrets/observability/ca.crt
+            min_version: "1.2"
+
+ingester:
+  lifecycler:
+    address: 127.0.0.1
+    ring: {replication_factor: 1}
+
+compactor:
+  compaction:
+    block_retention: ${AELEV_INFRASTRUCTURE_TEMPO_RETENTION}
+
+storage:
+  trace:
+    backend: local
+    local: {path: /var/tempo/traces}
+    wal: {path: /var/tempo/wal}
+
+usage_report:
+  reporting_enabled: false

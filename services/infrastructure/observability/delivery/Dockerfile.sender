@@ -1,0 +1,48 @@
+ARG PROMETHEUS_IMAGE
+FROM ${PROMETHEUS_IMAGE} AS prometheus
+FROM python:3.13.7-alpine3.22@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844 AS sqlite-builder
+RUN apk add --no-cache gcc musl-dev
+ADD --checksum=sha256:0e9483900e92cd5de8fd48d16bf9200145a61f7fd5be542a5ac81d8a9516eb9c https://sqlite.org/2026/sqlite-autoconf-3530400.tar.gz /tmp/sqlite.tar.gz
+RUN python - <<'PY'
+import hashlib
+import pathlib
+import subprocess
+import tarfile
+
+with tarfile.open('/tmp/sqlite.tar.gz') as archive:
+    member = archive.getmember('sqlite-autoconf-3530400/sqlite3.c')
+    assert member.isfile() and 0 < member.size < 20 * 1024**2
+    with archive.extractfile(member) as stream:
+        source = stream.read()
+assert hashlib.sha3_256(source).hexdigest() == '67f423e9ebbbdc473cbc4772c872ee6b89f31fde4ed0279a5c25d5f65c043a16'
+pathlib.Path('/tmp/sqlite3.c').write_bytes(source)
+pathlib.Path('/out').mkdir()
+subprocess.run([
+    'gcc', '-shared', '-fPIC', '-O1', '-DSQLITE_THREADSAFE=1',
+    '-DSQLITE_ENABLE_COLUMN_METADATA', '-DSQLITE_ENABLE_FTS5',
+    '-DSQLITE_ENABLE_RTREE', '-Wl,-soname,libsqlite3.so.0',
+    '/tmp/sqlite3.c', '-o', '/out/libsqlite3.so.0', '-lpthread', '-ldl', '-lm',
+], check=True, timeout=600)
+PY
+FROM python:3.13.7-alpine3.22@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844 AS builder
+RUN pip install --no-cache-dir poetry==2.2.1
+WORKDIR /build
+COPY pyproject.toml poetry.lock ./
+COPY vendor ./vendor
+RUN python -m venv /opt/venv && VIRTUAL_ENV=/opt/venv PATH=/opt/venv/bin:$PATH poetry install --only main --no-root --no-interaction
+FROM python:3.13.7-alpine3.22@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844
+COPY --from=sqlite-builder /out/libsqlite3.so.0 /usr/local/lib/libsqlite3.so.0
+ENV LD_LIBRARY_PATH=/usr/local/lib
+RUN python -S -c "import sqlite3; assert sqlite3.sqlite_version_info == (3, 53, 4), sqlite3.sqlite_version"
+COPY --from=builder /opt/venv /opt/venv
+COPY --from=prometheus /bin/prometheus /bin/promtool /bin/
+COPY --from=prometheus /LICENSE /NOTICE /licenses/prometheus/
+COPY delivery.py /opt/aelev/delivery.py
+COPY delivery_health.py /opt/aelev/delivery_health.py
+COPY delivery_snapshot.py /opt/aelev/delivery_snapshot.py
+COPY renewal.py /opt/aelev/telemetry-renewal.py
+COPY vendor/aelev-renewal-delivery-1.0.0.zip /opt/aelev/vendor/aelev-renewal-delivery-1.0.0.zip
+LABEL io.aelev.telemetry.issuer-export="1"
+ENV PATH=/opt/venv/bin:$PATH PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+USER 10001:10001
+CMD ["python", "/opt/aelev/delivery.py", "run", "--config", "/etc/aelev/delivery.json"]

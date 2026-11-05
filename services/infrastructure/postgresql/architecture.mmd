@@ -1,0 +1,11 @@
+flowchart LR
+    Clients["Владельцы баз данных"] -->|TLS SQL| Primary["PostgreSQL primary"]
+    Etcd["etcd quorum"] --> Patroni["Patroni leader election"]
+    Patroni --> Primary
+    Primary --> ReplicaA["Synchronous replica A"]
+    Primary --> ReplicaB["Synchronous replica B"]
+    Fencing["Fencing controller"] --> Primary
+    Backup["Backup / restore"] --> Primary
+    Primary --> Probe["SQL and replication probe"]
+    Probe --> Status["Platform UI status publisher"]
+    Probe --> Telemetry["Telemetry sender"]

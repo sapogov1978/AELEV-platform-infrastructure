@@ -1,0 +1,9 @@
+flowchart LR
+    Client["Клиент с workload identity"] -->|mTLS + exact grant| Gateway["Public Egress Gateway"]
+    Grants[("Разрешения и квоты")] --> Gateway
+    Gateway --> Resolver["DNS/IP validation"]
+    Resolver --> Public["Публичный HTTP(S) ресурс"]
+    Gateway -->|bounded response| Client
+    Gateway --> Audit[("Owner-local audit state")]
+    Gateway --> Status["Platform UI status publisher"]
+    Gateway --> Telemetry["Telemetry sender"]

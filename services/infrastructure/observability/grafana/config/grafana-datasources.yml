@@ -1,0 +1,36 @@
+apiVersion: 1
+datasources:
+  - name: DRP Prometheus
+    uid: aelev-prometheus
+    type: prometheus
+    access: proxy
+    url: ${AELEV_INFRASTRUCTURE_GRAFANA_PROMETHEUS_URL}
+    isDefault: true
+    jsonData: &tls
+      tlsAuth: true
+      tlsAuthWithCACert: true
+      tlsSkipVerify: false
+    secureJsonData: &credentials
+      tlsCACert: $GF_OBSERVABILITY_TLS_CA
+      tlsClientCert: $GF_OBSERVABILITY_TLS_CERT
+      tlsClientKey: $GF_OBSERVABILITY_TLS_KEY
+  - name: DRP Loki
+    uid: aelev-loki
+    type: loki
+    access: proxy
+    url: ${AELEV_INFRASTRUCTURE_GRAFANA_LOKI_URL}
+    jsonData: *tls
+    secureJsonData: *credentials
+  - name: DRP Tempo
+    uid: aelev-tempo
+    type: tempo
+    access: proxy
+    url: ${AELEV_INFRASTRUCTURE_GRAFANA_TEMPO_URL}
+    jsonData:
+      <<: *tls
+      tracesToLogsV2:
+        datasourceUid: aelev-loki
+        spanStartTimeShift: -2m
+        spanEndTimeShift: 2m
+        tags: [{key: service.name, value: service_name}]
+    secureJsonData: *credentials

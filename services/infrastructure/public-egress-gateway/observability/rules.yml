@@ -1,0 +1,16 @@
+groups:
+  - name: public-egress-gateway
+    rules:
+      - alert: PublicEgressGatewayUnavailable
+        expr: up{job="public-egress-gateway"} != 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Public Egress Gateway is unavailable
+      - alert: PublicEgressGatewayInternalErrors
+        expr: increase(aelev_egress_requests_total{outcome="INTERNAL_ERROR"}[10m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Public Egress Gateway completed requests with internal errors

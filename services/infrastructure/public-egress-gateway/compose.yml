@@ -1,0 +1,218 @@
+name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_COMPOSE_PROJECT:?set in the gateway .env}
+
+x-status-environment: &status-environment
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_PUBLIC_URL: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_PUBLIC_URL:?set the browser-facing documentation HTTPS origin in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_URL: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_URL:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IDENTITY_URL: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IDENTITY_URL:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_REALM: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_REALM:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_CLIENT_ID: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_CLIENT_ID:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_AUDIENCE: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_AUDIENCE:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_MODULE_ID: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_MODULE_ID:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_INTERVAL_SECONDS:?set in the gateway .env}
+  AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_TIMEOUT_SECONDS:?set in the gateway .env}
+
+x-build: &build
+  context: .
+  dockerfile: Dockerfile
+  target: runtime
+
+x-security: &security
+  read_only: true
+  tmpfs: ["/tmp:size=8m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+
+x-tls: &tls
+  type: bind
+  source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_ROOT:?set in the gateway .env}
+  target: /run/secrets/gateway
+  read_only: true
+  bind: {create_host_path: false}
+
+x-telemetry-client: &telemetry-client
+  type: bind
+  source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SECRET_ROOT:?set in the gateway .env}/client
+  target: /run/secrets/telemetry/client
+  read_only: true
+  bind: {create_host_path: false}
+
+services:
+  public-egress-gateway:
+    <<: *security
+    image: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_IMAGE:?set in the gateway .env}
+    build: *build
+    restart: "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_RESTART_POLICY:-on-failure:3}"
+    stop_grace_period: 15s
+    group_add: ["${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_GID:?set in the gateway .env}"]
+    mem_limit: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MEMORY_LIMIT:?set in the gateway .env}
+    pids_limit: 128
+    environment:
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_ENVIRONMENT: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_ENVIRONMENT:?set local or production in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_LISTEN_HOST: 0.0.0.0
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_LISTEN_PORT: "8080"
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_LISTEN_PORT: "8081"
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PUBLIC_URL: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PUBLIC_URL:?set the browser-facing protected gateway HTTPS origin in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_LOG_LEVEL: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_LOG_LEVEL:?set in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MAX_RESPONSE_BYTES: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MAX_RESPONSE_BYTES:?set in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TIMEOUT_SECONDS:?set in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MAX_CONCURRENCY: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MAX_CONCURRENCY:?set in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PER_HOST_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PER_HOST_INTERVAL_SECONDS:?set in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DENY_CIDRS: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DENY_CIDRS?set in the gateway .env; empty means no additional deny CIDRs}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME:?set in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_CERT_PATH: /run/secrets/gateway/server.pem
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_KEY_PATH: /run/secrets/gateway/server.key
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_CA_PATH: /run/secrets/gateway/server-ca.pem
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_CLIENT_CA_PATH: /run/secrets/gateway/client-ca.pem
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_GRANTS_DIRECTORY: /run/grants
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TRUST_DOMAIN: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TRUST_DOMAIN:?set the workload trust domain in the gateway .env}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_OTLP_HTTP_ENDPOINT: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_OTLP_HTTP_ENDPOINT?set empty for local without telemetry or an HTTPS durable sender endpoint}
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_CA_FILE: /run/secrets/telemetry/client/sender-ca.crt
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_CLIENT_CERT_FILE: /run/secrets/telemetry/client/runtime.crt
+      AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_CLIENT_KEY_FILE: /run/secrets/telemetry/client/runtime.key
+    ports:
+      - "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_BIND:?set in the gateway .env}:${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PORT:?set in the gateway .env}:8080"
+      - "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_BIND:?set in the gateway .env}:${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_PORT:?set in the gateway .env}:8081"
+    volumes:
+      - *tls
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_GRANTS_ROOT:?set in the gateway .env}
+        target: /run/grants
+        read_only: true
+        bind: {create_host_path: false}
+      - *telemetry-client
+    networks: [public-egress-gateway-access, public-egress-gateway-public, public-egress-gateway-telemetry]
+    healthcheck:
+      test: [CMD, python, health.py]
+      interval: 10s
+      timeout: 6s
+      retries: 6
+      start_period: 10s
+
+  public-egress-gateway-status-publisher:
+    <<: *security
+    image: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IMAGE:?set in the gateway .env}
+    build: &status-build
+      context: .
+      dockerfile: Dockerfile
+      target: status
+    profiles: [ui]
+    restart: "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_RESTART_POLICY:-on-failure:3}"
+    stop_grace_period: 2m
+    group_add: ["${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_GID:?set in the gateway .env}"]
+    environment: *status-environment
+    extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+    mem_limit: 128m
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_ROOT:?set in the gateway .env}/server-ca.pem
+        target: /run/secrets/gateway/server-ca.pem
+        read_only: true
+        bind: {create_host_path: false}
+      - public-egress-gateway-status-data:/var/lib/aelev-status
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_ROOT:?set in the gateway .env}
+        target: /run/secrets/status
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [public-egress-gateway-access, public-egress-gateway-status-egress]
+    healthcheck:
+      test: [CMD, python, -S, publisher-health.py, AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  public-egress-gateway-status-provision:
+    <<: *security
+    image: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IMAGE:?set in the gateway .env}
+    build: *status-build
+    profiles: [provision]
+    command: [provision]
+    restart: "no"
+    user: "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_PROVISION_UID:?set in the gateway .env}:${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_GID:?set in the gateway .env}"
+    environment: *status-environment
+    extra_hosts: ["host.docker.internal:host-gateway", "keycloak:host-gateway"]
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_ROOT:?set in the gateway .env}
+        target: /run/secrets/status
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_ADMIN_ROOT:?set in the gateway .env}
+        target: /run/secrets/status-admin
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [public-egress-gateway-status-egress]
+
+  public-egress-gateway-telemetry-sender:
+    image: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SENDER_IMAGE:?set in the gateway .env}
+    profiles: [telemetry]
+    command: [python, /opt/aelev/delivery.py, run, --config, /etc/aelev/sender.local.json]
+    user: "10001:10001"
+    group_add: ["${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SECRET_GID:?set in the gateway .env}"]
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_RESTART_POLICY:-on-failure:3}"
+    stop_grace_period: 1m
+    mem_limit: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_MEMORY_LIMIT:?set in the gateway .env}
+    extra_hosts: ["delivery:host-gateway"]
+    volumes:
+      - type: bind
+        source: ./observability
+        target: /etc/aelev
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SECRET_ROOT:?set in the gateway .env}/sender
+        target: /run/secrets/telemetry/sender
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_ROOT:?set in the gateway .env}/server-ca.pem
+        target: /run/secrets/gateway/server-ca.pem
+        read_only: true
+        bind: {create_host_path: false}
+      - public-egress-gateway-telemetry-data:/var/lib/delivery
+    networks: [public-egress-gateway-telemetry, public-egress-gateway-status-egress]
+    depends_on:
+      public-egress-gateway: {condition: service_healthy}
+      public-egress-gateway-telemetry-data-init: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -S, /opt/aelev/delivery_health.py]
+      interval: 10s
+      timeout: 15s
+      retries: 6
+
+  public-egress-gateway-telemetry-data-init:
+    image: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SENDER_IMAGE:?set in the gateway .env}
+    profiles: [provision, telemetry]
+    network_mode: none
+    user: "0:0"
+    entrypoint: [python, -c]
+    command: ["import os; os.chown('/journal',10001,10001); os.chmod('/journal',0o700)"]
+    restart: "no"
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    volumes: [public-egress-gateway-telemetry-data:/journal]
+
+volumes:
+  public-egress-gateway-status-data:
+    name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_STATE_VOLUME:?set in the gateway .env}
+  public-egress-gateway-telemetry-data:
+    name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_VOLUME:?set in the gateway .env}
+
+networks:
+  public-egress-gateway-access:
+    name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_NETWORK:?set in the gateway .env}
+    internal: true
+  public-egress-gateway-public:
+    name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PUBLIC_NETWORK:?set in the gateway .env}
+  public-egress-gateway-status-egress:
+    name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_EGRESS_NETWORK:?set in the gateway .env}
+  public-egress-gateway-telemetry:
+    name: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_NETWORK:?set in the gateway .env}
+    internal: true

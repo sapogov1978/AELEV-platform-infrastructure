@@ -1,0 +1,7 @@
+flowchart LR
+    Prometheus["Prometheus"] -->|probe request| Exporter["Blackbox Exporter"]
+    Modules["Declarative probe modules"] --> Exporter
+    Exporter --> Targets["Declared technical endpoints"]
+    Targets --> Exporter
+    Exporter -->|probe metrics| Prometheus
+    Exporter --> Status["Platform UI status publisher"]

@@ -1,0 +1,59 @@
+name: ${AELEV_DEMO_TELEMETRY_COMPOSE_PROJECT:?set the example project}
+x-readonly-bind: &readonly-bind
+  type: bind
+  read_only: true
+  bind: {create_host_path: false}
+services:
+  exporter:
+    image: ${AELEV_DEMO_TELEMETRY_PYTHON_IMAGE:?set the pinned Python image}
+    entrypoint: [python, /opt/example/exporter.py]
+    user: "10001:10001"
+    group_add: ["${AELEV_DEMO_TELEMETRY_SECRET_GID:?set the secret group}"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    environment: {PYTHONDONTWRITEBYTECODE: "1", PYTHONUNBUFFERED: "1"}
+    volumes:
+      - <<: *readonly-bind
+        source: ./exporter.py
+        target: /opt/example/exporter.py
+      - <<: *readonly-bind
+        source: ${AELEV_DEMO_TELEMETRY_SECRET_ROOT:?deliver own certificates}/exporter
+        target: /run/secrets/telemetry
+  sender:
+    image: ${AELEV_DEMO_TELEMETRY_SENDER_IMAGE:?set the immutable sender artifact}
+    command: [python, /opt/aelev/delivery.py, run, --config, /etc/aelev/sender.json]
+    user: "10001:10001"
+    group_add: ["${AELEV_DEMO_TELEMETRY_SECRET_GID:?set the secret group}"]
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    # Local diagnostics only: ephemeral ports, not public WAN access.
+    ports: ["127.0.0.1::9090", "127.0.0.1::13134"]
+    volumes:
+      - <<: *readonly-bind
+        source: ./sender.json
+        target: /etc/aelev/sender.json
+      - <<: *readonly-bind
+        source: ./prometheus.yml
+        target: /etc/aelev/prometheus.yml
+      - <<: *readonly-bind
+        source: ./web.yml
+        target: /etc/aelev/web.yml
+      - <<: *readonly-bind
+        source: ${AELEV_DEMO_TELEMETRY_SECRET_ROOT:?deliver own certificates}/sender
+        target: /run/secrets/telemetry
+      - journal:/var/lib/delivery
+  sender-init:
+    image: ${AELEV_DEMO_TELEMETRY_SENDER_IMAGE:?set the immutable sender artifact}
+    profiles: [provision]
+    network_mode: none
+    user: "0:0"
+    entrypoint: [python, -c]
+    command: ["import os; os.chown('/journal',10001,10001); os.chmod('/journal',0o700)"]
+    volumes: [journal:/journal]
+volumes:
+  journal: {}
