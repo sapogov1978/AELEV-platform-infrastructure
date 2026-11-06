@@ -74,7 +74,7 @@ ADR-0082 продолжает применяться к самостоятель
 ## Связанные документы
 
 - [Kafka-контракт перевода](../api/translation.md)
-- [Инфраструктурный компонент](../../services/infrastructure/translator-service/SPEC.md)
+- [Инфраструктурный компонент](../../translator-service/SPEC.md)
 - [Компонентная оркестрация инфраструктуры](20261008-0088-componentized-infrastructure-orchestration.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
 - [Discovery Registry Engine](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/05-discovery-services.md)

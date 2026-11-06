@@ -59,5 +59,5 @@
 ## Связанные документы
 
 - [ADR-0148](20261018-0148-bounded-local-infrastructure-recovery.md)
-- [Спецификация оператора](../../services/infrastructure/SPEC.md#контейнерный-оператор-восстановления)
+- [Спецификация оператора](../../SPEC.md#контейнерный-оператор-восстановления)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md#автоматическое-восстановление-локальных-процессов)

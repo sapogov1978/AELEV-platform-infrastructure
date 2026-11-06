@@ -1,5 +1,7 @@
 # Реестр ADR Platform Infrastructure
 
+- [INFRA-ADR-0002: Имя и корень репозитория](20261106-0002-infrastructure-repository-layout.md).
+
 Собственное решение имеет пространство INFRA-ADR. Унаследованные решения сохраняют исходную identity, статус и цепочки замены; точные исходные и экспортированные SHA-256 перечислены в [описи происхождения](../audit/extraction.json).
 
 - [INFRA-ADR-0001](20261105-0001-independent-infrastructure-product.md) — самостоятельный инфраструктурный продукт.

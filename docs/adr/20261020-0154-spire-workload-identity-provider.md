@@ -61,4 +61,4 @@ Production не создаёт новый корень автоматическ�
 - [Нулевое доверие](20260803-0017-zero-trust-and-operational-security.md)
 - [Согласованная установка](20261020-0153-distributed-advance-installation.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
-- [Поставка SPIRE](../../services/infrastructure/spire/README.md)
+- [Поставка SPIRE](../../spire/README.md)

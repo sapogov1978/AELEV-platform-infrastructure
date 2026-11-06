@@ -40,9 +40,7 @@ def main() -> int:
                 continue
             checked += 1
             if not resolved.exists():
-                missing.append(
-                    f"{document.relative_to(root)} -> {path_text}"
-                )
+                missing.append(f"{document.relative_to(root)} -> {path_text}")
     if missing:
         print("Missing local Markdown targets:")
         print("\n".join(missing))

@@ -137,5 +137,5 @@ Keycloak остаётся владельцем человеческой иден
 - [ADR-0049](20260901-0049-discovery-registry-engine-service-boundaries.md)
 - [ADR-0072](20261003-0072-owner-local-process-control.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
-- [Текущая спецификация Platform UI](../../services/infrastructure/platform-ui/SPEC.md)
-- [Текущая поставка Platform UI](../../services/infrastructure/platform-ui/README.md)
+- [Текущая спецификация Platform UI](../../platform-ui/SPEC.md)
+- [Текущая поставка Platform UI](../../platform-ui/README.md)

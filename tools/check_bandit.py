@@ -13,6 +13,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from source_scope import source_files
+
 EXCLUDED_PARTS = {"test", "tests", "__pycache__", "runtime", "obsolete"}
 
 
@@ -64,14 +66,12 @@ def main() -> int:
     ).stdout
     if not isinstance(expected_version, str) or expected_version not in version:
         print(
-            f"Bandit version mismatch: expected {expected_version!r}, "
-            f"got {version!r}"
+            f"Bandit version mismatch: expected {expected_version!r}, got {version!r}"
         )
         return 1
     files = sorted(
         path
-        for base in (root / "services", root / "tools")
-        for path in base.rglob("*.py")
+        for path in source_files(root, "*.py")
         if not EXCLUDED_PARTS.intersection(path.relative_to(root).parts)
         and not path.name.startswith("test_")
         and not path.name.endswith("_sandbox.py")

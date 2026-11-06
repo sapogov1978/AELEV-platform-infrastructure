@@ -67,4 +67,4 @@ ADR-0073 отделил функциональные web-приложения о
 - [Самодостаточная поставка](20261007-0082-self-contained-service-delivery.md)
 - [Границы конфигурации инфраструктуры](20261008-0090-infrastructure-configuration-boundaries.md)
 - [Архитектура интерфейсов](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/22-platform-ui.md)
-- [Platform UI](../../services/infrastructure/platform-ui/README.md)
+- [Platform UI](../../platform-ui/README.md)

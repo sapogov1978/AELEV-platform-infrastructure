@@ -58,6 +58,6 @@ Docker-сеть является только механизмом совмес�
 
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
 - [Архитектура Discovery](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/05-discovery-services.md)
-- [Инфраструктура](../../services/infrastructure/README.md)
+- [Инфраструктура](../../README.md)
 - [Zone Ingestion](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/services/discovery-engine/zone-ingestion/README.md)
 - [Base Screening](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/services/discovery-engine/base-screening/README.md)

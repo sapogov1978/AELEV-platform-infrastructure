@@ -71,7 +71,7 @@ Compose не управляет Docker daemon другого сервера. П�
 
 ## Связанные документы
 
-- [Поставка translator-service](../../services/infrastructure/translator-service/README.md)
+- [Поставка translator-service](../../translator-service/README.md)
 - [Компонентная инфраструктура](20261008-0088-componentized-infrastructure-orchestration.md)
 - [Владение Kafka topics](20261008-0091-service-owned-kafka-topics.md)
 - [Независимая поставка translator-service](20261009-0096-consumer-agnostic-scalable-translator.md)

@@ -86,4 +86,4 @@ Kafka-компонент владеет только broker/controller, его l
 - [Самодостаточная поставка](20261007-0082-self-contained-service-delivery.md)
 - [Границы конфигурации инфраструктуры](20261008-0090-infrastructure-configuration-boundaries.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
-- [Kafka](../../services/infrastructure/kafka/README.md)
+- [Kafka](../../kafka/README.md)

@@ -2,7 +2,7 @@
 
 > **Происхождение standalone-редакции.** Источник: `docs/adr/20261010-0103-consumer-agnostic-infrastructure-orchestration.md`; SHA-256: `dfba747bdc863e04703740dbb7524ab79566ebde8a2686c72f73d524f2d05465`; основание включения: прямая ссылка из поставки. Сохранены номер, статус, история замены и применимые решения; упоминания исключённых bounded contexts нейтрализованы без переноса их контрактов.
 
-- **Статус:** Принят; частично заменён [ADR-0104](20261010-0104-owner-contained-compose-recipes.md) в части корневых поправок имён и локальных зависимостей и [ADR-0106](20261010-0106-selectable-postgresql-fencing.md) в части обязательного watchdog; остальные требования действуют
+- **Статус:** Принят; частично заменён [ADR-0104](20261010-0104-owner-contained-compose-recipes.md) в части корневых поправок имён и локальных зависимостей и [ADR-0106](20261010-0106-selectable-postgresql-fencing.md) в части обязательного watchdog; остальные требования действуют; частично заменён [INFRA-ADR-0002](20261106-0002-infrastructure-repository-layout.md) только в размещении исходного дерева и имени репозитория
 - **Дата:** 2026-10-10
 - **Основание:** A5, A10, A12, ADR-0017, ADR-0082, ADR-0089, ADR-0091, ADR-0097, ADR-0099, ADR-0100, ADR-0101
 - **Частично заменяет (Supersedes):** ADR-0088 в части обязательного `extends` и корневого повторного объявления ресурсов включаемых поставок; ADR-0090 в части ресурсов конкретных потребителей в корневом env/Compose; ADR-0094 в части размещения прикладных OIDC-файлов и скрипта в корне инфраструктуры. Размещение оркестрационных файлов непосредственно в корне, изоляция и остальные требования сохраняются.
@@ -44,6 +44,6 @@
 
 ## Ссылки
 
-- [Руководство](../../services/infrastructure/README.md), [спецификация](../../services/infrastructure/SPEC.md), [тесты оркестрации](../../services/infrastructure/test_infrastructure/README.md).
+- [Руководство](../../README.md), [спецификация](../../SPEC.md), [тесты оркестрации](../../test_infrastructure/README.md).
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md), [схема](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/diagrams/infrastructure-orchestration.mmd).
 - [Compose include](https://docs.docker.com/reference/compose-file/include/), [сброс при объединении](https://docs.docker.com/reference/compose-file/merge/).

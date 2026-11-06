@@ -37,5 +37,5 @@ CI и установщик каждого владельца закрыто ср
 
 - [ADR-0017](20260803-0017-zero-trust-and-operational-security.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
-- [Технический интерфейс доставки](../../services/infrastructure/CERTIFICATE_DELIVERY.md)
-- [Telemetry Delivery](../../services/infrastructure/observability/delivery/SPEC.md)
+- [Технический интерфейс доставки](../../CERTIFICATE_DELIVERY.md)
+- [Telemetry Delivery](../../observability/delivery/SPEC.md)

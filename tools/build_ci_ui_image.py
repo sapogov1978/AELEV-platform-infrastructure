@@ -35,13 +35,13 @@ def main() -> int:
         "AELEV_ASC_PLATFORM_UI_ORIGIN": "https://shell.drp.invalid",
     }
     command = ["docker", "build", "--tag", arguments.tag]
-    if arguments.suite == "services/infrastructure/platform-ui":
+    if arguments.suite == "platform-ui":
         command.extend(["--target", "ui"])
         for line in (root / arguments.suite / ".env.example").read_text().splitlines():
             for name in ("NODE_IMAGE", "NGINX_IMAGE", "PYTHON_IMAGE"):
                 prefix = "AELEV_INFRASTRUCTURE_PLATFORM_UI_" + name + "="
                 if line.startswith(prefix):
-                    origins[name] = line[len(prefix):]
+                    origins[name] = line[len(prefix) :]
     for key, value in origins.items():
         command.extend(["--build-arg", f"{key}={value}"])
     command.append(str(root / arguments.suite))

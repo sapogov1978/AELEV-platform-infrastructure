@@ -8,6 +8,8 @@ import re
 import sys
 from pathlib import Path
 
+from source_scope import source_files
+
 FROM = re.compile(r"^\s*FROM\s+", re.IGNORECASE)
 USER = re.compile(r"^\s*USER\s+([^\s#]+)", re.IGNORECASE)
 ROOT_USERS = {"0", "0:0", "root", "root:root"}
@@ -19,9 +21,7 @@ def final_user(path: Path) -> str | None:
         (index for index, line in enumerate(lines) if FROM.match(line)), default=-1
     )
     users = [
-        match.group(1)
-        for line in lines[stage + 1 :]
-        if (match := USER.match(line))
+        match.group(1) for line in lines[stage + 1 :] if (match := USER.match(line))
     ]
     return users[-1] if users else None
 
@@ -40,7 +40,7 @@ def main() -> int:
         return 1
     dockerfiles = sorted(
         path
-        for path in (root / "services").rglob("Dockerfile*")
+        for path in source_files(root, "Dockerfile*")
         if path.is_file() and not path.name.endswith(".dockerignore")
     )
     errors: list[str] = []

@@ -53,5 +53,5 @@
 ## Связанные документы
 
 - [Технические ссылки](../api/platform-ui-injection.md#ссылки-на-собственные-интерфейсы), [контракт перевода](../api/translation.md).
-- [Поставка переводчика](../../services/infrastructure/translator-service/USER_MANUAL.md#группы-и-операции-swagger).
+- [Поставка переводчика](../../translator-service/USER_MANUAL.md#группы-и-операции-swagger).
 - [Swagger OAuth/PKCE](https://swagger.io/docs/open-source-tools/swagger-ui/usage/oauth2/), [OIDC-клиенты Keycloak](https://www.keycloak.org/docs/latest/server_admin/#_oidc_clients).

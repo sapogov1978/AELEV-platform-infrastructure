@@ -34,12 +34,27 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=False)
     scan, sbom = output / "vulnerabilities.json", output / "sbom.cdx.json"
     common = [
-        arguments.trivy, "image", "--no-progress", "--image-src", "docker",
-        "--scanners", "vuln", "--exit-code", "0",
+        arguments.trivy,
+        "image",
+        "--no-progress",
+        "--image-src",
+        "docker",
+        "--scanners",
+        "vuln",
+        "--exit-code",
+        "0",
     ]
-    run([
-        *common, "--format", "json", "--list-all-pkgs", "--output", str(scan), image_id
-    ])
+    run(
+        [
+            *common,
+            "--format",
+            "json",
+            "--list-all-pkgs",
+            "--output",
+            str(scan),
+            image_id,
+        ]
+    )
     run([*common, "--format", "cyclonedx", "--output", str(sbom), image_id])
     report = json.loads(scan.read_text(encoding="utf-8"))
     bill = json.loads(sbom.read_text(encoding="utf-8"))

@@ -33,6 +33,6 @@ Consumer-agnostic оператор Telemetry Delivery сопровождает �
 
 - [ADR-0154](../20261020-0154-spire-workload-identity-provider.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
-- [SPIRE](../../../services/infrastructure/spire/SPEC.md)
-- [Telemetry Delivery](../../../services/infrastructure/observability/delivery/SPEC.md)
-- [Platform UI](../../../services/infrastructure/platform-ui/SPEC.md)
+- [SPIRE](../../../spire/SPEC.md)
+- [Telemetry Delivery](../../../observability/delivery/SPEC.md)
+- [Platform UI](../../../platform-ui/SPEC.md)

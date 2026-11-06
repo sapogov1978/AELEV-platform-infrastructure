@@ -11,7 +11,7 @@ from unittest import mock
 
 SPEC = importlib.util.spec_from_file_location(
     "provider",
-    Path(__file__).resolve().parents[1] / "services/infrastructure/bootstrap.py",
+    Path(__file__).resolve().parents[1] / "bootstrap.py",
 )
 assert SPEC is not None and SPEC.loader is not None
 provider = importlib.util.module_from_spec(SPEC)

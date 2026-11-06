@@ -63,6 +63,6 @@
 ## Связанные документы
 
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
-- [Поставка и руководство](../../services/infrastructure/public-egress-gateway/README.md)
-- [Спецификация](../../services/infrastructure/public-egress-gateway/SPEC.md)
+- [Поставка и руководство](../../public-egress-gateway/README.md)
+- [Спецификация](../../public-egress-gateway/SPEC.md)
 - [ADR-0074](obsolete/20261004-0074-service-owned-egress-dependencies.md), [ADR-0089](20261008-0089-compose-owned-local-networks.md), [ADR-0113](20261012-0113-infrastructure-plan-stability.md)

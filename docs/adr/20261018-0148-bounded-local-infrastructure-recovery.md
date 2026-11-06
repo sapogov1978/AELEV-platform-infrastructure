@@ -68,6 +68,6 @@ Docker `unless-stopped` восстанавливает завершившийс�
 ## Связанные документы
 
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md#автоматическое-восстановление-локальных-процессов)
-- [Операторское руководство](../../services/infrastructure/USER_MANUAL.md#ограниченное-восстановление-по-unhealthy)
-- [Ограждение PostgreSQL](../../services/infrastructure/postgresql/FENCING.md)
+- [Операторское руководство](../../USER_MANUAL.md#ограниченное-восстановление-по-unhealthy)
+- [Ограждение PostgreSQL](../../postgresql/FENCING.md)
 - [Контракт проб](../api/health-readiness.md)

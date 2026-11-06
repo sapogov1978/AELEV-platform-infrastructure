@@ -8,6 +8,8 @@ import json
 import sys
 from pathlib import Path
 
+from source_scope import source_files
+
 MODES = {"pytest", "lock-only"}
 
 
@@ -39,9 +41,10 @@ def validate(root: Path, value: dict[str, object]) -> list[str]:
             errors.append(f"duplicate Python suite: {path}")
         declared_python.add(path)
         directory = root / path
-        if not (directory / "pyproject.toml").is_file() or not (
-            directory / "poetry.lock"
-        ).is_file():
+        if (
+            not (directory / "pyproject.toml").is_file()
+            or not (directory / "poetry.lock").is_file()
+        ):
             errors.append(f"Python suite lacks pyproject.toml or poetry.lock: {path}")
         if mode == "pytest" and not any(
             candidate.is_file()
@@ -61,7 +64,7 @@ def validate(root: Path, value: dict[str, object]) -> list[str]:
 
     actual_python = {
         path.parent.relative_to(root).as_posix()
-        for path in (root / "services").rglob("pyproject.toml")
+        for path in source_files(root, "pyproject.toml")
     }
     for path in sorted(actual_python - declared_python):
         errors.append(f"unclassified Python project: {path}")
@@ -94,7 +97,7 @@ def validate(root: Path, value: dict[str, object]) -> list[str]:
                 errors.append(f"UI suite lacks {script} script: {entry}")
     actual_ui = {
         path.parent.relative_to(root).as_posix()
-        for path in (root / "services").rglob("package-lock.json")
+        for path in source_files(root, "package-lock.json")
     }
     for path in sorted(actual_ui - declared_ui):
         errors.append(f"unclassified UI package: {path}")

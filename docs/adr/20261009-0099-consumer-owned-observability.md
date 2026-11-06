@@ -33,8 +33,8 @@ OTLP технической телеметрии не заменяет Kafka и 
 
 ## Ссылки
 
-- [Компонент](../../services/infrastructure/observability/README.md)
-- [Спецификация](../../services/infrastructure/observability/SPEC.md)
+- [Компонент](../../observability/README.md)
+- [Спецификация](../../observability/SPEC.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
 - [Исторические границы](20261008-0090-infrastructure-configuration-boundaries.md)
 - [Историческое размещение](20261009-0094-flat-infrastructure-orchestration-files.md)

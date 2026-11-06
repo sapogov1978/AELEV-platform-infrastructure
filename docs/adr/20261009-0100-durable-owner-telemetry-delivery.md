@@ -53,8 +53,8 @@ TLS/mTLS и разделение чтения/приёма сохраняютс�
 
 ## Ссылки
 
-- [Спецификация компонента](../../services/infrastructure/observability/SPEC.md)
-- [Эксплуатация и результаты](../../services/infrastructure/observability/README.md)
+- [Спецификация компонента](../../observability/SPEC.md)
+- [Эксплуатация и результаты](../../observability/README.md)
 - [Ограничение remote_write](https://prometheus.io/docs/practices/remote_write/)
 - [Устойчивость Collector](https://opentelemetry.io/docs/collector/resiliency/)
 - [Границы Thanos Sidecar](https://thanos.io/v0.39/components/sidecar.md/)

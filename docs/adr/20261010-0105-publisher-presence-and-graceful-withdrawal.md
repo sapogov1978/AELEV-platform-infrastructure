@@ -61,4 +61,4 @@ SQLite оболочки сохраняет только прежнюю прои�
 - [ADR-0102](20261009-0102-owner-controlled-shared-refresh-indicator.md)
 - [Контракт инъекции](../api/platform-ui-injection.md)
 - [Архитектура интерфейса](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/22-platform-ui.md)
-- [Поставка оболочки](../../services/infrastructure/platform-ui/README.md)
+- [Поставка оболочки](../../platform-ui/README.md)

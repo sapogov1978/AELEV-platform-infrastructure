@@ -9,7 +9,7 @@ __pycache__/
 node_modules/
 dist/
 runtime/
-services/**/secrets/
+**/secrets/
 graphify-out/.graphify_root
 graphify-out/.graphify_python
 
@@ -23,7 +23,7 @@ graphify-out/.graphify_python
 /models/*/_files/state/
 
 # Materialized from checksum-pinned owner Dockerfile ADD instructions.
-services/**/swagger-assets/
+**/swagger-assets/
 
 # Graphify local caches and machine-specific build state.
 graphify-out/cache/

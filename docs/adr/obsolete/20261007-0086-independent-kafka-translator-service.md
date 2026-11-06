@@ -40,6 +40,6 @@ Production требует отдельной SPIFFE-идентичности, mT
 ## Источники истины
 
 - [Публичный контракт перевода](../../api/translation.md)
-- [Исторически самостоятельный сервис](../../../services/infrastructure/translator-service/SPEC.md)
+- [Исторически самостоятельный сервис](../../../translator-service/SPEC.md)
 - [Discovery Registry Engine](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/05-discovery-services.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)

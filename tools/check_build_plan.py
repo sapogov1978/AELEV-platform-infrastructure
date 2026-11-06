@@ -10,9 +10,7 @@ from pathlib import Path
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    spec = importlib.util.spec_from_file_location(
-        "provider", root / "services/infrastructure/bootstrap.py"
-    )
+    spec = importlib.util.spec_from_file_location("provider", root / "bootstrap.py")
     assert spec is not None and spec.loader is not None
     provider = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(provider)

@@ -66,5 +66,5 @@ Platform UI продолжает возвращать эффективное `st
 - [ADR-0148](20261018-0148-bounded-local-infrastructure-recovery.md)
 - [ADR-0155](20261023-0155-automatic-recovery-after-cooldown.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md#автоматическое-восстановление-локальных-процессов)
-- [Контейнерный оператор](../../services/infrastructure/SPEC.md#контейнерный-оператор-восстановления)
+- [Контейнерный оператор](../../SPEC.md#контейнерный-оператор-восстановления)
 - [Platform UI injection](../api/platform-ui-injection.md)

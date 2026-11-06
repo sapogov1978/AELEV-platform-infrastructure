@@ -33,6 +33,6 @@
 
 ## Ссылки
 
-- [Слой observability](../../services/infrastructure/observability/README.md), [спецификация](../../services/infrastructure/observability/SPEC.md).
+- [Слой observability](../../observability/README.md), [спецификация](../../observability/SPEC.md).
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md), [схема](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/diagrams/infrastructure-observability.mmd), [контракт телеметрии](../api/telemetry.md).
 - Публичный артефакт.

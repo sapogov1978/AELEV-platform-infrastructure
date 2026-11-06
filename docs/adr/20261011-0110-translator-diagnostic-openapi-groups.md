@@ -43,4 +43,4 @@
 
 ## Связанные документы
 
-- [Контракт](../api/translation.md), [SPEC](../../services/infrastructure/translator-service/SPEC.md), [README](../../services/infrastructure/translator-service/USER_MANUAL.md#группы-и-операции-swagger), [руководство](../../services/infrastructure/translator-service/USER_MANUAL.md#группы-и-операции-swagger).
+- [Контракт](../api/translation.md), [SPEC](../../translator-service/SPEC.md), [README](../../translator-service/USER_MANUAL.md#группы-и-операции-swagger), [руководство](../../translator-service/USER_MANUAL.md#группы-и-операции-swagger).

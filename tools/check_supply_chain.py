@@ -7,6 +7,8 @@ import re
 import sys
 from pathlib import Path
 
+from source_scope import source_files
+
 USE = re.compile(r"^\s*-\s+uses:\s+([^\s#]+)", re.MULTILINE)
 SHA = re.compile(r"^[^@]+@[0-9a-f]{40}$")
 
@@ -25,7 +27,7 @@ def main() -> int:
                     f"GitHub Action is not pinned to a full SHA: {path.name}: {value}"
                 )
     active_wheels = set()
-    for path in (root / "services").rglob("pyproject.toml"):
+    for path in source_files(root, "pyproject.toml"):
         active_wheels.update(
             re.findall(
                 r"vendor/(aelev_platform_ui_client-[0-9.]+-py3-none-any\.whl)",

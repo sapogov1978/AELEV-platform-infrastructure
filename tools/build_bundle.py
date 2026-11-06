@@ -27,13 +27,14 @@ def build(root: Path, output: Path) -> dict:
             "core.eol=lf",
             "archive",
             revision,
-            "services/infrastructure",
         ],
         cwd=root,
     )
     records = {}
     with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
         for member in archive:
+            if member.name.split("/", 1)[0] in {".codex", "graphify-out"}:
+                continue
             if not member.isfile():
                 continue
             stream = archive.extractfile(member)
@@ -61,11 +62,12 @@ def build(root: Path, output: Path) -> dict:
                 "text": text,
             }
     return {
-        "schema_version": 1,
-        "repository": "sapogov1978/platform-infrastructure",
+        "schema_version": 2,
+        "excluded_roots": [".codex", "graphify-out"],
+        "repository": "sapogov1978/AELEV-platform-infrastructure",
         "version": json.loads(
             subprocess.check_output(
-                ["git", "show", revision + ":services/infrastructure/release.json"],
+                ["git", "show", revision + ":release.json"],
                 cwd=root,
             )
         )["version"],

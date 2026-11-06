@@ -57,7 +57,7 @@ Executor использует проверяемый mTLS с собственн�
 
 ## Связанные документы
 
-- [PostgreSQL](../../services/infrastructure/postgresql/README.md), [спецификация](../../services/infrastructure/postgresql/SPEC.md), схема.
+- [PostgreSQL](../../postgresql/README.md), [спецификация](../../postgresql/SPEC.md), схема.
 - [ADR-0098](20261009-0098-clustered-infrastructure-postgresql.md), [ADR-0103](20261010-0103-consumer-agnostic-infrastructure-orchestration.md), [ADR-0104](20261010-0104-owner-contained-compose-recipes.md).
 - [Patroni pre_promote](https://patroni.readthedocs.io/en/latest/yaml_configuration.html), [watchdog](https://patroni.readthedocs.io/en/latest/watchdog.html).
 - [Docker Engine API](https://docs.docker.com/reference/api/engine/), [безопасность daemon](https://docs.docker.com/engine/security/).

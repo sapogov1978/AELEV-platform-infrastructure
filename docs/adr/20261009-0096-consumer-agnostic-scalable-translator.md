@@ -87,5 +87,5 @@ Consumer масштабируется в общей Kafka consumer group не в
 - [ADR-0087](20261008-0087-infrastructure-translator-service.md)
 - [Границы конфигурации инфраструктуры](20261008-0090-infrastructure-configuration-boundaries.md)
 - [Kafka-контракт перевода](../api/translation.md)
-- [Компонент translator-service](../../services/infrastructure/translator-service/SPEC.md)
+- [Компонент translator-service](../../translator-service/SPEC.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)

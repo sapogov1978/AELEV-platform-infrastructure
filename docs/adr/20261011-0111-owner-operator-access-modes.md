@@ -56,5 +56,5 @@ Production-доставка предоставляет отдельные удо
 ## Связанные документы
 
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md), [схема наблюдения](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/diagrams/infrastructure-observability.mmd), [операторские ссылки](../api/platform-ui-injection.md#ссылки-на-собственные-интерфейсы).
-- [Prometheus](../../services/infrastructure/observability/prometheus/README.md), [Blackbox Exporter](../../services/infrastructure/observability/blackbox-exporter/README.md), публичная библиотека.
+- [Prometheus](../../observability/prometheus/README.md), [Blackbox Exporter](../../observability/blackbox-exporter/README.md), публичная библиотека.
 - [Keycloak: introspection](https://www.keycloak.org/securing-apps/oidc-layers), [модель безопасности Prometheus](https://prometheus.io/docs/operating/security/), [web configuration exporter-toolkit](https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md), [профили Compose](https://docs.docker.com/compose/how-tos/profiles/).

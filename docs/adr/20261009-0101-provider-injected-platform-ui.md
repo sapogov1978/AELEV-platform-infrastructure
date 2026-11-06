@@ -58,7 +58,7 @@ API оболочки проверяет JWT, точные issuer/audience, ср�
 ## Связанные документы
 
 - [Контракт](../api/platform-ui-injection.md)
-- [Компонент](../../services/infrastructure/platform-ui/README.md)
+- [Компонент](../../platform-ui/README.md)
 - [Архитектура](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/22-platform-ui.md)
 - [Историческая граница](20261009-0095-service-owned-standalone-ui.md)
 - [Изоляция iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe)

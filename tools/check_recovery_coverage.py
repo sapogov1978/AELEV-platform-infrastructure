@@ -21,9 +21,7 @@ def validate(report: dict[str, object]) -> list[str]:
     files = report.get("files", {})
     for name, (line_floor, branch_floor) in FLOORS.items():
         matching = [
-            value["summary"]
-            for path, value in files.items()
-            if Path(path).name == name
+            value["summary"] for path, value in files.items() if Path(path).name == name
         ]
         if len(matching) != 1:
             errors.append(f"missing or ambiguous recovery module: {name}")

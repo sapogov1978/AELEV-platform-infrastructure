@@ -34,7 +34,14 @@ TEXT_SUFFIXES = {
     ".yml",
 }
 
-EXCLUDED_DIRECTORIES = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "node_modules", "__pycache__"}
+EXCLUDED_DIRECTORIES = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    "node_modules",
+    "__pycache__",
+}
 
 _ENGLISH = [
     "mar" + "ket(?:s|place)?",
@@ -110,11 +117,15 @@ def main() -> int:
         relative = path.relative_to(root).as_posix()
         if path.parent.name == "swagger-assets":
             dockerfile = path.parent.parent / "Dockerfile"
-            pins = {
-                match.group(3): match.group(1)
-                for line in dockerfile.read_text(encoding="utf-8").splitlines()
-                if (match := ASSET.fullmatch(line))
-            } if dockerfile.is_file() else {}
+            pins = (
+                {
+                    match.group(3): match.group(1)
+                    for line in dockerfile.read_text(encoding="utf-8").splitlines()
+                    if (match := ASSET.fullmatch(line))
+                }
+                if dockerfile.is_file()
+                else {}
+            )
             if pins.get(path.name) != hashlib.sha256(path.read_bytes()).hexdigest():
                 findings.append(f"{relative}:unverified-third-party-asset")
             continue

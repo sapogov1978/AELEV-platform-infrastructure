@@ -8,6 +8,8 @@ import json
 import re
 from pathlib import Path
 
+from source_scope import source_files
+
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
@@ -21,12 +23,12 @@ def main() -> int:
             != document["exported_adr_sha256"][name]
         ):
             errors.append(f"Inherited ADR changed or missing: {name}")
-    diagrams = sorted((root / "services/infrastructure").rglob("architecture.mmd"))
+    diagrams = sorted(source_files(root, "architecture.mmd"))
     if len(diagrams) != 15:
         errors.append(f"Expected 15 owner diagrams, found {len(diagrams)}")
     diagrams += [
-        root / "services/infrastructure/infrastructure.mmd",
-        root / "services/infrastructure/observability/observability.mmd",
+        root / "infrastructure.mmd",
+        root / "observability/observability.mmd",
         root / "docs/architecture/repositories.mmd",
     ]
     for path in diagrams:

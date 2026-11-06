@@ -65,7 +65,7 @@
 
 ## Связанные документы
 
-- [Инфраструктура](../../services/infrastructure/README.md)
+- [Инфраструктура](../../README.md)
 - [Развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md)
 - [Границы конфигурации инфраструктуры](20261008-0090-infrastructure-configuration-boundaries.md)
 - [Компонентная поставка инфраструктуры](20261008-0088-componentized-infrastructure-orchestration.md)

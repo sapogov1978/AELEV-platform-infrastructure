@@ -2,7 +2,7 @@
 
 > **Происхождение standalone-редакции.** Источник: `docs/adr/20261010-0104-owner-contained-compose-recipes.md`; SHA-256: `10f470d041f933daab27004b37730ea50ae0ba8622835c9055fc70848205379c`; основание включения: прямая ссылка из поставки. Сохранены номер, статус, история замены и применимые решения; упоминания исключённых bounded contexts нейтрализованы без переноса их контрактов.
 
-- **Статус:** Частично заменён [ADR-0107](20261011-0107-independent-observability-products.md) только в части общего `observability-configuration-init`; владение рецептами и остальные решения действуют
+- **Статус:** Частично заменён [ADR-0107](20261011-0107-independent-observability-products.md) только в части общего `observability-configuration-init`; владение рецептами и остальные решения действуют; частично заменён [INFRA-ADR-0002](20261106-0002-infrastructure-repository-layout.md) только в размещении исходного дерева и имени репозитория
 - **Дата:** 2026-10-10
 - **Основание:** A5, A10, A12, ADR-0082, ADR-0089, ADR-0097, ADR-0103
 - **Частично заменяет (Supersedes):** ADR-0103 только в части допустимых корневых поправок административных имён и локальных зависимостей. Неосведомлённость инфраструктуры о потребителях, независимость Kafka, сохранность данных и остальные требования сохраняются.
@@ -54,5 +54,5 @@
 ## Связанные документы
 
 - [ADR-0103](20261010-0103-consumer-agnostic-infrastructure-orchestration.md), [ADR-0097](20261009-0097-translator-kafka-dependency.md).
-- [Корневое руководство](../../services/infrastructure/README.md), [спецификация](../../services/infrastructure/SPEC.md), [развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md), [схема](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/diagrams/infrastructure-orchestration.mmd).
-- [Переводчик](../../services/infrastructure/translator-service/README.md), [Keycloak](../../services/infrastructure/keycloak/README.md), [тесты оркестрации](../../services/infrastructure/test_infrastructure/README.md).
+- [Корневое руководство](../../README.md), [спецификация](../../SPEC.md), [развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md), [схема](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/diagrams/infrastructure-orchestration.mmd).
+- [Переводчик](../../translator-service/README.md), [Keycloak](../../keycloak/README.md), [тесты оркестрации](../../test_infrastructure/README.md).

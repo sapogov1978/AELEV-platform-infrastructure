@@ -9,12 +9,14 @@ import re
 import sys
 from pathlib import Path
 
+from source_scope import source_files
+
 
 def main() -> int:
     root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
     errors = []
     checked = 0
-    for checksum in sorted((root / "services").rglob("*.sha256")):
+    for checksum in sorted(source_files(root, "*.sha256")):
         if "contracts" not in checksum.parts:
             continue
         artifact = checksum.with_suffix(".json")

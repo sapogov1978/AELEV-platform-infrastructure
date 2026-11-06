@@ -56,5 +56,5 @@ API читает только результат созданного им за�
 
 ## Связанные документы
 
-- [Контракт перевода](../api/translation.md), [поставка](../../services/infrastructure/translator-service/README.md), [руководство](../../services/infrastructure/translator-service/USER_MANUAL.md).
+- [Контракт перевода](../api/translation.md), [поставка](../../translator-service/README.md), [руководство](../../translator-service/USER_MANUAL.md).
 - Схема поставки, [развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md).

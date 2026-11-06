@@ -73,7 +73,7 @@ SQL, физическая репликация, REST и оба канала etcd
 
 ## Связанные документы
 
-- [Поставка](../../services/infrastructure/postgresql/README.md), [SPEC](../../services/infrastructure/postgresql/SPEC.md), [ворота](../../services/infrastructure/postgresql/TASKS.md).
+- [Поставка](../../postgresql/README.md), [SPEC](../../postgresql/SPEC.md), [ворота](../../postgresql/TASKS.md).
 - [Хранилища](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/20-storage.md), [развёртывание](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md), схема.
 - [PostgreSQL: синхронная репликация](https://www.postgresql.org/docs/17/warm-standby.html), [failover](https://www.postgresql.org/docs/17/warm-standby-failover.html), [WAL-архив](https://www.postgresql.org/docs/17/continuous-archiving.html).
 - [Patroni: quorum/strict](https://patroni.readthedocs.io/en/latest/replication_modes.html), [watchdog](https://patroni.readthedocs.io/en/latest/watchdog.html), [bootstrap/DCS](https://patroni.readthedocs.io/en/latest/yaml_configuration.html).
