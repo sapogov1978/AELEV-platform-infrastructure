@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -79,6 +80,27 @@ class FullLocalContractTests(unittest.TestCase):
         self.assertEqual(source_builds, ["source-build"])
         self.assertEqual(pinned_pulls, ["release-pull"])
         self.assertEqual(manifest["profile"], "full-local")
+
+    def test_new_env_identity_adaptation_preserves_existing_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fresh = root / "fresh/.env"
+            existing = root / "existing/.env"
+            fresh.parent.mkdir()
+            existing.parent.mkdir()
+            content = "OWNER_SECRET_GID=10000\nOWNER_UI_PROVISION_UID=501\nVALUE=x\n"
+            fresh.write_text(content, encoding="utf-8")
+            existing.write_text(content, encoding="utf-8")
+            manifest = {"environment_files": ["fresh/.env", "existing/.env"]}
+
+            adapted = full_local.adapt_created_env_identities(
+                manifest, {"existing/.env"}, root
+            )
+
+            self.assertEqual(adapted, ["fresh/.env"])
+            self.assertIn(f"OWNER_SECRET_GID={os.getgid()}", fresh.read_text())
+            self.assertIn(f"OWNER_UI_PROVISION_UID={os.getuid()}", fresh.read_text())
+            self.assertEqual(existing.read_text(), content)
 
     def test_complete_evidence_verifies_and_tamper_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

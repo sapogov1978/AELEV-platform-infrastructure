@@ -2,6 +2,8 @@
 
 ## 2026-11-06
 
+- На чистом full-local checkout только что созданные env получают host UID/GID для локальной доставки секретов и provision; существующие env площадки не меняются. Это устраняет зависимость clean-room от macOS-значений `501/20` и заранее созданной группы `10000`.
+- Full-local `init` теперь устанавливает lock-pinned operator dependencies каждого владельца Observability до запуска его `prepare.py` через собственное Poetry-окружение; чистая машина больше не зависит от случайно установленных глобальных `httpx`/FastAPI пакетов.
 - Clean-room workflow переведён с отсутствующего постоянного self-hosted стенда на одноразовый GitHub-hosted Ubuntu runner: image digests берутся из versioned manifest, временный viewer secret создаётся владельческим `init`, а долгоживущие пользовательские runner/variables/secrets не требуются.
 - Первый Translator worker release успешно выполнен на GitHub-hosted Linux runner без пользовательского сервера: опубликован image с SBOM, provenance и Cosign signature под точным digest `sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912`; digest и release evidence закреплены в full-local manifest, runbook и readiness-аудите.
 - Исправлена чувствительная к регистру ссылка архивной композиции на корневой `INDEX.md`, обнаруженная Linux CI после унификации агентских карт.

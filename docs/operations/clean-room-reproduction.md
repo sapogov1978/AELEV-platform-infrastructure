@@ -6,7 +6,7 @@
 
 ## Требования к чистой машине
 
-- Linux Docker Engine либо Docker Desktop с Linux containers, Docker Compose 2.24.4+, Python 3.11+, Poetry 2.2.1, OpenSSL и Chromium;
+- Linux Docker Engine либо Docker Desktop с Linux containers, Docker Compose 2.24.4+, Python 3.13, Poetry 2.2.1, OpenSSL и Chromium;
 - чистый checkout точного release commit без существующих контейнеров, сетей и volumes этого Compose project;
 - место и ресурсы по руководствам владельцев;
 - два заранее допущенных digest-pinned образа: непрозрачного translation provider из отдельного private-репозитория [`AELEV-translation-provider`](https://github.com/sapogov1978/AELEV-translation-provider) и Translator worker, выпускаемого workflow `release-translator-worker-image` этого репозитория;
@@ -38,7 +38,7 @@ python3 tools/full_local.py init
 python3 tools/full_local.py build
 ```
 
-`init` создаёт только отсутствующие локальные env/PKI прежними владельческими средствами и не перезаписывает существующие файлы. `build` собирает все buildable-роли, три локальные SPIRE target и получает отсутствующие pull-only образы исключительно по digest; контейнеры не запускаются. Это сохраняет инвариант «build не выполняет up».
+`init` создаёт только отсутствующие локальные env/PKI прежними владельческими средствами и не перезаписывает существующие файлы. Только в новых env локального профиля он привязывает `*_SECRET_GID` и `*_PROVISION_UID` к identity текущего host-оператора; уже существующие настройки площадки остаются неизменными. `build` собирает все buildable-роли, три локальные SPIRE target и получает отсутствующие pull-only образы исключительно по digest; контейнеры не запускаются. Это сохраняет инвариант «build не выполняет up».
 
 ## 3. Подготовить owner inputs
 

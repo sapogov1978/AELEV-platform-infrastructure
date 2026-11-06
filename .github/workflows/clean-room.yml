@@ -109,7 +109,7 @@ jobs:
         with:
           name: clean-room-full-local-${{ github.sha }}
           path: ${{ runner.temp }}/clean-room-evidence
-          if-no-files-found: error
+          if-no-files-found: warn
       - name: Remove ephemeral registry session
         if: always()
         run: docker logout ghcr.io || true

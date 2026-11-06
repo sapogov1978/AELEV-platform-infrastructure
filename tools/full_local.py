@@ -386,10 +386,47 @@ def prepare_status_output_roots(
     return sorted(set(prepared))
 
 
+def adapt_created_env_identities(
+    manifest: dict[str, Any], preexisting: set[str], root: Path = ROOT
+) -> list[str]:
+    """Bind only newly initialized local env files to the current host identity."""
+    adapted: list[str] = []
+    replacements = {
+        "_SECRET_GID": str(os.getgid()),
+        "_PROVISION_UID": str(os.getuid()),
+    }
+    for relative in manifest["environment_files"]:
+        if relative in preexisting:
+            continue
+        path = root / relative
+        rows: list[str] = []
+        changed = False
+        for row in path.read_text(encoding="utf-8").splitlines():
+            key, separator, value = row.partition("=")
+            replacement = next(
+                (
+                    candidate
+                    for suffix, candidate in replacements.items()
+                    if key.endswith(suffix)
+                ),
+                None,
+            )
+            if separator and replacement is not None and value != replacement:
+                row = f"{key}={replacement}"
+                changed = True
+            rows.append(row)
+        if changed:
+            path.write_text("\n".join(rows) + "\n", encoding="utf-8")
+            adapted.append(relative)
+    return adapted
+
+
 def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[str]:
     prepared: list[str] = []
     observability = root / "observability"
     issuer = observability / "runtime/local-issuer"
+    if shutil.which("poetry") is None:
+        raise FullLocalError("TOOL_UNAVAILABLE:poetry")
     clean_environment = {
         key: value for key, value in os.environ.items() if not key.startswith("AELEV_")
     }
@@ -397,11 +434,18 @@ def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[st
         if not relative.startswith("observability/"):
             continue
         owner = root / relative
+        command(
+            ["poetry", "install", "--no-interaction", "--no-ansi"],
+            cwd=owner,
+            environment=clean_environment,
+        )
         native = owner / "secrets/native"
         if not native.exists():
             command(
                 [
-                    sys.executable,
+                    "poetry",
+                    "run",
+                    "python",
                     "prepare.py",
                     "tls",
                     "--issuer-dir",
@@ -411,7 +455,7 @@ def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[st
                 environment=clean_environment,
             )
         command(
-            [sys.executable, "prepare.py", "render"],
+            ["poetry", "run", "python", "prepare.py", "render"],
             cwd=owner,
             environment=clean_environment,
         )
@@ -449,16 +493,24 @@ def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[st
 
 
 def initialize_profile(root: Path = ROOT) -> dict[str, Any]:
+    initial_manifest = load_json(root / "full-local.json", root)
+    preexisting = {
+        relative
+        for relative in initial_manifest["environment_files"]
+        if (root / relative).exists()
+    }
     command([sys.executable, str(root / "bootstrap.py"), "init"], cwd=root)
     manifest, errors = validate_contract(root)
     if errors:
         raise FullLocalError(";".join(errors))
+    adapted = adapt_created_env_identities(manifest, preexisting, root)
     prepared = prepare_owner_inputs(manifest, root)
     return {
         "schema_version": 1,
         "profile": manifest["profile"],
         "release": manifest["release"],
         "status": "INITIALIZED",
+        "host_identity_envs": adapted,
         "prepared_owner_inputs": prepared,
         "containers_started": False,
     }

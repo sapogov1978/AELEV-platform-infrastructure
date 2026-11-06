@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793985582.9022703,
-    "seen": 1793985609.166373,
-    "ast_hash": "1eae7a683390ea57d5bbd684b634ef96",
+    "mtime": 1793985923.8143234,
+    "seen": 1793985975.330029,
+    "ast_hash": "7de62e8452f4e831dab80a828aabae92",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6150,15 +6150,15 @@
     "semantic_hash": ""
   },
   "tools/full_local.py": {
-    "mtime": 1793968567.8020213,
-    "seen": 1793968650.801245,
-    "ast_hash": "ca5b081a3b15063040ae4c6d1112f128",
+    "mtime": 1793985923.812338,
+    "seen": 1793985975.3289971,
+    "ast_hash": "6d7d824efd5c228e9ae1a354b0a4ac8b",
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1793968567.802623,
-    "seen": 1793968650.801314,
-    "ast_hash": "5b121b2922b980543fca80deb36b773c",
+    "mtime": 1793985923.8131127,
+    "seen": 1793985975.329066,
+    "ast_hash": "2d80e41883cd130e6c3178d53227ad99",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6168,15 +6168,15 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1793985582.9016368,
-    "seen": 1793985609.168502,
-    "ast_hash": "31ab0073b2529eb13ac3531a735524fd",
+    "mtime": 1793985923.813708,
+    "seen": 1793985975.332101,
+    "ast_hash": "581df8168837a69c8665cc115007f6ce",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1793985582.9012833,
-    "seen": 1793985609.157335,
-    "ast_hash": "e4bc73a21446fa0b08f75a1376307abe",
+    "mtime": 1793985852.2216644,
+    "seen": 1793985975.324406,
+    "ast_hash": "8d26138cbe868e5c3f0661477aa660c0",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
