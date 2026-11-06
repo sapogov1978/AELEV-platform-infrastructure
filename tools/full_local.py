@@ -17,6 +17,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "full-local.json"
 DIGEST_REFERENCE = re.compile(r"^[^@\s]+@sha256:[0-9a-f]{64}$")
+
+
 class FullLocalError(RuntimeError):
     """A bounded, secret-free validation failure."""
 
@@ -42,9 +44,7 @@ def read_env(path: Path, root: Path = ROOT) -> dict[str, str]:
             continue
         key, separator, value = line.partition("=")
         if not separator or not key or key in values:
-            raise FullLocalError(
-                f"ENV_INVALID:{display_path(path, root)}:{number}"
-            )
+            raise FullLocalError(f"ENV_INVALID:{display_path(path, root)}:{number}")
         values[key] = value
     return values
 
@@ -62,6 +62,22 @@ def command(
         check=True,
         text=True,
         capture_output=True,
+    )
+
+
+def stream_command(
+    arguments: list[str],
+    *,
+    cwd: Path = ROOT,
+    environment: dict[str, str] | None = None,
+) -> None:
+    """Run build/pull work with output inherited by the caller's evidence log."""
+    subprocess.run(
+        arguments,
+        cwd=cwd,
+        env=environment,
+        check=True,
+        text=True,
     )
 
 
@@ -253,9 +269,7 @@ def preflight(
         )
     models: dict[str, dict[str, Any]] = {}
     render_blockers = contract_errors + [
-        code
-        for code in errors
-        if code.startswith("ENV_FILE_MISSING:")
+        code for code in errors if code.startswith("ENV_FILE_MISSING:")
     ]
     if not render_blockers:
         for composition in ("root", "compute"):
@@ -537,7 +551,7 @@ def build_profile(root: Path = ROOT) -> dict[str, Any]:
     model = models["root"]
     services, pinned_pull_services = build_service_sets(model)
     if services:
-        command([*compose_prefix(manifest, root), "build", *services], cwd=root)
+        stream_command([*compose_prefix(manifest, root), "build", *services], cwd=root)
     local_images: list[str] = []
     for row in manifest.get("local_builds", []):
         arguments = [
@@ -549,7 +563,7 @@ def build_profile(root: Path = ROOT) -> dict[str, Any]:
             str(row["image"]),
             str(root / row["context"]),
         ]
-        command(arguments, cwd=root)
+        stream_command(arguments, cwd=root)
         local_images.append(str(row["image"]))
     exact_pull_images: list[str] = []
     for reference, row in sorted(_image_inventory(models).items()):
@@ -567,13 +581,10 @@ def build_profile(root: Path = ROOT) -> dict[str, Any]:
             raise FullLocalError(f"LOCAL_BUILD_IMAGE_MISSING:{reference}")
         if not DIGEST_REFERENCE.fullmatch(reference):
             raise FullLocalError(f"MUTABLE_PULL_IMAGE_REFUSED:{reference}")
-        command(["docker", "pull", reference], cwd=root)
+        stream_command(["docker", "pull", reference], cwd=root)
         exact_pull_images.append(reference)
     pinned_pull_images = sorted(
-        {
-            model["services"][name]["image"]
-            for name in pinned_pull_services
-        }
+        {model["services"][name]["image"] for name in pinned_pull_services}
         | set(exact_pull_images)
     )
     return {

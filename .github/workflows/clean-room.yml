@@ -91,6 +91,8 @@ jobs:
       - name: Run complete clean-room gate
         env:
           DRP_SPIRE_DOCKER_SOCKET_APPROVAL: operator-root-equivalent-v1
+          BUILDKIT_PROGRESS: plain
+          COMPOSE_PROGRESS: plain
         run: |
           CHROMIUM=$(command -v google-chrome || command -v chromium || true)
           test -n "$CHROMIUM"
