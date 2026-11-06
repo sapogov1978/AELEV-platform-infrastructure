@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794005667.8494625,
-    "seen": 1794005750.172503,
-    "ast_hash": "d7b2fd5e41f068a5c2106a39851c2258",
+    "mtime": 1794006009.5867114,
+    "seen": 1794006042.709928,
+    "ast_hash": "d72e79189b98efff7df39bd0c65d7dbe",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6219,6 +6219,12 @@
     "mtime": 1793980103.0157366,
     "seen": 1793985117.937361,
     "ast_hash": "ba6780af82371b2e5039d76c2b19c67e",
+    "semantic_hash": ""
+  },
+  ".github/workflows/observability-sender-release.yml": {
+    "mtime": 1794006031.9468002,
+    "seen": 1794006042.704128,
+    "ast_hash": "01330faa89b6e5bf728a3a9cf7821427",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

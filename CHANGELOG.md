@@ -2,6 +2,7 @@
 
 ## 2026-11-06
 
+- Добавлен подписываемый multi-architecture GHCR release pipeline для owner-controlled Observability Sender; он заменяет недоступный внешний Docker Hub base как воспроизводимый источник SQLite и sender runtime для clean-room.
 - Full-local build/pull теперь передаёт plain BuildKit progress в ограниченный stage artifact вместо потери stderr внутри вложенного CLI; fail-closed clean-room evidence показывает точный упавший Dockerfile/слой без запуска контейнеров.
 - Hosted clean-room выявил рассогласование local compute-профиля Translator: документированное пустое значение OTLP отклонялось только `compose.compute.yml`. Рендеринг приведён к основному Compose и защищён регрессией; production-требование HTTPS/mTLS telemetry не ослаблено.
 - Первый hosted clean-room run подтвердил выдачу одноразовой машины и полный host-neutral `init`; fail-closed package preflight остановил дорогую сборку на отсутствующем межрепозиторном Actions read access к private provider package. Runbook и readiness-аудит фиксируют точное минимальное разрешение без PAT или пользовательского сервера.
