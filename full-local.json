@@ -168,6 +168,7 @@
         "observability/prometheus/Dockerfile.status",
         "observability/tempo/Dockerfile.status",
         "platform-ui/Dockerfile",
+        "public-egress-gateway/.env.example",
         "spire/Dockerfile",
         "translator-service/.env.example"
       ],

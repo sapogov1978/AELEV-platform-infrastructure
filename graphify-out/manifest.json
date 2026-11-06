@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794006823.6041672,
-    "seen": 1794006888.797345,
-    "ast_hash": "39d13f1f85b0ba2296bd07c6468de4b6",
+    "mtime": 1794007590.1393595,
+    "seen": 1794007607.27057,
+    "ast_hash": "2386128a5416f91d27f8261cb69fafce",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4248,9 +4248,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/CHANGELOG.md": {
-    "mtime": 1793957794.0585585,
-    "seen": 1793958131.683616,
-    "ast_hash": "5fc171d5c1c0f29f61ab9642e5dcc8aa",
+    "mtime": 1794007590.1385124,
+    "seen": 1794007607.275341,
+    "ast_hash": "0e38185093b08b11f598490a6d81cc51",
     "semantic_hash": ""
   },
   "public-egress-gateway/ENDPOINTS.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1794006694.6575582,
-    "seen": 1794006888.791191,
-    "ast_hash": "07dafedbebeaea05e7140c089f8ab05c",
+    "mtime": 1794007590.1377642,
+    "seen": 1794007607.264553,
+    "ast_hash": "53ef9b27fa72e548493c5efb43c70a45",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
@@ -6225,6 +6225,12 @@
     "mtime": 1794006031.9468002,
     "seen": 1794006042.704128,
     "ast_hash": "01330faa89b6e5bf728a3a9cf7821427",
+    "semantic_hash": ""
+  },
+  ".github/workflows/observability-delivery-release.yml": {
+    "mtime": 1794007590.1359785,
+    "seen": 1794007607.2644072,
+    "ast_hash": "79c007f65c8a1839aeb6df115881eb2f",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
