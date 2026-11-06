@@ -11,7 +11,7 @@
   `ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9`.
 - [x] Выпустить подписанный Translator worker на GitHub-hosted Linux runner:
   `ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912`.
-- [ ] Предоставить одноразовое SPIRE approval и выполнить новый полный функциональный прогон на чистом стенде.
+- [ ] Выдать `AELEV-platform-infrastructure` Actions read access к private package `aelev-translation-provider`, затем выполнить новый полный функциональный прогон с одноразовым SPIRE approval; run 42261642805 уже прошёл hosted `init` и остановился до build только на `read_package`.
 - [ ] После успешного прогона повторить Production Ready аудит точного release commit.
 
 Владельческие незавершённые работы по-прежнему ведутся в `TASKS.md` соответствующего продукта и здесь не дублируются. Эти два пункта относятся к межвладельческой композиции и потому остаются в корневом списке.

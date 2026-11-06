@@ -119,7 +119,7 @@ python3 test_infrastructure/clean_room.py \
 
 Verifier сверяет точный набор функций, release/source, digest BOM, SHA-256 каждого артефакта, чистый baseline, успешную сохранность cleanup и итог `PASS`. Он не превращает старые отчёты в новый прогон.
 
-Ручной workflow `clean-room-full-local` создаёт одноразовый GitHub-hosted Ubuntu runner, получает оба exact digest из версионируемого manifest, использует созданную `init` временную operator identity и уничтожает всю машину после job. Пользовательский сервер, постоянный runner, repository variables и передача пароля в GitHub Secrets не требуются. `GITHUB_TOKEN` имеет только `contents:read` и `packages:read`; private provider package должен предоставить этому репозиторию Actions read access. Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
+Ручной workflow `clean-room-full-local` создаёт одноразовый GitHub-hosted Ubuntu runner, получает оба exact digest из версионируемого manifest, использует созданную `init` временную operator identity и уничтожает всю машину после job. Пользовательский сервер, постоянный runner, repository variables и передача пароля в GitHub Secrets не требуются. `GITHUB_TOKEN` имеет только `contents:read` и `packages:read`; private provider package должен предоставить этому репозиторию Actions read access через **Package settings → Manage Actions access → Add repository**, как предписывает [официальное руководство GitHub](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package). Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
 
 ## 7. Решение Production Ready
 

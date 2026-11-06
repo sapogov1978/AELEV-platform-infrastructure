@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793985923.8143234,
-    "seen": 1793985975.330029,
-    "ast_hash": "7de62e8452f4e831dab80a828aabae92",
+    "mtime": 1793986611.2129047,
+    "seen": 1793986709.311452,
+    "ast_hash": "306d0cd90b55cd152d9fd889ceec89e7",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3090,9 +3090,9 @@
     "semantic_hash": ""
   },
   "TASKS.md": {
-    "mtime": 1793985401.073599,
-    "seen": 1793985609.166423,
-    "ast_hash": "33655d6f9f62d58342ae2b8030f8eb6a",
+    "mtime": 1793986611.2126641,
+    "seen": 1793986709.311566,
+    "ast_hash": "beb67b9a003bf19b47c6bda580ae1dd5",
     "semantic_hash": ""
   },
   "USER_MANUAL.md": {
@@ -5088,9 +5088,9 @@
     "semantic_hash": ""
   },
   "docs/audit/production-readiness.md": {
-    "mtime": 1793985582.9020267,
-    "seen": 1793985609.168471,
-    "ast_hash": "036fa1cabe86e5430c65b69b6c660188",
+    "mtime": 1793986611.2124224,
+    "seen": 1793986709.316596,
+    "ast_hash": "5198b08b92d66677cd15d156c3a8ef58",
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1793985923.813708,
-    "seen": 1793985975.332101,
-    "ast_hash": "581df8168837a69c8665cc115007f6ce",
+    "mtime": 1793986611.212024,
+    "seen": 1793986709.316674,
+    "ast_hash": "45d37ab17082eab3bd7d2b9c7751c285",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
