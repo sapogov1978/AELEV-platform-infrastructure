@@ -9,7 +9,13 @@ from typing import Any
 
 import pytest
 
-from lifecycle import assert_sequence_advanced, compose_prefix, run
+from lifecycle import (
+    assert_sequence_advanced,
+    compose_prefix,
+    run,
+    status_provision_tasks,
+    validate_active_networks,
+)
 from resources import Inventory, cleanup_plan, inventory, preflight, verify_preserved
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -123,6 +129,36 @@ def test_local_translator_recipe_is_reused_not_copied() -> None:
 
 def test_production_prefix_never_disables_fencing() -> None:
     assert not any("compose.test.yml" in argument for argument in compose_prefix())
+
+
+def test_inactive_optional_external_network_does_not_block_combined_start() -> None:
+    description = {
+        "services": {
+            "active": {"networks": {"owned": {}}},
+            "optional": {"networks": {"consumer": {}}},
+        },
+        "networks": {
+            "owned": {"name": "owned"},
+            "consumer": {"name": "consumer", "external": True},
+        },
+    }
+    validate_active_networks(description, {"active"})
+    with pytest.raises(RuntimeError, match="external networks"):
+        validate_active_networks(description, {"active", "optional"})
+
+
+def test_status_provisioning_is_limited_to_active_publishers() -> None:
+    description = {
+        "services": {
+            "active-status-publisher": {},
+            "active-status-provision": {},
+            "optional-status-publisher": {},
+            "optional-status-provision": {},
+        }
+    }
+    assert status_provision_tasks(description, {"active-status-publisher"}) == [
+        "active-status-provision"
+    ]
 
 
 def test_interrupted_preflight_is_reported_as_failure(

@@ -51,7 +51,20 @@ def compose_prefix() -> list[str]:
     return ["docker", "compose", "-f", str(ROOT / "compose.yml")]
 
 
-def model_validation(model: dict[str, Any]) -> None:
+def validate_active_networks(model: dict[str, Any], active_services: set[str]) -> None:
+    active_networks = {
+        network
+        for name in active_services
+        for network in model["services"][name].get("networks", {})
+    }
+    if any(
+        model.get("networks", {}).get(network, {}).get("external")
+        for network in active_networks
+    ):
+        raise RuntimeError("clean combined start must not require external networks")
+
+
+def model_validation(model: dict[str, Any], active_services: set[str]) -> None:
     services = model["services"]
     if list(services).count("kafka") != 1:
         raise RuntimeError("exactly one canonical Kafka is required")
@@ -82,8 +95,7 @@ def model_validation(model: dict[str, Any]) -> None:
             raise RuntimeError("topic provisioning barrier disappeared")
     if "configuration-applier" in services:
         raise RuntimeError("unbound generic configuration template")
-    if any(row.get("external") for row in model.get("networks", {}).values()):
-        raise RuntimeError("clean combined start must not require external networks")
+    validate_active_networks(model, active_services)
     for row in services.values():
         for mount in row.get("volumes", []):
             if mount["type"] == "bind":
@@ -152,6 +164,17 @@ def validate_owner_models(model: dict[str, Any]) -> None:
                 raise RuntimeError(
                     "owner/orchestrated model differs: " + owner + "/" + name
                 )
+
+
+def status_provision_tasks(
+    model: dict[str, Any], active_services: set[str]
+) -> list[str]:
+    return sorted(
+        name
+        for name in model["services"]
+        if name.endswith("-status-provision")
+        and name.replace("-status-provision", "-status-publisher") in active_services
+    )
 
 
 def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
@@ -310,10 +333,13 @@ def run(args: argparse.Namespace) -> int:
         print("PASS: " + name, flush=True)
 
     try:
+        regular_names = set(
+            execute([*prefix, *PROFILES, "config", "--services"]).splitlines()
+        )
         normal = json.loads(
             execute([*compose_prefix(), "--profile", "*", "config", "--format", "json"])
         )
-        model_validation(normal)
+        model_validation(normal, regular_names)
         passed(
             "Каноническая композиция, один Kafka и явно выбранное ограждение PostgreSQL"
         )
@@ -323,9 +349,6 @@ def run(args: argparse.Namespace) -> int:
             execute([*prefix, "--profile", "*", "config", "--format", "json"])
         )
         project = model["name"]
-        regular_names = set(
-            execute([*prefix, *PROFILES, "config", "--services"]).splitlines()
-        )
         regular = {
             name: row
             for name, row in model["services"].items()
@@ -370,9 +393,7 @@ def run(args: argparse.Namespace) -> int:
             "blackbox-exporter-operator-provision",
             "prometheus-operator-provision",
             "translator-api-provision",
-        ] + sorted(
-            name for name in model["services"] if name.endswith("-status-provision")
-        ):
+        ] + status_provision_tasks(model, regular_names):
             execute([*prefix, "--profile", "provision", "run", "--rm", task])
             passed("Реальная задача владельца: " + task + " — exit 0")
         execute(
