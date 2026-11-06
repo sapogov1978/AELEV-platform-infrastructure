@@ -246,7 +246,7 @@ def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
                             ):
                                 raise RuntimeError("API/DOM composition differs")
                         page.screenshot(
-                            path=str(REPORT.with_suffix(".png")), full_page=True
+                            path=str(args.report.with_suffix(".png")), full_page=True
                         )
                         return rows
                 time.sleep(3)
@@ -293,6 +293,7 @@ def cleanup(
 
 
 def run(args: argparse.Namespace) -> int:
+    args.report = getattr(args, "report", REPORT)
     started = datetime.now(timezone.utc)
     checks: list[tuple[str, str]] = []
     before: Inventory | None = None
@@ -363,7 +364,13 @@ def run(args: argparse.Namespace) -> int:
             args.timeout,
         )
         passed("Настоящие Keycloak, его БД, TLS и импорт собственного realm")
-        for task in ["platform-ui-configuration-init"] + sorted(
+        for task in [
+            "platform-ui-configuration-init",
+            "grafana-oidc-provision",
+            "blackbox-exporter-operator-provision",
+            "prometheus-operator-provision",
+            "translator-api-provision",
+        ] + sorted(
             name for name in model["services"] if name.endswith("-status-provision")
         ):
             execute([*prefix, "--profile", "provision", "run", "--rm", task])
@@ -458,14 +465,19 @@ def run(args: argparse.Namespace) -> int:
             for row in rows.values():
                 title = row["title"]["ru"].replace("|", "\\|")
                 report += f"| {title} | {len(row['components'])} ONLINE | {row['status']['sequence']} |\n"
-            report += "\n[Страница состояния](lifecycle-result.png).\n"
+            report += (
+                "\nСнимок страницы состояния: `"
+                + args.report.with_suffix(".png").name
+                + "`.\n"
+            )
         if protected:
             report += (
                 "\nСверены сохранённые исходные ресурсы: "
                 + ", ".join(f"{kind}: {count}" for kind, count in protected.items())
                 + ". Созданных контейнеров, сетей и томов теста не осталось; рабочие env, секреты и образы сохранены.\n"
             )
-        REPORT.write_text(report)
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(report)
     return int(bool(failure))
 
 
@@ -476,6 +488,11 @@ def main() -> int:
     parser.add_argument("--viewer-user", required=True)
     parser.add_argument("--viewer-password-file", type=Path, required=True)
     parser.add_argument("--chromium", type=Path, required=True)
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=REPORT,
+    )
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--reuse-existing-data", action="store_true")
     parser.add_argument("--allow-local-certificate", action="store_true")

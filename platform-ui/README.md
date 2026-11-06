@@ -9,7 +9,7 @@
 - Изолированное встраивание самостоятельных UI.
 - Единый версионированный `PlatformPage` и presentation CSS для самостоятельных и внедряемых UI; приложения добавляют только предметные блоки и локальные специализации.
 - Раздельное отображение последнего владельческого состояния и свежести связи с его издателем.
-- Отдельное локальное полномочие publisher CA с явной перекрывающей ротацией по ADR-0166; в production используется внешний issuer.
+- Отдельное локальное полномочие publisher CA с явной перекрывающей ротацией по 00-INFRA-20261106-0013-owner-certificate-lifecycle; в production используется внешний issuer.
 
 ## Запуск
 
@@ -33,4 +33,4 @@ UI-сборка устанавливает security patches в принятой 
 - [PROVIDER_OPERATIONS.md](PROVIDER_OPERATIONS.md) — установка и эксплуатация поставщика.
 - [client/](client/README.md) — Python-клиент публикации.
 - [operator-ui-kit/package/](operator-ui-kit/package/README.md) — SDK владельческих React-приложений, выпускаемый Platform UI.
-- [index.md](index.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — карта, ограничения и история.
+- [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, ограничения и история.

@@ -1,13 +1,13 @@
 # Translator Service
 
-Вспомогательный сервис перевода текстов локальной моделью. Запросы и результаты передаются через Kafka; сервис не знает предметной области заказчика, а операторская страница показывает вычислительную модель как отдельный компонент без привязки интерфейса к семейству модели.
+Вспомогательный сервис-посредник перевода. Запросы и результаты передаются через Kafka; сервис не знает предметной области заказчика и передаёт текст непрозрачному провайдеру, не зная, используется ли там модель, словарь, внешний API или человек.
 
 ## Основные возможности
 
 - Обычная и приоритетная очереди.
 - Сохранение попыток и исходного порядка заданий при повторах.
 - Устойчивая публикация результатов.
-- Восстановление вычислителя с сохранением незавершённых заданий.
+- Восстановление связи с провайдером с сохранением незавершённых заданий.
 - Диагностика и управление через операторский API.
 - Собственные метрики, журналы и трассы.
 
@@ -20,14 +20,13 @@ docker compose --env-file .env config --quiet
 docker compose --env-file .env up --build -d --wait --wait-timeout 900
 ```
 
-Для удалённого Kafka используется `compose.remote.yml`. По [ADR-0170](../docs/adr/20261028-0170-uniform-owner-compute-station-entry.md) основной Compose больше не содержит compute-профиля, model/worker или их socket volume. Эти внутренние процессы имеют единственный самодостаточный рецепт `compose.compute.yml` и одинаковые `doctor`, `prepare`, `start`, `status`, `stop` для macOS/Linux и Windows в [compute-runtime](compute-runtime/README.md). Станция получает маршрутизируемый доступ только к собственной PostgreSQL переводчика и Telemetry Delivery, а model общается с worker через локальный Unix socket. В Platform UI они представлены одной «Вычислительной моделью», готовой только при готовности обоих процессов; раздельные наблюдения остаются в `/v1/components`. На управляющей стороне `AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_DESIRED_STATE=STOPPED` является явным владельческим намерением и публикует этот единый компонент как `OFFLINE`; перед запуском ячейки значение меняется на `RUNNING`, после чего готовность определяется только свежими heartbeat.
+Для удалённого Kafka используется `compose.remote.yml`. Основной Compose собирает `translator-core-runtime` без весов, движка, provider lock или реализации перевода. `compose.compute.yml` соединяет разные digest-pinned images внешнего provider и worker; одинаковый digest запрещён. Каноническая реализация provider находится в отдельном private-репозитории [`sapogov1978/AELEV-translation-provider`](https://github.com/sapogov1978/AELEV-translation-provider). Compose не задаёт провайдеру команду, среду или healthcheck. Worker отправляет через приватный Unix socket только текст и языки и получает строку перевода; оператор может заменить provider любой совместимой реализацией, не меняя Kafka-контракты и очередь. В Platform UI публикуется только доступность «Провайдера перевода».
 
 ## Навигация
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.
 - [src/](src), [alembic/](alembic) — реализация и миграции.
-- [translator.lock.json](translator.lock.json) — выбранная модель.
-- [compute-runtime/](compute-runtime/README.md) — единый запуск отдельной вычислительной станции.
+- [compute-runtime/](compute-runtime/README.md) — соединение внешнего provider image и worker.
 - [USER_MANUAL.md](USER_MANUAL.md), [SPEC.md](SPEC.md), [ENDPOINTS.md](ENDPOINTS.md) — эксплуатация, поведение и API.
 - [test/](test), [secrets/](secrets/README.md) — проверки и описание секретов.
-- [index.md](index.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — карта, готовность и история.
+- [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, готовность и история.

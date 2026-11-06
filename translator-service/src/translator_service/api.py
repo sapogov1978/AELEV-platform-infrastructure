@@ -83,7 +83,7 @@ def verify_kafka() -> None:
 
 @app.get("/healthz", tags=["default"], summary="Check API process liveness")
 async def health() -> dict[str, str]:
-    """Confirm that the API responds; do not check Kafka, storage, or the model."""
+    """Confirm that the API responds; do not check Kafka, storage, or provider."""
     return {"status": "ok"}
 
 
@@ -91,7 +91,7 @@ async def health() -> dict[str, str]:
 def ready() -> dict[str, str]:
     """Check the own database, Kafka broker, and all six required topics.
 
-    Return 503 when a dependency is unavailable. This probe does not prove model
+    Return 503 when a dependency is unavailable. This probe does not prove provider
     readiness or that workers are making progress.
     """
     try:
@@ -114,10 +114,10 @@ def status() -> dict[str, object]:
 
 @app.get("/v1/components", tags=["default"], summary="Read runtime component presence")
 def components() -> dict[str, object]:
-    """Read heartbeat observations for both consumers, worker, outbox, and model.
+    """Read heartbeat observations for consumers, worker, outbox, and provider.
 
     Missing or expired observations mean UNKNOWN. A fresh heartbeat proves
-    presence, not queue progress; the model probe runs inside its own cell.
+    presence, not queue progress; provider observation uses only the opaque port.
     No customer identifiers or request text are returned.
     """
     from translator_service.presence import read

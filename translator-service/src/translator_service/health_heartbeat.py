@@ -19,8 +19,8 @@ def withdraw(role: str, *, root: str = local_health.ROOT) -> None:
     (Path(root) / f"{role}.signal").unlink(missing_ok=True)
 
 
-def publish(role: str, child_pid: int | None, *, root: str = local_health.ROOT) -> None:
-    raw = local_health.frame(role, child_pid)
+def publish(role: str, *, root: str = local_health.ROOT) -> None:
+    raw = local_health.frame(role)
     _write(role, raw, root=root)
 
 
@@ -45,19 +45,17 @@ def _write(role: str, raw: bytes, *, root: str) -> None:
 async def run(
     role: str,
     ready: Callable[[], bool],
-    child: Callable[[], int | None] = lambda: None,
     *,
     root: str = local_health.ROOT,
 ) -> None:
-    """A stalled event loop cannot refresh the marker; native death invalidates it."""
+    """A stalled event loop cannot refresh its owner-local marker."""
     withdraw(role, root=root)
     try:
         while True:
             if ready():
                 try:
-                    publish(role, child(), root=root)
+                    publish(role, root=root)
                 except (OSError, ValueError):
-                    # A native restart can race this sample; never certify stale state.
                     withdraw(role, root=root)
             else:
                 withdraw(role, root=root)

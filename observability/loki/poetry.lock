@@ -2,18 +2,18 @@
 
 [[package]]
 name = "aelev-observability-tools"
-version = "1.0.0"
+version = "1.0.1"
 description = "Consumer-neutral preparation of one technical deployment"
 optional = false
 python-versions = ">=3.13,<3.14"
 groups = ["main"]
 files = [
-    {file = "aelev_observability_tools-1.0.0-py3-none-any.whl", hash = "sha256:4589c7281931e3a383e8b268f2450da74148b82ef777703f7ea0a4fa0534eb0d"},
+    {file = "aelev_observability_tools-1.0.1-py3-none-any.whl", hash = "sha256:c0526efa9e1ec7799a1c01b6b605c23ef4415fee740e922d1eddd89ddffc2364"},
 ]
 
 [package.source]
 type = "file"
-url = "vendor/aelev_observability_tools-1.0.0-py3-none-any.whl"
+url = "vendor/aelev_observability_tools-1.0.1-py3-none-any.whl"
 
 [[package]]
 name = "aelev-platform-ui-client"
@@ -383,4 +383,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "c48a5fa917316020c76996eda4f4255c0346e80d9b027561362720d461852310"
+content-hash = "e8e750d3f91d9b628b17c3dbcd0da6b944fad9490303ede321ab0cd6ecfa20be"

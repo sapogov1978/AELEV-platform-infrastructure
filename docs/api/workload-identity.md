@@ -1,6 +1,6 @@
 # Удостоверения рабочих нагрузок
 
-Технический контракт [SPIRE](../../spire/SPEC.md) по [ADR-0017](../adr/20260803-0017-zero-trust-and-operational-security.md) и [ADR-0154](../adr/20261020-0154-spire-workload-identity-provider.md). Он не передаёт предметные решения и не заменяет Kafka. Выдача использует стандартный SPIRE, получение — SPIFFE Workload API; собственный протокол CA не вводится.
+Технический контракт [SPIRE](../../spire/SPEC.md) по [00-INFRA-20261106-0007-workload-and-operator-identity](../adr/00-INFRA-20261106-0007-workload-and-operator-identity.md) и [00-INFRA-20261106-0007-workload-and-operator-identity](../adr/00-INFRA-20261106-0007-workload-and-operator-identity.md). Он не передаёт предметные решения и не заменяет Kafka. Выдача использует стандартный SPIRE, получение — SPIFFE Workload API; собственный протокол CA не вводится.
 
 ## Операторская регистрация
 

@@ -1,6 +1,6 @@
 # SQLite platform-ui: границы и восстановление
 
-Дата первоначальной проверки: 2026-10-12. Дополнение по конкурентной границе: 2026-10-14. Итог модульных проверок: PASS. Основание: [ADR-0115](../../docs/adr/20261012-0115-owner-local-embedded-sqlite.md). Тест: [test_storage_boundaries.py](test_storage_boundaries.py).
+Дата первоначальной проверки: 2026-10-12. Дополнение по конкурентной границе: 2026-10-14. Итог модульных проверок: PASS. Основание: [ADR-0115](../../docs/audit/inherited-adrs/20261012-0115-owner-local-embedded-sqlite.md). Тест: [test_storage_boundaries.py](test_storage_boundaries.py).
 
 ## Что проверено
 

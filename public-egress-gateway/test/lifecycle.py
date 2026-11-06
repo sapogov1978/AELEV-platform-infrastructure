@@ -171,6 +171,11 @@ def main() -> None:
         action="store_true",
         help="standalone extracted repository only; root check remains open",
     )
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=OWNER / "test/lifecycle-result.md",
+    )
     args = parser.parse_args()
     before = {
         kind: inventory(kind) for kind in ("container", "network", "volume", "image")
@@ -686,7 +691,8 @@ def main() -> None:
         )
     if failure:
         report.extend(["", "Ошибка: " + failure])
-    (OWNER / "test/lifecycle-result.md").write_text("\n".join(report) + "\n")
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text("\n".join(report) + "\n")
     if failure:
         raise SystemExit(failure)
 

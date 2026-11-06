@@ -54,22 +54,17 @@ def test_migration_rejects_unexpected_changes(mutation: str) -> None:
         CHECK.verify_extension(before, after)
 
 
-def test_maintenance_target_requires_pinned_seed_and_fresh_sources() -> None:
+def test_default_runtime_target_is_provider_neutral() -> None:
     recipe = (ROOT / "Dockerfile").read_text()
-    stage = recipe.split(" AS translator-runtime-update", 1)[1].split(
-        "FROM translator-base AS translator-runtime", 1
-    )[0]
-    for item in (
+    for forbidden in (
+        "translator.lock.json",
+        "download-model.py",
+        "index_translation_provider",
+        "AELEV_TRANSLATOR_MODEL_ROOT",
+        "AELEV_TRANSLATOR_RUNTIME_PATH",
         "PINNED_RUNTIME_SEED_REQUIRED",
-        "shutil.rmtree",
-        "COPY --from=dependencies",
-        "COPY src",
-        "COPY contracts",
-        "COPY alembic",
-        "verify-model",
-        "USER 10001:10001",
     ):
-        assert item in stage
+        assert forbidden not in recipe
     assert recipe.rsplit("FROM ", 1)[1].startswith(
-        "translator-base AS translator-runtime"
+        "translator-core-runtime AS translator-runtime"
     )

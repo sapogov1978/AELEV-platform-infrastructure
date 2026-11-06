@@ -11,3 +11,10 @@
 - `fencing` (только Docker/Kubernetes): `server.crt/key` с SAN адресов исполнителя и `serverAuth`, `ca.crt`, `admin.crt/key`, `etcd-ca.crt`, `etcd-client.crt/key`. Пароли SQL, секреты UI и приватные ключи CA исполнителю не нужны. Административный CN разрешает `/fence`, CN `postgresql-probe` — только GET `/health`. Первоначальный генератор создаёт каталог; `prepare-tls.py --fencing-only` добавляет только его к существующей локальной PKI и отказывает при повторе. В Kubernetes тот же набор PEM поступает из утверждённого внешнего источника через CSI.
 
 CN SQL-клиента должен точно совпадать с ролью. Административные и репликационные права не выдаются рабочему приложению. Серверные SAN соответствуют адресу своего узла из .env. Для ротации используйте утверждённую PKI, смену материала по одному узлу и повторную проверку здоровья/репликации; истёкшее удостоверение не допускает незашифрованный fallback.
+
+## Официальные руководства
+
+- [PostgreSQL SSL support](https://www.postgresql.org/docs/17/ssl-tcp.html) и [client certificate authentication](https://www.postgresql.org/docs/17/auth-cert.html) — CA, CRL, client certificate и role mapping.
+- [Patroni TLS configuration](https://patroni.readthedocs.io/en/latest/yaml_configuration.html#rest-api) — защита REST API и сертификаты.
+- [etcd transport security](https://etcd.io/docs/v3.6/op-guide/security/) — peer/client TLS и разделение доверия.
+- [Docker Compose secrets](https://docs.docker.com/reference/compose-file/secrets/) — выдача файлов только явно перечисленным ролям.

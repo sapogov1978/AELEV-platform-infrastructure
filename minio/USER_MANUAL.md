@@ -118,7 +118,7 @@ install -m 640 /secure/idp-ca.crt secrets/status/identity-ca.crt
 chmod 640 secrets/status/publisher.key secrets/status/publisher.crt
 ```
 
-Тестовую CA издателей создаёт оператор локальной оболочки при её явной подготовке PKI; берутся именно `issuer/publisher.crt/key`, не серверный ключ UI. В рабочей среде последнее подписание локальной CA не выполняют: удостоверение и обновляемую identity доставляет утверждённая PKI/SPIRE по [ADR-0017](../docs/adr/20260803-0017-zero-trust-and-operational-security.md). CSR можно передать CA, закрытый ключ нельзя. Перед включением издателя доставьте также перечисленные файлы нативных проб и выполните собственный `--profile provision run --rm minio-status-provision` из раздела запуска.
+Тестовую CA издателей создаёт оператор локальной оболочки при её явной подготовке PKI; берутся именно `issuer/publisher.crt/key`, не серверный ключ UI. В рабочей среде последнее подписание локальной CA не выполняют: удостоверение и обновляемую identity доставляет утверждённая PKI/SPIRE по [00-INFRA-20261106-0007-workload-and-operator-identity](../docs/adr/00-INFRA-20261106-0007-workload-and-operator-identity.md). CSR можно передать CA, закрытый ключ нельзя. Перед включением издателя доставьте также перечисленные файлы нативных проб и выполните собственный `--profile provision run --rm minio-status-provision` из раздела запуска.
 
 
 Для локальной пробы после собственного генератора достаточно доставить публичное доверие: `install -d -m 750 secrets/status`, затем `install -m 640 secrets/sites-ca.crt secrets/status/probe-ca.crt`. Приватный MinIO key и root-password издателю не передаются.
@@ -126,7 +126,7 @@ chmod 640 secrets/status/publisher.key secrets/status/publisher.crt
 
 ### Хранение, доступ и ротация
 
-Секреты разделяются по среде, владельцу и роли. Локальные файлы — только материал стенда или доставка, не каноническое production-хранилище; рабочий источник — внешнее утверждённое хранилище, доставка в память/tmpfs по ADR-0017. Не включайте секреты в Git, образ, архив исходников, команды с подстановкой содержимого или отчёты. Не запускайте `set -x`, не публикуйте раскрытый `docker compose config`; проверяйте через `config --quiet`. Резервные копии секретов хранятся отдельно, зашифрованно, с ограниченным доступом; закрытые CA — только у оператора/KMS/HSM, никогда у рабочего процесса.
+Секреты разделяются по среде, владельцу и роли. Локальные файлы — только материал стенда или доставка, не каноническое production-хранилище; рабочий источник — внешнее утверждённое хранилище, доставка в память/tmpfs по 00-INFRA-20261106-0007-workload-and-operator-identity. Не включайте секреты в Git, образ, архив исходников, команды с подстановкой содержимого или отчёты. Не запускайте `set -x`, не публикуйте раскрытый `docker compose config`; проверяйте через `config --quiet`. Резервные копии секретов хранятся отдельно, зашифрованно, с ограниченным доступом; закрытые CA — только у оператора/KMS/HSM, никогда у рабочего процесса.
 
 Для status-файлов установите каталоги `0750`, файлы `0640`, группу из собственного `UI_SECRET_GID`; владельцем каталога должен быть оператор с `UI_PROVISION_UID`, которому разрешена запись client-secret. UID рабочего издателя остаётся заданным собственным образом/Compose; дополнительная группа даёт только чтение. В командном примере ниже STATUS_SECRET_GID — числовое значение уже настроенного UI_SECRET_GID, не новая переменная сервисного env. Не делайте ключи общедоступными ради запуска. Права нативных секретов описаны отдельно выше.
 
@@ -404,3 +404,10 @@ docker compose --env-file .env --profile ui stop minio-status-publisher
 При откате остановите только новый издатель и выберите сохранённый совместимый образ с прежней командой пробы, не меняя журнал. Схема журнала этим обновлением не меняется; возврат более старого клиента с несовместимым форматом без отдельной подготовки не допускается. Если процесс не восстановился, сохраняйте журналы и безопасную причину ошибки, не обнуляйте последовательность и не увеличивайте таймаут вместо устранения причины.
 
 Исключение секретных файлов из публичного контекста проверяет `test/Dockerfile.publisher-context`. Задайте в переменной окружения `AELEV_INFRASTRUCTURE_MINIO_UI_PYTHON_IMAGE` точное закреплённое значение из собственного `.env.example` и выполните `docker build --network none --build-arg PYTHON_IMAGE="$AELEV_INFRASTRUCTURE_MINIO_UI_PYTHON_IMAGE" -f test/Dockerfile.publisher-context .`. Проверка монтирует контекст в режиме только чтения, не копирует его в слои образа и требует, чтобы из `secrets` был виден только публичный `README.md`; сертификаты, ключи и пароли не должны попадать в контекст.
+
+## Официальные руководства
+
+- [MinIO deployment architecture](https://min.io/docs/minio/linux/operations/concepts/architecture.html) и [multi-node multi-drive deployment](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html) — topology, quorum и failure domains.
+- [MinIO erasure coding](https://min.io/docs/minio/linux/operations/concepts/erasure-coding.html) — data/parity shards, read/write quorum и healing.
+- [MinIO site replication](https://min.io/docs/minio/linux/operations/install-deploy-manage/multi-site-replication.html) — репликация объектов и конфигурации площадок.
+- [MinIO TLS](https://min.io/docs/minio/linux/operations/network-encryption.html) — каталоги сертификатов, доверие и защищённые endpoints.

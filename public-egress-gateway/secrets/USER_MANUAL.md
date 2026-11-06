@@ -13,3 +13,10 @@ Sender дополнительно получает `sender-ca.crt`, собств
 Для состояния `status/identity-ca.crt` проверяет IdP, `status/shell-ca.crt` — оболочку, `status/publisher.crt` и `publisher.key` — собственную mTLS-identity издателя. `status/client-secret` создаёт одноразовая задача с `0640`; рабочий UID 10001 получает чтение через `UI_SECRET_GID`. Только `status-admin/admin-user` и `admin-password` доступны этой задаче, не издателю. Отдельное OIDC-право позволяет публиковать только собственный module UUID; API keys клиентов/серверный CA private key здесь не используются. Публичный клиент 1.1.0 поставляется как собственный wheel с закреплённым digest, не общий runtime-образ.
 
 Телеметрия использует два раздельных каталога. В `telemetry/client` runtime получает только `sender-ca.crt`, `runtime.crt`, `runtime.key`; в `telemetry/sender` находятся отдельные listener-файлы `sender.crt`, `sender.key`, `local-write-ca.crt`, центральные `central-ca.crt`, `central-write.crt`, `central-write.key` и read-only health identity `local-query-ca.crt`, `local-query.crt`, `local-query.key`. Runtime не видит центральную identity, sender не получает gateway server key или клиентские credentials. Production не допускает пустой OTLP endpoint или отсутствующие обычные файлы; symlink вместо credential закрыто отклоняется.
+
+## Официальные руководства
+
+- [SPIFFE X.509-SVID](https://spiffe.io/docs/latest/spiffe-specs/x509-svid/) и [Workload API](https://spiffe.io/docs/latest/spiffe-specs/spiffe_workload_api/) — отдельные workload identities и ротация.
+- [Docker Compose secrets](https://docs.docker.com/reference/compose-file/secrets/) — минимальная выдача файлов каждой роли.
+- [OpenSSL verify](https://docs.openssl.org/3.0/man1/openssl-verify/) — проверка цепочек, purpose и SAN.
+- [OTLP security considerations](https://opentelemetry.io/docs/specs/otlp/#security-considerations) — защищённый transport телеметрии.

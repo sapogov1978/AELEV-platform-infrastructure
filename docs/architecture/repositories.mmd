@@ -1,6 +1,8 @@
 flowchart LR
     SRC[Platform Infrastructure repository] --> REL[Pinned source release and manifest]
     REL --> ENV[Managed infrastructure installation]
+    PROV[AELEV Translation Provider repository] --> PIMG[Signed provider image digest]
+    PIMG -->|opaque translation port| ENV
     APP[Independent consumer repository] -->|exact release requirement| REL
     APP -->|public technical interfaces| ENV
     ENV --> K[Kafka]
@@ -9,3 +11,4 @@ flowchart LR
     click K "../../kafka/architecture.mmd" "Kafka"
     click S "../../postgresql/architecture.mmd" "PostgreSQL"
     click U "../../platform-ui/architecture.mmd" "Platform UI"
+    click PROV "https://github.com/sapogov1978/AELEV-translation-provider" "Translation Provider"

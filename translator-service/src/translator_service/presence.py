@@ -13,25 +13,24 @@ from sqlalchemy import Engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
 LOGGER = logging.getLogger("translator.presence")
-COMPONENTS = ("priority-consumer", "normal-consumer", "worker", "outbox", "model")
+COMPONENTS = ("priority-consumer", "normal-consumer", "worker", "outbox", "provider")
 
 
-def observe_model() -> str:
-    """Only a worker can inspect its own private model socket."""
-    from translator_service.translator_healthcheck import main
+def observe_provider() -> str:
+    """Only a worker can inspect its opaque provider socket."""
+    from translator_service.provider_healthcheck import main
 
     try:
         main()
         return "ONLINE"
     except httpx.ConnectError:
-        # The worker and model share one owner-local Unix socket. A refused or
-        # missing socket proves that this compute cell cannot use the model;
-        # it does not identify the model implementation or inspect Docker.
+        # A refused or missing socket proves only that this cell cannot reach
+        # its opaque provider; it does not inspect the provider implementation.
         return "OFFLINE"
     except Exception as error:
         # Timeout, invalid identity and malformed replies remain uncertainty.
         LOGGER.debug(
-            "model_presence_unknown", extra={"error_type": type(error).__name__}
+            "provider_presence_unknown", extra={"error_type": type(error).__name__}
         )
         return "UNKNOWN"
 
@@ -54,7 +53,7 @@ def start(engine: Engine, role: str, stop: threading.Event) -> threading.Thread:
         while not stop.is_set():
             observations = [(component, "ONLINE")]
             if role == "worker":
-                observations.append(("model", observe_model()))
+                observations.append(("provider", observe_provider()))
             try:
                 with engine.begin() as connection:
                     for name, state in observations:

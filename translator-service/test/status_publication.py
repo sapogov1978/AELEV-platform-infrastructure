@@ -12,7 +12,7 @@ if __name__ == "__main__":
             "database": "translator-database",
             "priority-consumer": "translator-priority-consumer",
             "normal-consumer": "translator-normal-consumer",
-            "model": "translator-model",
+            "provider": "translation-provider",
             "worker": "translator-worker",
             "outbox": "translator-outbox",
             "api": "translator-api",

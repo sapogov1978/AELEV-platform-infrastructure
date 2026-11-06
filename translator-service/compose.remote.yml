@@ -4,7 +4,7 @@ x-image: &image
   image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE:?set AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE in the translator-service .env file}
   build:
     context: ${AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT:?set AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT in the translator-service .env file}
-    target: translator-runtime
+    target: translator-core-runtime
 
 x-database-environment: &database-environment
   AELEV_TRANSLATOR_PRESENCE_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS:?set in the translator-service .env file}

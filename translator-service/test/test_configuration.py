@@ -26,7 +26,7 @@ ROLES = {
     "translator-priority-consumer",
     "translator-topic-provisioner",
 }
-COMPUTE_ROLES = {"translator-model", "translator-worker"}
+COMPUTE_ROLES = {"translation-provider", "translator-worker"}
 
 
 def _clean_environment() -> dict[str, str]:
@@ -69,12 +69,13 @@ def _resolved_compose(
     return cast(dict[str, Any], json.loads(result.stdout))
 
 
-def _resolved_compute(
-    *, overrides: dict[str, str] | None = None
-) -> dict[str, Any]:
+def _resolved_compute(*, overrides: dict[str, str] | None = None) -> dict[str, Any]:
     values = {
-        "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE": (
-            "registry.example/translator@sha256:" + "a" * 64
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": (
+            "registry.example/provider@sha256:" + "a" * 64
+        ),
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE": (
+            "registry.example/worker@sha256:" + "b" * 64
         ),
         **(overrides or {}),
     }
@@ -161,69 +162,86 @@ class TranslatorConfigurationTest(unittest.TestCase):
             services["translator-api"]["image"], "own-background:checked"
         )
         self.assertNotEqual(
-            _resolved_compute()["services"]["translator-model"]["image"],
+            _resolved_compute()["services"]["translation-provider"]["image"],
             "own-background:checked",
         )
 
-    def test_model_override_is_isolated_and_has_a_startup_window(self) -> None:
+    def test_provider_is_opaque_and_only_deployment_limits_are_overridden(self) -> None:
         services = _resolved_compute(
             overrides={
-                "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE": (
-                    "registry.example/own-model@sha256:" + "b" * 64
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": (
+                    "registry.example/opaque-provider@sha256:" + "c" * 64
                 ),
-                "AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_RESTART_POLICY": "on-failure:2",
-                "AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_STARTUP_TIMEOUT_SECONDS": "700",
+                (
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY"
+                ): "on-failure:2",
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT": "6g",
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS": "1.5",
             }
         )["services"]
-        model = services["translator-model"]
+        provider = services["translation-provider"]
         self.assertEqual(
-            model["image"], "registry.example/own-model@sha256:" + "b" * 64
+            provider["image"],
+            "registry.example/opaque-provider@sha256:" + "c" * 64,
         )
-        self.assertEqual(model["restart"], "on-failure:2")
-        self.assertEqual(model["healthcheck"]["start_period"], "11m40s")
-        self.assertEqual(
-            model["environment"]["AELEV_TRANSLATOR_STARTUP_TIMEOUT_SECONDS"], "700"
-        )
-        for name, service in services.items():
-            if name != "translator-model":
-                self.assertEqual(service.get("image"), model["image"])
+        self.assertEqual(provider["restart"], "on-failure:2")
+        self.assertEqual(provider["mem_limit"], "6442450944")
+        self.assertEqual(provider["cpus"], 1.5)
+        self.assertIsNone(provider.get("command"))
+        self.assertIsNone(provider.get("entrypoint"))
+        for forbidden in ("environment", "healthcheck"):
+            self.assertNotIn(forbidden, provider)
+        self.assertNotEqual(services["translator-worker"]["image"], provider["image"])
 
-    def test_model_and_api_use_local_minimal_probes(self) -> None:
+    def test_api_uses_its_local_minimal_probe(self) -> None:
         control = _resolved_compose()["services"]
-        compute = _resolved_compute()["services"]
-        for role, selected, retries in (
-            ("model", compute["translator-model"], 30),
-            ("api", control["translator-api"], 12),
-        ):
-            self.assertEqual(
-                selected["healthcheck"]["test"],
-                [
-                    "CMD",
-                    "python",
-                    "-S",
-                    "/opt/aelev/src/translator_service/local_health.py",
-                ],
-            )
-            self.assertEqual(
-                selected["environment"]["AELEV_TRANSLATOR_HEALTH_ROLE"], role
-            )
-            self.assertEqual(selected["healthcheck"]["timeout"], "5s")
-            self.assertEqual(selected["healthcheck"]["retries"], retries)
+        selected = control["translator-api"]
+        self.assertEqual(
+            selected["healthcheck"]["test"],
+            [
+                "CMD",
+                "python",
+                "-S",
+                "/opt/aelev/src/translator_service/local_health.py",
+            ],
+        )
+        self.assertEqual(selected["environment"]["AELEV_TRANSLATOR_HEALTH_ROLE"], "api")
+        self.assertEqual(selected["healthcheck"]["timeout"], "5s")
+        self.assertEqual(selected["healthcheck"]["retries"], 12)
 
-    def test_light_status_image_contains_required_lock_metadata(self) -> None:
+    def test_light_status_image_does_not_contain_provider_metadata(self) -> None:
         stage = (
             (COMPONENT_ROOT / "Dockerfile")
             .read_text()
             .split("FROM python-bookworm AS status-runtime", 1)[1]
-            .split("FROM python-bookworm AS index-runtime-builder", 1)[0]
+            .split("FROM python-bookworm AS translator-core-runtime", 1)[0]
         )
-        self.assertIn(
-            "AELEV_TRANSLATOR_LOCK_PATH=/opt/aelev/translator.lock.json", stage
-        )
-        self.assertIn("COPY translator.lock.json", stage)
-        self.assertIn("read_translator_lock", stage)
+        self.assertNotIn("AELEV_TRANSLATOR_LOCK_PATH", stage)
+        self.assertNotIn("COPY translator.lock.json", stage)
+        self.assertNotIn("read_translator_lock", stage)
         self.assertNotIn("index-model-assets", stage)
         self.assertNotIn("COPY --from=index-runtime-builder", stage)
+
+    def test_core_image_does_not_contain_provider_implementation(self) -> None:
+        stage = (
+            (COMPONENT_ROOT / "Dockerfile")
+            .read_text()
+            .split("FROM python-bookworm AS translator-core-runtime", 1)[1]
+            .split("FROM ${AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE}", 1)[0]
+        )
+        for forbidden in (
+            "COPY translator.lock.json",
+            "COPY --from=index-model-assets",
+            "COPY --from=index-runtime-builder",
+            "AELEV_TRANSLATOR_MODEL_ROOT",
+            "AELEV_TRANSLATOR_LOCK_PATH",
+            "AELEV_TRANSLATOR_RUNTIME_PATH",
+        ):
+            self.assertNotIn(forbidden, stage)
+        recipe = (COMPONENT_ROOT / "Dockerfile").read_text()
+        self.assertNotIn("index_translation_provider", recipe)
+        self.assertNotIn("index-model-assets", recipe)
+        self.assertNotIn("index-runtime-builder", recipe)
 
     def test_operator_entrypoints_are_owned_by_the_component(self) -> None:
         self.assertEqual(
@@ -391,8 +409,11 @@ class TranslatorConfigurationTest(unittest.TestCase):
         variable = "AELEV_INFRASTRUCTURE_TRANSLATOR_HIGH_PRIORITY_BURST"
         environment = _clean_environment()
         environment[variable] = ""
-        environment["AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE"] = (
-            "registry.example/translator@sha256:" + "a" * 64
+        environment["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"] = (
+            "registry.example/provider@sha256:" + "a" * 64
+        )
+        environment["AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"] = (
+            "registry.example/worker@sha256:" + "b" * 64
         )
         result = subprocess.run(
             [
@@ -421,12 +442,12 @@ class TranslatorConfigurationTest(unittest.TestCase):
             name
             for name, service in compute.items()
             if any(
-                volume.get("source") == "translator-model-socket"
+                volume.get("source") == "translation-provider-socket"
                 for volume in service.get("volumes", [])
             )
         }
-        self.assertEqual(socket_users, {"translator-model", "translator-worker"})
-        self.assertEqual(compute["translator-model"]["network_mode"], "none")
+        self.assertEqual(socket_users, {"translation-provider", "translator-worker"})
+        self.assertEqual(compute["translation-provider"]["network_mode"], "none")
         self.assertEqual(
             set(compute["translator-worker"]["networks"]),
             {"translator-data", "translator-telemetry"},

@@ -18,7 +18,7 @@ COMPONENTS = {
     "kafka-connection": "Соединение с Kafka",
     "priority-consumer": "Приоритетный consumer",
     "normal-consumer": "Обычный consumer",
-    "model": "Вычислительная модель",
+    "provider": "Провайдер перевода",
     "outbox": "Outbox",
     "api": "Операционный API",
     "publisher": "Издатель состояния переводчика",
@@ -57,9 +57,7 @@ def description(cfg: Settings) -> bytes:
 
 
 def probe(cfg: Settings) -> tuple[str, list[dict[str, str]]]:
-    compute_desired_state = os.environ[
-        PREFIX + "COMPUTE_DESIRED_STATE"
-    ].strip().upper()
+    compute_desired_state = os.environ[PREFIX + "COMPUTE_DESIRED_STATE"].strip().upper()
     if compute_desired_state not in {"RUNNING", "STOPPED"}:
         raise ValueError("TRANSLATOR_COMPUTE_DESIRED_STATE_INVALID")
 
@@ -93,25 +91,25 @@ def probe(cfg: Settings) -> tuple[str, list[dict[str, str]]]:
         compute = [
             observation
             for observation in runtime
-            if observation["id"] in {"model", "worker"}
+            if observation["id"] in {"provider", "worker"}
         ]
-        if {observation["id"] for observation in compute} != {"model", "worker"}:
+        if {observation["id"] for observation in compute} != {"provider", "worker"}:
             raise ValueError("TRANSLATOR_COMPUTE_OBSERVATION_INCOMPLETE")
         observations.extend(
             observation
             for observation in runtime
-            if observation["id"] not in {"model", "worker"}
+            if observation["id"] not in {"provider", "worker"}
         )
         observations.append(
             {
-                "id": "model",
+                "id": "provider",
                 "state": aggregate(compute),
                 "observed_at": timestamp(),
             }
         )
         if compute_desired_state == "STOPPED":
             for observation in observations:
-                if observation["id"] == "model":
+                if observation["id"] == "provider":
                     observation["state"] = "OFFLINE"
                     observation["observed_at"] = timestamp()
     except Exception:
@@ -121,7 +119,7 @@ def probe(cfg: Settings) -> tuple[str, list[dict[str, str]]]:
                 "database",
                 "priority-consumer",
                 "normal-consumer",
-                "model",
+                "provider",
                 "outbox",
             )
         )

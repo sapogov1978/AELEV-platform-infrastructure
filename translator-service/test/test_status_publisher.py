@@ -50,9 +50,9 @@ def test_description_is_own_technical_composition(cfg: Settings) -> None:
         else:
             assert "swagger_url" not in part
     assert value["title"] == {"ru": "Перевод текстов", "en": "Text translation"}
-    model = next(part for part in value["components"] if part["id"] == "model")
-    assert model["title"]["ru"] == "Вычислительная модель"
-    assert "Index-Translate" not in model["title"]["ru"]
+    provider = next(part for part in value["components"] if part["id"] == "provider")
+    assert provider["title"]["ru"] == "Провайдер перевода"
+    assert "Index-Translate" not in provider["title"]["ru"]
     assert "worker" not in {part["id"] for part in value["components"]}
     assert value["service_kind"] == "INFRASTRUCTURE"
     assert value["sections"] == []
@@ -79,7 +79,9 @@ def test_invalid_description_revision_fails_closed(
         owner.description(cfg)
 
 
-@pytest.mark.parametrize("unavailable", ["none", "database", "kafka", "api", "model"])
+@pytest.mark.parametrize(
+    "unavailable", ["none", "database", "kafka", "api", "provider"]
+)
 def test_failures_never_become_false_online(
     cfg: Settings, monkeypatch: pytest.MonkeyPatch, unavailable: str
 ) -> None:
@@ -153,24 +155,24 @@ def test_intentionally_stopped_compute_is_reported_offline(
     compute = {
         observation["id"]: observation["state"]
         for observation in observations
-        if observation["id"] in {"model", "worker"}
+        if observation["id"] in {"provider", "worker"}
     }
-    assert compute == {"model": "OFFLINE"}
+    assert compute == {"provider": "OFFLINE"}
     assert state == "OFFLINE"
 
 
 @pytest.mark.parametrize(
-    ("model", "worker", "expected"),
+    ("provider", "worker", "expected"),
     [
         ("ONLINE", "ONLINE", "ONLINE"),
         ("ONLINE", "UNKNOWN", "UNKNOWN"),
         ("ONLINE", "OFFLINE", "OFFLINE"),
     ],
 )
-def test_public_compute_component_aggregates_internal_model_and_worker(
+def test_public_compute_component_aggregates_provider_and_worker(
     cfg: Settings,
     monkeypatch: pytest.MonkeyPatch,
-    model: str,
+    provider: str,
     worker: str,
     expected: str,
 ) -> None:
@@ -185,8 +187,8 @@ def test_public_compute_component_aggregates_internal_model_and_worker(
                 {
                     "id": name,
                     "state": (
-                        model
-                        if name == "model"
+                        provider
+                        if name == "provider"
                         else worker
                         if name == "worker"
                         else "ONLINE"
@@ -207,5 +209,5 @@ def test_public_compute_component_aggregates_internal_model_and_worker(
 
     public = {row["id"]: row["state"] for row in observations}
     assert "worker" not in public
-    assert public["model"] == expected
+    assert public["provider"] == expected
     assert state == expected

@@ -256,3 +256,10 @@ docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-
 ```
 
 Реальные Docker-проверки включаются только явными `AELEV_INFRASTRUCTURE_SPIRE_TEST_IMAGE` и для установщика `AELEV_INFRASTRUCTURE_SPIRE_INSTALLER_TEST_IMAGE`. Наблюдение дополнительно требует `AELEV_INFRASTRUCTURE_SPIRE_SENDER_TEST_IMAGE`, проверка Grafana — `AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_TEST_IMAGE`. Это выбранные утверждённые образы, а не команда обновить рабочие контейнеры. Нативные проверки запускаются из операторского окружения с Docker-доступом, не из runtime или из изолированной стадии `checks`. Они создают уникальные тестовые проекты, проверяют выдачу/ротацию/отзыв/повтор и удаляют только свои ресурсы после сверки владельца. [Отчёт](test/lifecycle-20261020.md) отделяет фактические результаты от невыполненных внешних проверок. Ни одна из этих команд не переключает рабочий стенд.
+
+## Официальные руководства
+
+- [SPIRE configuration](https://spiffe.io/docs/latest/deploying/configuring/), [Server](https://spiffe.io/docs/latest/deploying/spire_server/) и [Agent](https://spiffe.io/docs/latest/deploying/spire_agent/) — trust domain, node/workload attestation и operational API.
+- [SPIFFE Workload API](https://spiffe.io/docs/latest/spiffe-specs/spiffe_workload_api/) и [X.509-SVID](https://spiffe.io/docs/latest/spiffe-specs/x509-svid/) — получение, ротация и проверка workload identity.
+- [SPIRE registration entries](https://spiffe.io/docs/latest/deploying/registering/) — selectors и явная авторизация workloads.
+- [SPIFFE federation](https://spiffe.io/docs/latest/architecture/federation/) — внешние trust domains без общего CA private key.

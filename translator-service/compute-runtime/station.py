@@ -37,13 +37,27 @@ def _docker() -> str:
 
 def _local_engine(docker: str) -> tuple[dict[str, Any], str]:
     context = _execute([docker, "context", "show"], capture=True)
-    raw = json.loads(
-        _execute([docker, "context", "inspect", context], capture=True)
+    raw = cast(
+        object,
+        json.loads(_execute([docker, "context", "inspect", context], capture=True)),
     )
-    if not isinstance(raw, list) or len(raw) != 1:
+    if not isinstance(raw, list):
         raise RuntimeError("TRANSLATOR_COMPUTE_LOCAL_DOCKER_REQUIRED")
-    row = cast(dict[str, Any], raw[0])
-    endpoint = row.get("Endpoints", {}).get("docker", {}).get("Host")
+    typed_raw = cast(list[object], raw)
+    if len(typed_raw) != 1:
+        raise RuntimeError("TRANSLATOR_COMPUTE_LOCAL_DOCKER_REQUIRED")
+    row_value = typed_raw[0]
+    if not isinstance(row_value, dict):
+        raise RuntimeError("TRANSLATOR_COMPUTE_LOCAL_DOCKER_REQUIRED")
+    row = cast(dict[str, object], row_value)
+    endpoints_value = row.get("Endpoints")
+    if not isinstance(endpoints_value, dict):
+        raise RuntimeError("TRANSLATOR_COMPUTE_LOCAL_DOCKER_REQUIRED")
+    endpoints = cast(dict[str, object], endpoints_value)
+    docker_value = endpoints.get("docker")
+    if not isinstance(docker_value, dict):
+        raise RuntimeError("TRANSLATOR_COMPUTE_LOCAL_DOCKER_REQUIRED")
+    endpoint = cast(dict[str, object], docker_value).get("Host")
     system = platform.system()
     local = (
         isinstance(endpoint, str)
@@ -55,17 +69,23 @@ def _local_engine(docker: str) -> tuple[dict[str, Any], str]:
             )
         )
     )
-    if not local:
+    if not local or not isinstance(endpoint, str):
         raise RuntimeError("TRANSLATOR_COMPUTE_REMOTE_DOCKER_FORBIDDEN")
-    info = json.loads(
-        _execute(
-            [docker, "--host", cast(str, endpoint), "info", "--format", "{{json .}}"],
-            capture=True,
-        )
+    info = cast(
+        object,
+        json.loads(
+            _execute(
+                [docker, "--host", endpoint, "info", "--format", "{{json .}}"],
+                capture=True,
+            )
+        ),
     )
-    if not isinstance(info, dict) or info.get("OSType") != "linux":
+    if not isinstance(info, dict):
         raise RuntimeError("TRANSLATOR_COMPUTE_LINUX_CONTAINERS_REQUIRED")
-    return cast(dict[str, Any], info), cast(str, endpoint)
+    typed_info = cast(dict[str, object], info)
+    if typed_info.get("OSType") != "linux":
+        raise RuntimeError("TRANSLATOR_COMPUTE_LINUX_CONTAINERS_REQUIRED")
+    return cast(dict[str, Any], typed_info), endpoint
 
 
 def _compose(docker: str, endpoint: str, env_file: Path) -> list[str]:
@@ -88,25 +108,41 @@ def _compose(docker: str, endpoint: str, env_file: Path) -> list[str]:
 
 
 def _configuration(command: list[str]) -> dict[str, Any]:
-    raw = json.loads(_execute(command + ["config", "--format", "json"], capture=True))
+    raw = cast(
+        object,
+        json.loads(
+            _execute(command + ["config", "--format", "json"], capture=True)
+        ),
+    )
     if not isinstance(raw, dict):
         raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
-    services = raw.get("services")
-    if not isinstance(services, dict) or set(services) != {
-        "translator-model",
+    configuration = cast(dict[str, object], raw)
+    services = configuration.get("services")
+    if not isinstance(services, dict):
+        raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    typed_services = cast(dict[str, object], services)
+    if set(typed_services) != {
+        "translation-provider",
         "translator-worker",
     }:
         raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
-    for service in services.values():
+    for service in typed_services.values():
         if not isinstance(service, dict) or not PINNED_IMAGE.fullmatch(
-            str(service.get("image", ""))
+            str(cast(dict[str, object], service).get("image", ""))
         ):
             raise RuntimeError("TRANSLATOR_COMPUTE_PINNED_IMAGE_REQUIRED")
-    model = cast(dict[str, Any], services["translator-model"])
-    worker = cast(dict[str, Any], services["translator-worker"])
-    if model["image"] != worker["image"] or model.get("network_mode") != "none":
+    provider = cast(dict[str, object], typed_services["translation-provider"])
+    worker = cast(dict[str, object], typed_services["translator-worker"])
+    if (
+        provider["image"] == worker["image"]
+        or provider.get("network_mode") != "none"
+        or provider.get("command") is not None
+        or provider.get("entrypoint") is not None
+        or "environment" in provider
+        or "healthcheck" in provider
+    ):
         raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
-    return raw
+    return cast(dict[str, Any], configuration)
 
 
 def run(action: str, env_file: Path, timeout: int) -> None:

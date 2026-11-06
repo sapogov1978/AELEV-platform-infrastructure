@@ -29,4 +29,4 @@ docker compose up -d --no-build --pull never
 - [USER_MANUAL.md](USER_MANUAL.md), [SPEC.md](SPEC.md) — подключение, диагностика и правила.
 - [test/](test) — проверки и датированные отчёты.
 - [Доставка сертификатов](../../CERTIFICATE_DELIVERY.md) — сопровождение Docker volumes.
-- [index.md](index.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — карта, ограничения и история.
+- [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, ограничения и история.

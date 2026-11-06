@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import datetime
 import json
 import platform
@@ -14,7 +15,6 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-REPORT = ROOT / "test" / "cluster-lifecycle-result.md"
 PREFIX = "AELEV_INFRASTRUCTURE_POSTGRESQL_"
 COMPOSE = [
     "docker",
@@ -255,7 +255,7 @@ with tempfile.TemporaryDirectory(prefix='aelev-postgresql-restore-') as temporar
     )
 
 
-def main() -> None:
+def main(report: Path) -> None:
     """Run failure scenarios and always inventory/clean newly owned resources."""
     started = datetime.datetime.now(datetime.UTC)
     steps: list[tuple[str, str]] = []
@@ -615,10 +615,17 @@ def main() -> None:
             "Потеря или timeout ответа COMMIT не доказывает отсутствие записи: клиент обязан сверить операцию перед повтором. Очистка ограничена точно объявленными ресурсами, отсутствие которых проверено до запуска; глобальная очистка и перезапуск Docker не выполнялись.",
             "",
         ]
-        REPORT.write_text("\n".join(lines))
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text("\n".join(lines))
     if failure:
         raise SystemExit(failure)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=ROOT / "test" / "cluster-lifecycle-result.md",
+    )
+    main(parser.parse_args().report)

@@ -11,3 +11,9 @@
 - `https/ca.crt` — публичный overlap bundle старого и нового CA для потребителей, без закрытого ключа issuer.
 
 Сертификат должен содержать host из `AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL` и внутреннее имя `keycloak`, если `AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT` использует `https://keycloak:8443`. Compose монтирует `https` целиком, а не отдельные файлы: только так атомарное продление не остаётся на прежнем inode. Собственные издатель и `keycloak-status-provision` используют PEM CA и удостоверения из `UI_SECRET_ROOT` по [README](../USER_MANUAL.md#публикация-в-состоянии-платформы); PKCS12 не читается. Ранее созданный `admin-truststore.p12` сохранён только как необязательный материал ручного административного CLI. Сами TLS-файлы игнорируются Git и исключены из Docker build context. Если требуемого каталога нет, Docker не создаёт его вместо владельца: соответствующая роль не запускается.
+
+## Официальные руководства
+
+- [Keycloak TLS configuration](https://www.keycloak.org/server/enabletls) — поддерживаемые PEM/keystore варианты и HTTPS-настройки.
+- [Docker Compose secrets](https://docs.docker.com/reference/compose-file/secrets/) — явная выдача файлового секрета только нужному сервису.
+- [OpenSSL certificate verification](https://docs.openssl.org/3.0/man1/openssl-verify/) — цепочка доверия, SAN и проверка leaf.

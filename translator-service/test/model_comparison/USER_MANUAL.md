@@ -1,6 +1,6 @@
 # Руководство: Сравнение моделей перевода
 
-Исторический эксперимент сравнил прежний MADLAD400 3B Q4_K из собственного неизменяемого образа и официальные Index-Translate 2B/9B Q4_K_M. После оценки оператор отдельно выбрал 9B по [ADR-0112](../../../docs/adr/20261011-0112-index-translate-9b.md); сырые результаты и условия этого эксперимента не переписываются. Это проверка вычислителей, не полный тест Kafka-поставки. Старый MADLAD-образ не сохраняется по требованию оператора: повторение исторического сравнения потребует отдельно получить прежний выпуск, а текущий рабочий образ нельзя назвать прежней моделью. По умолчанию рабочие контейнеры не останавливаются; отдельно разрешённое окно освобождения памяти описано ниже. Очередь, БД, API, удостоверения и `translator.lock.json` экспериментом не изменяются.
+Исторический эксперимент сравнил прежний MADLAD400 3B Q4_K из собственного неизменяемого образа и официальные Index-Translate 2B/9B Q4_K_M. После оценки оператор отдельно выбрал 9B по [00-INFRA-20261106-0012-translator-technical-capability](../../../docs/adr/00-INFRA-20261106-0012-translator-technical-capability.md); сырые результаты и условия этого эксперимента не переписываются. Это проверка вычислителей, не полный тест Kafka-поставки. Старый MADLAD-образ не сохраняется по требованию оператора: повторение исторического сравнения потребует отдельно получить прежний выпуск, а текущий рабочий образ нельзя назвать прежней моделью. По умолчанию рабочие контейнеры не останавливаются; отдельно разрешённое окно освобождения памяти описано ниже. Очередь, БД, API, удостоверения и `translator.lock.json` экспериментом не изменяются.
 
 ## Что измеряется
 
@@ -57,3 +57,10 @@ python3 test/model_comparison/run.py clean
 - [Index-Translate 9B GGUF](https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF): официальный более крупный кандидат.
 - [Шаблон запроса Bilibili](https://github.com/bilibili/Index-Translate/blob/main/inference/llm/translate.py): plain translation, явные языки и отключённый thinking; без дополнительных glossary/format-подсказок для изменения результата после просмотра.
 - [Закреплённый llama.cpp](https://github.com/ggml-org/llama.cpp/tree/d81235049384534c167caea52b85a694f6103d14): поддержка Qwen3.5 и локальное CPU-исполнение.
+
+## Официальные руководства
+
+- [Index-Translate repository](https://github.com/bilibili/Index-Translate) — официальный inference template и описание семейства.
+- [Index-Translate 9B GGUF](https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF) — model card, лицензия и опубликованные артефакты.
+- [llama.cpp server](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md) — официальные параметры запуска, GGUF и resource controls.
+- [Hugging Face model cards](https://huggingface.co/docs/hub/model-cards) — документирование происхождения, лицензии и ограничений модели.

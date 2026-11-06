@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import os
 import subprocess
@@ -25,6 +26,45 @@ class Sandbox:
         self.containers: list[str] = []
         self.volumes: list[str] = []
         self.network: str | None = None
+
+    def private_network(self) -> str:
+        if self.network is not None:
+            raise RuntimeError("SPIRE_TEST_NETWORK_ALREADY_CREATED")
+        identifiers = self.docker("network", "ls", "-q").decode().splitlines()
+        rows: list[dict[str, Any]] = (
+            json.loads(self.docker("network", "inspect", *identifiers))
+            if identifiers
+            else []
+        )
+        used: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = []
+        for row in rows:
+            for configuration in (row.get("IPAM") or {}).get("Config") or []:
+                subnet = configuration.get("Subnet")
+                if subnet:
+                    used.append(ipaddress.ip_network(subnet, strict=False))
+        candidate = next(
+            (
+                subnet
+                for parent in ("10.254.0.0/16", "10.253.0.0/16")
+                for subnet in ipaddress.ip_network(parent).subnets(new_prefix=24)
+                if not any(subnet.overlaps(existing) for existing in used)
+            ),
+            None,
+        )
+        if candidate is None:
+            raise RuntimeError("SPIRE_TEST_PRIVATE_SUBNET_UNAVAILABLE")
+        self.network = self.prefix + "-private"
+        self.docker(
+            "network",
+            "create",
+            "--internal",
+            "--subnet",
+            str(candidate),
+            "--label",
+            "io.aelev.spire-test=" + self.id,
+            self.network,
+        )
+        return self.network
 
     def docker(
         self, *arguments: str, payload: bytes | None = None, check: bool = True
@@ -224,15 +264,7 @@ def wait(predicate: Callable[[], bool], code: str, seconds: int = 90) -> None:
 def test_real_issue_rotation_revoke_and_node_restart() -> None:
     sandbox = Sandbox()
     try:
-        sandbox.network = sandbox.prefix + "-private"
-        sandbox.docker(
-            "network",
-            "create",
-            "--internal",
-            "--label",
-            "io.aelev.spire-test=" + sandbox.id,
-            sandbox.network,
-        )
+        sandbox.private_network()
         configuration = sandbox.volume("configuration")
         admin = sandbox.volume("admin", ephemeral=True)
         operator_state = sandbox.volume("operator")

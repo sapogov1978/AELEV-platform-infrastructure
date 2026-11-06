@@ -36,6 +36,10 @@ jobs:
       - run: python tools/check_json.py .
       - run: python tools/check_contract_digests.py .
       - run: python tools/check_infrastructure.py
+      - run: python tools/build_inherited_adr_index.py --check
+      - run: python tools/check_documentation.py
+      - run: python tools/full_local.py validate
+      - run: python tools/full_local.py plan > "$RUNNER_TEMP/full-local-plan.json"
       - run: python tools/check_container_security.py .
       - run: python tools/check_secrets.py .
       - run: python tools/check_supply_chain.py .

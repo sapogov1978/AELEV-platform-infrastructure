@@ -1,4 +1,5 @@
 {
+  "archive_root": "docs/audit/inherited-adrs",
   "exported_adr_sha256": {
     "docs/adr/20260727-0001-kafka-only.md": "efc73b19f3240dcd2bb789d93aeb3c055281179a9eed67ee6abac7e56e06d5e1",
     "docs/adr/20260727-0003-bounded-context-separation.md": "df1c1673dcbe305738a4dd10e81e85556441a36ac15ea78ab6e28ddc27b1f55a",
@@ -268,7 +269,7 @@
     "docs/adr/obsolete/20261029-0174-exact-location-is-the-sensor-candidate.md"
   ],
   "layout_migration": {
-    "decision": "docs/adr/20261106-0002-infrastructure-repository-layout.md",
+    "decision": "docs/adr/00-INFRA-20261106-0002-infrastructure-repository-layout.md",
     "new_source_prefix": "",
     "old_source_prefix": "services/infrastructure/",
     "repository": "sapogov1978/AELEV-platform-infrastructure"

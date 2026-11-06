@@ -1,6 +1,6 @@
 # HTTP endpoints Public Egress Gateway
 
-Этот документ описывает endpoints самостоятельного Public Egress Gateway. Swagger доступен на read-only documentation listener по `/docs`, схема — по `/openapi.json`; фактический `POST /v1/fetch` выполняется через защищённый gateway listener, указанный в OpenAPI. Канонические ограничения назначения и прав определены [SPEC](SPEC.md), [USER_MANUAL](USER_MANUAL.md) и [ADR-0114](../docs/adr/20261012-0114-infrastructure-public-egress-gateway.md).
+Этот документ описывает endpoints самостоятельного Public Egress Gateway. Swagger доступен на read-only documentation listener по `/docs`, схема — по `/openapi.json`; фактический `POST /v1/fetch` выполняется через защищённый gateway listener, указанный в OpenAPI. Канонические ограничения назначения и прав определены [SPEC](SPEC.md), [USER_MANUAL](USER_MANUAL.md) и [00-INFRA-20261106-0011-controlled-public-egress](../docs/adr/00-INFRA-20261106-0011-controlled-public-egress.md).
 
 ## Доступ и общие правила
 

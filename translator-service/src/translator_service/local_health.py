@@ -7,13 +7,13 @@ import time
 
 ROOT = "/tmp/aelev-translator-health"
 HEADER = b"aelev:translator:health:1"
-ROLES = {"api", "model"}
+ROLES = {"api"}
 MAX_AGE = 30.0
 PROGRESS_HEADER = b"aelev:translator:progress:1"
 PROGRESS_WINDOWS = {
     "consumer": {"loop": 30.0, "kafka": 120.0},
     "outbox": {"loop": 30.0},
-    "worker": {"loop": 30.0, "model": 300.0},
+    "worker": {"loop": 30.0, "provider": 300.0},
 }
 
 
@@ -47,11 +47,9 @@ def process_identity(pid: int) -> str:
     return f"{boot}:{pid}:{fields[19].decode('ascii')}"
 
 
-def frame(role: str, child_pid: int | None) -> bytes:
-    if role not in ROLES or (role == "model") != (child_pid is not None):
+def frame(role: str) -> bytes:
+    if role not in ROLES:
         raise ValueError("TRANSLATOR_HEALTH_ROLE_INVALID")
-    if child_pid is not None and (type(child_pid) is not int or child_pid <= 0):
-        raise ValueError("TRANSLATOR_HEALTH_CHILD_INVALID")
     pid = os.getpid()
     return b"\n".join(
         (
@@ -59,8 +57,8 @@ def frame(role: str, child_pid: int | None) -> bytes:
             role.encode("ascii"),
             str(pid).encode(),
             process_identity(pid).encode("ascii"),
-            str(child_pid or 0).encode(),
-            process_identity(child_pid).encode("ascii") if child_pid else b"-",
+            b"0",
+            b"-",
             repr(time.monotonic()).encode(),
             b"",
         )
@@ -131,9 +129,7 @@ def healthy(*, root: str = ROOT) -> bool:
             or fields[3].decode("ascii") != process_identity(pid)
         ):
             return False
-        if role == "api":
-            return child == 0 and fields[5] == b"-"
-        return child > 0 and fields[5].decode("ascii") == process_identity(child)
+        return child == 0 and fields[5] == b"-"
     except (OSError, ValueError, TypeError, IndexError, OverflowError):
         return False
 

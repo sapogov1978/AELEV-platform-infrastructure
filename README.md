@@ -20,7 +20,9 @@
 
 `down` останавливает выбранные инфраструктурные процессы и сохраняет данные. Прикладные продукты останавливаются отдельно. Для ограниченного состава повторяйте `--capability`, например `./infrastructure up --capability kafka`. Состав и зависимости возможностей определяет только [владелец](bootstrap.py); зависимость Platform UI от identity добавляется автоматически. `build` не запускает контейнеры. `init` только подготавливает локальные файлы и проверяет Compose.
 
-Запуск относится к локальному ознакомлению. Реальные grants, сертификаты рабочих нагрузок, защищённые endpoints, backup, аппаратный допуск моделей и независимые области отказа подготавливаются по руководствам владельцев. Обычный запуск не разрешает возобновление ранее приостановленной обработки.
+Полный `full-local` профиль, включающий все 15 владельцев, workload identity, наблюдаемость и отдельные provider/worker роли перевода, намеренно не смешан с быстрым core-запуском. Его машиночитаемый состав, fail-closed preflight, release BOM и чистая функциональная приёмка описаны в [clean-room runbook](docs/operations/clean-room-reproduction.md). Пока для точного release commit нет нового полного evidence, этот профиль имеет статус `BLOCKED`, даже если отдельные сервисы и core quickstart проходят проверки.
+
+Запуск относится к локальному ознакомлению. Реальные grants, сертификаты рабочих нагрузок, защищённые endpoints, backup, ресурсный допуск внешних compute providers и независимые области отказа подготавливаются по руководствам владельцев. Обычный запуск не разрешает возобновление ранее приостановленной обработки.
 
 ## Независимые выпуски
 
@@ -36,12 +38,15 @@ python3 tools/build_bundle.py --output dist/AELEV-platform-infrastructure-0.2.0.
 
 ## Документация и сопровождение
 
-Сервисы расположены прямо в корне: `kafka/`, `postgresql/`, `minio/`, `keycloak/`, `spire/`, `public-egress-gateway/`, `platform-ui/`, `observability/` и `translator-service/`. Здесь же находятся `compose.yml`, `bootstrap.py` и `release.json`; промежуточного `services/infrastructure` в исходниках нет. [INFRA-ADR-0002](docs/adr/20261106-0002-infrastructure-repository-layout.md) описывает новое размещение и совместимость существующих установок.
+Сервисы расположены прямо в корне: `kafka/`, `postgresql/`, `minio/`, `keycloak/`, `spire/`, `public-egress-gateway/`, `platform-ui/`, `observability/` и `translator-service/`. Здесь же находятся `compose.yml`, `bootstrap.py` и `release.json`; промежуточного `services/infrastructure` в исходниках нет. [00-INFRA-20261106-0002-infrastructure-repository-layout](docs/adr/00-INFRA-20261106-0002-infrastructure-repository-layout.md) описывает новое размещение и совместимость существующих установок.
 
 - [Видение](docs/00-vision.md), [аксиомы](docs/01-axioms.md), [обзор](docs/03-system-overview.md).
-- [Решение о разделении](docs/adr/20261105-0001-independent-infrastructure-product.md), [реестр унаследованных ADR](docs/adr/INDEX.md), [происхождение выделения](docs/audit/extraction.json).
+- [Агентская карта репозитория](INDEX.md) — высокоуровневый ответ «что и где искать» в дополнение к Graphify.
+- [Решение о самостоятельном продукте](docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md), [ключевые архитектурные решения](docs/adr/INDEX.md), [происхождение унаследованных ADR](docs/audit/extraction.json).
 - [Композиционная диаграмма](infrastructure.mmd), [границы репозиториев](docs/architecture/repositories.mmd), [эксплуатация компонентов](USER_MANUAL.md).
 - [Публичный установочный интерфейс](docs/api/installation.md), [изменения](CHANGELOG.md).
+- [Clean-room воспроизведение полного профиля](docs/operations/clean-room-reproduction.md), [машиночитаемый состав](full-local.json).
+- [Аудит документации и Production Readiness](docs/audit/production-readiness.md), [официальные источники решений](docs/references/official-sources.md).
 - [История прежней композиции](docs/obsolete/services/infrastructure/CHANGELOG.md) и [архив прежнего руководства](docs/obsolete/services/infrastructure/README.md).
 
 Сохранена отдельная identity каждого применимого исторического ADR и цепочки его замены. Ссылки на документы вне состава продукта ведут к конкретному исходному commit, а не к общему индексу. Каждый инфраструктурный сервис сохраняет собственные README, SPEC, contracts, tests и `architecture.mmd`.

@@ -27,7 +27,7 @@ def probe(action: str, identity: str, argument: str, timestamp: str) -> None:
     from confluent_kafka import Consumer, Producer
     from sqlalchemy import text
 
-    from translator_service.contracts import RESULT_TOPIC, digest, parse
+    from translator_service.contracts import RESULT_TOPIC_V2, digest, parse
     from translator_service.runtime import kafka_configuration, repository
 
     if action == "state":
@@ -53,23 +53,20 @@ def probe(action: str, identity: str, argument: str, timestamp: str) -> None:
             repo.engine.dispose()
         return
     if action == "send":
-        lock = cast(
-            dict[str, Any], json.loads(Path("translator.lock.json").read_text())
-        )
         event = {
             "specversion": "1.0",
             "id": identity,
             "source": "urn:aelev:test-client",
-            "type": "com.aelev.translation-requested.v1",
+            "type": "com.aelev.translation-requested.v2",
             "time": timestamp,
             "subject": "translation/" + identity,
             "datacontenttype": "application/json",
-            "dataschema": "https://schemas.aelev.dev/events/v1#/$defs/TranslationRequested",
+            "dataschema": "https://schemas.aelev.dev/events/v1#/$defs/TranslationRequestedV2",
             "correlationid": identity,
             "causationid": identity,
             "traceparent": "00-" + "a" * 32 + "-" + "b" * 16 + "-01",
             "data": {
-                "schema_version": "1.0.0",
+                "schema_version": "2.0.0",
                 "recorded_at": timestamp,
                 "provenance": {
                     "owner_context": "TEST_CLIENT",
@@ -78,16 +75,14 @@ def probe(action: str, identity: str, argument: str, timestamp: str) -> None:
                     "input_refs": [],
                 },
                 "request_id": identity,
-                "operation": "TRANSLATE_TEXT",
                 "text": "climate observatory",
                 "source_digest": digest(b"climate observatory"),
                 "source_language": "en",
                 "target_language": "de",
-                "translator_ref": lock["translator_ref"],
             },
         }
         raw = json.dumps(event, sort_keys=True).encode()
-        parse(raw, "TranslationRequested")
+        parse(raw, "TranslationRequestedV2")
         producer = Producer({**kafka_configuration(), "acks": "all"})
         failures: list[str] = []
         producer.produce(
@@ -109,7 +104,7 @@ def probe(action: str, identity: str, argument: str, timestamp: str) -> None:
             "isolation.level": "read_committed",
         }
     )
-    consumer.subscribe([RESULT_TOPIC])
+    consumer.subscribe([RESULT_TOPIC_V2])
     found: list[dict[str, object]] = []
     try:
         deadline = time.monotonic() + 300
@@ -122,7 +117,7 @@ def probe(action: str, identity: str, argument: str, timestamp: str) -> None:
             raw = message.value()
             if raw is None:
                 raise RuntimeError("empty result")
-            data = parse(raw, "TranslationCompleted")["data"]
+            data = parse(raw, "TranslationCompletedV2")["data"]
             if data["request_id"] != identity:
                 continue
             assert data["status"] == "SUCCEEDED", data["error_code"]
@@ -150,7 +145,9 @@ def compose_rows(output: str) -> list[dict[str, Any]]:
     return cast(list[dict[str, Any]], data)
 
 
-def run(fail_after_start: bool = False) -> None:
+def run(
+    fail_after_start: bool = False, result_path: Path | None = None
+) -> None:
     sys.dont_write_bytecode = True
     from lifecycle_resources import (
         Inventory,
@@ -191,6 +188,14 @@ def run(fail_after_start: bool = False) -> None:
         str(ROOT / "compose.remote.yml"),
         "--profile",
         "bundled-database",
+    ]
+    compute = [
+        "docker",
+        "compose",
+        "--env-file",
+        str(ROOT / ".env"),
+        "-f",
+        str(ROOT / "compose.compute.yml"),
     ]
     kafka_compose = [
         "docker",
@@ -292,7 +297,7 @@ def run(fail_after_start: bool = False) -> None:
         "--wait-timeout",
         "600",
     ]
-    kafka_started, translator_started = False, False
+    kafka_started, translator_started, compute_started = False, False, False
     before: Inventory | None = None
     projects: set[str] = set()
 
@@ -320,12 +325,39 @@ def run(fail_after_start: bool = False) -> None:
                 )
             ),
         )
+        compute_config = cast(
+            dict[str, Any],
+            json.loads(
+                command(
+                    "Resolve opaque compute station",
+                    compute + ["config", "--format", "json"],
+                    record_output=False,
+                )
+            ),
+        )
         check(
             "Kafka owns exactly one broker", set(kafka_config["services"]) == {"kafka"}
         )
         check(
             "Translator does not create a second broker",
             "kafka" not in translator_config["services"],
+        )
+        check(
+            "Compute station has only provider and worker",
+            set(compute_config["services"])
+            == {"translation-provider", "translator-worker"},
+        )
+        provider = compute_config["services"]["translation-provider"]
+        worker = compute_config["services"]["translator-worker"]
+        check(
+            "Provider and worker use distinct admitted images",
+            provider["image"] != worker["image"]
+            and "@sha256:" in provider["image"]
+            and "@sha256:" in worker["image"],
+        )
+        check(
+            "Provider is network-isolated behind the opaque port",
+            provider.get("network_mode") == "none",
         )
         network = translator_config["networks"]["kafka"]
         check(
@@ -347,17 +379,22 @@ def run(fail_after_start: bool = False) -> None:
         )
         report["kafka_project"] = kafka_config["name"]
         report["translator_project"] = translator_config["name"]
-        projects = {str(kafka_config["name"]), str(translator_config["name"])}
+        report["compute_project"] = compute_config["name"]
+        projects = {
+            str(kafka_config["name"]),
+            str(translator_config["name"]),
+            str(compute_config["name"]),
+        }
         before = snapshot(inventory_command)
         report["inventory_before"] = before
         volumes = {
             str(volume["name"])
-            for config in (kafka_config, translator_config)
+            for config in (kafka_config, translator_config, compute_config)
             for volume in config["volumes"].values()
         }
         images = {
             str(service["image"])
-            for config in (kafka_config, translator_config)
+            for config in (kafka_config, translator_config, compute_config)
             for service in config["services"].values()
         }
         preflight(before, projects, volumes, images)
@@ -371,7 +408,7 @@ def run(fail_after_start: bool = False) -> None:
         # A shared network may already exist, but not an active foreign endpoint.
         network_names = {
             str(item["name"])
-            for config in (kafka_config, translator_config)
+            for config in (kafka_config, translator_config, compute_config)
             for item in config["networks"].values()
             if item.get("name")
         }
@@ -397,14 +434,16 @@ def run(fail_after_start: bool = False) -> None:
         command("Start real infrastructure Kafka", kafka_compose + up)
         translator_started = True
         command(
-            "Start ALL real translator roles including both initializers", compose + up
+            "Start Translator contracts, storage and dispatch roles", compose + up
         )
+        compute_started = True
+        command("Start opaque provider and separate worker", compute + up)
         rows = compose_rows(
             command(
                 "Real translator states", compose + ["ps", "--all", "--format", "json"]
             )
         )
-        check("Exactly nine translator roles, no broker", len(rows) == 9)
+        check("Exactly seven Translator roles, no broker or provider", len(rows) == 7)
         for row in rows:
             role = row["Service"]
             if role in {"translator-migrator", "translator-topic-provisioner"}:
@@ -414,12 +453,17 @@ def run(fail_after_start: bool = False) -> None:
                 )
             else:
                 check(role + " running", row["State"] == "running")
-                if role in {
-                    "translator-database",
-                    "translator-model",
-                    "translator-api",
-                }:
+                if role in {"translator-database", "translator-api"}:
                     check(role + " healthy", row["Health"] == "healthy")
+        compute_rows = compose_rows(
+            command(
+                "Opaque compute states", compute + ["ps", "--all", "--format", "json"]
+            )
+        )
+        check("Exactly provider and worker are running", len(compute_rows) == 2)
+        for row in compute_rows:
+            check(row["Service"] + " running", row["State"] == "running")
+            check(row["Service"] + " healthy", row["Health"] == "healthy")
         broker = compose_rows(
             command(
                 "Real Kafka state", kafka_compose + ["ps", "--all", "--format", "json"]
@@ -433,9 +477,9 @@ def run(fail_after_start: bool = False) -> None:
             raise RuntimeError("Injected failure after all real roles became healthy")
         stamp = datetime.now(UTC).isoformat()
         priority = str(uuid.uuid4())
-        kafka("send", priority, "translation.requests.priority.v1", stamp)
+        kafka("send", priority, "translation.requests.priority.v2", stamp)
         original = kafka("receive", priority, "1", stamp)[0]["sha256"]
-        kafka("send", priority, "translation.requests.priority.v1", stamp)
+        kafka("send", priority, "translation.requests.priority.v2", stamp)
         replay = kafka("receive", priority, "2", stamp)
         check(
             "Duplicate republishes identical saved bytes",
@@ -448,12 +492,16 @@ def run(fail_after_start: bool = False) -> None:
         )
         command(
             "Stop real worker",
-            compose + ["stop", "--timeout", "20", "translator-worker"],
+            compute + ["stop", "--timeout", "20", "translator-worker"],
         )
         normal = str(uuid.uuid4())
-        kafka("send", normal, "translation.requests.v1", stamp)
+        kafka("send", normal, "translation.requests.v2", stamp)
         data = state(normal, "PENDING", stamp)
         check("Normal queue persisted while worker stopped", data["priority"] == 100)
+        command(
+            "Stop compute preserving provider state",
+            compute + ["stop", "--timeout", "20"],
+        )
         command(
             "Stop real translator preserving data",
             compose + ["stop", "--timeout", "20"],
@@ -463,7 +511,10 @@ def run(fail_after_start: bool = False) -> None:
             kafka_compose + ["stop", "--timeout", "20"],
         )
         command("Restart real Kafka", kafka_compose + up)
-        command("Restart ALL real translator roles", compose + up)
+        command(
+            "Restart Translator contracts, storage and dispatch roles", compose + up
+        )
+        command("Restart opaque provider and separate worker", compute + up)
         command(
             "Re-run real topic provisioning",
             compose + ["run", "--rm", "-T", "translator-topic-provisioner"],
@@ -477,10 +528,10 @@ def run(fail_after_start: bool = False) -> None:
         )
         command(
             "Stop worker before Kafka outage",
-            compose + ["stop", "--timeout", "20", "translator-worker"],
+            compute + ["stop", "--timeout", "20", "translator-worker"],
         )
         outage = str(uuid.uuid4())
-        kafka("send", outage, "translation.requests.v1", stamp)
+        kafka("send", outage, "translation.requests.v2", stamp)
         state(outage, "PENDING", stamp)
         command(
             "Stop real Kafka for outage test",
@@ -489,14 +540,15 @@ def run(fail_after_start: bool = False) -> None:
         ready(503)
         command(
             "Restore worker with Kafka unavailable",
-            compose + ["start", "translator-worker"],
+            compute + ["start", "translator-worker"],
         )
         data = state(outage, "SUCCEEDED", stamp)
         check(
             "Completed result retained in outbox during outage", data["pending_outbox"]
         )
         command("Restore real Kafka", kafka_compose + up)
-        command("Verify ALL translator roles after broker recovery", compose + up)
+        command("Verify Translator roles after broker recovery", compose + up)
+        command("Verify compute roles after broker recovery", compute + up)
         ready(200)
         kafka("receive", outage, "1", stamp)
         report["requests"] = {
@@ -530,7 +582,12 @@ def run(fail_after_start: bool = False) -> None:
             except Exception as error:
                 cleanup_errors.append(str(error))
 
-        if kafka_started or translator_started:
+        if kafka_started or translator_started or compute_started:
+            if compute_started:
+                cleanup_step(
+                    "Stop compute before cleanup",
+                    compute + ["stop", "--timeout", "20"],
+                )
             if translator_started:
                 cleanup_step(
                     "Stop translator before cleanup",
@@ -581,12 +638,14 @@ def run(fail_after_start: bool = False) -> None:
             report["cleanup"] = "FAILED"
             report["cleanup_failures"] = cleanup_errors
         report["finished_at"] = datetime.now(UTC).isoformat()
-        result_name = (
-            "lifecycle-failure-cleanup-result"
-            if fail_after_start
-            else "lifecycle-result"
-        )
-        result_path = ROOT / f"test/{result_name}.json"
+        if result_path is None:
+            result_name = (
+                "lifecycle-failure-cleanup-result"
+                if fail_after_start
+                else "lifecycle-result"
+            )
+            result_path = ROOT / f"test/{result_name}.json"
+        result_path.parent.mkdir(parents=True, exist_ok=True)
         result_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
         write_readable_report(report, result_path)
         print(f"{report['status']}: {result_path}", flush=True)
@@ -619,9 +678,11 @@ def write_readable_report(report: dict[str, object], result_path: Path) -> None:
         f"- Длительность: `{(finished - started).total_seconds():.2f} с`.",
         f"- Успешные этапы: `{sum(phase['status'] == 'PASS' for phase in phases)}`.",
         "",
-        "Использованы канонические поставки Kafka и переводчика с рабочими `.env`, "
-        "собственной PostgreSQL и настоящей моделью из lock. Отдельные тестовые "
-        "broker, модели, конфигурации и проекты не создаются. Образы подготовлены "
+        "Использованы канонические поставки Kafka и Translator с рабочими `.env`, "
+        "собственной PostgreSQL и отдельной вычислительной станцией. Translator "
+        "передаёт только текст и языки непрозрачному provider port и не читает "
+        "модель, её версию или способ исполнения. Отдельные тестовые broker и "
+        "подменные provider не создаются. Образы подготовлены "
         "до теста; "
         "сборка, загрузка образов, файловые секреты и кеш не входят в его изменения.",
         "",
@@ -661,7 +722,7 @@ def write_readable_report(report: dict[str, object], result_path: Path) -> None:
         "Качество перевода, удалённые TLS/mTLS и ACL, географически разнесённые "
         "узлы, нагрузочные пределы и внешнее резервное восстановление этим тестом "
         "не подтверждаются. Проверка транспорта не заменяет оценку смысловой "
-        "точности выбранной модели.",
+        "точности результата выбранного внешнего provider.",
         "",
         "Подробные этапы, исходная и конечная опись ресурсов — "
         f"[машинный отчёт]({result_path.name}).",
@@ -678,8 +739,13 @@ if __name__ == "__main__":
         action="store_true",
         help="inject a failure after startup to verify cleanup on the error path",
     )
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=ROOT / "test/lifecycle-result.json",
+    )
     arguments = parser.parse_args()
     if arguments.probe:
         probe(*arguments.probe)
     else:
-        run(arguments.fail_after_start)
+        run(arguments.fail_after_start, arguments.report)

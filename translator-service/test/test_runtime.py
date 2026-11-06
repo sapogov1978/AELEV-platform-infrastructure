@@ -15,7 +15,7 @@ from translator_service.repository import Repository
 
 
 @pytest.mark.parametrize("fail", [False, True])
-def test_compute_has_a_bounded_model_phase_and_returns_to_loop(
+def test_compute_sends_only_text_and_languages_to_opaque_provider(
     monkeypatch: pytest.MonkeyPatch, fail: bool
 ) -> None:
     progress = Mock()
@@ -29,6 +29,12 @@ def test_compute_has_a_bounded_model_phase_and_returns_to_loop(
         "text": "sample",
         "source_digest": "unused",
     }
+    provider_payload = {
+        "schema_version": "1.0.0",
+        "source_language": "en",
+        "target_language": "de",
+        "text": "sample",
+    }
 
     class Client:
         def __init__(self, **_kwargs: Any) -> None:
@@ -40,15 +46,16 @@ def test_compute_has_a_bounded_model_phase_and_returns_to_loop(
         def __exit__(self, *_args: Any) -> None:
             pass
 
-        def post(self, _route: str, *, json: dict[str, Any]) -> httpx.Response:
-            assert json == payload
-            assert progress.call_args.args == ("worker", "model")
+        def post(self, route: str, *, json: dict[str, Any]) -> httpx.Response:
+            assert route == "/v1/translate"
+            assert json == provider_payload
+            assert progress.call_args.args == ("worker", "provider")
             if fail:
                 raise httpx.ReadTimeout("isolated timeout")
             return httpx.Response(
                 200,
-                json={**payload, "translated_text": "Beispiel"},
-                request=httpx.Request("POST", "http://private-model"),
+                json={"schema_version": "1.0.0", "translated_text": "Beispiel"},
+                request=httpx.Request("POST", "http://translation-provider"),
             )
 
     monkeypatch.setattr(runtime.httpx, "Client", Client)
@@ -58,7 +65,7 @@ def test_compute_has_a_bounded_model_phase_and_returns_to_loop(
     else:
         assert runtime.compute(payload)["status"] == "SUCCEEDED"
     assert [call.args for call in progress.call_args_list] == [
-        ("worker", "model"),
+        ("worker", "provider"),
         ("worker",),
     ]
 
@@ -80,19 +87,17 @@ def test_repository_accepts_only_supported_environment_transport(
 ) -> None:
     sentinel = object()
     monkeypatch.setenv("AELEV_ENVIRONMENT", environment)
-    monkeypatch.setenv("AELEV_TRANSLATOR_LOCK_PATH", "/test/translator.lock.json")
     monkeypatch.setattr(runtime, "database_sslmode", lambda: sslmode)
     monkeypatch.setattr(runtime, "database_url", lambda: "postgresql://test")
 
-    def fake_lock(_path: object) -> tuple[str, dict[str, object]]:
-        return "execution-ref", {}
-
     def fake_repository(url: object, *, execution_ref: str | None) -> object | None:
-        if (url, execution_ref) == ("postgresql://test", "execution-ref"):
+        if (url, execution_ref) == (
+            "postgresql://test",
+            runtime.PROVIDER_CHECKPOINT_SCOPE,
+        ):
             return sentinel
         return None
 
-    monkeypatch.setattr(runtime, "read_translator_lock", fake_lock)
     monkeypatch.setattr(runtime, "Repository", fake_repository)
     assert runtime.repository() is sentinel
 
@@ -113,7 +118,7 @@ def test_execution_duration_measures_only_compute_and_preserves_v1(
         }
     )
     assert duration_ms == 1250
-    compute.assert_called_once_with({"schema_version": version}, "owner-only")
+    compute.assert_called_once_with({"schema_version": version})
     assert ("execution_duration_ms" in response) == (version == "2.0.0")
     if version == "2.0.0":
         assert response["execution_duration_ms"] == 1250
@@ -133,7 +138,7 @@ def test_long_translation_resumes_durable_segments(
         ) -> dict[int, tuple[str, list[str]]]:
             assert lease["token"] == "lease"
             assert segments == ("first", "second")
-            assert execution_ref == "owner-only"
+            assert execution_ref == runtime.PROVIDER_CHECKPOINT_SCOPE
             return {0: ("erste", ["MACHINE_TRANSLATION_UNVERIFIED"])}
 
         def complete_segment(

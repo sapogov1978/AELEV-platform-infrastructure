@@ -30,7 +30,7 @@ def retry_code(error: Exception) -> str:
     if isinstance(error, TimeoutError | httpx.TimeoutException):
         return "TRANSLATOR_DEADLINE_EXCEEDED"
     if isinstance(error, httpx.ConnectError):
-        return "TRANSLATOR_MODEL_UNREACHABLE"
+        return "TRANSLATOR_PROVIDER_UNREACHABLE"
     if isinstance(error, httpx.HTTPStatusError):
         if error.response.status_code == 503:
             try:
@@ -42,9 +42,9 @@ def retry_code(error: Exception) -> str:
                             return code
             except (ValueError, httpx.ResponseNotRead):
                 pass
-        return "TRANSLATOR_MODEL_HTTP_ERROR"
+        return "TRANSLATOR_PROVIDER_HTTP_ERROR"
     if isinstance(error, httpx.HTTPError):
-        return "TRANSLATOR_MODEL_TRANSPORT_ERROR"
+        return "TRANSLATOR_PROVIDER_TRANSPORT_ERROR"
     if isinstance(error, ValidationError):
         return "TRANSLATOR_RESULT_INVALID"
     if isinstance(error, ValueError):

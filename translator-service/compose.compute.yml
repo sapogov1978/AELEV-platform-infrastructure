@@ -1,7 +1,10 @@
 name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT:?set a dedicated compute project}
 
-x-compute-image: &compute-image
-  image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE:?set exact admitted compute image by digest}
+x-provider-image: &provider-image
+  image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE:?set exact admitted provider image by digest}
+
+x-worker-image: &worker-image
+  image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE:?set exact admitted Translator worker image by digest}
 
 x-database-environment: &database-environment
   AELEV_TRANSLATOR_PRESENCE_INTERVAL_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS:?set presence interval}
@@ -37,33 +40,20 @@ x-telemetry-identity: &telemetry-identity
   bind: {create_host_path: false}
 
 services:
-  translator-model:
-    <<: *compute-image
-    command: [python, -m, translator_service.index_translation_provider, serve]
-    environment:
-      AELEV_TRANSLATOR_HEALTH_ROLE: model
-      AELEV_TRANSLATOR_BATCH_SIZE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_BATCH_SIZE:?set model batch size}
-      AELEV_TRANSLATOR_REQUEST_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_REQUEST_TIMEOUT_SECONDS:?set request timeout}
-      AELEV_TRANSLATOR_SEGMENT_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_SEGMENT_TIMEOUT_SECONDS:?set segment timeout}
-      AELEV_TRANSLATOR_STARTUP_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_STARTUP_TIMEOUT_SECONDS:-600}
-    volumes: [translator-model-socket:/run/aelev-translator]
+  translation-provider:
+    <<: *provider-image
+    volumes: [translation-provider-socket:/run/aelev-translator]
     network_mode: none
-    restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_RESTART_POLICY:-on-failure:3}
+    restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY:-on-failure:3}
     read_only: true
     tmpfs: [/tmp:size=64m,mode=1777]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_MEMORY_LIMIT:?set model memory limit}
-    cpus: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_CPUS:?set model CPU limit}
-    healthcheck:
-      test: [CMD, python, -S, /opt/aelev/src/translator_service/local_health.py]
-      start_period: ${AELEV_INFRASTRUCTURE_TRANSLATOR_MODEL_STARTUP_TIMEOUT_SECONDS:-600}s
-      interval: 10s
-      timeout: 5s
-      retries: 30
+    mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT:?set provider memory limit}
+    cpus: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS:?set provider CPU limit}
 
   translator-worker:
-    <<: *compute-image
+    <<: *worker-image
     command: [python, -m, translator_service.runtime, worker]
     environment:
       <<: *database-environment
@@ -71,11 +61,11 @@ services:
       AELEV_TRANSLATOR_HEALTH_ROLE: worker
       AELEV_TRANSLATOR_HIGH_PRIORITY_BURST: ${AELEV_INFRASTRUCTURE_TRANSLATOR_HIGH_PRIORITY_BURST:?set high priority burst}
     volumes:
-      - translator-model-socket:/run/aelev-translator:ro
+      - translation-provider-socket:/run/aelev-translator:ro
       - *database-identity
       - *telemetry-identity
     depends_on:
-      translator-model: {condition: service_healthy}
+      translation-provider: {condition: service_healthy}
     restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY:-on-failure:3}
     read_only: true
     tmpfs: [/tmp:size=64m,mode=1777]
@@ -92,7 +82,7 @@ services:
       retries: 3
 
 volumes:
-  translator-model-socket:
+  translation-provider-socket:
 
 networks:
   translator-data:

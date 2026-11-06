@@ -23,15 +23,7 @@ def test_actual_collection_delivery_outage_and_recovery(
     sandbox = Sandbox()
     cert, key, ca = credential
     try:
-        sandbox.network = sandbox.prefix + "-private"
-        sandbox.docker(
-            "network",
-            "create",
-            "--internal",
-            "--label",
-            "io.aelev.spire-test=" + sandbox.id,
-            sandbox.network,
-        )
+        sandbox.private_network()
 
         def deliver(volume: str, files: dict[str, bytes]) -> None:
             sandbox.docker(

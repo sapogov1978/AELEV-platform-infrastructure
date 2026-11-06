@@ -10,6 +10,7 @@ from urllib.parse import unquote
 
 
 EXCLUDED = {".git", "node_modules", "runtime", "secrets"}
+IMMUTABLE_ARCHIVE = Path("docs/audit/inherited-adrs")
 FENCED = re.compile(r"```.*?```", re.DOTALL)
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
 
@@ -21,8 +22,14 @@ def main() -> int:
     missing: list[str] = []
     checked = 0
     for document in sorted(root.rglob("*.md")):
-        if document.relative_to(root).parts[0] == "dist":
+        relative_document = document.relative_to(root)
+        if relative_document.parts[0] == "dist":
             continue  # Generated distributions are not repository documentation.
+        if (
+            relative_document.is_relative_to(IMMUTABLE_ARCHIVE)
+            and relative_document != IMMUTABLE_ARCHIVE / "INDEX.md"
+        ):
+            continue  # Imported bytes retain links relative to their source repository.
         if any(part in EXCLUDED for part in document.parts):
             continue
         text = FENCED.sub("", document.read_text(encoding="utf-8"))

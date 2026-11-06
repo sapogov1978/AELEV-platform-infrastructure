@@ -21,4 +21,4 @@
 - [USER_MANUAL.md](USER_MANUAL.md) — установка, регистрация, отзыв и восстановление.
 - [SPEC.md](SPEC.md), [ENDPOINTS.md](ENDPOINTS.md) — правила и технические интерфейсы.
 - [src/](src), [test/](test) — реализация и проверки.
-- [index.md](index.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — карта, ограничения и история.
+- [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, ограничения и история.

@@ -17,3 +17,9 @@
 - `sites-ca.crt` — набор доверенных выпускающих или корневых сертификатов обеих площадок для узлов и административных клиентов.
 
 Для локального стенда файлы безопасно создаёт `../generate-local-configuration.sh`. Для рабочей установки учётные данные выдаются утверждённым хранилищем секретов, а сертификат каждой площадки должен содержать SAN каждого реально используемого DNS-имени её узлов и балансировщика. Site replication требует совместимых корневых учётных данных на обеих площадках. Отсутствующий файл не создаётся Docker автоматически: Compose завершает создание контейнера ошибкой.
+
+## Официальные руководства
+
+- [MinIO network encryption](https://min.io/docs/minio/linux/operations/network-encryption.html) — размещение сертификатов, CA bundle и требования SAN.
+- [MinIO site replication](https://min.io/docs/minio/linux/operations/install-deploy-manage/multi-site-replication.html) — полномочия и доверие между площадками.
+- [Docker Compose secrets](https://docs.docker.com/reference/compose-file/secrets/) — файловая доставка без включения байтов в образ.

@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "profile": "full-local",
+  "release": "0.2.0",
+  "description": "Clean-room functional profile composed from owner-controlled infrastructure deliveries.",
+  "root_compose": {
+    "file": "compose.yml",
+    "profiles": [
+      "ui",
+      "workload-identity",
+      "spire-observation"
+    ],
+    "required_services": [
+      "blackbox-exporter",
+      "blackbox-exporter-operator",
+      "blackbox-exporter-status-publisher",
+      "delivery",
+      "delivery-status-publisher",
+      "etcd-1",
+      "etcd-2",
+      "etcd-3",
+      "grafana",
+      "grafana-status-publisher",
+      "kafka",
+      "kafka-status-publisher",
+      "keycloak",
+      "keycloak-database",
+      "keycloak-status-publisher",
+      "loki",
+      "loki-status-publisher",
+      "minio-site-a-1",
+      "minio-site-a-2",
+      "minio-site-a-3",
+      "minio-site-a-4",
+      "minio-site-b-1",
+      "minio-site-b-2",
+      "minio-site-b-3",
+      "minio-site-b-4",
+      "minio-status-publisher",
+      "otel-collector",
+      "otel-collector-status-publisher",
+      "platform-ui",
+      "platform-ui-api",
+      "platform-ui-status-publisher",
+      "postgresql-1",
+      "postgresql-2",
+      "postgresql-3",
+      "postgresql-fencer",
+      "postgresql-status-publisher",
+      "prometheus",
+      "prometheus-operator",
+      "prometheus-status-publisher",
+      "public-egress-gateway",
+      "public-egress-gateway-status-publisher",
+      "spire-observer",
+      "spire-server",
+      "spire-status-publisher",
+      "spire-telemetry-sender",
+      "tempo",
+      "tempo-status-publisher",
+      "translator-api",
+      "translator-database",
+      "translator-migrator",
+      "translator-normal-consumer",
+      "translator-outbox",
+      "translator-priority-consumer",
+      "translator-service-status-publisher",
+      "translator-topic-provisioner"
+    ]
+  },
+  "compute_compose": {
+    "file": "translator-service/compose.compute.yml",
+    "env_file": "translator-service/.env",
+    "required_services": [
+      "translation-provider",
+      "translator-worker"
+    ]
+  },
+  "owners": [
+    "kafka",
+    "keycloak",
+    "minio",
+    "observability/blackbox-exporter",
+    "observability/delivery",
+    "observability/grafana",
+    "observability/loki",
+    "observability/otel-collector",
+    "observability/prometheus",
+    "observability/tempo",
+    "platform-ui",
+    "postgresql",
+    "public-egress-gateway",
+    "spire",
+    "translator-service"
+  ],
+  "environment_files": [
+    ".env",
+    "kafka/.env",
+    "keycloak/.env",
+    "minio/.env",
+    "observability/.env",
+    "observability/blackbox-exporter/.env",
+    "observability/delivery/.env",
+    "observability/grafana/.env",
+    "observability/loki/.env",
+    "observability/otel-collector/.env",
+    "observability/prometheus/.env",
+    "observability/tempo/.env",
+    "platform-ui/.env",
+    "postgresql/.env",
+    "public-egress-gateway/.env",
+    "spire/.env",
+    "translator-service/.env"
+  ],
+  "external_inputs": [
+    {
+      "id": "translation-provider-image",
+      "kind": "container-image-digest",
+      "env_file": "translator-service/.env",
+      "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
+      "owner": "translation-provider",
+      "source_repository": "https://github.com/sapogov1978/AELEV-translation-provider",
+      "release_workflow": "release-provider-image",
+      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42248923795",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9",
+      "purpose": "Opaque translation capability provider; Translator does not inspect its implementation."
+    },
+    {
+      "id": "translator-worker-image",
+      "kind": "container-image-digest",
+      "env_file": "translator-service/.env",
+      "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
+      "owner": "translator-service",
+      "source_repository": "https://github.com/sapogov1978/AELEV-platform-infrastructure",
+      "release_workflow": "release-translator-worker-image",
+      "purpose": "Translator worker admitted independently from the opaque provider."
+    },
+    {
+      "id": "spire-installer-approval",
+      "kind": "operator-confirmation",
+      "variable": "DRP_SPIRE_DOCKER_SOCKET_APPROVAL",
+      "expected": "operator-root-equivalent-v1",
+      "persistent": false,
+      "owner": "operator",
+      "purpose": "One-process approval for the SPIRE installer helper with Docker socket access."
+    }
+  ],
+  "local_builds": [
+    {
+      "image": "aelev/infrastructure-spire:local",
+      "context": "spire",
+      "target": "runtime"
+    },
+    {
+      "image": "aelev/infrastructure-spire-installer:local",
+      "context": "spire",
+      "target": "operator-installer"
+    },
+    {
+      "image": "aelev/spire-telemetry-sender:local",
+      "context": "spire",
+      "target": "telemetry-sender"
+    }
+  ],
+  "acceptance": {
+    "runner": "test_infrastructure/clean_room_gate.py",
+    "verifier": "test_infrastructure/clean_room.py",
+    "required_functions": [
+      "identity-login",
+      "platform-ui-owner-status",
+      "kafka-round-trip",
+      "postgresql-transaction",
+      "object-storage-round-trip",
+      "public-egress-default-deny-and-exact-allow",
+      "telemetry-delivery-query",
+      "opaque-translation-round-trip",
+      "workload-identity-issue-rotate-revoke",
+      "workload-identity-observation-delivery-recovery",
+      "bounded-recovery-preserves-state"
+    ],
+    "evidence_schema": "docs/schemas/clean-room-evidence-v1.json"
+  }
+}

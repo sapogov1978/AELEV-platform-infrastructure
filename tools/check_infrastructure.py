@@ -15,8 +15,15 @@ def main() -> int:
     root = Path(__file__).resolve().parents[1]
     document = json.loads((root / "docs/audit/extraction.json").read_text())
     errors = []
+    archive_root = root / document["archive_root"]
     for name in document["inherited_adrs"]:
-        path = root / name
+        source_path = Path(name)
+        try:
+            relative = source_path.relative_to("docs/adr")
+        except ValueError:
+            errors.append(f"Inherited ADR has invalid source identity: {name}")
+            continue
+        path = archive_root / relative
         if (
             not path.is_file()
             or hashlib.sha256(path.read_bytes()).hexdigest()
@@ -44,7 +51,7 @@ def main() -> int:
     if errors:
         raise SystemExit("\n".join(errors))
     print(
-        f"Infrastructure audit passed: {len(document['inherited_adrs'])} inherited ADRs, {len(diagrams)} diagrams"
+        f"Infrastructure audit passed: {len(document['inherited_adrs'])} immutable inherited ADRs in audit archive, {len(diagrams)} diagrams"
     )
     return 0
 

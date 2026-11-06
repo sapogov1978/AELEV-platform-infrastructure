@@ -1,4 +1,4 @@
-"""Independent Kafka consumer, bounded model worker and durable outbox."""
+"""Independent Kafka consumer, opaque-provider worker and durable outbox."""
 
 import argparse
 import json
@@ -8,7 +8,6 @@ import signal
 import sys
 import threading
 import time
-from pathlib import Path
 from typing import Any
 
 import httpx
@@ -20,11 +19,11 @@ from sqlalchemy.exc import SQLAlchemyError
 from translator_service import health_heartbeat, observability
 from translator_service.contracts import RESULT_TOPIC, RESULT_TOPIC_V2, digest
 from translator_service.environment import database_sslmode, database_url
-from translator_service.index_translation_provider import read_translator_lock
 from translator_service.repository import Repository
 from translator_service.retry import retry_code
 
 LOGGER = logging.getLogger(__name__)
+PROVIDER_CHECKPOINT_SCOPE = "opaque-translation-provider-v1"
 
 
 class JsonFormatter(logging.Formatter):
@@ -80,58 +79,33 @@ def repository() -> Repository:
         and database_sslmode() != "verify-full"
     ):
         raise RuntimeError("TRANSLATOR_DATABASE_TLS_REQUIRED")
-    execution_ref, _ = read_translator_lock(
-        Path(os.environ["AELEV_TRANSLATOR_LOCK_PATH"])
-    )
-    return Repository(database_url(), execution_ref=execution_ref)
+    return Repository(database_url(), execution_ref=PROVIDER_CHECKPOINT_SCOPE)
 
 
-def compute(data: dict[str, Any], execution_ref: str | None = None) -> dict[str, Any]:
-    v2 = data.get("schema_version") == "2.0.0"
-    if v2 and not execution_ref:
-        raise RuntimeError("TRANSLATOR_EXECUTION_NOT_CONFIGURED")
+def compute(data: dict[str, Any]) -> dict[str, Any]:
     payload = {
         "schema_version": "1.0.0",
         **{key: data[key] for key in ("source_language", "target_language")},
-        "translator_ref": execution_ref if v2 else data["translator_ref"],
+        "text": data["text"],
     }
-    operation = data.get("operation", "TRANSLATE_TEXT")
-    if operation == "PROFILE_UNIT":
-        payload["profile"] = {
-            "subject_area": data["text"],
-            "positive_terms": [],
-            "excluded_terms": [],
-            "excluded_topics": [],
-        }
-        route = "/v1/localize-profile"
-    else:
-        payload.update({"text": data["text"], "source_digest": data["source_digest"]})
-        route = (
-            "/v1/translate-evidence"
-            if operation == "OPERATOR_REVIEW"
-            else "/v1/translate-text"
-        )
     with httpx.Client(
         transport=httpx.HTTPTransport(uds=os.environ["AELEV_TRANSLATOR_SOCKET_PATH"]),
-        base_url="http://private-model",
+        base_url="http://translation-provider",
         trust_env=False,
         timeout=240,
     ) as client:
-        health_heartbeat.progress("worker", "model")
+        health_heartbeat.progress("worker", "provider")
         try:
-            response = client.post(route, json=payload)
+            response = client.post("/v1/translate", json=payload)
         finally:
             health_heartbeat.progress("worker")
     if response.status_code == 422:
         code = response.json().get("detail", "TRANSLATOR_REQUEST_INVALID")
-        if v2 and code == "TRANSLATOR_VERSION_MISMATCH":
-            raise RuntimeError("TRANSLATOR_EXECUTION_UNAVAILABLE")
         permitted = {
             "TRANSLATOR_EMPTY_OUTPUT",
             "TRANSLATOR_CONTROL_TOKEN_LEAK",
             "TRANSLATOR_UNSUPPORTED_TARGET_LANGUAGE",
             "TRANSLATOR_UNSUPPORTED_SOURCE_LANGUAGE",
-            "TRANSLATOR_VERSION_MISMATCH",
         }
         return {
             "status": "FAILED",
@@ -141,29 +115,25 @@ def compute(data: dict[str, Any], execution_ref: str | None = None) -> dict[str,
         }
     response.raise_for_status()
     result = response.json()
-    for key in (
-        "schema_version",
-        "translator_ref",
-        "source_language",
-        "target_language",
-    ):
-        if result.get(key) != payload[key]:
-            raise RuntimeError("TRANSLATOR_PRIVATE_RESPONSE_INVALID")
-    translated = (
-        result["profile"]["subject_area"]
-        if operation == "PROFILE_UNIT"
-        else result["translated_text"]
-    )
+    if result.get("schema_version") != payload["schema_version"]:
+        raise RuntimeError("TRANSLATOR_PRIVATE_RESPONSE_INVALID")
+    translated = result.get("translated_text")
+    warnings = result.get("warnings", [])
     if (
         not isinstance(translated, str)
         or not translated.strip()
         or len(translated) > 48000
+        or not isinstance(warnings, list)
+        or len(warnings) > 32
+        or any(
+            not isinstance(warning, str) or len(warning) > 128 for warning in warnings
+        )
     ):
         raise RuntimeError("TRANSLATOR_PRIVATE_RESPONSE_INVALID")
     return {
         "status": "SUCCEEDED",
         "translated_text": translated,
-        "warnings": result.get("warnings", []),
+        "warnings": warnings,
         "error_code": "",
     }
 
@@ -178,7 +148,7 @@ def retry_translation(
     code = retry_code(error)
     repo.retry(lease, code)
     LOGGER.warning(
-        "translation_model_retry",
+        "translation_provider_retry",
         extra={
             "request_id": lease["request_id"],
             "correlationid": envelope["correlationid"],
@@ -218,13 +188,10 @@ def execute_translation(
     )
     result: dict[str, Any]
     if not segments:
-        result = compute(data, lease.get("execution_ref"))
+        result = compute(data)
     else:
         assert repo is not None
-        execution_ref = lease.get("execution_ref") or data.get("translator_ref")
-        if not isinstance(execution_ref, str) or not execution_ref:
-            raise RuntimeError("TRANSLATOR_EXECUTION_NOT_CONFIGURED")
-        completed = repo.prepare_segments(lease, segments, execution_ref)
+        completed = repo.prepare_segments(lease, segments, PROVIDER_CHECKPOINT_SCOPE)
         translated: list[str] = []
         warnings: list[str] = []
         result = {}
@@ -236,7 +203,7 @@ def execute_translation(
                     "text": segment,
                     "source_digest": digest(segment.encode()),
                 }
-                segment_result = compute(segment_data, lease.get("execution_ref"))
+                segment_result = compute(segment_data)
                 if segment_result["status"] != "SUCCEEDED":
                     result = segment_result
                     break

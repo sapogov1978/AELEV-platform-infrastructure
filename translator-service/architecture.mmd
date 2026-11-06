@@ -3,8 +3,8 @@ flowchart LR
     KafkaIn --> Consumer["Priority / regular consumers"]
     Consumer --> Jobs[("Owner PostgreSQL: jobs and attempts")]
     Jobs --> Worker["Translation worker"]
-    Worker --> Model["Изолированный model runtime"]
-    Model --> Worker
+    Worker -->|opaque text + languages| Provider["Непрозрачный провайдер перевода"]
+    Provider -->|translation or bounded error| Worker
     Worker --> Outbox[("Transactional outbox")]
     Outbox -->|translation results| KafkaOut["Kafka result topics"]
     API["Operator / diagnostic API"] --> Jobs

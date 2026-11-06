@@ -62,7 +62,7 @@ python3 provision.py apply /path/to/owner/grant.json --directory grants \
   --audit-directory audit --actor <operator-subject>
 ```
 
-Первая команда только проверяет. Вторая создаёт или заменяет один файл с хешем identity в имени. До изменения она устойчиво фиксирует намерение в отдельном `audit/operator-audit.jsonl`, после изменения — завершение с тем же event ID; Actor берётся из подтверждённой операторской identity, а не из имени grant. Право записи имеет только оператор; контейнер получает каталог grants read-only и не получает audit. Новый запрос перечитывает файл, restart не требуется. Повтор не создаёт второго разрешения. Проверить всю хеш-цепочку можно командой `python3 provision.py verify-audit audit/operator-audit.jsonl`; повреждённая цепочка или недоступность записи intent запрещают apply/revoke. Если команда вернула ошибку уже после сохранённого intent, сначала сравните текущий grant с его digest и зафиксируйте результат штатным аудитом площадки: отсутствие `MUTATION_COMMITTED` не доказывает отсутствие мутации. На целевой платформе эти локальные записи принимает отдельный канонический сборщик ADR-0017, а конфигурация дополнительно подписывается.
+Первая команда только проверяет. Вторая создаёт или заменяет один файл с хешем identity в имени. До изменения она устойчиво фиксирует намерение в отдельном `audit/operator-audit.jsonl`, после изменения — завершение с тем же event ID; Actor берётся из подтверждённой операторской identity, а не из имени grant. Право записи имеет только оператор; контейнер получает каталог grants read-only и не получает audit. Новый запрос перечитывает файл, restart не требуется. Повтор не создаёт второго разрешения. Проверить всю хеш-цепочку можно командой `python3 provision.py verify-audit audit/operator-audit.jsonl`; повреждённая цепочка или недоступность записи intent запрещают apply/revoke. Если команда вернула ошибку уже после сохранённого intent, сначала сравните текущий grant с его digest и зафиксируйте результат штатным аудитом площадки: отсутствие `MUTATION_COMMITTED` не доказывает отсутствие мутации. На целевой платформе эти локальные записи принимает отдельный канонический сборщик 00-INFRA-20261106-0007-workload-and-operator-identity, а конфигурация дополнительно подписывается.
 
 Отзыв одной exact identity:
 
@@ -151,3 +151,11 @@ curl --cacert /path/to/client/ca.pem \
 | `EGRESS_UPSTREAM_FAILED`, `EGRESS_UPSTREAM_TIMEOUT` | Внешний endpoint, route и timeout; сообщения исключений/секреты не журналируются. |
 
 `docker compose logs public-egress-gateway` показывает безопасный `request_id`, hostname, метод, результат, байты и длительность, не полный URL/secret. `/metrics` содержит только технические счётчики процесса. В local можно оставить `OTLP_HTTP_ENDPOINT` пустым. Для production доставьте две отдельные mTLS-пары в `secrets/telemetry/client` и `secrets/telemetry/sender`, задайте `OTLP_HTTP_ENDPOINT=https://public-egress-gateway-telemetry-sender:4318`, один раз подготовьте том командой `docker compose --profile provision run --rm public-egress-gateway-telemetry-data-init`, затем запустите `docker compose --profile telemetry up -d`. Runtime видит только client identity, sender — только свои listener/central-delivery identities; постоянный volume сохраняет журнал при недоступности центральной наблюдаемости. Публикация состояния и тесты описаны в [README](README.md).
+
+## Официальные руководства
+
+- [FastAPI deployment concepts](https://fastapi.tiangolo.com/deployment/concepts/) — запуск защищённого API, workers и завершение процесса.
+- [HTTPX advanced clients](https://www.python-httpx.org/advanced/clients/) и [timeouts](https://www.python-httpx.org/advanced/timeouts/) — connection pooling и раздельные сетевые пределы.
+- [Python ipaddress](https://docs.python.org/3.13/library/ipaddress.html) — классификация разрешённых и запрещённых адресов после DNS resolution.
+- [OpenTelemetry OTLP](https://opentelemetry.io/docs/specs/otlp/) — доставка logs/traces/metrics, backpressure и повтор.
+- [SPIFFE X.509-SVID](https://spiffe.io/docs/latest/spiffe-specs/x509-svid/) — workload identity для mTLS.

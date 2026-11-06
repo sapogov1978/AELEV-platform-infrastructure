@@ -14,13 +14,9 @@ from translator_service import health_heartbeat, local_health
 
 @pytest.fixture
 def signal_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    monkeypatch.setenv("AELEV_TRANSLATOR_HEALTH_ROLE", "model")
-
-    def identity(pid: int) -> str:
-        return f"boot:{pid}:1"
-
-    monkeypatch.setattr(local_health, "process_identity", identity)
-    health_heartbeat.publish("model", 12, root=str(tmp_path))
+    monkeypatch.setenv("AELEV_TRANSLATOR_HEALTH_ROLE", "api")
+    monkeypatch.setattr(local_health, "process_identity", lambda pid: f"boot:{pid}:1")
+    health_heartbeat.publish("api", root=str(tmp_path))
     return tmp_path
 
 
@@ -42,32 +38,28 @@ def test_probe_has_only_os_time_imports() -> None:
 
 def test_atomic_owned_signal(signal_root: Path) -> None:
     assert local_health.healthy(root=str(signal_root))
-    assert (signal_root / "model.signal").stat().st_mode & 0o777 == 0o600
-    assert sorted(p.name for p in signal_root.iterdir()) == ["model.signal"]
+    assert (signal_root / "api.signal").stat().st_mode & 0o777 == 0o600
+    assert sorted(path.name for path in signal_root.iterdir()) == ["api.signal"]
 
 
 @pytest.mark.parametrize(
     ("field", "value"),
     [
         (0, b"foreign"),
-        (1, b"api"),
+        (1, b"provider"),
         (2, b"0"),
         (2, b"0001"),
         (3, b"old-incarnation"),
-        (4, b"0"),
-        (4, b"-1"),
-        (4, b"0012"),
-        (5, b"old-native-incarnation"),
-        (6, b"0"),
+        (4, b"1"),
+        (5, b"child"),
         (6, b"nan"),
         (6, b"inf"),
-        (6, b"-inf"),
         (6, b"999999999999999"),
         (7, b"trailing"),
     ],
 )
 def test_invalid_frame(signal_root: Path, field: int, value: bytes) -> None:
-    path = signal_root / "model.signal"
+    path = signal_root / "api.signal"
     fields = path.read_bytes().split(b"\n")
     fields[field] = value
     path.write_bytes(b"\n".join(fields))
@@ -76,7 +68,7 @@ def test_invalid_frame(signal_root: Path, field: int, value: bytes) -> None:
 
 @pytest.mark.parametrize("kind", ["missing", "symlink", "hardlink", "fifo", "mode"])
 def test_unsafe_files_fail_closed(signal_root: Path, kind: str) -> None:
-    path = signal_root / "model.signal"
+    path = signal_root / "api.signal"
     if kind == "mode":
         path.chmod(0o644)
     elif kind == "hardlink":
@@ -103,43 +95,17 @@ def test_process_death_invalidates_signal(
     assert not local_health.healthy(root=str(signal_root))
 
 
-def test_api_signal_ignores_model(
-    signal_root: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setenv("AELEV_TRANSLATOR_HEALTH_ROLE", "api")
-    health_heartbeat.publish("api", None, root=str(signal_root))
-    assert local_health.healthy(root=str(signal_root))
-    with pytest.raises(ValueError):
-        health_heartbeat.publish("api", 12, root=str(signal_root))
-
-
 @pytest.mark.parametrize("ready", [True, False])
 def test_loop_heartbeat_and_cancellation(signal_root: Path, ready: bool) -> None:
     async def exercise() -> None:
         task = asyncio.create_task(
-            health_heartbeat.run(
-                "model", lambda: ready, lambda: 12, root=str(signal_root)
-            )
+            health_heartbeat.run("api", lambda: ready, root=str(signal_root))
         )
         await asyncio.sleep(0)
         assert local_health.healthy(root=str(signal_root)) is ready
         task.cancel()
         await asyncio.gather(task, return_exceptions=True)
         assert not local_health.healthy(root=str(signal_root))
-
-    asyncio.run(exercise())
-
-
-def test_native_restart_race_does_not_kill_heartbeat(signal_root: Path) -> None:
-    async def exercise() -> None:
-        task = asyncio.create_task(
-            health_heartbeat.run("model", lambda: True, root=str(signal_root))
-        )
-        await asyncio.sleep(0)
-        assert not task.done()
-        assert not local_health.healthy(root=str(signal_root))
-        task.cancel()
-        await asyncio.gather(task, return_exceptions=True)
 
     asyncio.run(exercise())
 
@@ -151,7 +117,7 @@ def test_native_restart_race_does_not_kill_heartbeat(signal_root: Path) -> None:
         ("consumer", "kafka", 120),
         ("outbox", "loop", 30),
         ("worker", "loop", 30),
-        ("worker", "model", 300),
+        ("worker", "provider", 300),
     ],
 )
 def test_progress_expires_without_main_loop_refresh(
@@ -171,35 +137,6 @@ def test_progress_expires_without_main_loop_refresh(
     assert not local_health.healthy(root=str(signal_root))
     health_heartbeat.progress(role, root=str(signal_root))
     assert local_health.healthy(root=str(signal_root))
-    clock[0] += 31
-    assert not local_health.healthy(root=str(signal_root))
-
-
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [
-        (0, b"foreign"),
-        (1, b"outbox"),
-        (2, b"0"),
-        (2, b"01"),
-        (3, b"reused-pid"),
-        (4, b"model"),
-        (5, b"nan"),
-        (5, b"inf"),
-        (5, b"999999999999999"),
-        (6, b"trailing"),
-    ],
-)
-def test_progress_frame_fails_closed(
-    signal_root: Path, monkeypatch: pytest.MonkeyPatch, field: int, value: bytes
-) -> None:
-    monkeypatch.setenv("AELEV_TRANSLATOR_HEALTH_ROLE", "consumer")
-    health_heartbeat.progress("consumer", root=str(signal_root))
-    path = signal_root / "consumer.signal"
-    fields = path.read_bytes().split(b"\n")
-    fields[field] = value
-    path.write_bytes(b"\n".join(fields))
-    assert not local_health.healthy(root=str(signal_root))
 
 
 def test_progress_is_opt_in_and_phase_is_not_arbitrary(

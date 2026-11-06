@@ -5,12 +5,22 @@ from __future__ import annotations
 
 import re
 import sys
+import zipfile
 from pathlib import Path
 
 from source_scope import source_files
 
 USE = re.compile(r"^\s*-\s+uses:\s+([^\s#]+)", re.MULTILINE)
 SHA = re.compile(r"^[^@]+@[0-9a-f]{40}$")
+OBSERVABILITY_TOOLS = {
+    "observability/blackbox-exporter": "aelev_observability_tools-1.1.3-py3-none-any.whl",
+    "observability/delivery": "aelev_observability_tools-1.0.1-py3-none-any.whl",
+    "observability/grafana": "aelev_observability_tools-1.0.1-py3-none-any.whl",
+    "observability/loki": "aelev_observability_tools-1.0.1-py3-none-any.whl",
+    "observability/otel-collector": "aelev_observability_tools-1.0.1-py3-none-any.whl",
+    "observability/prometheus": "aelev_observability_tools-1.1.3-py3-none-any.whl",
+    "observability/tempo": "aelev_observability_tools-1.0.1-py3-none-any.whl",
+}
 
 
 def main() -> int:
@@ -38,13 +48,39 @@ def main() -> int:
         errors.append(
             f"unexpected active Platform UI client wheels: {sorted(active_wheels)}"
         )
+    for owner, expected in OBSERVABILITY_TOOLS.items():
+        pyproject = root / owner / "pyproject.toml"
+        configured = re.findall(
+            r'vendor/(aelev_observability_tools-[0-9.]+-py3-none-any\.whl)',
+            pyproject.read_text(encoding="utf-8"),
+        )
+        if configured != [expected]:
+            errors.append(
+                f"unexpected Observability tools wheel for {owner}: {configured}"
+            )
+            continue
+        wheel = pyproject.parent / "vendor" / expected
+        if not wheel.is_file():
+            errors.append(f"missing active Observability tools wheel: {wheel}")
+            continue
+        with zipfile.ZipFile(wheel) as archive:
+            source = archive.read("aelev_observability_tools/__init__.py").decode()
+        required_extensions = (
+            "subjectKeyIdentifier=hash",
+            "authorityKeyIdentifier=keyid:always",
+            "authorityKeyIdentifier=keyid,issuer",
+        )
+        missing = [value for value in required_extensions if value not in source]
+        if missing:
+            errors.append(f"{owner} wheel lacks PKI extensions: {missing}")
     if errors:
         print("Supply-chain validation failed:")
         print("\n".join(f"- {error}" for error in errors))
         return 1
     print(
         f"Supply-chain references passed: {references} pinned workflow uses; "
-        "active Platform UI client is exactly 1.1.1"
+        "active Platform UI client is exactly 1.1.1; "
+        f"{len(OBSERVABILITY_TOOLS)} Observability wheels include SKI/AKI"
     )
     return 0
 
