@@ -67,6 +67,21 @@ class FullLocalContractTests(unittest.TestCase):
                 }
             ],
         )
+        self.assertEqual(
+            plan["release_images"],
+            [
+                {
+                    "id": "observability-delivery-image",
+                    "owner": "observability/delivery",
+                    "admitted_reference": (
+                        "ghcr.io/sapogov1978/"
+                        "aelev-platform-infrastructure-observability-delivery"
+                        "@sha256:d54693da1819b78a20af65d3fc5eaab12b6b12873dd231f6"
+                        "5f18f4aa5f3aedc0"
+                    ),
+                }
+            ],
+        )
         self.assertEqual(len(plan["acceptance_functions"]), 11)
 
     def test_gate_stages_cover_each_function_once(self) -> None:

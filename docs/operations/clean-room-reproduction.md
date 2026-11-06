@@ -9,7 +9,7 @@
 - Linux Docker Engine либо Docker Desktop с Linux containers, Docker Compose 2.24.4+, Python 3.13, Poetry 2.2.1, OpenSSL и Chromium;
 - чистый checkout точного release commit без существующих контейнеров, сетей и volumes этого Compose project;
 - место и ресурсы по руководствам владельцев;
-- три заранее допущенных digest-pinned образа: непрозрачного translation provider из отдельного private-репозитория [`AELEV-translation-provider`](https://github.com/sapogov1978/AELEV-translation-provider), Translator worker и owner-controlled Observability Sender, выпускаемых workflow этого репозитория;
+- четыре заранее допущенных digest-pinned образа: непрозрачного translation provider из отдельного private-репозитория [`AELEV-translation-provider`](https://github.com/sapogov1978/AELEV-translation-provider), Translator worker, owner-controlled Observability Sender и Telemetry Delivery, выпускаемые workflow этого репозитория;
 - отдельное операторское решение на единственный запуск SPIRE installer с Docker socket; подтверждение не сохраняется в `.env`;
 - локальные secrets/PKI и внешние owner inputs, подготовленные владельческими средствами. Они не передаются в Git и не печатаются в evidence.
 
@@ -26,7 +26,7 @@ python3 tools/full_local.py validate
 python3 tools/full_local.py plan > full-local-plan.json
 ```
 
-`git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых и две compute-роли, три внешних входа, один build input и одиннадцать функций приёмки. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
+`git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых и две compute-роли, три внешних входа, один build input, один release image и одиннадцать функций приёмки. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
 
 ## 2. Инициализировать и собрать без запуска
 

@@ -87,6 +87,8 @@ jobs:
           for item in manifest.get("build_inputs", []):
               if item["kind"] == "container-image-digest":
                   print(item["admitted_reference"])
+          for item in manifest.get("release_images", []):
+              print(item["admitted_reference"])
           PY
           while IFS= read -r image; do
             docker buildx imagetools inspect "$image" >/dev/null

@@ -148,6 +148,26 @@ def validate_contract(root: Path = ROOT) -> tuple[dict[str, Any], list[str]]:
                 errors.append(f"BUILD_INPUT_NOT_ADMITTED:{item['id']}:{relative}")
     if len(build_input_ids) != len(set(build_input_ids)):
         errors.append("BUILD_INPUT_IDS_NOT_UNIQUE")
+    release_image_ids: list[str] = []
+    for item in manifest.get("release_images", []):
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+            errors.append("RELEASE_IMAGE_INVALID")
+            continue
+        release_image_ids.append(item["id"])
+        reference = item.get("admitted_reference")
+        env_file = item.get("env_file")
+        variable = item.get("variable")
+        if not isinstance(reference, str) or not DIGEST_REFERENCE.fullmatch(reference):
+            errors.append(f"RELEASE_IMAGE_DIGEST_INVALID:{item['id']}")
+            continue
+        example = (root / str(env_file)).with_name(".env.example")
+        if (
+            not example.is_file()
+            or read_env(example, root).get(str(variable)) != reference
+        ):
+            errors.append(f"RELEASE_IMAGE_NOT_ADMITTED:{item['id']}")
+    if len(release_image_ids) != len(set(release_image_ids)):
+        errors.append("RELEASE_IMAGE_IDS_NOT_UNIQUE")
     acceptance = manifest.get("acceptance")
     if not isinstance(acceptance, dict):
         errors.append("ACCEPTANCE_MISSING")
@@ -300,6 +320,19 @@ def preflight(
             ok,
             f"BUILD_INPUT_NOT_ADMITTED:{item['id']}",
         )
+    for item in manifest.get("release_images", []):
+        env_path = root / str(item["env_file"])
+        value = (
+            read_env(env_path, root).get(str(item["variable"]), "")
+            if env_path.is_file()
+            else ""
+        )
+        ok = value == item.get("admitted_reference")
+        check(
+            f"release-image:{item['id']}",
+            ok,
+            f"RELEASE_IMAGE_NOT_ADMITTED:{item['id']}",
+        )
     models: dict[str, dict[str, Any]] = {}
     render_blockers = contract_errors + [
         code for code in errors if code.startswith("ENV_FILE_MISSING:")
@@ -415,6 +448,14 @@ def source_plan(root: Path = ROOT) -> dict[str, Any]:
                 "admitted_reference": item["admitted_reference"],
             }
             for item in manifest.get("build_inputs", [])
+        ],
+        "release_images": [
+            {
+                "id": item["id"],
+                "owner": item["owner"],
+                "admitted_reference": item["admitted_reference"],
+            }
+            for item in manifest.get("release_images", [])
         ],
         "compose_models_included": ["root", "compute"],
         "translation_provider_implementation_included": False,
@@ -693,6 +734,20 @@ def build_bom(
                 ),
             }
             for item in manifest.get("build_inputs", [])
+        ],
+        "release_images": [
+            {
+                "id": item["id"],
+                "owner": item["owner"],
+                "admitted_reference": item["admitted_reference"],
+                "release_run": item["release_run"],
+                "status": next(
+                    row["status"]
+                    for row in result["checks"]
+                    if row["name"] == f"release-image:{item['id']}"
+                ),
+            }
+            for item in manifest.get("release_images", [])
         ],
     }
     output.parent.mkdir(parents=True, exist_ok=True)

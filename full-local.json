@@ -175,6 +175,19 @@
       "purpose": "Owner-controlled sender runtime and verified SQLite build base."
     }
   ],
+  "release_images": [
+    {
+      "id": "observability-delivery-image",
+      "owner": "observability/delivery",
+      "env_file": "observability/delivery/.env",
+      "variable": "AELEV_INFRASTRUCTURE_DELIVERY_IMAGE",
+      "source_repository": "https://github.com/sapogov1978/AELEV-platform-infrastructure",
+      "release_workflow": "release-observability-delivery-image",
+      "release_run": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42311965742",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-delivery@sha256:d54693da1819b78a20af65d3fc5eaab12b6b12873dd231f65f18f4aa5f3aedc0",
+      "purpose": "Durable central telemetry receiver built from the owner source."
+    }
+  ],
   "local_builds": [
     {
       "image": "aelev/infrastructure-spire:local",
