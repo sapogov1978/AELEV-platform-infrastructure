@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793985300.7170358,
-    "seen": 1793985316.7965162,
-    "ast_hash": "03e9f70e92b7d826a27702cbd912e879",
+    "mtime": 1793985582.9022703,
+    "seen": 1793985609.166373,
+    "ast_hash": "1eae7a683390ea57d5bbd684b634ef96",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3090,9 +3090,9 @@
     "semantic_hash": ""
   },
   "TASKS.md": {
-    "mtime": 1793982241.4957752,
-    "seen": 1793985117.9351912,
-    "ast_hash": "3aa7418fabd272a6836bee041a2462d3",
+    "mtime": 1793985401.073599,
+    "seen": 1793985609.166423,
+    "ast_hash": "33655d6f9f62d58342ae2b8030f8eb6a",
     "semantic_hash": ""
   },
   "USER_MANUAL.md": {
@@ -5088,9 +5088,9 @@
     "semantic_hash": ""
   },
   "docs/audit/production-readiness.md": {
-    "mtime": 1793984985.7379923,
-    "seen": 1793985117.9372401,
-    "ast_hash": "122a66d4e728b29d873c80f883d3ad1f",
+    "mtime": 1793985582.9020267,
+    "seen": 1793985609.168471,
+    "ast_hash": "036fa1cabe86e5430c65b69b6c660188",
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1793982241.494442,
-    "seen": 1793985117.929499,
-    "ast_hash": "cd397794fe23b34ce9e2f80010997af8",
+    "mtime": 1793985401.0729136,
+    "seen": 1793985609.157519,
+    "ast_hash": "6346053d4415133351bb89a4d0dba299",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
@@ -6168,15 +6168,15 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1793985036.4957614,
-    "seen": 1793985117.937269,
-    "ast_hash": "7990dccd1657d6fdef9e9354daf397c0",
+    "mtime": 1793985582.9016368,
+    "seen": 1793985609.168502,
+    "ast_hash": "31ab0073b2529eb13ac3531a735524fd",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1793966598.6315343,
-    "seen": 1793966970.2313411,
-    "ast_hash": "2100b49c7953cfdbe561be4870b19e05",
+    "mtime": 1793985582.9012833,
+    "seen": 1793985609.157335,
+    "ast_hash": "e4bc73a21446fa0b08f75a1376307abe",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {

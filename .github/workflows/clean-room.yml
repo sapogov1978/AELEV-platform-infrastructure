@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: clean-room-full-local
@@ -12,32 +13,53 @@ concurrency:
 
 jobs:
   functional-reproduction:
-    runs-on: [self-hosted, aelev-clean-room]
+    runs-on: ubuntu-24.04
     timeout-minutes: 360
-    environment: clean-room
     steps:
+      - name: Reclaim ephemeral runner disk
+        run: |
+          df -h /
+          sudo rm -rf \
+            /usr/local/lib/android \
+            /usr/local/.ghcup \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /opt/hostedtoolcache/CodeQL
+          df -h /
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           clean: true
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+      - name: Install admitted operator tooling
+        run: python -m pip install poetry==2.2.1
+      - name: Authenticate ephemeral runner to private GHCR packages
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Initialize owner-local inputs without starting containers
         run: python3 tools/full_local.py init
       - name: Admit exact translation images
-        env:
-          PROVIDER_IMAGE: ${{ vars.AELEV_TRANSLATION_PROVIDER_IMAGE }}
-          WORKER_IMAGE: ${{ vars.AELEV_TRANSLATOR_WORKER_IMAGE }}
         run: |
           python3 - <<'PY'
-          import os
+          import json
           import re
           from pathlib import Path
 
           digest = re.compile(r"^[^@\s]+@sha256:[0-9a-f]{64}$")
-          values = {
-              "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": os.environ.get("PROVIDER_IMAGE", ""),
-              "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE": os.environ.get("WORKER_IMAGE", ""),
-          }
+          manifest = json.loads(Path("full-local.json").read_text())
+          values = {}
+          for item in manifest["external_inputs"]:
+              if item["kind"] != "container-image-digest":
+                  continue
+              values[item["variable"]] = item.get("admitted_reference", "")
           if not all(digest.fullmatch(value) for value in values.values()):
               raise SystemExit("CLEAN_ROOM_TRANSLATION_IMAGE_DIGEST_REQUIRED")
+          if len(values) != 2:
+              raise SystemExit("CLEAN_ROOM_TRANSLATION_IMAGE_SET_INVALID")
           path = Path("translator-service/.env")
           rows = []
           seen = set()
@@ -52,19 +74,33 @@ jobs:
               raise SystemExit("CLEAN_ROOM_TRANSLATION_IMAGE_VARIABLE_MISSING")
           path.write_text("\n".join(rows) + "\n")
           PY
+      - name: Verify private image admission before the expensive build
+        run: |
+          python3 - <<'PY' > "$RUNNER_TEMP/translation-images"
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path("full-local.json").read_text())
+          for item in manifest["external_inputs"]:
+              if item["kind"] == "container-image-digest":
+                  print(item["admitted_reference"])
+          PY
+          while IFS= read -r image; do
+            docker buildx imagetools inspect "$image" >/dev/null
+          done < "$RUNNER_TEMP/translation-images"
       - name: Run complete clean-room gate
         env:
           DRP_SPIRE_DOCKER_SOCKET_APPROVAL: operator-root-equivalent-v1
-          VIEWER_PASSWORD: ${{ secrets.AELEV_CLEAN_ROOM_VIEWER_PASSWORD }}
-          VIEWER_USER: ${{ vars.AELEV_CLEAN_ROOM_VIEWER_USER }}
-          CHROMIUM: ${{ vars.AELEV_CLEAN_ROOM_CHROMIUM }}
         run: |
+          CHROMIUM=$(command -v google-chrome || command -v chromium || true)
+          test -n "$CHROMIUM"
           install -m 600 /dev/null "$RUNNER_TEMP/clean-room-viewer-password"
-          printf '%s\n' "$VIEWER_PASSWORD" > "$RUNNER_TEMP/clean-room-viewer-password"
+          cp platform-ui/secrets/provision/operator-password "$RUNNER_TEMP/clean-room-viewer-password"
+          chmod 600 "$RUNNER_TEMP/clean-room-viewer-password"
           python3 test_infrastructure/clean_room_gate.py \
             --output "$RUNNER_TEMP/clean-room-evidence" \
             --ui-url https://127.0.0.1:18082 \
-            --viewer-user "$VIEWER_USER" \
+            --viewer-user platform-operator \
             --viewer-password-file "$RUNNER_TEMP/clean-room-viewer-password" \
             --chromium "$CHROMIUM" \
             --allow-local-certificate
@@ -74,3 +110,6 @@ jobs:
           name: clean-room-full-local-${{ github.sha }}
           path: ${{ runner.temp }}/clean-room-evidence
           if-no-files-found: error
+      - name: Remove ephemeral registry session
+        if: always()
+        run: docker logout ghcr.io || true

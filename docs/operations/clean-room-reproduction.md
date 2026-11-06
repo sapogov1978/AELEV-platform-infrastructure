@@ -30,7 +30,7 @@ python3 tools/full_local.py plan > full-local-plan.json
 
 ## 2. Инициализировать и собрать без запуска
 
-После `init` в `translator-service/.env` оператор указывает `AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE` и `AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE` только как `repository@sha256:<64 hex>`. Допущенный Linux amd64 provider release — `ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9`, полученный из artifact [release workflow 42248923795](https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42248923795); worker digest берётся из `translator-worker-digest` workflow этого репозитория. Первый образ реализует непрозрачный приватный порт перевода; Translator не получает модель, её версию или способ исполнения. Для private GHCR clean runner заранее получает только `read:packages`; credential не пишется в `.env`, Git или evidence. Рабочие `.env` не коммитятся.
+После `init` в `translator-service/.env` оператор указывает `AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE` и `AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE` только как `repository@sha256:<64 hex>`. Допущены Linux amd64 provider `ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9` из artifact [provider release 42248923795](https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42248923795) и worker `ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912` из artifact [worker release 42259587979](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42259587979). Первый образ реализует непрозрачный приватный порт перевода; Translator не получает модель, её версию или способ исполнения. Для private GHCR clean runner заранее получает только `read:packages`; credential не пишется в `.env`, Git или evidence. Рабочие `.env` не коммитятся.
 
 ```sh
 python3 tools/full_local.py init
@@ -119,7 +119,7 @@ python3 test_infrastructure/clean_room.py \
 
 Verifier сверяет точный набор функций, release/source, digest BOM, SHA-256 каждого артефакта, чистый baseline, успешную сохранность cleanup и итог `PASS`. Он не превращает старые отчёты в новый прогон.
 
-Для отдельного доверенного стенда доступен ручной workflow `clean-room-full-local`. Он требует self-hosted runner с label `aelev-clean-room`, environment `clean-room`, две digest-pinned repository variables, путь Chromium, viewer name и viewer password secret. Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
+Ручной workflow `clean-room-full-local` создаёт одноразовый GitHub-hosted Ubuntu runner, получает оба exact digest из версионируемого manifest, использует созданную `init` временную operator identity и уничтожает всю машину после job. Пользовательский сервер, постоянный runner, repository variables и передача пароля в GitHub Secrets не требуются. `GITHUB_TOKEN` имеет только `contents:read` и `packages:read`; private provider package должен предоставить этому репозиторию Actions read access. Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
 
 ## 7. Решение Production Ready
 

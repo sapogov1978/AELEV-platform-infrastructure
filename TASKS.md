@@ -9,8 +9,8 @@
 - [x] Создать отдельный provider-репозиторий и независимые подписываемые release workflows для provider/worker images.
 - [x] Выпустить подписанный provider image на GitHub-hosted Linux x86_64 runner:
   `ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9`.
-- [ ] Выполнить workflow Translator worker и получить подписанный worker
-  `name@sha256` из его digest-artifact.
+- [x] Выпустить подписанный Translator worker на GitHub-hosted Linux runner:
+  `ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912`.
 - [ ] Предоставить одноразовое SPIRE approval и выполнить новый полный функциональный прогон на чистом стенде.
 - [ ] После успешного прогона повторить Production Ready аудит точного release commit.
 

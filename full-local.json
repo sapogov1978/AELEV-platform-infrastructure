@@ -133,6 +133,8 @@
       "owner": "translator-service",
       "source_repository": "https://github.com/sapogov1978/AELEV-platform-infrastructure",
       "release_workflow": "release-translator-worker-image",
+      "release_run": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42259587979",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912",
       "purpose": "Translator worker admitted independently from the opaque provider."
     },
     {
