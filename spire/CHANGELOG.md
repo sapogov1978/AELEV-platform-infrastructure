@@ -1,5 +1,7 @@
 # История SPIRE
 
+- 2026-11-07: default base стадии `telemetry-sender` переведён с недоступного локального Docker Hub sender 1.0.9 на подписанный owner-controlled multi-architecture GHCR digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e`. Собственная SQLite-оболочка, SPIRE runtime, журналы и прежние датированные evidence не меняются.
+
 - 2026-11-04: Shell/PowerShell-операторы установки и экспорта закрыто требуют одноразовое явное подтверждение root-equivalent доступа к Docker socket до первого обращения к daemon; helper-контейнеры получили `network=none` и предел процессов, постоянные SPIRE-роли не изменены.
 
 - 2026-10-27: helper доставки принимает старый и новый CA одним публичным bundle, корректно перебирает разные ключи при одинаковом subject и использует отдельный lock для `status`, `status-query` и `status-publisher`. Одновременные минутные циклы больше не создают ложные отрицательные квитанции; все три профиля переведены на один проверенный immutable digest.

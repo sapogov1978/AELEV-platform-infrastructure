@@ -1,5 +1,5 @@
 ARG PYTHON_IMAGE=python:3.13.7-alpine3.22@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844
-ARG SQLITE_IMAGE=aelev/observability-sender:1.0.7@sha256:44e5063c37fd5268d221bf7886a66abb4a256a595190604470bbf1c5e5500739
+ARG SQLITE_IMAGE=ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e
 FROM ${SQLITE_IMAGE} AS sqlite
 FROM ${PYTHON_IMAGE} AS builder
 RUN pip install --no-cache-dir poetry==2.2.1

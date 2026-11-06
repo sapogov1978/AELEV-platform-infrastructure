@@ -1,7 +1,7 @@
 ARG NODE_IMAGE
 ARG NGINX_IMAGE
 ARG PYTHON_IMAGE
-ARG SQLITE_IMAGE=aelev/observability-sender:1.0.7@sha256:44e5063c37fd5268d221bf7886a66abb4a256a595190604470bbf1c5e5500739
+ARG SQLITE_IMAGE=ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e
 FROM ${SQLITE_IMAGE} AS sqlite
 FROM ${NODE_IMAGE} AS frontend-build
 WORKDIR /work

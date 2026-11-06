@@ -68,7 +68,11 @@ def test_receiver_uses_minimal_probe_and_explicit_restart_budget() -> None:
         "/opt/aelev/delivery_health.py",
     ]
     recipe = (ROOT / "Dockerfile.status").read_text()
-    assert "aelev/observability-sender:1.0.6@sha256:ccccd35e" in recipe
+    assert (
+        "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender"
+        "@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e"
+        in recipe
+    )
     assert "COPY --from=sqlite /usr/local/lib/libsqlite3.so.0" in recipe
     assert "sqlite3.sqlite_version_info == (3, 53, 4)" in recipe
     assert "COPY delivery_snapshot.py /opt/aelev/delivery_snapshot.py" in recipe

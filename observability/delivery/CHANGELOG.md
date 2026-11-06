@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-07: sender впервые выпущен owner-controlled multi-architecture GHCR workflow с закреплённым Prometheus base, SBOM, provenance и Cosign signature. Digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` заменяет недоступные Docker Hub 1.0.6/1.0.7 как SQLite/runtime base; исходники, журнал, протокол и исторические evidence не переписаны.
+
 - 2026-11-06: локальная библиотека `aelev-observability-tools` обновлена до patch-версии 1.0.1; тестовая PKI теперь содержит SKI/AKI для строгой X.509-проверки, без изменения production PKI и принятого стека.
 
 - 2026-10-28: минимальный локальный предел памяти собственного издателя состояния увеличен с 128 до 256 MiB после подтверждённого OOM во время длительной недоступности Platform UI; нативный приёмник, его журнал и доставка не меняются.

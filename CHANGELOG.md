@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-07
+
+- Clean-room build больше не зависит от исчезнувших Docker Hub `aelev/observability-sender` 1.0.6/1.0.7/1.0.9: release run `42308900143` выпустил и подписал owner-controlled `linux/amd64`/`linux/arm64` image с SBOM/provenance под digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e`. Все активные Dockerfile-потребители закреплены на нём; исторические evidence и changelog не переписаны. Full-local manifest, plan, preflight и BOM отдельно учитывают этот build input и его потребителей.
+
 ## 2026-11-06
 
 - Добавлен подписываемый multi-architecture GHCR release pipeline для owner-controlled Observability Sender; он заменяет недоступный внешний Docker Hub base как воспроизводимый источник SQLite и sender runtime для clean-room.

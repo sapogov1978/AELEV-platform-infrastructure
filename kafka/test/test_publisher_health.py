@@ -26,7 +26,7 @@ def test_publisher_uses_pinned_standalone_probe() -> None:
 def test_publisher_pins_sqlite_and_finite_recovery() -> None:
     dockerfile = (ROOT / "Dockerfile.status").read_text()
     assert (
-        "aelev/observability-sender:1.0.7@sha256:44e5063c37fd5268d221bf7886a66abb4a256a595190604470bbf1c5e5500739"
+        "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e"
         in dockerfile
     )
     assert "sqlite3.sqlite_version_info == (3, 53, 4)" in dockerfile

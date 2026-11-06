@@ -51,6 +51,22 @@ class FullLocalContractTests(unittest.TestCase):
         self.assertEqual(
             plan["compute_services"], ["translation-provider", "translator-worker"]
         )
+        self.assertEqual(
+            plan["build_inputs"],
+            [
+                {
+                    "id": "observability-sender-image",
+                    "kind": "container-image-digest",
+                    "owner": "observability/delivery",
+                    "admitted_reference": (
+                        "ghcr.io/sapogov1978/"
+                        "aelev-platform-infrastructure-observability-sender"
+                        "@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864f"
+                        "cba0ce1f80dd941e"
+                    ),
+                }
+            ],
+        )
         self.assertEqual(len(plan["acceptance_functions"]), 11)
 
     def test_gate_stages_cover_each_function_once(self) -> None:

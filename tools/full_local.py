@@ -128,6 +128,26 @@ def validate_contract(root: Path = ROOT) -> tuple[dict[str, Any], list[str]]:
             example = (root / str(env_file)).with_name(".env.example")
             if not example.is_file() or variable not in read_env(example, root):
                 errors.append(f"EXTERNAL_INPUT_UNDECLARED:{item['id']}")
+    build_input_ids: list[str] = []
+    for item in manifest.get("build_inputs", []):
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+            errors.append("BUILD_INPUT_INVALID")
+            continue
+        build_input_ids.append(item["id"])
+        reference = item.get("admitted_reference")
+        consumers = item.get("consumers")
+        if not isinstance(reference, str) or not DIGEST_REFERENCE.fullmatch(reference):
+            errors.append(f"BUILD_INPUT_DIGEST_INVALID:{item['id']}")
+            continue
+        if not isinstance(consumers, list) or not consumers:
+            errors.append(f"BUILD_INPUT_CONSUMERS_MISSING:{item['id']}")
+            continue
+        for relative in consumers:
+            path = root / str(relative)
+            if not path.is_file() or reference not in path.read_text(encoding="utf-8"):
+                errors.append(f"BUILD_INPUT_NOT_ADMITTED:{item['id']}:{relative}")
+    if len(build_input_ids) != len(set(build_input_ids)):
+        errors.append("BUILD_INPUT_IDS_NOT_UNIQUE")
     acceptance = manifest.get("acceptance")
     if not isinstance(acceptance, dict):
         errors.append("ACCEPTANCE_MISSING")
@@ -267,6 +287,19 @@ def preflight(
             ok,
             f"EXTERNAL_INPUT_NOT_ADMITTED:{item['id']}",
         )
+    for item in manifest.get("build_inputs", []):
+        reference = item.get("admitted_reference", "")
+        consumers = item.get("consumers", [])
+        ok = bool(DIGEST_REFERENCE.fullmatch(reference)) and all(
+            (root / relative).is_file()
+            and reference in (root / relative).read_text(encoding="utf-8")
+            for relative in consumers
+        )
+        check(
+            f"build-input:{item['id']}",
+            ok,
+            f"BUILD_INPUT_NOT_ADMITTED:{item['id']}",
+        )
     models: dict[str, dict[str, Any]] = {}
     render_blockers = contract_errors + [
         code for code in errors if code.startswith("ENV_FILE_MISSING:")
@@ -373,6 +406,15 @@ def source_plan(root: Path = ROOT) -> dict[str, Any]:
                 "owner": item["owner"],
             }
             for item in manifest["external_inputs"]
+        ],
+        "build_inputs": [
+            {
+                "id": item["id"],
+                "kind": item["kind"],
+                "owner": item["owner"],
+                "admitted_reference": item["admitted_reference"],
+            }
+            for item in manifest.get("build_inputs", [])
         ],
         "compose_models_included": ["root", "compute"],
         "translation_provider_implementation_included": False,
@@ -636,6 +678,21 @@ def build_bom(
         "images": dict(sorted(images.items())),
         "external_inputs": [
             row for row in result["checks"] if row["name"].startswith("external:")
+        ],
+        "build_inputs": [
+            {
+                "id": item["id"],
+                "owner": item["owner"],
+                "admitted_reference": item["admitted_reference"],
+                "release_run": item["release_run"],
+                "consumers": item["consumers"],
+                "status": next(
+                    row["status"]
+                    for row in result["checks"]
+                    if row["name"] == f"build-input:{item['id']}"
+                ),
+            }
+            for item in manifest.get("build_inputs", [])
         ],
     }
     output.parent.mkdir(parents=True, exist_ok=True)

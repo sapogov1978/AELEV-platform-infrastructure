@@ -76,7 +76,7 @@ jobs:
           PY
       - name: Verify private image admission before the expensive build
         run: |
-          python3 - <<'PY' > "$RUNNER_TEMP/translation-images"
+          python3 - <<'PY' > "$RUNNER_TEMP/admitted-private-images"
           import json
           from pathlib import Path
 
@@ -84,10 +84,13 @@ jobs:
           for item in manifest["external_inputs"]:
               if item["kind"] == "container-image-digest":
                   print(item["admitted_reference"])
+          for item in manifest.get("build_inputs", []):
+              if item["kind"] == "container-image-digest":
+                  print(item["admitted_reference"])
           PY
           while IFS= read -r image; do
             docker buildx imagetools inspect "$image" >/dev/null
-          done < "$RUNNER_TEMP/translation-images"
+          done < "$RUNNER_TEMP/admitted-private-images"
       - name: Run complete clean-room gate
         env:
           DRP_SPIRE_DOCKER_SOCKET_APPROVAL: operator-root-equivalent-v1

@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-07: шаблон telemetry sender закреплён на подписанном owner-controlled multi-architecture GHCR digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` вместо недоступного Docker Hub sender 1.0.7. Очередь, provider boundary, compute images, журналы и исторический rollout evidence не меняются.
+
 - 2026-11-06: `compose.compute.yml` принимает явно пустой `OTLP_HTTP_ENDPOINT` для документированного локального профиля без telemetry, как и основной `compose.remote.yml`; production по-прежнему требует HTTPS/mTLS endpoint. Добавлена регрессия рендеринга локального compute-профиля.
 
 - 2026-11-06: Translator фактически отделён от реализации перевода: из активной поставки удалены Index Translate, веса, downloader, runtime-builder, lock и provider-specific tests. `compose.compute.yml` принимает внешний provider image по digest, не переопределяет его запуск, environment или healthcheck и передаёт через единственный `POST /v1/translate` только текст и языки. Исторические отчёты и Git-история не переписывались. Status publisher revision 9 показывает только «Провайдер перевода».

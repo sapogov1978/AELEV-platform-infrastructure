@@ -1,4 +1,4 @@
-ARG OWNER_SENDER_IMAGE=aelev/observability-sender:1.0.9@sha256:4021bbaa12048635a8aab42121089a93e46dc7e8b5d52d517213fa4c350e99b3
+ARG OWNER_SENDER_IMAGE=ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e
 FROM python:3.13.7-slim-bookworm@sha256:adafcc17694d715c905b4c7bebd96907a1fd5cf183395f0ebc4d3428bd22d92d AS artifacts
 ARG TARGETARCH
 WORKDIR /work
