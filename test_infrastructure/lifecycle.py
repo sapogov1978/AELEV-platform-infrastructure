@@ -64,6 +64,25 @@ def validate_active_networks(model: dict[str, Any], active_services: set[str]) -
         raise RuntimeError("clean combined start must not require external networks")
 
 
+def validate_active_mounts(
+    model: dict[str, Any], active_services: set[str], root: Path = ROOT
+) -> None:
+    for name in active_services:
+        row = model["services"][name]
+        for mount in row.get("volumes", []):
+            if mount["type"] != "bind":
+                continue
+            source = Path(mount["source"])
+            own_socket = (
+                row.get("command") == ["fencing-serve"]
+                and mount.get("target") == "/run/docker.sock"
+            )
+            if (
+                not source.exists() or not source.is_relative_to(root)
+            ) and not own_socket:
+                raise RuntimeError("missing or nonportable owner mount")
+
+
 def model_validation(model: dict[str, Any], active_services: set[str]) -> None:
     services = model["services"]
     if list(services).count("kafka") != 1:
@@ -96,18 +115,8 @@ def model_validation(model: dict[str, Any], active_services: set[str]) -> None:
     if "configuration-applier" in services:
         raise RuntimeError("unbound generic configuration template")
     validate_active_networks(model, active_services)
+    validate_active_mounts(model, active_services)
     for row in services.values():
-        for mount in row.get("volumes", []):
-            if mount["type"] == "bind":
-                source = Path(mount["source"])
-                own_socket = (
-                    row.get("command") == ["fencing-serve"]
-                    and mount.get("target") == "/run/docker.sock"
-                )
-                if (
-                    not source.exists() or not source.is_relative_to(ROOT)
-                ) and not own_socket:
-                    raise RuntimeError("missing or nonportable owner mount")
         if row.get("restart") not in {
             "no",
             "on-failure",

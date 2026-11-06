@@ -14,6 +14,7 @@ from lifecycle import (
     compose_prefix,
     run,
     status_provision_tasks,
+    validate_active_mounts,
     validate_active_networks,
 )
 from resources import Inventory, cleanup_plan, inventory, preflight, verify_preserved
@@ -145,6 +146,32 @@ def test_inactive_optional_external_network_does_not_block_combined_start() -> N
     validate_active_networks(description, {"active"})
     with pytest.raises(RuntimeError, match="external networks"):
         validate_active_networks(description, {"active", "optional"})
+
+
+def test_inactive_optional_mount_does_not_block_combined_start(tmp_path: Path) -> None:
+    existing = tmp_path / "existing"
+    existing.mkdir()
+    description = {
+        "services": {
+            "active": {
+                "volumes": [
+                    {"type": "bind", "source": str(existing), "target": "/active"}
+                ]
+            },
+            "optional": {
+                "volumes": [
+                    {
+                        "type": "bind",
+                        "source": str(tmp_path / "missing"),
+                        "target": "/optional",
+                    }
+                ]
+            },
+        }
+    }
+    validate_active_mounts(description, {"active"}, tmp_path)
+    with pytest.raises(RuntimeError, match="owner mount"):
+        validate_active_mounts(description, {"active", "optional"}, tmp_path)
 
 
 def test_status_provisioning_is_limited_to_active_publishers() -> None:
