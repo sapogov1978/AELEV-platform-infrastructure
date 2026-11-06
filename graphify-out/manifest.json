@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1793984985.7385168,
-    "seen": 1793985117.935143,
-    "ast_hash": "d51765601d5af10187e437de8df0a15b",
+    "mtime": 1793985300.7170358,
+    "seen": 1793985316.7965162,
+    "ast_hash": "03e9f70e92b7d826a27702cbd912e879",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3108,9 +3108,9 @@
     "semantic_hash": ""
   },
   "docs/obsolete/services/infrastructure/README.md": {
-    "mtime": 1793957791.1622446,
-    "seen": 1793958131.683028,
-    "ast_hash": "01aa016ab95b347916b01361bbb89818",
+    "mtime": 1793985300.7166226,
+    "seen": 1793985316.7997508,
+    "ast_hash": "a370fbcfc7f12c05501a567b0b9f9b8f",
     "semantic_hash": ""
   },
   "kafka/CHANGELOG.md": {

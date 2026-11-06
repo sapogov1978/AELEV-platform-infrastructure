@@ -2,6 +2,7 @@
 
 ## 2026-11-06
 
+- Исправлена чувствительная к регистру ссылка архивной композиции на корневой `INDEX.md`, обнаруженная Linux CI после унификации агентских карт.
 - Первый Linux amd64 release отдельного translation provider успешно собран на GitHub-hosted runner без пользовательского сервера: verified model weights, SBOM, provenance и Cosign signature опубликованы под точным digest `sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9`; full-local manifest и runbook закрепляют его как внешний вход.
 - Тот же exact provider digest прошёл bounded quality smoke на чистом GitHub-hosted runner: 20/20 утверждённых синтетических переводов через opaque UDS, hash-only evidence и bounded cleanup; отдельная машина для provider release/quality не требуется.
 - Создан отдельный private-репозиторий `sapogov1978/AELEV-translation-provider` с сохранённой subtree-историей реализации: модель, веса, runtime, prompt, cache, lock и healthcheck принадлежат provider, а Translator получает только непрозрачный UDS-контракт. Добавлены независимые подписываемые release workflows для provider и Translator worker; clean-room manifest и runbook теперь указывают канонические источники обоих digest.
