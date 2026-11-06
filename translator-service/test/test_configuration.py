@@ -96,6 +96,26 @@ def _resolved_compute(*, overrides: dict[str, str] | None = None) -> dict[str, A
 
 @unittest.skipUnless(shutil.which("docker"), "Docker CLI is required")
 class TranslatorConfigurationTest(unittest.TestCase):
+    def test_compute_allows_explicitly_empty_otlp_for_local_profile(self) -> None:
+        services = _resolved_compose(
+            COMPUTE_COMPOSE_PATH,
+            env_path=ENV_PATH,
+            overrides={
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": (
+                    "registry.example/provider@sha256:" + "a" * 64
+                ),
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE": (
+                    "registry.example/worker@sha256:" + "b" * 64
+                ),
+            },
+        )["services"]
+        self.assertEqual(
+            services["translator-worker"]["environment"][
+                "AELEV_TRANSLATOR_OTLP_HTTP_ENDPOINT"
+            ],
+            "",
+        )
+
     def test_background_probes_and_sender_do_not_import_the_application(self) -> None:
         resolved = _resolved_compose(overrides={"COMPOSE_PROFILES": "*"})
         services = resolved["services"]

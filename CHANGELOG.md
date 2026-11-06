@@ -2,6 +2,7 @@
 
 ## 2026-11-06
 
+- Hosted clean-room выявил рассогласование local compute-профиля Translator: документированное пустое значение OTLP отклонялось только `compose.compute.yml`. Рендеринг приведён к основному Compose и защищён регрессией; production-требование HTTPS/mTLS telemetry не ослаблено.
 - Первый hosted clean-room run подтвердил выдачу одноразовой машины и полный host-neutral `init`; fail-closed package preflight остановил дорогую сборку на отсутствующем межрепозиторном Actions read access к private provider package. Runbook и readiness-аудит фиксируют точное минимальное разрешение без PAT или пользовательского сервера.
 - На чистом full-local checkout только что созданные env получают host UID/GID для локальной доставки секретов и provision; существующие env площадки не меняются. Это устраняет зависимость clean-room от macOS-значений `501/20` и заранее созданной группы `10000`.
 - Full-local `init` теперь устанавливает lock-pinned operator dependencies каждого владельца Observability до запуска его `prepare.py` через собственное Poetry-окружение; чистая машина больше не зависит от случайно установленных глобальных `httpx`/FastAPI пакетов.

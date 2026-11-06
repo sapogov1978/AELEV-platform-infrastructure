@@ -20,7 +20,7 @@ x-database-environment: &database-environment
   AELEV_TRANSLATOR_DATABASE_CLIENT_CERT_FILE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE:?set database client certificate filename}
   AELEV_TRANSLATOR_DATABASE_CLIENT_KEY_FILE: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE:?set database client key filename}
   AELEV_TRANSLATOR_DATABASE_SECRET_ROOT: /run/secrets/database
-  AELEV_TRANSLATOR_OTLP_HTTP_ENDPOINT: ${AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT:?set HTTPS durable sender endpoint}
+  AELEV_TRANSLATOR_OTLP_HTTP_ENDPOINT: ${AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT?set empty for local without telemetry or an HTTPS durable sender endpoint}
   AELEV_TRANSLATOR_TELEMETRY_CA_FILE: /run/secrets/telemetry/client/sender-ca.crt
   AELEV_TRANSLATOR_TELEMETRY_CLIENT_CERT_FILE: /run/secrets/telemetry/client/runtime.crt
   AELEV_TRANSLATOR_TELEMETRY_CLIENT_KEY_FILE: /run/secrets/telemetry/client/runtime.key
