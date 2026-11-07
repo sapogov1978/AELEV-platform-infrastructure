@@ -67,6 +67,7 @@ def preflight(
     before: Inventory,
     model: dict[str, Any],
     reuse_existing_data: bool,
+    active_services: set[str] | None = None,
 ) -> None:
     if owned_containers(before, model["name"]):
         raise RuntimeError("existing containers of the common project")
@@ -86,7 +87,9 @@ def preflight(
         for reference in row["references"].split(",")
     }
     missing = set()
-    for image in {row["image"] for row in model["services"].values()} - available:
+    selected = set(model["services"]) if active_services is None else active_services
+    required_images = {model["services"][name]["image"] for name in selected}
+    for image in required_images - available:
         try:
             identity = execute(
                 ["docker", "image", "inspect", "--format", "{{.Id}}", image]

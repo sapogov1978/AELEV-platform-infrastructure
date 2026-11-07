@@ -373,7 +373,13 @@ def run(args: argparse.Namespace) -> int:
         if not ids:
             raise RuntimeError("no owner publisher identities in model")
         before = inventory(execute)
-        preflight(execute, before, model, args.reuse_existing_data)
+        preflight(
+            execute,
+            before,
+            model,
+            args.reuse_existing_data,
+            regular_names,
+        )
         admitted = True
         passed("Исходные ресурсы учтены; существующих писателей общих томов нет")
         execute([*prefix, "up", "-d", "--no-build", "--pull", "never", "kafka"])

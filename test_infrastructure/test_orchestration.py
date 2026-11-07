@@ -207,6 +207,12 @@ def test_preflight_accepts_prepared_clean_stand() -> None:
     preflight(execute_empty, baseline(), model(), False)
 
 
+def test_preflight_does_not_require_inactive_profile_image() -> None:
+    description = model()
+    description["services"]["optional"] = {"image": "optional:missing"}
+    preflight(execute_empty, baseline(), description, False, {"native"})
+
+
 def test_preflight_refuses_existing_common_containers() -> None:
     before = baseline()
     before["containers"]["old"] = row("owned")
