@@ -153,6 +153,18 @@ def states(project: str) -> dict[str, dict[str, Any]]:
     return result
 
 
+def bounded_container_logs(identity: str) -> str:
+    result = subprocess.run(
+        ["docker", "logs", "--tail", "100", identity],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    if result.returncode:
+        return "DOCKER_LOGS_UNAVAILABLE"
+    return (result.stdout + result.stderr)[-16384:]
+
+
 def capture_startup_diagnostic(
     project: str, service: str, output: Path, code: str
 ) -> None:
@@ -202,9 +214,7 @@ def capture_startup_diagnostic(
             },
             # Selected startup roles do not emit credential values. Keep only a
             # bounded tail; never serialize environment or inspect configuration.
-            "startup_tail": execute(["docker", "logs", "--tail", "100", identity])[
-                -16384:
-            ],
+            "startup_tail": bounded_container_logs(identity),
         }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
@@ -252,6 +262,7 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
     while time.monotonic() < deadline:
         current = states(project)
         pending = []
+        terminal = []
         for name, description in services.items():
             state = current.get(name, {})
             if description.get("healthcheck"):
@@ -265,6 +276,16 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
                 ready = state.get("Running") is True
             if not ready:
                 pending.append(name)
+                if (
+                    description.get("healthcheck")
+                    and description.get("restart") == "no"
+                    and state.get("Status") in {"dead", "exited"}
+                ):
+                    terminal.append(name)
+        if terminal:
+            raise RuntimeError(
+                "service exited before readiness: " + ", ".join(sorted(terminal))
+            )
         if not pending:
             return
         time.sleep(3)

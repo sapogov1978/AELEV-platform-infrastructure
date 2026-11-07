@@ -6,6 +6,7 @@ import argparse
 import copy
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -213,17 +214,22 @@ def test_kafka_startup_diagnostic_is_bounded_and_excludes_environment(
                     },
                 }
             )
-        if arguments[1:3] == ["logs", "--tail"]:
-            return "x" * 20000
         raise AssertionError(arguments)
 
     monkeypatch.setattr("lifecycle.execute", diagnostic)
+    monkeypatch.setattr(
+        "lifecycle.subprocess.run",
+        lambda *args, **kwargs: SimpleNamespace(
+            returncode=0, stdout="x" * 10000, stderr="y" * 10000
+        ),
+    )
     capture_kafka_startup_diagnostic("project", output)
     payload = json.loads(output.read_text())
     assert payload["health"]["log"] == [
         {"exit_code": 1, "output": "KAFKA_HEALTH_CONNECT\n"}
     ]
     assert len(payload["startup_tail"]) == 16384
+    assert payload["startup_tail"].endswith("y" * 10000)
     assert "environment" not in payload
 
 
@@ -246,6 +252,33 @@ def test_healthchecked_restart_no_role_is_not_treated_as_one_shot(
         {"kafka": {"restart": "no", "healthcheck": {"test": ["CMD", "probe"]}}},
         1,
     )
+
+
+def test_healthchecked_restart_no_role_fails_immediately_after_exit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "keycloak": {
+                "Status": "exited",
+                "Running": False,
+                "ExitCode": 1,
+                "Health": {"Status": "unhealthy"},
+            }
+        },
+    )
+    with pytest.raises(RuntimeError, match="exited before readiness: keycloak"):
+        wait_ready(
+            "project",
+            {
+                "keycloak": {
+                    "restart": "no",
+                    "healthcheck": {"test": ["CMD", "probe"]},
+                }
+            },
+            600,
+        )
 
 
 def test_interrupted_preflight_is_reported_as_failure(
