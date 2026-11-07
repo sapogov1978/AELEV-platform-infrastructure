@@ -393,6 +393,36 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
     raise RuntimeError("readiness deadline: " + ", ".join(sorted(pending)))
 
 
+def ui_status_diagnostic(
+    ids: set[str], api_status: int, rows: dict[str, Any]
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "code": "PLATFORM_UI_EXPECTED_MODULES_NOT_ONLINE",
+        "api_status": api_status,
+        "expected_module_ids": sorted(ids),
+        "missing_module_ids": sorted(ids - set(rows)),
+        "modules": [
+            {
+                "module_id": identity,
+                "state": row.get("status", {}).get("state", "MISSING"),
+                "reported_state": row.get("status", {}).get(
+                    "reported_state", "MISSING"
+                ),
+                "connection": row.get("status", {}).get("connection", "MISSING"),
+                "components": [
+                    {
+                        "id": part.get("id", "MISSING"),
+                        "state": part.get("state", "MISSING"),
+                    }
+                    for part in row.get("status", {}).get("components", [])
+                ],
+            }
+            for identity, row in sorted(rows.items())
+        ],
+    }
+
+
 def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
     # Model/resource regressions do not execute a browser. Load its platform-
     # specific dependency only for the actual operator UI exercise.
@@ -423,11 +453,14 @@ def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
                 raise RuntimeError("real OIDC viewer request failed")
             authorization = initial.value.request.all_headers()["authorization"]
             deadline = time.monotonic() + args.timeout
+            last_status = 0
+            rows: dict[str, Any] = {}
             while time.monotonic() < deadline:
                 response = page.request.get(
                     args.ui_url + "/api/modules",
                     headers={"Authorization": authorization},
                 )
+                last_status = response.status
                 if response.status == 200:
                     rows = {
                         row["module_id"]: row
@@ -468,6 +501,15 @@ def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
                         )
                         return rows
                 time.sleep(3)
+            diagnostic_path = args.report.with_name("ui-status-diagnostic.json")
+            diagnostic_path.write_text(
+                json.dumps(
+                    ui_status_diagnostic(ids, last_status, rows),
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n"
+            )
             raise RuntimeError("injected state did not become ONLINE")
         finally:
             browser.close()

@@ -19,6 +19,7 @@ from lifecycle import (
     execute_provision_task,
     run,
     status_provision_tasks,
+    ui_status_diagnostic,
     validate_active_mounts,
     validate_active_networks,
     wait_ready,
@@ -380,6 +381,48 @@ def test_bounded_on_failure_role_is_ready_after_successful_exit(
         {"translator-topic-provisioner": {"restart": "on-failure:3"}},
         1,
     )
+
+
+def test_ui_timeout_diagnostic_contains_only_bounded_status_fields() -> None:
+    diagnostic = ui_status_diagnostic(
+        {"expected", "missing"},
+        200,
+        {
+            "expected": {
+                "title": {"en": "must not persist"},
+                "url": "https://must-not-persist.invalid",
+                "authorization": "must-not-persist",
+                "status": {
+                    "state": "UNKNOWN",
+                    "reported_state": "ONLINE",
+                    "connection": "LOST",
+                    "components": [
+                        {
+                            "id": "api",
+                            "state": "UNKNOWN",
+                            "details": "must not persist",
+                        }
+                    ],
+                },
+            }
+        },
+    )
+    assert diagnostic == {
+        "schema_version": 1,
+        "code": "PLATFORM_UI_EXPECTED_MODULES_NOT_ONLINE",
+        "api_status": 200,
+        "expected_module_ids": ["expected", "missing"],
+        "missing_module_ids": ["missing"],
+        "modules": [
+            {
+                "module_id": "expected",
+                "state": "UNKNOWN",
+                "reported_state": "ONLINE",
+                "connection": "LOST",
+                "components": [{"id": "api", "state": "UNKNOWN"}],
+            }
+        ],
+    }
 
 
 def test_interrupted_preflight_is_reported_as_failure(
