@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794087341.2267692,
-    "seen": 1794087361.138898,
-    "ast_hash": "22fa6b4794243f946b7bb95aae22fa3d",
+    "mtime": 1794089099.1805973,
+    "seen": 1794089179.19518,
+    "ast_hash": "231e2ec4c6122dd08811a5e6968e6f91",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1806,9 +1806,9 @@
     "semantic_hash": ""
   },
   "postgresql/status_publisher.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150542,
-    "ast_hash": "b502142e1597e580e9d7e40e6797d855",
+    "mtime": 1794089099.17864,
+    "seen": 1794089179.1925719,
+    "ast_hash": "55cf58bf62d44b50b6a04676979c50c5",
     "semantic_hash": ""
   },
   "postgresql/test/cluster-lifecycle.py": {
@@ -1878,9 +1878,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_status_publisher.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150549,
-    "ast_hash": "fda2d8e1ec8314b7412ce1aedc827a3b",
+    "mtime": 1794089099.179012,
+    "seen": 1794089179.192694,
+    "ast_hash": "33aac3259797b5be9acf2a10b4b0c4a2",
     "semantic_hash": ""
   },
   "public-egress-gateway/api_contract.py": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794087341.2254686,
-    "seen": 1794087361.1373901,
-    "ast_hash": "898936b811572049cb6e3c0f770dcb15",
+    "mtime": 1794089106.0173802,
+    "seen": 1794089179.193674,
+    "ast_hash": "98e647f06cb81c0a2ecbc2f8c106c6e9",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -2496,9 +2496,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_orchestration.py": {
-    "mtime": 1794087341.2260494,
-    "seen": 1794087361.137511,
-    "ast_hash": "994855faf2e832a5e16ad2f53415dd5f",
+    "mtime": 1794089105.9472225,
+    "seen": 1794089179.193793,
+    "ast_hash": "9cbec254f88ee059c6abff1a978b24f3",
     "semantic_hash": ""
   },
   "test_infrastructure/test_recovery.py": {

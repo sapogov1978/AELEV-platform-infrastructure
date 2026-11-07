@@ -15,10 +15,12 @@ from lifecycle import (
     assert_sequence_advanced,
     capture_group_startup_diagnostic,
     capture_kafka_startup_diagnostic,
+    compute_prefix,
     compose_prefix,
     execute_provision_task,
     run,
     status_provision_tasks,
+    start_compute,
     ui_status_diagnostic,
     write_ui_status_diagnostic,
     validate_active_mounts,
@@ -70,6 +72,59 @@ def test_root_env_has_only_orchestration() -> None:
                 if line and not line.startswith("#")
             }
             assert keys == {"AELEV_INFRASTRUCTURE_COMPOSE_PROJECT"}
+
+
+def test_compute_prefix_keeps_the_independent_owner_composition() -> None:
+    assert compute_prefix() == [
+        "docker",
+        "compose",
+        "--env-file",
+        str(ROOT / "translator-service/.env"),
+        "-f",
+        str(ROOT / "translator-service/compose.compute.yml"),
+    ]
+
+
+def test_compute_start_requires_both_native_healthchecks(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[list[str]] = []
+    monkeypatch.setattr(
+        "lifecycle.execute", lambda arguments: calls.append(arguments) or ""
+    )
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "translation-provider": {
+                "Running": True,
+                "Health": {"Status": "healthy"},
+            },
+            "translator-worker": {
+                "Running": True,
+                "Health": {"Status": "healthy"},
+            },
+        },
+    )
+    start_compute(
+        ["docker", "compose"],
+        "compute",
+        {"translation-provider", "translator-worker"},
+        600,
+    )
+    assert calls == [
+        [
+            "docker",
+            "compose",
+            "up",
+            "-d",
+            "--no-build",
+            "--pull",
+            "never",
+            "--wait",
+            "--wait-timeout",
+            "600",
+        ]
+    ]
 
 
 def test_root_is_only_inclusion_not_runtime() -> None:

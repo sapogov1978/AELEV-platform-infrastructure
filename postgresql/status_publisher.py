@@ -28,8 +28,12 @@ def node_state(cfg: Settings, component: str) -> str:
     port = os.environ[
         PREFIX + f"NODE_{node}_" + ("ETCD_CLIENT_PORT" if etcd else "REST_PORT")
     ]
+    identity = f"etcd-{node}" if etcd else role
     context = tls(
-        cfg.secret_root, role + "-ca.crt", role + "-probe.crt", role + "-probe.key"
+        cfg.secret_root,
+        identity + "-ca.crt",
+        identity + "-probe.crt",
+        identity + "-probe.key",
     )
     code, body = request(context, f"https://{host}:{port}/health", cfg.timeout)
     payload = json.loads(body)

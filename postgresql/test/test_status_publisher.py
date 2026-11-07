@@ -64,6 +64,25 @@ def test_native_health(
     assert owner.node_state(cfg, component) == expected
 
 
+def test_etcd_probe_uses_the_node_specific_identity(
+    cfg: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    tls = Mock(return_value=Mock())
+    monkeypatch.setattr(owner, "tls", tls)
+    monkeypatch.setattr(
+        owner,
+        "request",
+        Mock(return_value=(200, json.dumps({"health": "true"}).encode())),
+    )
+    assert owner.node_state(cfg, "etcd-2") == "ONLINE"
+    tls.assert_called_once_with(
+        cfg.secret_root,
+        "etcd-2-ca.crt",
+        "etcd-2-probe.crt",
+        "etcd-2-probe.key",
+    )
+
+
 def test_owned_composition(cfg: Settings) -> None:
     value = json.loads(owner.description(cfg))
     assert value["module_id"] == cfg.module_id

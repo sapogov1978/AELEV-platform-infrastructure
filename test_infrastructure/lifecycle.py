@@ -78,6 +78,17 @@ def compose_prefix() -> list[str]:
     return ["docker", "compose", "-f", str(ROOT / "compose.yml")]
 
 
+def compute_prefix() -> list[str]:
+    return [
+        "docker",
+        "compose",
+        "--env-file",
+        str(ROOT / "translator-service/.env"),
+        "-f",
+        str(ROOT / "translator-service/compose.compute.yml"),
+    ]
+
+
 def validate_active_networks(model: dict[str, Any], active_services: set[str]) -> None:
     active_networks = {
         network
@@ -393,6 +404,30 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
     raise RuntimeError("readiness deadline: " + ", ".join(sorted(pending)))
 
 
+def start_compute(
+    compose: list[str], project: str, service_names: set[str], timeout: int
+) -> None:
+    execute(
+        [
+            *compose,
+            "up",
+            "-d",
+            "--no-build",
+            "--pull",
+            "never",
+            "--wait",
+            "--wait-timeout",
+            str(timeout),
+        ]
+    )
+    current = states(project)
+    if set(current) != service_names or any(
+        not row.get("Running") or row.get("Health", {}).get("Status") != "healthy"
+        for row in current.values()
+    ):
+        raise RuntimeError("compute composition did not become healthy")
+
+
 def ui_status_diagnostic(
     ids: set[str], api_status: int, rows: dict[str, Any]
 ) -> dict[str, Any]:
@@ -473,6 +508,17 @@ def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
                     headers={"Authorization": authorization},
                 )
                 last_status = response.status
+                if response.status == 401:
+                    with page.expect_response(
+                        lambda reply: reply.url == args.ui_url + "/api/modules"
+                    ) as refreshed:
+                        page.reload()
+                    if refreshed.value.status != 200:
+                        raise RuntimeError("viewer token refresh failed")
+                    authorization = refreshed.value.request.all_headers()[
+                        "authorization"
+                    ]
+                    continue
                 if response.status == 200:
                     rows = {
                         row["module_id"]: row
@@ -563,12 +609,16 @@ def run(args: argparse.Namespace) -> int:
     checks: list[tuple[str, str]] = []
     before: Inventory | None = None
     prefix = compose_prefix()
+    compute = compute_prefix()
     project = ""
+    compute_project = ""
     witnessed: set[str] = set()
+    compute_witnessed: set[str] = set()
     rows: dict[str, Any] = {}
     protected: dict[str, int] = {}
     failure = ""
     admitted = False
+    compute_admitted = False
 
     def passed(name: str, detail: str = "") -> None:
         checks.append((name, detail))
@@ -591,6 +641,15 @@ def run(args: argparse.Namespace) -> int:
             execute([*prefix, "--profile", "*", "config", "--format", "json"])
         )
         project = model["name"]
+        compute_model = json.loads(execute([*compute, "config", "--format", "json"]))
+        compute_project = compute_model["name"]
+        compute_names = set(compute_model["services"])
+        if compute_project == project or compute_names != {
+            "translation-provider",
+            "translator-worker",
+        }:
+            raise RuntimeError("independent compute composition contract differs")
+        validate_active_mounts(compute_model, compute_names)
         regular = {
             name: row
             for name, row in model["services"].items()
@@ -613,7 +672,15 @@ def run(args: argparse.Namespace) -> int:
             args.reuse_existing_data,
             regular_names,
         )
+        preflight(
+            execute,
+            before,
+            compute_model,
+            args.reuse_existing_data,
+            compute_names,
+        )
         admitted = True
+        compute_admitted = True
         passed("Исходные ресурсы учтены; существующих писателей общих томов нет")
         execute([*prefix, "up", "-d", "--no-build", "--pull", "never", "kafka"])
         try:
@@ -693,6 +760,7 @@ def run(args: argparse.Namespace) -> int:
             )
             raise
         wait_ready(project, regular, args.timeout)
+        start_compute(compute, compute_project, compute_names, args.timeout)
         passed(
             "Общий старт: healthcheck, автоматические миграции и topics готовы",
             str(len(regular))
@@ -700,32 +768,53 @@ def run(args: argparse.Namespace) -> int:
             + str(sum(bool(row.get("healthcheck")) for row in regular.values()))
             + " healthcheck; остальные постоянные роли RUNNING и далее проверяются владельцами через UI",
         )
+        passed("Отдельная compute-композиция provider и worker healthy")
         rows = ui_snapshot(args, ids)
         passed(
             "Настоящие OIDC, API и DOM: все собственные строки ONLINE",
             str(len(rows)) + " строк",
         )
         first_ids = set(owned_containers(inventory(execute), project))
+        first_compute_ids = set(owned_containers(inventory(execute), compute_project))
+        execute([*compute, "stop"])
         execute([*prefix, *PROFILES, "stop"])
-        if any(row.get("Running") for row in states(project).values()):
+        if any(row.get("Running") for row in states(project).values()) or any(
+            row.get("Running") for row in states(compute_project).values()
+        ):
             raise RuntimeError("a project container is still running after stop")
         passed("Общая остановка: ни один контейнер группы не работает")
         execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
         wait_ready(project, regular, args.timeout)
+        start_compute(compute, compute_project, compute_names, args.timeout)
         resumed = ui_snapshot(args, ids)
         assert_sequence_advanced(rows, resumed)
         if set(owned_containers(inventory(execute), project)) != first_ids:
             raise RuntimeError("stop/up unexpectedly replaced containers")
+        if (
+            set(owned_containers(inventory(execute), compute_project))
+            != first_compute_ids
+        ):
+            raise RuntimeError("compute stop/up unexpectedly replaced containers")
         rows = resumed
         passed(
             "Повторный старт: прежние контейнеры, identities и возрастающие последовательности"
         )
         current = inventory(execute)
         witnessed.update(mounted_volumes(execute, owned_containers(current, project)))
+        compute_witnessed.update(
+            mounted_volumes(execute, owned_containers(current, compute_project))
+        )
+        execute([*compute, "down"])
         execute([*prefix, *PROFILES, "down"])
-        if owned_containers(inventory(execute), project):
+        if owned_containers(inventory(execute), project) or owned_containers(
+            inventory(execute), compute_project
+        ):
             raise RuntimeError("project containers remain after down")
-        data_names = {row["name"] for row in model["volumes"].values()}
+        data_names = {
+            row["name"]
+            for source in (model, compute_model)
+            for row in source["volumes"].values()
+        }
         if (
             data_names.intersection(current["volumes"])
             - inventory(execute)["volumes"].keys()
@@ -734,10 +823,15 @@ def run(args: argparse.Namespace) -> int:
         passed("Общее down сняло контейнеры; постоянные тома сохранены")
         execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
         wait_ready(project, regular, args.timeout)
+        start_compute(compute, compute_project, compute_names, args.timeout)
         recreated = ui_snapshot(args, ids)
         assert_sequence_advanced(rows, recreated)
         if first_ids & set(owned_containers(inventory(execute), project)):
             raise RuntimeError("down/up did not recreate all containers")
+        if first_compute_ids & set(
+            owned_containers(inventory(execute), compute_project)
+        ):
+            raise RuntimeError("compute down/up did not recreate all containers")
         rows = recreated
         passed("Down/up: новые контейнеры работают с прежними данными и identities")
     except (Exception, KeyboardInterrupt) as error:
@@ -747,14 +841,32 @@ def run(args: argparse.Namespace) -> int:
         print("FAIL: " + failure, flush=True)
     finally:
         if admitted and before is not None:
+            cleanup_errors: list[str] = []
+            if compute_admitted:
+                try:
+                    cleanup(
+                        before,
+                        compute_project,
+                        compute_witnessed,
+                        compute,
+                    )
+                except Exception as error:
+                    cleanup_errors.append(
+                        "compute: " + type(error).__name__ + ": " + str(error)
+                    )
             try:
                 protected = cleanup(before, project, witnessed, prefix)
+            except Exception as error:
+                cleanup_errors.append(
+                    "root: " + type(error).__name__ + ": " + str(error)
+                )
+            if cleanup_errors:
+                failure += "; cleanup: " + "; ".join(cleanup_errors)
+                print("FAIL: cleanup", flush=True)
+            else:
                 passed(
                     "Очистка: созданное снято, все исходные ресурсы и чужие состояния сохранены"
                 )
-            except Exception as error:
-                failure += "; cleanup: " + type(error).__name__ + ": " + str(error)
-                print("FAIL: cleanup", flush=True)
         result = "FAIL" if failure else "PASS"
         report = "# Проверка общей инфраструктурной оркестрации\n\n"
         report += f"Начало: {started.isoformat()}. Итог: {result}.\n\n"
