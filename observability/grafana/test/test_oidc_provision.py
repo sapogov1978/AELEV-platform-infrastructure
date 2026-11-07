@@ -61,3 +61,14 @@ def test_main_reports_only_failure_type(
     diagnostic = capsys.readouterr().err
     assert diagnostic.strip() == "Provisioning failed: FileNotFoundError"
     assert "sensitive-local-path" not in diagnostic
+
+
+def test_admin_permission_error_is_stage_specific(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def denied(*args: object, **kwargs: object) -> str:
+        raise PermissionError("sensitive-local-path")
+
+    monkeypatch.setattr(Path, "read_text", denied)
+    with pytest.raises(oidc_provision.GrafanaAdminSecretPermissionError):
+        oidc_provision._read_admin("admin-password")

@@ -176,6 +176,29 @@ class FullLocalContractTests(unittest.TestCase):
                 full_local.prepare_local_deployment_admin(manifest, root), []
             )
 
+    def test_local_oidc_trust_delivers_only_public_ca_create_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            ca = root / "keycloak/secrets/https/ca.crt"
+            ca.parent.mkdir(parents=True)
+            ca.write_bytes(b"public-local-ca\n")
+            owner_env = root / "owner/.env"
+            owner_env.parent.mkdir()
+            owner_env.write_text("OWNER_OIDC_SECRET_ROOT=./secrets/oidc\n")
+            manifest = {"environment_files": ["owner/.env"]}
+
+            self.assertEqual(
+                full_local.prepare_local_oidc_trust(manifest, root),
+                ["owner/secrets/oidc"],
+            )
+            delivered = owner_env.parent / "secrets/oidc/ca.crt"
+            self.assertEqual(delivered.read_bytes(), b"public-local-ca\n")
+            self.assertEqual(delivered.stat().st_mode & 0o777, 0o640)
+
+            delivered.write_bytes(b"approved-existing-ca\n")
+            self.assertEqual(full_local.prepare_local_oidc_trust(manifest, root), [])
+            self.assertEqual(delivered.read_bytes(), b"approved-existing-ca\n")
+
     def test_complete_evidence_verifies_and_tamper_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -24,6 +24,18 @@ OIDC_SECRET = Path("/run/secrets/oidc/client-secret")
 ADMIN_ROOT = Path("/run/secrets/status-admin")
 
 
+class GrafanaOidcCaPermissionError(PermissionError):
+    """The one-off role cannot read its public IdP trust input."""
+
+
+class GrafanaAdminSecretPermissionError(PermissionError):
+    """The one-off role cannot read its deployment-admin files."""
+
+
+class GrafanaOidcOutputPermissionError(PermissionError):
+    """The one-off role cannot write its owner-local client secret."""
+
+
 def required(name: str) -> str:
     """Read one non-secret required setting."""
     value = os.environ.get(PREFIX + name, "").strip()
@@ -143,9 +155,22 @@ def _write_secret(value: str, destination: Path = OIDC_SECRET) -> None:
             os.fsync(directory)
         finally:
             os.close(directory)
+    except PermissionError as error:
+        try:
+            temporary.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise GrafanaOidcOutputPermissionError from error
     except BaseException:
         temporary.unlink(missing_ok=True)
         raise
+
+
+def _read_admin(name: str) -> str:
+    try:
+        return (ADMIN_ROOT / name).read_text().strip()
+    except PermissionError as error:
+        raise GrafanaAdminSecretPermissionError from error
 
 
 def provision() -> None:
@@ -155,7 +180,10 @@ def provision() -> None:
     public_url = https_origin("OIDC_PUBLIC_URL")
     realm_name = required("OIDC_REALM")
     client_id = required("OIDC_CLIENT_ID")
-    context = ssl.create_default_context(cafile=str(OIDC_CA))
+    try:
+        context = ssl.create_default_context(cafile=str(OIDC_CA))
+    except PermissionError as error:
+        raise GrafanaOidcCaPermissionError from error
     opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=context))
     _, token_response = _call(
         opener,
@@ -164,8 +192,8 @@ def provision() -> None:
         form={
             "grant_type": "password",
             "client_id": "admin-cli",
-            "username": (ADMIN_ROOT / "admin-user").read_text().strip(),
-            "password": (ADMIN_ROOT / "admin-password").read_text().strip(),
+            "username": _read_admin("admin-user"),
+            "password": _read_admin("admin-password"),
         },
     )
     if not isinstance(token_response, dict) or not isinstance(
