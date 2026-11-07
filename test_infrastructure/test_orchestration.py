@@ -318,7 +318,10 @@ def test_verification_refuses_created_remainder() -> None:
 
 
 def test_inventory_merges_image_tags_without_losing_protection() -> None:
+    calls: list[list[str]] = []
+
     def listing(arguments: list[str]) -> str:
+        calls.append(arguments)
         if arguments[1] == "image":
             return (
                 '{"ID":"sha","Repository":"image","Tag":"1"}\n'
@@ -327,6 +330,15 @@ def test_inventory_merges_image_tags_without_losing_protection() -> None:
         return ""
 
     assert inventory(listing)["images"]["sha"]["references"] == "image:1,image:2"
+    assert [
+        "docker",
+        "image",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "json",
+    ] in calls
 
 
 def status(sequence: int) -> dict[str, Any]:

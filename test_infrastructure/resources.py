@@ -16,7 +16,7 @@ def inventory(execute: Execute) -> Inventory:
         "containers": ["container", "ls", "--all", "--no-trunc"],
         "networks": ["network", "ls", "--no-trunc"],
         "volumes": ["volume", "ls"],
-        "images": ["image", "ls", "--no-trunc"],
+        "images": ["image", "ls", "--all", "--no-trunc"],
     }.items():
         resources: dict[str, dict[str, str]] = {}
         for line in execute(["docker", *arguments, "--format", "json"]).splitlines():
@@ -98,7 +98,10 @@ def preflight(
         if identity not in before["images"]:
             missing.add(image)
     if missing:
-        raise RuntimeError("prepare canonical images before lifecycle testing")
+        raise RuntimeError(
+            "prepare canonical images before lifecycle testing: "
+            + ", ".join(sorted(missing))
+        )
 
 
 def cleanup_plan(

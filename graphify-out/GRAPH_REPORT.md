@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-07)
 
 ## Corpus Check
-- 1008 files · ~629,857 words
+- 1008 files · ~629,920 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 182 file(s) not represented in the graph (top: .whl 48, (none) 45, .example 21)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `93e84ecc`
+- Built from commit: `f9e3f3b4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3095,16 +3095,16 @@ Nodes (4): Выкладка и сохранность, Подтверждённ�
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `replace` to `Store`, `ssl`, `recovery.py`, `typing`, `Delivery — руководство пользователя`, `test_automatic_recovery.py`, `keycloak/USER_MANUAL.md`, `Blackbox Exporter — руководство пользователя`, `test_delivery_http.py`, `Техническая инъекция разделов и состояния`, `platform-ui/test/test_api.py`, `Loki — руководство пользователя`, `OpenTelemetry Collector — руководство пользователя`, `gateway.py`, `Prometheus — руководство пользователя`, `suspend`, `json`, `keycloak/test/test_status_publisher.py`, `spire/CHANGELOG.md`, `Kafka — руководство пользователя`, `test_authorization.py`, `production-readiness.md`, `test_restart_intent.py`, `Path`, `Руководство: метрики и панели нового владельца`, `Создание и подключение UI нового сервиса`, `Keycloak — руководство пользователя`, `Tempo — руководство пользователя`, `test_documentation.py`, `MinIO — руководство пользователя`, `recovery_host.py`, `ADR-0171: Восстановление после паузы хоста и передача Compose-инкарнации`?**
-  _High betweenness centrality (0.103) - this node is a cross-community bridge._
+  _High betweenness centrality (0.100) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `test_operator_api.py` be split into smaller, more focused modules?**
   _Cohesion score 0.13756613756613756 - nodes in this community are weakly interconnected._
 - **Why does `Platform UI — нормативная спецификация` connect `Техническая инъекция разделов и состояния` to `platform-ui-injection.md`, `replace`?**
-  _High betweenness centrality (0.066) - this node is a cross-community bridge._
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
 - **Should `recovery.py` be split into smaller, more focused modules?**
   _Cohesion score 0.07168262653898769 - nodes in this community are weakly interconnected._
 - **Why does `PlatformPage()` connect `Техническая инъекция разделов и состояния` to `QueueServiceApp.tsx`, `Changelog`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Should `tempo/USER_MANUAL.md` be split into smaller, more focused modules?**
   _Cohesion score 0.06463414634146342 - nodes in this community are weakly interconnected._
