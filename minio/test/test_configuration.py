@@ -112,6 +112,9 @@ class MinioConfigurationTest(unittest.TestCase):
         replication = (COMPONENT_ROOT / "configure-site-replication.sh").read_text(
             encoding="utf-8"
         )
+        generator = (COMPONENT_ROOT / "generate-local-configuration.sh").read_text(
+            encoding="utf-8"
+        )
 
         for site in ("a", "b"):
             for node in range(1, 5):
@@ -145,6 +148,10 @@ class MinioConfigurationTest(unittest.TestCase):
         )
         self.assertIn("mc admin replicate add site-a site-b", replication)
         self.assertIn("mc admin replicate status site-a", replication)
+        for site in ("a", "b"):
+            local_ca = f'$secrets_dir/site-{site}/CAs/aelev-minio-sites.crt'
+            self.assertIn(f'cp "$secrets_dir/sites-ca.crt" "{local_ca}"', generator)
+            self.assertIn(f'"{local_ca}"', generator)
         self.assertRegex(
             compose,
             r"bucket-provisioner:[\s\S]*"

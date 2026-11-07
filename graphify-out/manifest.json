@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794075748.5817177,
-    "seen": 1794075771.551282,
-    "ast_hash": "6bf10e3e745a070943843607539cfdd0",
+    "mtime": 1794077153.571773,
+    "seen": 1794077244.3248482,
+    "ast_hash": "3a36cd812028226ab1aada48b95583e0",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -510,9 +510,9 @@
     "semantic_hash": ""
   },
   "minio/generate-local-configuration.sh": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150401,
-    "ast_hash": "c8a42f4d9dc5a6338ba5891ad8d1bfe6",
+    "mtime": 1794077153.5705388,
+    "seen": 1794077244.319556,
+    "ast_hash": "62c3e0f04d9ff30246386326e67293df",
     "semantic_hash": ""
   },
   "minio/healthcheck.sh": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "minio/test/test_configuration.py": {
-    "mtime": 1793839506.4711385,
-    "seen": 1793926130.1504068,
-    "ast_hash": "38dfaa29d614d0b80d4a8fcf62237361",
+    "mtime": 1794077153.5710933,
+    "seen": 1794077244.319635,
+    "ast_hash": "2423ffe3e62e560bc9ff45e43c91de56",
     "semantic_hash": ""
   },
   "minio/test/test_publisher_health.py": {
