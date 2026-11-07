@@ -362,6 +362,26 @@ def test_healthchecked_restart_no_role_fails_immediately_after_exit(
         )
 
 
+def test_bounded_on_failure_role_is_ready_after_successful_exit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "translator-topic-provisioner": {
+                "Status": "exited",
+                "Running": False,
+                "ExitCode": 0,
+            }
+        },
+    )
+    wait_ready(
+        "project",
+        {"translator-topic-provisioner": {"restart": "on-failure:3"}},
+        1,
+    )
+
+
 def test_interrupted_preflight_is_reported_as_failure(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

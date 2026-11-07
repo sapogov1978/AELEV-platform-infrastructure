@@ -360,12 +360,18 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
         terminal = []
         for name, description in services.items():
             state = current.get(name, {})
+            restart = str(description["restart"])
+            one_shot = (
+                restart == "no"
+                or restart == "on-failure"
+                or restart.startswith("on-failure:")
+            )
             if description.get("healthcheck"):
                 ready = (
                     state.get("Running") is True
                     and state.get("Health", {}).get("Status") == "healthy"
                 )
-            elif description["restart"] in {"no", "on-failure"}:
+            elif one_shot:
                 ready = state.get("Status") == "exited" and state.get("ExitCode") == 0
             else:
                 ready = state.get("Running") is True
