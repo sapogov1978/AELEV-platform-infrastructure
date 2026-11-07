@@ -105,11 +105,13 @@ test ! -e secrets/admin-password || exit 1
 test ! -e secrets/database-password || exit 1
 openssl rand -out secrets/admin-password -hex 32
 openssl rand -out secrets/database-password -hex 32
-chmod 600 secrets/admin-password secrets/database-password
+KEYCLOAK_SECRET_GID="$(id -g)"
+chgrp "$KEYCLOAK_SECRET_GID" secrets/admin-password secrets/database-password
+chmod 640 secrets/admin-password secrets/database-password
 chmod 600 .env
 ```
 
-В `.env` находятся только пути `AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_PASSWORD_FILE` и `AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PASSWORD_FILE`, а не значения. PostgreSQL использует `POSTGRES_PASSWORD_FILE`; entrypoint Keycloak проверяет отдельные обычные файлы и экспортирует значения только внутри памяти запускаемого процесса, поэтому Docker Compose/inspect их не хранит. Одноразовый provisioner получает только административный файл. В production эти же пути указывают на доставленные внешним secret manager временные файлы; локальная схема не является обходом.
+Числовой `KEYCLOAK_SECRET_GID` должен совпадать с `AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID` в `.env`: контейнеры получают эту дополнительную группу и только групповое чтение файлов. В `.env` находятся только пути `AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_PASSWORD_FILE` и `AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PASSWORD_FILE`, а не значения. PostgreSQL использует `POSTGRES_PASSWORD_FILE`; entrypoint Keycloak проверяет отдельные обычные файлы и экспортирует значения только внутри памяти запускаемого процесса, поэтому Docker Compose/inspect их не хранит. Одноразовый provisioner получает только административный файл. В production эти же пути указывают на доставленные внешним secret manager временные файлы с group-read для настроенного runtime GID; локальная схема не является обходом.
 
 Не повторяйте генерацию ключей поверх существующих `https/tls.key`/`https/tls.crt`: для новой установки сначала убедитесь, что файлов нет; для ротации создайте отдельный набор. Закреплённый образ Keycloak работает с UID 1000. На Linux после доставки назначьте ключу этого владельца (`sudo chown 1000 secrets/https/tls.key`, `chmod 600 secrets/https/tls.key`); read-only mount не меняет владельца автоматически. Каталог должен допускать проход, сертификат может иметь `0644`. Изменение файлов паролей после инициализации не обновляет пользователей или SQL-роли. SQL-пароль меняют согласованно в существующей БД и подключении Keycloak; административный — в Keycloak и файле одноразового provision. При смене TLS используйте проверенный сертификат и контролируемый рестарт собственного Keycloak, без смены issuer или удаления базы.
 

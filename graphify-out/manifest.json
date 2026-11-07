@@ -156,9 +156,9 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1793925326.5428398,
-    "seen": 1793926130.150691,
-    "ast_hash": "4974863aff9865b4665dc5b7ea1b3808",
+    "mtime": 1794045121.7397535,
+    "seen": 1794051640.5469718,
+    "ast_hash": "ef7807e520266ed788c7448269a052bf",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794035076.563752,
-    "seen": 1794036960.937187,
-    "ast_hash": "fc02bb10093b8602325144246b1f3575",
+    "mtime": 1794045121.7424083,
+    "seen": 1794051640.550236,
+    "ast_hash": "d78626040fa964a6f2d5cea9abab695f",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "bootstrap.py": {
-    "mtime": 1793922250.6491783,
-    "seen": 1793926130.1503701,
-    "ast_hash": "dfd8634c683d097c91104dd741fb9dc8",
+    "mtime": 1794045121.7392378,
+    "seen": 1794051640.537418,
+    "ast_hash": "63c3c97ed6357e9cf9f4b76961269e04",
     "semantic_hash": ""
   },
   "certificate_authority.py": {
@@ -3174,9 +3174,9 @@
     "semantic_hash": ""
   },
   "keycloak/CHANGELOG.md": {
-    "mtime": 1793957791.3219795,
-    "seen": 1793958131.68309,
-    "ast_hash": "e02d6227d8487f4d8aa27fb013f64214",
+    "mtime": 1794045121.742015,
+    "seen": 1794051640.557193,
+    "ast_hash": "93db9de20fa1fbfa6647ad0891c675e8",
     "semantic_hash": ""
   },
   "keycloak/README.md": {
@@ -3186,9 +3186,9 @@
     "semantic_hash": ""
   },
   "keycloak/SPEC.md": {
-    "mtime": 1793957754.0504155,
-    "seen": 1793958131.683101,
-    "ast_hash": "c3e59f7558ebe46cfa67090b49236dcd",
+    "mtime": 1794045121.7415686,
+    "seen": 1794051640.5572329,
+    "ast_hash": "39253773bddebc3791a8027ff8528364",
     "semantic_hash": ""
   },
   "keycloak/TASKS.md": {
@@ -3198,9 +3198,9 @@
     "semantic_hash": ""
   },
   "keycloak/USER_MANUAL.md": {
-    "mtime": 1793957754.0859802,
-    "seen": 1793958131.6831129,
-    "ast_hash": "952cfe8185d1655cbe0e4f737b37d084",
+    "mtime": 1794045121.740908,
+    "seen": 1794051640.557251,
+    "ast_hash": "6915524c3c506fef5b327dee5e8ceab5",
     "semantic_hash": ""
   },
   "keycloak/test/composition-validation-result.md": {

@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Новые локальные Keycloak password files теперь получают `0640` и группу оператора, совпадающую с runtime GID контейнеров; это устраняет обнаруженный clean-room отказ чтения на GitHub-hosted Linux. Существующие секреты и их режимы bootstrap не изменяет.
 - Неуспешный Keycloak startup теперь также сохраняет до cleanup ограниченные State, health-output и объединённый stdout/stderr-хвост только серверного лога в `keycloak-startup-diagnostic.json`; environment, realm и inspect-конфигурация не сериализуются. Терминально завершившаяся healthchecked-роль с `restart: no` прекращает ожидание сразу, а не после общего deadline.
 - Root lifecycle readiness больше не считает постоянную healthchecked-роль одноразовой job только из-за `restart: no`: Kafka с осознанно внешним recovery budget принимается по `Running=true` и `Health=healthy`. Одноразовые роли без healthcheck по-прежнему обязаны завершиться с exit 0.
 - При отказе первого общего Kafka startup clean-room после собственного health-окна и пятиминутного внешнего предела сохраняет до cleanup ограниченный `kafka-startup-diagnostic.json`: State, последние безопасные результаты native health и хвост лога брокера. Environment и inspect-конфигурация не сериализуются; успешный запуск не создаёт диагностический артефакт.

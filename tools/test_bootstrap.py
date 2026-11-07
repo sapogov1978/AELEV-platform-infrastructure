@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import subprocess
 import tempfile
 import unittest
@@ -19,6 +20,47 @@ SPEC.loader.exec_module(provider)
 
 
 class BootstrapTest(unittest.TestCase):
+    def test_keycloak_creates_group_readable_password_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            keycloak = Path(temporary).resolve()
+            (keycloak / ".env.example").write_text("")
+            tls = keycloak / "secrets/https"
+            tls.mkdir(parents=True)
+            for name in ("ca.crt", "tls.crt", "tls.key"):
+                (tls / name).write_text("fixture\n")
+
+            with mock.patch.object(provider, "KEYCLOAK", keycloak):
+                provider.initialize_keycloak()
+
+            for name in ("admin-password", "database-password"):
+                status = (keycloak / "secrets" / name).stat()
+                self.assertEqual(status.st_mode & 0o777, 0o640)
+                self.assertEqual(status.st_gid, os.getgid())
+
+    def test_keycloak_preserves_existing_password_file_and_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            keycloak = Path(temporary).resolve()
+            (keycloak / ".env.example").write_text("")
+            secrets_root = keycloak / "secrets"
+            secrets_root.mkdir()
+            admin_password = secrets_root / "admin-password"
+            admin_password.write_text("existing-value\n")
+            admin_password.chmod(0o600)
+            tls = secrets_root / "https"
+            tls.mkdir()
+            for name in ("ca.crt", "tls.crt", "tls.key"):
+                (tls / name).write_text("fixture\n")
+
+            with mock.patch.object(provider, "KEYCLOAK", keycloak):
+                provider.initialize_keycloak()
+
+            self.assertEqual(admin_password.read_text(), "existing-value\n")
+            self.assertEqual(admin_password.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(
+                (secrets_root / "database-password").stat().st_mode & 0o777,
+                0o640,
+            )
+
     def test_first_run_minio_configuration_is_owned_by_its_generator(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()

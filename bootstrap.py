@@ -154,8 +154,12 @@ def initialize_keycloak() -> None:
         },
     )
     secrets_root = KEYCLOAK / "secrets"
-    write_private(secrets_root / "admin-password", secrets.token_urlsafe(32) + "\n")
-    write_private(secrets_root / "database-password", secrets.token_urlsafe(32) + "\n")
+    write_private(
+        secrets_root / "admin-password", secrets.token_urlsafe(32) + "\n", 0o640
+    )
+    write_private(
+        secrets_root / "database-password", secrets.token_urlsafe(32) + "\n", 0o640
+    )
     tls = secrets_root / "https"
     required = (tls / "ca.crt", tls / "tls.crt", tls / "tls.key")
     if all(item.is_file() for item in required):
