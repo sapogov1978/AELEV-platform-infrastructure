@@ -423,6 +423,18 @@ def ui_status_diagnostic(
     }
 
 
+def write_ui_status_diagnostic(
+    path: Path, ids: set[str], api_status: int, rows: dict[str, Any]
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            ui_status_diagnostic(ids, api_status, rows), indent=2, sort_keys=True
+        )
+        + "\n"
+    )
+
+
 def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
     # Model/resource regressions do not execute a browser. Load its platform-
     # specific dependency only for the actual operator UI exercise.
@@ -502,14 +514,7 @@ def ui_snapshot(args: argparse.Namespace, ids: set[str]) -> dict[str, Any]:
                         return rows
                 time.sleep(3)
             diagnostic_path = args.report.with_name("ui-status-diagnostic.json")
-            diagnostic_path.write_text(
-                json.dumps(
-                    ui_status_diagnostic(ids, last_status, rows),
-                    indent=2,
-                    sort_keys=True,
-                )
-                + "\n"
-            )
+            write_ui_status_diagnostic(diagnostic_path, ids, last_status, rows)
             raise RuntimeError("injected state did not become ONLINE")
         finally:
             browser.close()

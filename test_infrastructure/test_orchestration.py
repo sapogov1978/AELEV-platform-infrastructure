@@ -20,6 +20,7 @@ from lifecycle import (
     run,
     status_provision_tasks,
     ui_status_diagnostic,
+    write_ui_status_diagnostic,
     validate_active_mounts,
     validate_active_networks,
     wait_ready,
@@ -383,7 +384,9 @@ def test_bounded_on_failure_role_is_ready_after_successful_exit(
     )
 
 
-def test_ui_timeout_diagnostic_contains_only_bounded_status_fields() -> None:
+def test_ui_timeout_diagnostic_contains_only_bounded_status_fields(
+    tmp_path: Path,
+) -> None:
     diagnostic = ui_status_diagnostic(
         {"expected", "missing"},
         200,
@@ -423,6 +426,24 @@ def test_ui_timeout_diagnostic_contains_only_bounded_status_fields() -> None:
             }
         ],
     }
+    path = tmp_path / "new" / "stages" / "ui-status-diagnostic.json"
+    write_ui_status_diagnostic(
+        path,
+        {"expected", "missing"},
+        200,
+        {
+            "expected": {
+                "authorization": "must-not-persist",
+                "status": {
+                    "state": "UNKNOWN",
+                    "components": [{"id": "api", "state": "UNKNOWN"}],
+                },
+            }
+        },
+    )
+    persisted = path.read_text()
+    assert json.loads(persisted)["modules"][0]["state"] == "UNKNOWN"
+    assert "must-not-persist" not in persisted
 
 
 def test_interrupted_preflight_is_reported_as_failure(

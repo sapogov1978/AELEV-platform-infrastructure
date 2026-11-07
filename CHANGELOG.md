@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Run `42414666075` снова дошёл до UI acceptance и безопасного cleanup, но первый fail-only writer state-матрицы предполагал уже существующий внешний каталог stages и сам завершился `FileNotFoundError`. Writer теперь create-only создаёт собственный evidence-каталог; regression-test пишет JSON в новый вложенный путь и подтверждает отсутствие неразрешённых полей.
 - Run `42412635427` подтвердил PASS общего старта 51 роли, 49 healthcheck, миграций и topics, после чего реальный OIDC/API/DOM acceptance остановился на ожидании всех owner-state `ONLINE`. При таком timeout lifecycle теперь сохраняет отдельный bounded `ui-status-diagnostic.json` только с module UUID и состояниями компонентов; OIDC token, headers, URL, описания и raw API body не сериализуются.
 - Run `42410522057` подтвердил успешный exit `translator-topic-provisioner`, но clean-room lifecycle ошибочно признавал одноразовыми только literal `on-failure`, а не допустимый bounded policy `on-failure:3`, и ложно ждал до deadline. Классификация readiness теперь принимает весь канонический bounded `on-failure:N`; runtime-контракт и restart policy сервиса не изменены.
 - Run `42410000957` выявил регрессию повторного clean-room `init`: первый проход правильно выдавал runtime-группе Translator чтение `0640`, а прежний create-only validator принимал только `0600`. Validator теперь допускает ровно owner-only `0600` либо `0640` с точным `SECRET_GID`; group-write, неверная группа и любые world bits по-прежнему отклоняются, поэтому повторный init идемпотентен без расширения доступа.
