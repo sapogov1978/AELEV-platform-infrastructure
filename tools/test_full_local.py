@@ -202,6 +202,36 @@ class FullLocalContractTests(unittest.TestCase):
             self.assertEqual(full_local.prepare_local_oidc_trust(manifest, root), [])
             self.assertEqual(delivered.read_bytes(), b"approved-existing-ca\n")
 
+    def test_local_operator_trust_is_owner_local_and_create_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            ca = root / "keycloak/secrets/https/ca.crt"
+            ca.parent.mkdir(parents=True)
+            ca.write_bytes(b"public-local-ca\n")
+            first_env = root / "first/.env"
+            second_env = root / "second/.env"
+            first_env.parent.mkdir()
+            second_env.parent.mkdir()
+            first_env.write_text("FIRST_OPERATOR_SECRET_ROOT=./secrets/operator\n")
+            second_env.write_text("SECOND_OPERATOR_SECRET_ROOT=./secrets/operator\n")
+            existing = second_env.parent / "secrets/operator/identity-ca.crt"
+            existing.parent.mkdir(parents=True)
+            existing.write_bytes(b"approved-existing-ca\n")
+            manifest = {"environment_files": ["first/.env", "second/.env"]}
+
+            self.assertEqual(
+                full_local.prepare_local_operator_trust(manifest, root),
+                ["first/secrets/operator/identity-ca.crt"],
+            )
+            delivered = first_env.parent / "secrets/operator/identity-ca.crt"
+            self.assertEqual(delivered.read_bytes(), b"public-local-ca\n")
+            self.assertEqual(delivered.stat().st_mode & 0o777, 0o640)
+            self.assertEqual(delivered.parent.stat().st_mode & 0o777, 0o750)
+            self.assertEqual(existing.read_bytes(), b"approved-existing-ca\n")
+            self.assertEqual(
+                full_local.prepare_local_operator_trust(manifest, root), []
+            )
+
     def test_complete_evidence_verifies_and_tamper_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

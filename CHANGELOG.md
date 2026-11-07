@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Run `42394601103` подтвердил PASS Grafana OIDC provision и остановился на `blackbox-exporter-operator-provision`: чистый `OPERATOR_SECRET_ROOT` не получал обязательный `identity-ca.crt`. Full-local init теперь create-only доставляет только публичную CA локального IdP в явно объявленные operator roots Blackbox/Prometheus; закрытый CA key, client secret и существующее доверие не изменяются.
 - Run `42393401311` прошёл чистоту checkout, image admission, build и дошёл до root lifecycle, где безопасный marker `GrafanaAdminSecretPermissionError` выявил использование шаблонных UID/GID. Новый operational `observability/.env` теперь выбирает владельческие `.env`; версионируемый шаблон по-прежнему выбирает `.env.example` для contract-проверок, а существующий операторский выбор не переписывается.
 - Воспроизведение `full_local init` в отдельном чистом clone локализовало последний `SOURCE_TREE_NOT_CLEAN`: create-only публичная CA Translator `identity-ca.crt` была owner-local input, но не была исключена из Git. Путь теперь игнорируется Git и Docker build context; runtime-контракт, trust и существующие файлы не изменены.
 - Run `42392523339` закрыто остановился с `SOURCE_TREE_NOT_CLEAN`, потому что новый локальный public-trust path ещё не был исключён из source tree. `observability/grafana/trust/` теперь игнорируется Git и Docker build context; сама CA остаётся проверяемым owner-local bind input.

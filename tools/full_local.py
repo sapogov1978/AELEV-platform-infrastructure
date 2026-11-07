@@ -584,6 +584,33 @@ def prepare_local_oidc_trust(manifest: dict[str, Any], root: Path = ROOT) -> lis
     return sorted(set(prepared))
 
 
+def prepare_local_operator_trust(
+    manifest: dict[str, Any], root: Path = ROOT
+) -> list[str]:
+    """Deliver local IdP public trust to declared operator secret roots."""
+    root = root.resolve()
+    source = root / "keycloak/secrets/https/ca.crt"
+    if source.is_symlink() or not source.is_file():
+        raise FullLocalError("LOCAL_IDP_CA_INVALID")
+    certificate = source.read_bytes()
+    if not certificate.strip():
+        raise FullLocalError("LOCAL_IDP_CA_EMPTY")
+    prepared: list[str] = []
+    for relative in manifest["environment_files"]:
+        env_path = root / relative
+        owner = env_path.parent.resolve()
+        for key, value in read_env(env_path, root).items():
+            if not key.endswith("_OPERATOR_SECRET_ROOT"):
+                continue
+            secret_root = (owner / value).resolve()
+            if secret_root == owner or owner not in secret_root.parents:
+                raise FullLocalError(f"OWNER_OPERATOR_PATH_INVALID:{relative}")
+            trust = secret_root / "identity-ca.crt"
+            if _write_new_local_secret(trust, certificate):
+                prepared.append(display_path(trust, root))
+    return sorted(set(prepared))
+
+
 def adapt_created_env_identities(
     manifest: dict[str, Any], preexisting: set[str], root: Path = ROOT
 ) -> list[str]:
@@ -622,6 +649,7 @@ def adapt_created_env_identities(
 def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[str]:
     prepared = prepare_local_deployment_admin(manifest, root)
     prepared.extend(prepare_local_oidc_trust(manifest, root))
+    prepared.extend(prepare_local_operator_trust(manifest, root))
     observability = root / "observability"
     issuer = observability / "runtime/local-issuer"
     if shutil.which("poetry") is None:
