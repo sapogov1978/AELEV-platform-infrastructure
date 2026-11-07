@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794082335.2831616,
-    "seen": 1794082371.923795,
-    "ast_hash": "e367e4892a3c3ff62d313b8ef5290679",
+    "mtime": 1794082702.4350164,
+    "seen": 1794082767.6105118,
+    "ast_hash": "4b96a7b469138e4a01c63fade33a6a48",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6186,9 +6186,9 @@
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
-    "mtime": 1793967461.8634894,
-    "seen": 1793967480.046189,
-    "ast_hash": "7c813edcfff362674bbebdb0f31e8004",
+    "mtime": 1794082744.8644817,
+    "seen": 1794082767.6097531,
+    "ast_hash": "f206bff7fd5ec034f433cba7df95975f",
     "semantic_hash": ""
   },
   "translator-service/src/translator_service/provider_healthcheck.py": {
@@ -6243,6 +6243,12 @@
     "mtime": 1794058233.7705321,
     "seen": 1794058563.629451,
     "ast_hash": "382a62e84632dab32348845f4b040227",
+    "semantic_hash": ""
+  },
+  "translator-service/test/test_prepare_local.py": {
+    "mtime": 1794082751.1209848,
+    "seen": 1794082767.6104488,
+    "ast_hash": "dadf78db8da6b3078d7bb76c1cb82d6c",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

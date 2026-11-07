@@ -39,13 +39,18 @@ def owned_path(value: str) -> Path:
     return path
 
 
-def private_file(path: Path, value: str) -> None:
+def private_mode_allowed(path: Path, secret_gid: int) -> bool:
+    mode = stat.S_IMODE(path.stat().st_mode)
+    return mode == 0o600 or (mode == 0o640 and path.stat().st_gid == secret_gid)
+
+
+def private_file(path: Path, value: str, secret_gid: int) -> None:
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
     if path.exists():
         if (
             not path.is_file()
             or not path.read_text(encoding="utf-8").strip()
-            or stat.S_IMODE(path.stat().st_mode) & 0o077
+            or not private_mode_allowed(path, secret_gid)
         ):
             raise PreparationError("TRANSLATOR_LOCAL_SECRET_INVALID")
         return
@@ -67,10 +72,16 @@ def main() -> int:
             or env.get("AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT")
         ):
             raise PreparationError("TRANSLATOR_LOCAL_PROFILE_REQUIRED")
+        secret_gid_text = env["AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID"]
+        if not secret_gid_text.isdecimal():
+            raise PreparationError("TRANSLATOR_LOCAL_SECRET_GID_INVALID")
+        secret_gid = int(secret_gid_text)
         database = owned_path(
             env["AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT"]
         )
-        private_file(database / "postgres-password", secrets.token_urlsafe(32))
+        private_file(
+            database / "postgres-password", secrets.token_urlsafe(32), secret_gid
+        )
         for key in (
             "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT",
             "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_SECRET_ROOT",
@@ -104,7 +115,7 @@ def main() -> int:
                 pki_root / "api-operator/operator.p12",
                 pki_root / "api-operator/p12-password",
             )
-            if any(stat.S_IMODE(path.stat().st_mode) & 0o077 for path in private):
+            if any(not private_mode_allowed(path, secret_gid) for path in private):
                 raise PreparationError("TRANSLATOR_LOCAL_PKI_PERMISSION_INVALID")
         else:
             result = subprocess.run(
@@ -145,9 +156,7 @@ def main() -> int:
         return 0
     except (OSError, KeyError, PreparationError) as error:
         code = (
-            str(error)
-            if isinstance(error, PreparationError)
-            else type(error).__name__
+            str(error) if isinstance(error, PreparationError) else type(error).__name__
         )
         print(json.dumps({"status": "BLOCKED", "code": code}), file=sys.stderr)
         return 2
