@@ -309,6 +309,84 @@ def capture_group_startup_diagnostic(
     output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
+def classify_compute_start_failure(output: str) -> str:
+    normalized = output.lower()
+    markers = (
+        (
+            "required to have a healthcheck configured",
+            "PROVIDER_HEALTHCHECK_NOT_DECLARED",
+        ),
+        ("declared as external, but could not be found", "EXTERNAL_NETWORK_MISSING"),
+        ("bind source path does not exist", "BIND_SOURCE_MISSING"),
+        ("invalid mount config", "INVALID_MOUNT"),
+        ("no matching manifest", "IMAGE_PLATFORM_UNAVAILABLE"),
+        ("no such image", "IMAGE_NOT_AVAILABLE"),
+        ("dependency failed to start", "DEPENDENCY_NOT_READY"),
+        ("permission denied", "ENGINE_PERMISSION_DENIED"),
+    )
+    return next(
+        (code for marker, code in markers if marker in normalized),
+        "COMPUTE_CREATE_FAILED",
+    )
+
+
+def capture_compute_startup_diagnostic(
+    compose: list[str],
+    project: str,
+    service_names: set[str],
+    output: Path,
+    reason_code: str,
+) -> None:
+    capture_group_startup_diagnostic(
+        project,
+        {name: {} for name in service_names},
+        output,
+    )
+    payload = json.loads(output.read_text())
+    model = json.loads(execute([*compose, "config", "--format", "json"]))
+    payload["reason_code"] = reason_code
+    payload["external_networks"] = {
+        key: subprocess.run(
+            ["docker", "network", "inspect", row.get("name", key)],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).returncode
+        == 0
+        for key, row in sorted(model.get("networks", {}).items())
+        if row.get("external")
+    }
+    payload["bind_mounts"] = {
+        name: [
+            {
+                "target": mount["target"],
+                "source_exists": Path(mount["source"]).exists(),
+            }
+            for mount in model["services"][name].get("volumes", [])
+            if mount["type"] == "bind"
+        ]
+        for name in sorted(service_names)
+    }
+    payload["images"] = {}
+    for name in sorted(service_names):
+        image = model["services"][name]["image"]
+        inspected = subprocess.run(
+            ["docker", "image", "inspect", image],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        payload["images"][name] = {
+            "available": inspected.returncode == 0,
+            "healthcheck_declared": bool(
+                json.loads(inspected.stdout)[0].get("Config", {}).get("Healthcheck")
+            )
+            if inspected.returncode == 0
+            else False,
+        }
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
 def validate_owner_models(model: dict[str, Any]) -> None:
     for owner in (
         "keycloak",
@@ -411,28 +489,35 @@ def start_compute(
     timeout: int,
     diagnostic: Path | None = None,
 ) -> None:
-    try:
-        execute(
-            [
-                *compose,
-                "up",
-                "-d",
-                "--no-build",
-                "--pull",
-                "never",
-                "--wait",
-                "--wait-timeout",
-                str(timeout),
-            ]
-        )
-    except RuntimeError:
+    command = [
+        *compose,
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "--wait",
+        "--wait-timeout",
+        str(timeout),
+    ]
+    started = subprocess.run(
+        command, cwd=ROOT, capture_output=True, text=True, timeout=1200
+    )
+    if started.returncode:
         if diagnostic is not None:
-            capture_group_startup_diagnostic(
+            capture_compute_startup_diagnostic(
+                compose,
                 project,
-                {name: {} for name in service_names},
+                service_names,
                 diagnostic,
+                classify_compute_start_failure(started.stdout + "\n" + started.stderr),
             )
-        raise
+        raise RuntimeError(
+            "command failed (exit "
+            + str(started.returncode)
+            + "): "
+            + " ".join(command)
+        )
     current = states(project)
     if set(current) != service_names or any(
         not row.get("Running") or row.get("Health", {}).get("Status") != "healthy"

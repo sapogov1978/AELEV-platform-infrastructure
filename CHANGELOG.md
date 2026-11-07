@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08
+
+- Run `42425354213` подтвердил, что compute startup завершается ещё до создания provider/worker. Fail-only evidence теперь сводит raw Compose output к фиксированному reason code и дополнительно сохраняет только availability/healthcheck-флаги образов, наличие логических external networks и существование bind-source для публичных container targets; image references, host paths, environment и raw output не сохраняются.
+
 ## 2026-11-07
 
 - Run `42419056483` подтвердил полный PASS root startup и локализовал отказ на первом старте независимой compute-композиции Translator, но безопасное подавление raw Compose stderr не оставляло состояния provider/worker. При compute startup-отказе lifecycle теперь сохраняет только bounded State и native health двух ролей в отдельный `compute-startup-diagnostic.json`; environment, inspect-конфигурация и container logs не сериализуются.

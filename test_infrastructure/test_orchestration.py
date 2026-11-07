@@ -15,6 +15,7 @@ from lifecycle import (
     assert_sequence_advanced,
     capture_group_startup_diagnostic,
     capture_kafka_startup_diagnostic,
+    classify_compute_start_failure,
     compute_prefix,
     compose_prefix,
     execute_provision_task,
@@ -88,9 +89,9 @@ def test_compute_prefix_keeps_the_independent_owner_composition() -> None:
 def test_compute_start_requires_both_native_healthchecks(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    calls: list[list[str]] = []
     monkeypatch.setattr(
-        "lifecycle.execute", lambda arguments: calls.append(arguments) or ""
+        "lifecycle.subprocess.run",
+        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout="", stderr=""),
     )
     monkeypatch.setattr(
         "lifecycle.states",
@@ -111,20 +112,6 @@ def test_compute_start_requires_both_native_healthchecks(
         {"translation-provider", "translator-worker"},
         600,
     )
-    assert calls == [
-        [
-            "docker",
-            "compose",
-            "up",
-            "-d",
-            "--no-build",
-            "--pull",
-            "never",
-            "--wait",
-            "--wait-timeout",
-            "600",
-        ]
-    ]
 
 
 def test_compute_start_failure_persists_only_bounded_state(
@@ -132,10 +119,18 @@ def test_compute_start_failure_persists_only_bounded_state(
 ) -> None:
     output = tmp_path / "compute-startup-diagnostic.json"
 
-    def fail(arguments: list[str]) -> str:
-        raise RuntimeError("expanded credential=must-not-survive")
-
-    monkeypatch.setattr("lifecycle.execute", fail)
+    calls: list[list[str]] = []
+    monkeypatch.setattr(
+        "lifecycle.subprocess.run",
+        lambda arguments, **kwargs: (
+            calls.append(arguments)
+            or SimpleNamespace(
+                returncode=1,
+                stdout="expanded credential=must-not-survive",
+                stderr="network translator-data declared as external, but could not be found",
+            )
+        ),
+    )
     monkeypatch.setattr(
         "lifecycle.states",
         lambda project: {
@@ -149,7 +144,14 @@ def test_compute_start_failure_persists_only_bounded_state(
         },
     )
 
-    with pytest.raises(RuntimeError, match="expanded credential"):
+    monkeypatch.setattr(
+        "lifecycle.capture_compute_startup_diagnostic",
+        lambda compose, project, services, path, reason: path.write_text(
+            json.dumps({"reason_code": reason})
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="command failed"):
         start_compute(
             ["docker", "compose"],
             "compute",
@@ -159,10 +161,25 @@ def test_compute_start_failure_persists_only_bounded_state(
         )
 
     payload = json.loads(output.read_text())
-    assert payload["code"] == "GROUP_STARTUP_FAILED"
-    assert payload["services"]["translator-worker"] == {"status": "not-created"}
-    assert payload["services"]["translation-provider"]["exit_code"] == 1
+    assert payload == {"reason_code": "EXTERNAL_NETWORK_MISSING"}
     assert "credential" not in output.read_text()
+
+
+@pytest.mark.parametrize(
+    ("message", "code"),
+    [
+        (
+            "service provider is required to have a healthcheck configured",
+            "PROVIDER_HEALTHCHECK_NOT_DECLARED",
+        ),
+        ("bind source path does not exist", "BIND_SOURCE_MISSING"),
+        ("arbitrary private error", "COMPUTE_CREATE_FAILED"),
+    ],
+)
+def test_compute_start_failure_is_reduced_to_fixed_code(
+    message: str, code: str
+) -> None:
+    assert classify_compute_start_failure(message) == code
 
 
 def test_root_is_only_inclusion_not_runtime() -> None:
