@@ -248,12 +248,15 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
         pending = []
         for name, description in services.items():
             state = current.get(name, {})
-            if description["restart"] in {"no", "on-failure"}:
+            if description.get("healthcheck"):
+                ready = (
+                    state.get("Running") is True
+                    and state.get("Health", {}).get("Status") == "healthy"
+                )
+            elif description["restart"] in {"no", "on-failure"}:
                 ready = state.get("Status") == "exited" and state.get("ExitCode") == 0
             else:
                 ready = state.get("Running") is True
-                if description.get("healthcheck"):
-                    ready = ready and state.get("Health", {}).get("Status") == "healthy"
             if not ready:
                 pending.append(name)
         if not pending:

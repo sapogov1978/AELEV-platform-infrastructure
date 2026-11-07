@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Root lifecycle readiness больше не считает постоянную healthchecked-роль одноразовой job только из-за `restart: no`: Kafka с осознанно внешним recovery budget принимается по `Running=true` и `Health=healthy`. Одноразовые роли без healthcheck по-прежнему обязаны завершиться с exit 0.
 - При отказе первого общего Kafka startup clean-room после собственного health-окна и пятиминутного внешнего предела сохраняет до cleanup ограниченный `kafka-startup-diagnostic.json`: State, последние безопасные результаты native health и хвост лога брокера. Environment и inspect-конфигурация не сериализуются; успешный запуск не создаёт диагностический артефакт.
 - Clean-room root lifecycle требует наличие runtime images только для фактически выбранных сервисов общего профиля. Digest-pinned Observability Sender остаётся проверяемым build input и отдельно проверяется telemetry acceptance, но больше не обязан сохраняться BuildKit как runtime image неактивного `telemetry`-профиля.
 - Clean-room lifecycle image inventory теперь использует полный `docker image ls --all --no-trunc`, согласованный с полным Docker baseline общего gate. Inspectable digest больше не объявляется отсутствующим только из-за фильтра представления; реальный отказ перечисляет только безопасные image references без credentials.

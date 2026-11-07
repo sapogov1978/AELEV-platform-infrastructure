@@ -18,6 +18,7 @@ from lifecycle import (
     status_provision_tasks,
     validate_active_mounts,
     validate_active_networks,
+    wait_ready,
 )
 from resources import Inventory, cleanup_plan, inventory, preflight, verify_preserved
 
@@ -224,6 +225,27 @@ def test_kafka_startup_diagnostic_is_bounded_and_excludes_environment(
     ]
     assert len(payload["startup_tail"]) == 16384
     assert "environment" not in payload
+
+
+def test_healthchecked_restart_no_role_is_not_treated_as_one_shot(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "kafka": {
+                "Status": "running",
+                "Running": True,
+                "ExitCode": 0,
+                "Health": {"Status": "healthy"},
+            }
+        },
+    )
+    wait_ready(
+        "project",
+        {"kafka": {"restart": "no", "healthcheck": {"test": ["CMD", "probe"]}}},
+        1,
+    )
 
 
 def test_interrupted_preflight_is_reported_as_failure(
