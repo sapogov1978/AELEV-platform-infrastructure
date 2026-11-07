@@ -10,6 +10,7 @@ import os
 import secrets
 import shutil
 import ssl
+import stat
 import subprocess
 import sys
 import tempfile
@@ -135,6 +136,38 @@ def initialize_env(path: Path, updates: dict[str, str] | None = None) -> None:
     write_private(path, "".join(f"{key}={value}\n" for key, value in values.items()))
 
 
+def update_env(path: Path, updates: dict[str, str]) -> None:
+    lines = path.read_text().splitlines()
+    seen: set[str] = set()
+    rendered: list[str] = []
+    for line in lines:
+        key, separator, _ = line.partition("=")
+        if separator and key in updates:
+            rendered.append(f"{key}={updates[key]}")
+            seen.add(key)
+        else:
+            rendered.append(line)
+    rendered.extend(
+        f"{key}={value}" for key, value in updates.items() if key not in seen
+    )
+    mode = stat.S_IMODE(path.stat().st_mode)
+    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
+    try:
+        os.fchmod(descriptor, mode)
+        owned_descriptor = descriptor
+        descriptor = -1
+        with os.fdopen(owned_descriptor, "w") as output:
+            output.write("\n".join(rendered) + "\n")
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary, path)
+    except BaseException:
+        if descriptor >= 0:
+            os.close(descriptor)
+        Path(temporary).unlink(missing_ok=True)
+        raise
+
+
 def openssl(*arguments: str) -> None:
     run(["openssl", *arguments], capture=True)
 
@@ -233,10 +266,32 @@ def initialize_keycloak() -> None:
 
 
 def initialize_platform() -> None:
+    keycloak_network = read_env(KEYCLOAK / ".env")[
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK"
+    ]
     initialize_env(
         PLATFORM / ".env",
-        {"AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID": str(os.getgid())},
+        {
+            "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID": str(os.getgid()),
+            "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL": "https://keycloak:8443",
+            "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK": keycloak_network,
+        },
     )
+    platform_env = read_env(PLATFORM / ".env")
+    updates: dict[str, str] = {}
+    if (
+        platform_env.get("AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL")
+        == "https://keycloak:18443"
+    ):
+        updates["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL"] = (
+            "https://keycloak:8443"
+        )
+    if "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK" not in platform_env:
+        updates["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK"] = (
+            keycloak_network
+        )
+    if updates:
+        update_env(PLATFORM / ".env", updates)
     secrets_root = PLATFORM / "secrets"
     if not (secrets_root / "nginx/server.crt").exists():
         run(

@@ -77,6 +77,7 @@ def test_root_is_only_inclusion_not_runtime() -> None:
     assert "AELEV_INFRASTRUCTURE_COMPOSE_PROJECT:?" in compose
     assert "./translator-service/compose.remote.yml" in compose
     assert compose.count("./kafka/compose.yml") == 1
+    assert compose.count("./platform-ui/compose.local-keycloak.yml") == 1
     assert compose.count("env_file:") == 8
     assert compose.count("./public-egress-gateway/compose.yml") == 1
     assert compose.count("./spire/compose.group.yml") == 1
@@ -151,6 +152,17 @@ def test_inactive_optional_external_network_does_not_block_combined_start() -> N
     validate_active_networks(description, {"active"})
     with pytest.raises(RuntimeError, match="external networks"):
         validate_active_networks(description, {"active", "optional"})
+
+
+def test_external_alias_of_managed_network_is_not_an_external_dependency() -> None:
+    description = {
+        "services": {"active": {"networks": {"consumer-alias": {}}}},
+        "networks": {
+            "provider-ingress": {"name": "owned-ingress"},
+            "consumer-alias": {"name": "owned-ingress", "external": True},
+        },
+    }
+    validate_active_networks(description, {"active"})
 
 
 def test_inactive_optional_mount_does_not_block_combined_start(tmp_path: Path) -> None:

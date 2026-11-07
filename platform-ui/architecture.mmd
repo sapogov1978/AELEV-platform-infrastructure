@@ -8,3 +8,5 @@ flowchart LR
     SDK --> Owners
     Shell --> Status["Self status publisher"]
     Shell --> Telemetry["Telemetry sender"]
+    API["Platform UI API"] -->|"HTTPS CA/SAN; remote endpoint or local ingress overlay"| IdP["Keycloak IdP"]
+    Provision["One-off configuration init"] -->|"HTTPS CA/SAN; local ingress overlay"| IdP

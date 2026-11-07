@@ -53,6 +53,7 @@ def settings(path: Path) -> dict[str, str]:
     for key in (
         "KEYCLOAK_REALM",
         "KEYCLOAK_CLIENT_ID",
+        "KEYCLOAK_INGRESS_NETWORK",
         "PROVISION_ADMIN_USER",
         "OPERATOR_USER",
     ):

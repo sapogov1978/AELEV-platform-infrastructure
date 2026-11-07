@@ -1,0 +1,17 @@
+services:
+  platform-ui-api:
+    extra_hosts: !reset []
+    networks:
+      platform-ui-backend: {}
+      platform-ui-egress: {}
+      platform-ui-keycloak-local: {}
+  platform-ui-configuration-init:
+    extra_hosts: !reset []
+    networks:
+      platform-ui-egress: {}
+      platform-ui-keycloak-local: {}
+
+networks:
+  platform-ui-keycloak-local:
+    name: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK:?set the co-located Keycloak ingress network in .env}
+    external: true

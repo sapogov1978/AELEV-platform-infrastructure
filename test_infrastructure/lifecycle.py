@@ -84,8 +84,15 @@ def validate_active_networks(model: dict[str, Any], active_services: set[str]) -
         for name in active_services
         for network in model["services"][name].get("networks", {})
     }
+    networks = model.get("networks", {})
+    managed_names = {
+        row.get("name", name)
+        for name, row in networks.items()
+        if not row.get("external")
+    }
     if any(
-        model.get("networks", {}).get(network, {}).get("external")
+        networks.get(network, {}).get("external")
+        and networks[network].get("name", network) not in managed_names
         for network in active_networks
     ):
         raise RuntimeError("clean combined start must not require external networks")
@@ -260,9 +267,21 @@ def validate_owner_models(model: dict[str, Any]) -> None:
         "postgresql",
         "public-egress-gateway",
     ):
+        compose_files = ["-f", "compose.yml"]
+        if owner == "platform-ui":
+            compose_files.extend(["-f", "compose.local-keycloak.yml"])
         native = json.loads(
             execute(
-                ["docker", "compose", "--profile", "*", "config", "--format", "json"],
+                [
+                    "docker",
+                    "compose",
+                    *compose_files,
+                    "--profile",
+                    "*",
+                    "config",
+                    "--format",
+                    "json",
+                ],
                 cwd=ROOT / owner,
             )
         )

@@ -20,6 +20,17 @@ def test_no_settings_fallback() -> None:
     assert compose.count("ipam:") == 2
 
 
+def test_local_keycloak_overlay_only_adds_tls_routing() -> None:
+    overlay = (ROOT / "compose.local-keycloak.yml").read_text()
+    assert "platform-ui-api:" in overlay
+    assert "platform-ui-configuration-init:" in overlay
+    assert "platform-ui-keycloak-local" in overlay
+    assert "external: true" in overlay
+    assert "extra_hosts: !reset []" in overlay
+    for forbidden in ("image:", "build:", "volumes:", "environment:", "ports:"):
+        assert forbidden not in overlay
+
+
 def test_required_settings(tmp_path: Path) -> None:
     cfg = tmp_path / ".env"
     data = env(ROOT / ".env.example")

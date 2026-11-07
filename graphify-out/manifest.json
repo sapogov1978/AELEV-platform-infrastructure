@@ -156,9 +156,9 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1794052739.0519898,
-    "seen": 1794052767.774664,
-    "ast_hash": "e0593b2a43e5a9d5bf0af5c5385a3e18",
+    "mtime": 1794057359.1619525,
+    "seen": 1794057422.033729,
+    "ast_hash": "81046d9e5a10157c61f7a2afbd44a11f",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794053522.577945,
-    "seen": 1794053560.635935,
-    "ast_hash": "9cd4c91fa66603a89ef4500bffce1aa0",
+    "mtime": 1794057325.857155,
+    "seen": 1794057422.034713,
+    "ast_hash": "56e5d1b49848857e122ac78e77f88735",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "bootstrap.py": {
-    "mtime": 1794052739.051509,
-    "seen": 1794052767.769949,
-    "ast_hash": "ff2b9f661477bfa4bfaab787dbee5246",
+    "mtime": 1794057359.2091138,
+    "seen": 1794057422.029304,
+    "ast_hash": "02b0455c95cb7a602831f67368715638",
     "semantic_hash": ""
   },
   "certificate_authority.py": {
@@ -294,9 +294,9 @@
     "semantic_hash": ""
   },
   "compose.yml": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.1503732,
-    "ast_hash": "c59089584d298e9e3f65bce3f9e68b0d",
+    "mtime": 1794054527.219418,
+    "seen": 1794057422.029323,
+    "ast_hash": "de3e6434d258b5367656e698bfa92af2",
     "semantic_hash": ""
   },
   "kafka/compose.yml": {
@@ -1464,9 +1464,9 @@
     "semantic_hash": ""
   },
   "platform-ui/prepare.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150506,
-    "ast_hash": "7f490038500a3597079edb23aa548d29",
+    "mtime": 1794054527.220425,
+    "seen": 1794057422.031577,
+    "ast_hash": "80e5b6a4913465e0b82d3ac33b6b9fd8",
     "semantic_hash": ""
   },
   "platform-ui/provision.py": {
@@ -1626,9 +1626,9 @@
     "semantic_hash": ""
   },
   "platform-ui/test/test_configuration.py": {
-    "mtime": 1793573713.4570093,
-    "seen": 1793926130.150523,
-    "ast_hash": "69cc9cc1e3d2c476ceb8b064e3295b80",
+    "mtime": 1794054545.5064714,
+    "seen": 1794057422.031862,
+    "ast_hash": "52c9257e156ab93c030fac7c854e1e10",
     "semantic_hash": ""
   },
   "platform-ui/test/test_jwt.py": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794053540.5020278,
-    "seen": 1794053560.634433,
-    "ast_hash": "d41743660d0aa10b13e487a03964d99d",
+    "mtime": 1794054545.5049214,
+    "seen": 1794057422.033262,
+    "ast_hash": "bd65d090885bb5924569d91845763900",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -2496,9 +2496,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_orchestration.py": {
-    "mtime": 1794053522.5767288,
-    "seen": 1794053560.6345541,
-    "ast_hash": "3eaaba3261bf7e3b74d47a36f1f6c9b5",
+    "mtime": 1794054545.5056107,
+    "seen": 1794057422.03338,
+    "ast_hash": "0b1dbc7125fda43851a015e0a5bd2dd1",
     "semantic_hash": ""
   },
   "test_infrastructure/test_recovery.py": {
@@ -3948,27 +3948,27 @@
     "semantic_hash": ""
   },
   "platform-ui/CHANGELOG.md": {
-    "mtime": 1793957793.2651048,
-    "seen": 1793958131.6834838,
-    "ast_hash": "4e4d9cd3a8002efca60f28733b844cac",
+    "mtime": 1794057325.856638,
+    "seen": 1794057422.038501,
+    "ast_hash": "04a43317588730433dc03461e530fe8f",
     "semantic_hash": ""
   },
   "platform-ui/PROVIDER_OPERATIONS.md": {
-    "mtime": 1793957754.5579019,
-    "seen": 1793958131.683485,
-    "ast_hash": "d650d096969063a46e272a5f541b2e80",
+    "mtime": 1794057325.854042,
+    "seen": 1794057422.038503,
+    "ast_hash": "7f024e368241ed6090064203509472f0",
     "semantic_hash": ""
   },
   "platform-ui/README.md": {
-    "mtime": 1793961294.8974404,
-    "seen": 1793961484.044472,
-    "ast_hash": "960bdce420916072488ebdfc99e197fb",
+    "mtime": 1794057325.8523107,
+    "seen": 1794057422.038504,
+    "ast_hash": "232d845c75d30cebcfe21c6ea8f8e4c3",
     "semantic_hash": ""
   },
   "platform-ui/SPEC.md": {
-    "mtime": 1793957754.5696886,
-    "seen": 1793958131.683486,
-    "ast_hash": "974e782712befa31ea63e2629c1a5273",
+    "mtime": 1794057325.8531928,
+    "seen": 1794057422.038504,
+    "ast_hash": "4db78faf6b359a31eb0a14bb9cbec352",
     "semantic_hash": ""
   },
   "platform-ui/TASKS.md": {
@@ -5130,9 +5130,9 @@
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0004-self-contained-service-delivery.md": {
-    "mtime": 1793961340.0580995,
-    "seen": 1793961484.041047,
-    "ast_hash": "b760a5894b2bfcfd4e7746e2bd30981d",
+    "mtime": 1794057325.855899,
+    "seen": 1794057422.034841,
+    "ast_hash": "f69e71bc8dd635d0c5c9cd51a63acd1c",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0005-kafka-cloudevents-contracts.md": {
@@ -6102,9 +6102,9 @@
     "semantic_hash": ""
   },
   "platform-ui/INDEX.md": {
-    "mtime": 1793961235.8920553,
-    "seen": 1793961484.044462,
-    "ast_hash": "4fd9911c6a04c5761eed531dd9ccf5eb",
+    "mtime": 1794057325.855518,
+    "seen": 1794057422.038502,
+    "ast_hash": "e5aae0ed9735ca659b92a91cff3f62ba",
     "semantic_hash": ""
   },
   "postgresql/INDEX.md": {

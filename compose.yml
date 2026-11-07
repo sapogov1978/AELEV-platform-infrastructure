@@ -27,7 +27,9 @@ include:
   - path: ./keycloak/compose.yml
     project_directory: ./keycloak
     env_file: ./keycloak/.env
-  - path: ./platform-ui/compose.yml
+  - path:
+      - ./platform-ui/compose.yml
+      - ./platform-ui/compose.local-keycloak.yml
     project_directory: ./platform-ui
     env_file: ./platform-ui/.env
   - path: ./observability/compose.yml

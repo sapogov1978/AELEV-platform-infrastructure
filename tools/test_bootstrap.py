@@ -121,6 +121,81 @@ class BootstrapTest(unittest.TestCase):
             )
         )
 
+    def test_platform_migrates_only_legacy_local_keycloak_route(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            keycloak = root / "keycloak"
+            platform = root / "platform-ui"
+            keycloak.mkdir()
+            platform.mkdir()
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK=owned-ingress\n"
+            )
+            (keycloak / "secrets").mkdir()
+            (keycloak / "secrets/admin-password").write_text("fixture\n")
+            (platform / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL=https://keycloak:18443\n"
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID=123\n"
+            )
+            (platform / "secrets/nginx").mkdir(parents=True)
+            (platform / "secrets/nginx/server.crt").write_text("fixture\n")
+
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(provider, "PLATFORM", platform),
+                mock.patch.object(provider, "run"),
+            ):
+                provider.initialize_platform()
+
+            values = provider.read_env(platform / ".env")
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL"],
+                "https://keycloak:8443",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK"],
+                "owned-ingress",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID"], "123"
+            )
+
+    def test_platform_preserves_remote_keycloak_route(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            keycloak = root / "keycloak"
+            platform = root / "platform-ui"
+            keycloak.mkdir()
+            platform.mkdir()
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK=owned-ingress\n"
+            )
+            (keycloak / "secrets").mkdir()
+            (keycloak / "secrets/admin-password").write_text("fixture\n")
+            (platform / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL=https://identity.example.com\n"
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID=123\n"
+            )
+            (platform / "secrets/nginx").mkdir(parents=True)
+            (platform / "secrets/nginx/server.crt").write_text("fixture\n")
+
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(provider, "PLATFORM", platform),
+                mock.patch.object(provider, "run"),
+            ):
+                provider.initialize_platform()
+
+            values = provider.read_env(platform / ".env")
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL"],
+                "https://identity.example.com",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK"],
+                "owned-ingress",
+            )
+
     def test_build_never_starts_a_container(self) -> None:
         with (
             mock.patch.object(provider, "initialize"),
