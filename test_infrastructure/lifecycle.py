@@ -153,7 +153,9 @@ def states(project: str) -> dict[str, dict[str, Any]]:
     return result
 
 
-def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
+def capture_startup_diagnostic(
+    project: str, service: str, output: Path, code: str
+) -> None:
     identities = execute(
         [
             "docker",
@@ -162,14 +164,14 @@ def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
             "--filter",
             "label=com.docker.compose.project=" + project,
             "--filter",
-            "label=com.docker.compose.service=kafka",
+            "label=com.docker.compose.service=" + service,
         ]
     ).splitlines()
     if len(identities) != 1:
         payload: dict[str, Any] = {
             "schema_version": 1,
-            "service": "kafka",
-            "code": "KAFKA_STARTUP_CONTAINER_CARDINALITY",
+            "service": service,
+            "code": code + "_CONTAINER_CARDINALITY",
             "containers": len(identities),
         }
     else:
@@ -180,8 +182,8 @@ def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
         health = state.get("Health", {})
         payload = {
             "schema_version": 1,
-            "service": "kafka",
-            "code": "KAFKA_STARTUP_NOT_READY",
+            "service": service,
+            "code": code,
             "container_id": identity,
             "status": state.get("Status"),
             "exit_code": state.get("ExitCode"),
@@ -198,14 +200,18 @@ def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
                     for row in health.get("Log", [])[-10:]
                 ],
             },
-            # Kafka receives no credentials in this profile. Keep only a bounded
-            # startup tail; never serialize its environment or inspect payload.
+            # Selected startup roles do not emit credential values. Keep only a
+            # bounded tail; never serialize environment or inspect configuration.
             "startup_tail": execute(["docker", "logs", "--tail", "100", identity])[
                 -16384:
             ],
         }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
+def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
+    capture_startup_diagnostic(project, "kafka", output, "KAFKA_STARTUP_NOT_READY")
 
 
 def validate_owner_models(model: dict[str, Any]) -> None:
@@ -463,11 +469,20 @@ def run(args: argparse.Namespace) -> int:
             execute([*prefix, "--profile", "provision", "run", "--rm", task])
             passed("Настоящая инициализация собственного тома: " + task + " — exit 0")
         execute([*prefix, "up", "-d", "--no-build", "--pull", "never", "keycloak"])
-        wait_ready(
-            project,
-            {name: regular[name] for name in ("keycloak-database", "keycloak")},
-            args.timeout,
-        )
+        try:
+            wait_ready(
+                project,
+                {name: regular[name] for name in ("keycloak-database", "keycloak")},
+                args.timeout,
+            )
+        except RuntimeError:
+            capture_startup_diagnostic(
+                project,
+                "keycloak",
+                args.report.with_name("keycloak-startup-diagnostic.json"),
+                "KEYCLOAK_STARTUP_NOT_READY",
+            )
+            raise
         passed("Настоящие Keycloak, его БД, TLS и импорт собственного realm")
         for task in [
             "platform-ui-configuration-init",
