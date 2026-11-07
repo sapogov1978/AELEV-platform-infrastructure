@@ -15,6 +15,7 @@ from lifecycle import (
     assert_sequence_advanced,
     capture_kafka_startup_diagnostic,
     compose_prefix,
+    execute_provision_task,
     run,
     status_provision_tasks,
     validate_active_mounts,
@@ -231,6 +232,34 @@ def test_kafka_startup_diagnostic_is_bounded_and_excludes_environment(
     assert len(payload["startup_tail"]) == 16384
     assert payload["startup_tail"].endswith("y" * 10000)
     assert "environment" not in payload
+
+
+def test_provision_failure_keeps_only_fixed_safe_marker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "provision-task-diagnostic.json"
+    monkeypatch.setattr(
+        "lifecycle.subprocess.run",
+        lambda *args, **kwargs: SimpleNamespace(
+            returncode=1,
+            stdout="expanded credential=must-not-survive\n",
+            stderr="Provisioning failed: ConnectError\nsecret-token\n",
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="command failed"):
+        execute_provision_task(["docker", "compose", "run"], "task", output)
+
+    payload = json.loads(output.read_text())
+    assert payload == {
+        "code": "PROVISION_TASK_FAILED",
+        "exit_code": 1,
+        "safe_marker": "Provisioning failed: ConnectError",
+        "schema_version": 1,
+        "task": "task",
+    }
+    assert "credential" not in output.read_text()
+    assert "secret-token" not in output.read_text()
 
 
 def test_healthchecked_restart_no_role_is_not_treated_as_one_shot(

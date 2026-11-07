@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import signal
 import subprocess
 import time
@@ -45,6 +46,32 @@ def execute(arguments: list[str], cwd: Path = ROOT) -> str:
             + " ".join(arguments)
         )
     return result.stdout
+
+
+def execute_provision_task(arguments: list[str], task: str, output: Path) -> str:
+    result = subprocess.run(
+        arguments, cwd=ROOT, capture_output=True, text=True, timeout=1200
+    )
+    if not result.returncode:
+        return result.stdout
+    markers = re.findall(
+        r"Provisioning failed: [A-Za-z][A-Za-z0-9_]*",
+        result.stdout + "\n" + result.stderr,
+    )
+    payload = {
+        "schema_version": 1,
+        "task": task,
+        "code": "PROVISION_TASK_FAILED",
+        "exit_code": result.returncode,
+        # Provisioners emit this fixed type-only marker. Never persist their
+        # raw stdout/stderr because Compose may expand credential-bearing env.
+        "safe_marker": markers[-1] if markers else "NO_SAFE_MARKER",
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    raise RuntimeError(
+        "command failed (exit " + str(result.returncode) + "): " + " ".join(arguments)
+    )
 
 
 def compose_prefix() -> list[str]:
@@ -512,7 +539,11 @@ def run(args: argparse.Namespace) -> int:
             "prometheus-operator-provision",
             "translator-api-provision",
         ] + status_provision_tasks(model, regular_names):
-            execute([*prefix, "--profile", "provision", "run", "--rm", task])
+            execute_provision_task(
+                [*prefix, "--profile", "provision", "run", "--rm", task],
+                task,
+                args.report.with_name("provision-task-diagnostic.json"),
+            )
             passed("Реальная задача владельца: " + task + " — exit 0")
         execute(
             [
