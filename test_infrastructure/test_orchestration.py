@@ -127,6 +127,44 @@ def test_compute_start_requires_both_native_healthchecks(
     ]
 
 
+def test_compute_start_failure_persists_only_bounded_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "compute-startup-diagnostic.json"
+
+    def fail(arguments: list[str]) -> str:
+        raise RuntimeError("expanded credential=must-not-survive")
+
+    monkeypatch.setattr("lifecycle.execute", fail)
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "translation-provider": {
+                "Status": "exited",
+                "Running": False,
+                "ExitCode": 1,
+                "OOMKilled": False,
+                "Error": "provider failed",
+            }
+        },
+    )
+
+    with pytest.raises(RuntimeError, match="expanded credential"):
+        start_compute(
+            ["docker", "compose"],
+            "compute",
+            {"translation-provider", "translator-worker"},
+            600,
+            output,
+        )
+
+    payload = json.loads(output.read_text())
+    assert payload["code"] == "GROUP_STARTUP_FAILED"
+    assert payload["services"]["translator-worker"] == {"status": "not-created"}
+    assert payload["services"]["translation-provider"]["exit_code"] == 1
+    assert "credential" not in output.read_text()
+
+
 def test_root_is_only_inclusion_not_runtime() -> None:
     compose = (ROOT / "compose.yml").read_text()
     for declaration in ("services:", "volumes:", "networks:", "secrets:", "build:"):

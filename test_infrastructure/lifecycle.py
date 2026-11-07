@@ -405,21 +405,34 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
 
 
 def start_compute(
-    compose: list[str], project: str, service_names: set[str], timeout: int
+    compose: list[str],
+    project: str,
+    service_names: set[str],
+    timeout: int,
+    diagnostic: Path | None = None,
 ) -> None:
-    execute(
-        [
-            *compose,
-            "up",
-            "-d",
-            "--no-build",
-            "--pull",
-            "never",
-            "--wait",
-            "--wait-timeout",
-            str(timeout),
-        ]
-    )
+    try:
+        execute(
+            [
+                *compose,
+                "up",
+                "-d",
+                "--no-build",
+                "--pull",
+                "never",
+                "--wait",
+                "--wait-timeout",
+                str(timeout),
+            ]
+        )
+    except RuntimeError:
+        if diagnostic is not None:
+            capture_group_startup_diagnostic(
+                project,
+                {name: {} for name in service_names},
+                diagnostic,
+            )
+        raise
     current = states(project)
     if set(current) != service_names or any(
         not row.get("Running") or row.get("Health", {}).get("Status") != "healthy"
@@ -760,7 +773,13 @@ def run(args: argparse.Namespace) -> int:
             )
             raise
         wait_ready(project, regular, args.timeout)
-        start_compute(compute, compute_project, compute_names, args.timeout)
+        start_compute(
+            compute,
+            compute_project,
+            compute_names,
+            args.timeout,
+            args.report.with_name("compute-startup-diagnostic.json"),
+        )
         passed(
             "Общий старт: healthcheck, автоматические миграции и topics готовы",
             str(len(regular))
@@ -785,7 +804,13 @@ def run(args: argparse.Namespace) -> int:
         passed("Общая остановка: ни один контейнер группы не работает")
         execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
         wait_ready(project, regular, args.timeout)
-        start_compute(compute, compute_project, compute_names, args.timeout)
+        start_compute(
+            compute,
+            compute_project,
+            compute_names,
+            args.timeout,
+            args.report.with_name("compute-startup-diagnostic.json"),
+        )
         resumed = ui_snapshot(args, ids)
         assert_sequence_advanced(rows, resumed)
         if set(owned_containers(inventory(execute), project)) != first_ids:
@@ -823,7 +848,13 @@ def run(args: argparse.Namespace) -> int:
         passed("Общее down сняло контейнеры; постоянные тома сохранены")
         execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
         wait_ready(project, regular, args.timeout)
-        start_compute(compute, compute_project, compute_names, args.timeout)
+        start_compute(
+            compute,
+            compute_project,
+            compute_names,
+            args.timeout,
+            args.report.with_name("compute-startup-diagnostic.json"),
+        )
         recreated = ui_snapshot(args, ids)
         assert_sequence_advanced(rows, recreated)
         if first_ids & set(owned_containers(inventory(execute), project)):
