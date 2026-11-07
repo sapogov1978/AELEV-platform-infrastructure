@@ -216,7 +216,11 @@ def initialize_local_bridge_routes(gateway: str) -> None:
     for path, (primary_key, bridge_key) in routes.items():
         settings = read_env(path)
         primary = settings.get(primary_key)
-        if primary in {"0.0.0.0", "::", gateway}:
+        try:
+            primary_address = ipaddress.ip_address(primary or "")
+        except ValueError as error:
+            raise QuickstartError(f"{primary_key} must be an IP address") from error
+        if primary_address.is_unspecified or str(primary_address) == gateway:
             raise QuickstartError(
                 f"{primary_key} must not overlap the Docker bridge listener"
             )
