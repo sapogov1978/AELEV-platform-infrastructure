@@ -156,9 +156,9 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1794069624.3833811,
-    "seen": 1794069656.6206138,
-    "ast_hash": "1625ec5abdb1bc5c3bca2a0006344b41",
+    "mtime": 1794071104.2692716,
+    "seen": 1794071139.44722,
+    "ast_hash": "a81854aa45afbb6868787ef13e6f98d1",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794070226.5703492,
-    "seen": 1794070267.212964,
-    "ast_hash": "b258f9d9d8dbb11c1b503cbbf5fd1ff6",
+    "mtime": 1794071083.4754617,
+    "seen": 1794071139.44824,
+    "ast_hash": "5b9d2134ab176ae57ac39dea8e29d130",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "bootstrap.py": {
-    "mtime": 1794069616.4559004,
-    "seen": 1794069656.6161542,
-    "ast_hash": "41a403eeb1b7732c87378e355238c291",
+    "mtime": 1794071083.4741466,
+    "seen": 1794071139.4399822,
+    "ast_hash": "65dc512f5ee0bee40aea0426d324bafb",
     "semantic_hash": ""
   },
   "certificate_authority.py": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794069586.725306,
-    "seen": 1794069656.6235561,
-    "ast_hash": "ced8e984d3a9f19518261d37a088cd37",
+    "mtime": 1794071083.475085,
+    "seen": 1794071139.4503438,
+    "ast_hash": "6a3dc46398cb5752dfcbb74e8c69c0b8",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {

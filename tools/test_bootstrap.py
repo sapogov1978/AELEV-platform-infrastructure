@@ -183,6 +183,63 @@ class BootstrapTest(unittest.TestCase):
                 },
             )
 
+    def test_new_observability_environment_selects_operational_owner_envs(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            observability = root / "observability"
+            owner = root / "owner"
+            observability.mkdir()
+            owner.mkdir()
+            (observability / ".env.example").write_text(
+                "AELEV_INFRASTRUCTURE_OBSERVABILITY_COMPOSE_PROJECT=example\n"
+                "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE=.env.example\n"
+            )
+            (owner / ".env.example").write_text("OWNER_VALUE=template\n")
+
+            with (
+                mock.patch.object(provider, "ROOT", root),
+                mock.patch.object(provider, "OBSERVABILITY", observability),
+            ):
+                provider.initialize_owner_environments()
+
+            self.assertEqual(
+                provider.read_env(observability / ".env"),
+                {
+                    "AELEV_INFRASTRUCTURE_OBSERVABILITY_COMPOSE_PROJECT": "example",
+                    "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE": ".env",
+                },
+            )
+            self.assertEqual(
+                provider.read_env(owner / ".env"), {"OWNER_VALUE": "template"}
+            )
+
+    def test_existing_observability_environment_is_not_rewritten(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            observability = root / "observability"
+            observability.mkdir()
+            (observability / ".env.example").write_text(
+                "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE=.env.example\n"
+            )
+            (observability / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE=custom.env\n"
+            )
+
+            with (
+                mock.patch.object(provider, "ROOT", root),
+                mock.patch.object(provider, "OBSERVABILITY", observability),
+            ):
+                provider.initialize_owner_environments()
+
+            self.assertEqual(
+                provider.read_env(observability / ".env")[
+                    "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE"
+                ],
+                "custom.env",
+            )
+
     def test_local_bridge_routes_reject_wildcard_primary_listener(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()

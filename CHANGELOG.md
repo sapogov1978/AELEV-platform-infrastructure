@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Run `42393401311` прошёл чистоту checkout, image admission, build и дошёл до root lifecycle, где безопасный marker `GrafanaAdminSecretPermissionError` выявил использование шаблонных UID/GID. Новый operational `observability/.env` теперь выбирает владельческие `.env`; версионируемый шаблон по-прежнему выбирает `.env.example` для contract-проверок, а существующий операторский выбор не переписывается.
 - Воспроизведение `full_local init` в отдельном чистом clone локализовало последний `SOURCE_TREE_NOT_CLEAN`: create-only публичная CA Translator `identity-ca.crt` была owner-local input, но не была исключена из Git. Путь теперь игнорируется Git и Docker build context; runtime-контракт, trust и существующие файлы не изменены.
 - Run `42392523339` закрыто остановился с `SOURCE_TREE_NOT_CLEAN`, потому что новый локальный public-trust path ещё не был исключён из source tree. `observability/grafana/trust/` теперь игнорируется Git и Docker build context; сама CA остаётся проверяемым owner-local bind input.
 - Run `42387191359` уточнил отказ как `GrafanaOidcCaReadPermissionError`: публичная CA и writable client-secret больше не используют общий mount. Grafana получила отдельный owner-local `OIDC_CA_FILE` (`0755/0644`, read-only), а закрытый `OIDC_SECRET_ROOT` остаётся writable только provisioner и read-only runtime; закрытый CA key не передаётся.

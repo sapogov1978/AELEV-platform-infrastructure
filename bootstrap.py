@@ -24,6 +24,7 @@ PLATFORM = ROOT / "platform-ui"
 KEYCLOAK = ROOT / "keycloak"
 POSTGRESQL = ROOT / "postgresql"
 MINIO = ROOT / "minio"
+OBSERVABILITY = ROOT / "observability"
 RELEASE = json.loads((ROOT / "release.json").read_text())["version"]
 
 CAPABILITIES = {
@@ -184,6 +185,19 @@ def initialize_additive_local_paths() -> None:
         }
         if updates:
             update_env(path, updates)
+
+
+def initialize_owner_environments() -> None:
+    """Create operational owner env files without replacing existing choices."""
+    for example in sorted(ROOT.glob("**/.env.example")):
+        if example.parent in {KEYCLOAK, PLATFORM, MINIO}:
+            continue
+        updates = None
+        if example.parent == OBSERVABILITY:
+            updates = {
+                "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE": ".env",
+            }
+        initialize_env(example.with_name(".env"), updates)
 
 
 def openssl(*arguments: str) -> None:
@@ -412,9 +426,7 @@ def initialize() -> None:
         if shutil.which(executable) is None:
             raise QuickstartError(f"required tool unavailable: {executable}")
     initialize_env(ROOT / ".env")
-    for example in sorted(ROOT.glob("**/.env.example")):
-        if example.parent not in {KEYCLOAK, PLATFORM, MINIO}:
-            initialize_env(example.with_name(".env"))
+    initialize_owner_environments()
     initialize_additive_local_paths()
     initialize_keycloak()
     initialize_minio()
