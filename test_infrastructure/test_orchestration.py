@@ -13,6 +13,7 @@ import pytest
 
 from lifecycle import (
     assert_sequence_advanced,
+    capture_group_startup_diagnostic,
     capture_kafka_startup_diagnostic,
     compose_prefix,
     execute_provision_task,
@@ -246,6 +247,43 @@ def test_kafka_startup_diagnostic_is_bounded_and_excludes_environment(
     assert len(payload["startup_tail"]) == 16384
     assert payload["startup_tail"].endswith("y" * 10000)
     assert "environment" not in payload
+
+
+def test_group_startup_diagnostic_has_only_bounded_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "group-startup-diagnostic.json"
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "created": {
+                "Status": "exited",
+                "Running": False,
+                "ExitCode": 1,
+                "OOMKilled": False,
+                "Error": "x" * 2000,
+                "Health": {
+                    "Status": "unhealthy",
+                    "FailingStreak": 4,
+                    "Log": [
+                        {"ExitCode": index, "Output": str(index) * 2000}
+                        for index in range(4)
+                    ],
+                },
+                "Environment": ["SECRET=must-not-survive"],
+            }
+        },
+    )
+
+    capture_group_startup_diagnostic("project", {"created": {}, "missing": {}}, output)
+
+    payload = json.loads(output.read_text())
+    assert payload["code"] == "GROUP_STARTUP_FAILED"
+    assert payload["services"]["missing"] == {"status": "not-created"}
+    assert len(payload["services"]["created"]["error"]) == 1024
+    assert len(payload["services"]["created"]["health"]["log"]) == 3
+    assert len(payload["services"]["created"]["health"]["log"][-1]["output"]) == 1024
+    assert "SECRET" not in output.read_text()
 
 
 def test_provision_failure_keeps_only_fixed_safe_marker(

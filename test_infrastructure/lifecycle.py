@@ -258,6 +258,46 @@ def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
     capture_startup_diagnostic(project, "kafka", output, "KAFKA_STARTUP_NOT_READY")
 
 
+def capture_group_startup_diagnostic(
+    project: str, services: dict[str, Any], output: Path
+) -> None:
+    current = states(project)
+    rows: dict[str, dict[str, Any]] = {}
+    for name in sorted(services):
+        state = current.get(name)
+        if state is None:
+            rows[name] = {"status": "not-created"}
+            continue
+        health = state.get("Health", {})
+        rows[name] = {
+            "status": state.get("Status"),
+            "running": state.get("Running"),
+            "exit_code": state.get("ExitCode"),
+            "oom_killed": state.get("OOMKilled"),
+            "error": str(state.get("Error", ""))[-1024:],
+            # Owner healthchecks emit bounded type/path diagnostics. Never
+            # serialize environment, inspect configuration or container logs.
+            "health": {
+                "status": health.get("Status"),
+                "failing_streak": health.get("FailingStreak"),
+                "log": [
+                    {
+                        "exit_code": row.get("ExitCode"),
+                        "output": str(row.get("Output", ""))[-1024:],
+                    }
+                    for row in health.get("Log", [])[-3:]
+                ],
+            },
+        }
+    payload = {
+        "schema_version": 1,
+        "code": "GROUP_STARTUP_FAILED",
+        "services": rows,
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
 def validate_owner_models(model: dict[str, Any]) -> None:
     for owner in (
         "keycloak",
@@ -584,7 +624,15 @@ def run(args: argparse.Namespace) -> int:
             ]
         )
         passed("Реальная проверка/настройка MinIO site replication: exit 0")
-        execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
+        try:
+            execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
+        except RuntimeError:
+            capture_group_startup_diagnostic(
+                project,
+                regular,
+                args.report.with_name("group-startup-diagnostic.json"),
+            )
+            raise
         wait_ready(project, regular, args.timeout)
         passed(
             "Общий старт: healthcheck, автоматические миграции и topics готовы",
