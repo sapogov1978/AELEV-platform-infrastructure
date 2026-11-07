@@ -471,6 +471,11 @@ def prepare_status_output_roots(
         env_path = root / relative
         owner = env_path.parent.resolve()
         for key, value in read_env(env_path, root).items():
+            if (
+                owner == (root / "platform-ui").resolve()
+                and key == "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT"
+            ):
+                continue
             if not key.endswith(
                 ("_UI_SECRET_ROOT", "_OIDC_SECRET_ROOT", "_OPERATOR_SECRET_ROOT")
             ):
@@ -611,6 +616,168 @@ def prepare_local_operator_trust(
     return sorted(set(prepared))
 
 
+def _issue_local_client_identity(
+    destination: Path,
+    name: str,
+    ca_certificate: Path,
+    ca_key: Path,
+    root: Path,
+) -> bool:
+    certificate = destination / f"{name}.crt"
+    key = destination / f"{name}.key"
+    if certificate.exists() != key.exists():
+        raise FullLocalError(f"LOCAL_CLIENT_IDENTITY_PARTIAL:{name}")
+    if certificate.exists():
+        if certificate.is_symlink() or key.is_symlink():
+            raise FullLocalError(f"LOCAL_CLIENT_IDENTITY_INVALID:{name}")
+        return False
+    for source in (ca_certificate, ca_key):
+        if source.is_symlink() or not source.is_file():
+            raise FullLocalError(f"LOCAL_CLIENT_ISSUER_INVALID:{name}")
+    command(
+        [
+            sys.executable,
+            str(root / "platform-ui/client/src/aelev_platform_ui_client/prepare.py"),
+            "--root",
+            str(destination),
+            "--name",
+            name,
+            "--ca-cert",
+            str(ca_certificate),
+            "--ca-key",
+            str(ca_key),
+        ],
+        cwd=root,
+    )
+    if not certificate.is_file() or not key.is_file():
+        raise FullLocalError(f"LOCAL_CLIENT_IDENTITY_MISSING:{name}")
+    return True
+
+
+def prepare_local_status_identities(
+    manifest: dict[str, Any], root: Path = ROOT
+) -> list[str]:
+    """Prepare create-only local publisher and owner-probe identities."""
+    root = root.resolve()
+    publisher_ca = root / "platform-ui/secrets/issuer/publisher.crt"
+    publisher_key = root / "platform-ui/secrets/issuer/publisher.key"
+    shell_ca = root / "platform-ui/secrets/issuer/transport.crt"
+    identity_ca = root / "keycloak/secrets/https/ca.crt"
+    sources = (publisher_ca, publisher_key, shell_ca, identity_ca)
+    if any(source.is_symlink() or not source.is_file() for source in sources):
+        raise FullLocalError("LOCAL_STATUS_ISSUER_INVALID")
+    status_roots: dict[str, Path] = {}
+    prepared: list[str] = []
+    for relative in manifest["environment_files"]:
+        env_path = root / relative
+        owner = env_path.parent.resolve()
+        values = read_env(env_path, root)
+        for key, value in values.items():
+            if (
+                owner == (root / "platform-ui").resolve()
+                and key == "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT"
+            ):
+                continue
+            if not key.endswith("_UI_SECRET_ROOT"):
+                continue
+            status_root = (owner / value).resolve()
+            if status_root == owner or owner not in status_root.parents:
+                raise FullLocalError(f"OWNER_STATUS_PATH_INVALID:{relative}")
+            status_roots[display_path(owner, root)] = status_root
+            changed = _write_new_local_secret(
+                status_root / "shell-ca.crt", shell_ca.read_bytes()
+            )
+            changed |= _write_new_local_secret(
+                status_root / "identity-ca.crt", identity_ca.read_bytes()
+            )
+            changed |= _issue_local_client_identity(
+                status_root, "publisher", publisher_ca, publisher_key, root
+            )
+            if changed:
+                prepared.append(display_path(status_root, root))
+
+    observability_ca = root / "observability/runtime/local-issuer/internal-ca.crt"
+    observability_key = root / "observability/runtime/local-issuer/internal-ca.key"
+    if any(
+        source.is_symlink() or not source.is_file()
+        for source in (observability_ca, observability_key)
+    ) and any(owner.startswith("observability/") for owner in status_roots):
+        raise FullLocalError("LOCAL_OBSERVABILITY_PROBE_ISSUER_INVALID")
+    for owner, status_root in status_roots.items():
+        if not owner.startswith("observability/"):
+            continue
+        changed = _write_new_local_secret(
+            status_root / "probe-ca.crt", observability_ca.read_bytes()
+        )
+        changed |= _issue_local_client_identity(
+            status_root,
+            "probe",
+            observability_ca,
+            observability_key,
+            root,
+        )
+        if changed:
+            prepared.append(display_path(status_root, root))
+
+    platform_status = status_roots.get("platform-ui")
+    if platform_status is not None:
+        platform_probe_key = root / "platform-ui/secrets/issuer/transport.key"
+        if platform_probe_key.is_symlink() or not platform_probe_key.is_file():
+            raise FullLocalError("LOCAL_PLATFORM_PROBE_ISSUER_INVALID")
+        changed = _write_new_local_secret(
+            platform_status / "probe-ca.crt", shell_ca.read_bytes()
+        )
+        changed |= _issue_local_client_identity(
+            platform_status,
+            "probe",
+            shell_ca,
+            platform_probe_key,
+            root,
+        )
+        if changed:
+            prepared.append(display_path(platform_status, root))
+
+    minio_status = status_roots.get("minio")
+    minio_ca = root / "minio/secrets/sites-ca.crt"
+    if minio_status is not None:
+        if minio_ca.is_symlink() or not minio_ca.is_file():
+            raise FullLocalError("LOCAL_MINIO_STATUS_CA_INVALID")
+        if _write_new_local_secret(
+            minio_status / "probe-ca.crt", minio_ca.read_bytes()
+        ):
+            prepared.append(display_path(minio_status, root))
+
+    postgresql_status = status_roots.get("postgresql")
+    if postgresql_status is not None:
+        for name, issuer in (
+            ("etcd-1-probe", "etcd"),
+            ("etcd-2-probe", "etcd"),
+            ("etcd-3-probe", "etcd"),
+            ("postgresql-probe", "postgresql"),
+        ):
+            ca = root / f"postgresql/secrets/issuer/{issuer}.crt"
+            issuer_key = root / f"postgresql/secrets/issuer/{issuer}.key"
+            if any(
+                source.is_symlink() or not source.is_file()
+                for source in (ca, issuer_key)
+            ):
+                raise FullLocalError("LOCAL_POSTGRESQL_PROBE_ISSUER_INVALID")
+            trust_name = (
+                "postgresql-ca.crt"
+                if issuer == "postgresql"
+                else name.removesuffix("-probe") + "-ca.crt"
+            )
+            changed = _write_new_local_secret(
+                postgresql_status / trust_name, ca.read_bytes()
+            )
+            changed |= _issue_local_client_identity(
+                postgresql_status, name, ca, issuer_key, root
+            )
+            if changed:
+                prepared.append(display_path(postgresql_status, root))
+    return sorted(set(prepared))
+
+
 def adapt_created_env_identities(
     manifest: dict[str, Any], preexisting: set[str], root: Path = ROOT
 ) -> list[str]:
@@ -716,6 +883,7 @@ def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[st
     )
     prepared.append("translator-service")
     prepared.extend(prepare_status_output_roots(manifest, root))
+    prepared.extend(prepare_local_status_identities(manifest, root))
     return prepared
 
 

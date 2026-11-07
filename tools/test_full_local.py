@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 FULL_LOCAL_SPEC = importlib.util.spec_from_file_location(
@@ -231,6 +232,75 @@ class FullLocalContractTests(unittest.TestCase):
             self.assertEqual(
                 full_local.prepare_local_operator_trust(manifest, root), []
             )
+
+    def test_local_status_identities_are_owner_local_and_create_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            sources = {
+                "platform-ui/secrets/issuer/publisher.crt": b"publisher-ca\n",
+                "platform-ui/secrets/issuer/publisher.key": b"publisher-key\n",
+                "platform-ui/secrets/issuer/transport.crt": b"transport-ca\n",
+                "platform-ui/secrets/issuer/transport.key": b"transport-key\n",
+                "keycloak/secrets/https/ca.crt": b"identity-ca\n",
+                "observability/runtime/local-issuer/internal-ca.crt": b"native-ca\n",
+                "observability/runtime/local-issuer/internal-ca.key": b"native-key\n",
+            }
+            for relative, payload in sources.items():
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(payload)
+            owner_env = root / "observability/example/.env"
+            owner_env.parent.mkdir(parents=True)
+            owner_env.write_text("EXAMPLE_UI_SECRET_ROOT=./secrets/status\n")
+            platform_env = root / "platform-ui/.env"
+            platform_env.parent.mkdir(parents=True, exist_ok=True)
+            platform_env.write_text(
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT=./secrets\n"
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_SECRET_ROOT=./secrets/status\n"
+            )
+            manifest = {
+                "environment_files": [
+                    "observability/example/.env",
+                    "platform-ui/.env",
+                ]
+            }
+
+            def issue(arguments: list[str], **_: object) -> None:
+                destination = Path(arguments[arguments.index("--root") + 1])
+                name = arguments[arguments.index("--name") + 1]
+                destination.mkdir(parents=True, exist_ok=True)
+                (destination / f"{name}.crt").write_bytes(b"issued-cert\n")
+                (destination / f"{name}.key").write_bytes(b"issued-key\n")
+
+            with mock.patch.object(full_local, "command", side_effect=issue):
+                self.assertEqual(
+                    full_local.prepare_local_status_identities(manifest, root),
+                    [
+                        "observability/example/secrets/status",
+                        "platform-ui/secrets/status",
+                    ],
+                )
+
+            status = owner_env.parent / "secrets/status"
+            self.assertEqual(
+                {path.name for path in status.iterdir()},
+                {
+                    "identity-ca.crt",
+                    "probe-ca.crt",
+                    "probe.crt",
+                    "probe.key",
+                    "publisher.crt",
+                    "publisher.key",
+                    "shell-ca.crt",
+                },
+            )
+            self.assertEqual((status / "publisher.key").read_bytes(), b"issued-key\n")
+            self.assertFalse((platform_env.parent / "secrets/publisher.key").exists())
+            with mock.patch.object(full_local, "command") as command:
+                self.assertEqual(
+                    full_local.prepare_local_status_identities(manifest, root), []
+                )
+            command.assert_not_called()
 
     def test_complete_evidence_verifies_and_tamper_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
