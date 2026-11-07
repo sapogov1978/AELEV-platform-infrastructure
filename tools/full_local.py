@@ -485,13 +485,18 @@ def prepare_status_output_roots(
 
 def _write_new_local_secret(path: Path, value: bytes) -> bool:
     """Create one owner-local secret without replacing an existing file."""
+    parent_created = not path.parent.exists()
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
+    if parent_created:
+        os.chown(path.parent, os.getuid(), os.getgid())
+        path.parent.chmod(0o750)
     if path.exists() or path.is_symlink():
         if path.is_symlink() or not path.is_file():
             raise FullLocalError("LOCAL_ADMIN_SECRET_INVALID:" + path.name)
         return False
     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640)
     with os.fdopen(descriptor, "wb") as output:
+        os.fchown(output.fileno(), os.getuid(), os.getgid())
         os.fchmod(output.fileno(), 0o640)
         output.write(value)
         output.flush()
