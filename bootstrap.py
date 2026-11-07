@@ -267,13 +267,22 @@ def initialize_keycloak() -> None:
             "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND": "127.0.0.1",
             "AELEV_INFRASTRUCTURE_KEYCLOAK_HTTPS_PORT": "18443",
             "AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL": "https://127.0.0.1:18443",
-            "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT": "https://127.0.0.1:18443",
+            "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT": "https://keycloak:8443",
             "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_URL": "https://host.docker.internal:18082",
             "AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID": str(os.getgid()),
             "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_GID": str(os.getgid()),
             "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PROVISION_UID": str(os.getuid()),
         },
     )
+    keycloak_env = read_env(KEYCLOAK / ".env")
+    if (
+        keycloak_env.get("AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT")
+        == "https://127.0.0.1:18443"
+    ):
+        update_env(
+            KEYCLOAK / ".env",
+            {"AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT": ("https://keycloak:8443")},
+        )
     secrets_root = KEYCLOAK / "secrets"
     write_private(
         secrets_root / "admin-password", secrets.token_urlsafe(32) + "\n", 0o640

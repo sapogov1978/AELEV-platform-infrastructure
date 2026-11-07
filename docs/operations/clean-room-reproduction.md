@@ -44,6 +44,8 @@ python3 tools/full_local.py build
 
 Новый operational `observability/.env` выбирает владельческие `.env`, тогда как версионируемый `.env.example` сохраняет `.env.example` только для проверки шаблонов. Уже существующий выбор оператора bootstrap не меняет.
 
+В локальном профиле собственный `keycloak-status-provision` обращается к Keycloak по внутреннему TLS origin `https://keycloak:8443`; браузерный `PUBLIC_URL` и внешний host bind не меняются. Bootstrap переводит только прежний локальный default `https://127.0.0.1:18443`, но сохраняет любой явно заданный оператором endpoint.
+
 ## 3. Подготовить owner inputs
 
 `full_local.py init` вызывает владельческие генераторы для отсутствующих local PKI/runtime, создаёт owner-local output directories и create-only файлы локального deployment-admin для provision-задач и закрыто останавливается при частичном PKI. Существующие `.env`, ключи, admin-файлы и secret roots не заменяются. Для нестандартных либо production identities выполните соответствующие разделы руководств [Keycloak](../../keycloak/USER_MANUAL.md), [PostgreSQL](../../postgresql/USER_MANUAL.md), [MinIO](../../minio/USER_MANUAL.md), [Observability](../../observability/USER_MANUAL.md), [Public Egress Gateway](../../public-egress-gateway/USER_MANUAL.md), [SPIRE](../../spire/USER_MANUAL.md), [Platform UI](../../platform-ui/USER_MANUAL.md) и [Translator](../../translator-service/USER_MANUAL.md). Не создавайте пустые файлы вместо удостоверений и не копируйте целые secret roots между владельцами.

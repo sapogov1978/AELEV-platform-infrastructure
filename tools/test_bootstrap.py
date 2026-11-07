@@ -84,6 +84,50 @@ class BootstrapTest(unittest.TestCase):
                 0o640,
             )
 
+    def test_keycloak_migrates_only_legacy_local_admin_route(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            keycloak = Path(temporary).resolve()
+            (keycloak / ".env.example").write_text("")
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT=https://127.0.0.1:18443\n"
+            )
+            tls = keycloak / "secrets/https"
+            tls.mkdir(parents=True)
+            for name in ("ca.crt", "tls.crt", "tls.key"):
+                (tls / name).write_text("fixture\n")
+
+            with mock.patch.object(provider, "KEYCLOAK", keycloak):
+                provider.initialize_keycloak()
+
+            self.assertEqual(
+                provider.read_env(keycloak / ".env")[
+                    "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT"
+                ],
+                "https://keycloak:8443",
+            )
+
+    def test_keycloak_preserves_custom_admin_route(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            keycloak = Path(temporary).resolve()
+            (keycloak / ".env.example").write_text("")
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT=https://identity.example.com\n"
+            )
+            tls = keycloak / "secrets/https"
+            tls.mkdir(parents=True)
+            for name in ("ca.crt", "tls.crt", "tls.key"):
+                (tls / name).write_text("fixture\n")
+
+            with mock.patch.object(provider, "KEYCLOAK", keycloak):
+                provider.initialize_keycloak()
+
+            self.assertEqual(
+                provider.read_env(keycloak / ".env")[
+                    "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT"
+                ],
+                "https://identity.example.com",
+            )
+
     def test_first_run_minio_configuration_is_owned_by_its_generator(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
