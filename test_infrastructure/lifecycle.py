@@ -632,6 +632,12 @@ def run(args: argparse.Namespace) -> int:
                 regular,
                 args.report.with_name("group-startup-diagnostic.json"),
             )
+            capture_startup_diagnostic(
+                project,
+                "postgresql-fencer",
+                args.report.with_name("postgresql-fencer-startup-diagnostic.json"),
+                "POSTGRESQL_FENCER_STARTUP_FAILED",
+            )
             raise
         wait_ready(project, regular, args.timeout)
         passed(
