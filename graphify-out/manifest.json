@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794081126.916366,
-    "seen": 1794081143.4446452,
-    "ast_hash": "63998d604e83303a3e99f254f61bba29",
+    "mtime": 1794082335.2831616,
+    "seen": 1794082371.923795,
+    "ast_hash": "e367e4892a3c3ff62d313b8ef5290679",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1686,9 +1686,9 @@
     "semantic_hash": ""
   },
   "postgresql/compose.docker.yml": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150529,
-    "ast_hash": "88fbe466923bca473371482c06d9db87",
+    "mtime": 1794082276.4129891,
+    "seen": 1794082371.920949,
+    "ast_hash": "e676f39d2b9598dd7429ad24bca74da2",
     "semantic_hash": ""
   },
   "postgresql/compose.kubernetes.yml": {
@@ -1836,9 +1836,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_configuration.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150545,
-    "ast_hash": "d301f8da1082d64759789cc5e09fc6d4",
+    "mtime": 1794082285.425452,
+    "seen": 1794082371.9212139,
+    "ast_hash": "3c48555fc1b07f09660225dd695d6f5e",
     "semantic_hash": ""
   },
   "postgresql/test/test_fencing.py": {
@@ -4122,9 +4122,9 @@
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
-    "mtime": 1793957755.0633316,
-    "seen": 1793958131.68358,
-    "ast_hash": "cf29f064bd380660b09a466bc9a498bb",
+    "mtime": 1794082276.4135265,
+    "seen": 1794082371.928011,
+    "ast_hash": "b5b069aad0213cce8a3bc831c84f07be",
     "semantic_hash": ""
   },
   "postgresql/README.md": {
@@ -6150,15 +6150,15 @@
     "semantic_hash": ""
   },
   "tools/full_local.py": {
-    "mtime": 1794074866.6117947,
-    "seen": 1794074903.152305,
-    "ast_hash": "edd097bdcd518493004801a9b97f092d",
+    "mtime": 1794082300.2479932,
+    "seen": 1794082371.922739,
+    "ast_hash": "e47be7388537faf2ea0a6e1817f1e64f",
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794074878.9754248,
-    "seen": 1794074903.1523788,
-    "ast_hash": "95c6eb1834c67659abcc30de21f6a368",
+    "mtime": 1794082358.8171248,
+    "seen": 1794082371.92281,
+    "ast_hash": "2de52c5eeafc7d9cd57f4f29ccf03444",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794075748.580733,
-    "seen": 1794075771.553301,
-    "ast_hash": "391da5bab5782696df4563715b015d08",
+    "mtime": 1794082335.2822661,
+    "seen": 1794082371.925886,
+    "ast_hash": "0d45551998a4626ab597d65ea8347314",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {

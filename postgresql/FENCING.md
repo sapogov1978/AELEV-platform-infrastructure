@@ -66,6 +66,7 @@ docker compose --env-file .env ps
 | `FENCING_MEMORY` | `128m` | Лимит памяти отдельного Docker-исполнителя; истощение не разрешает обход ограждения. |
 | `FENCING_STATE_VOLUME` | `aelev-infrastructure-postgresql-fencing-data` | Устойчивый технический журнал намерений и подтверждений; не PGDATA и не новая аренда. |
 | `FENCING_DOCKER_SOCKET` | `/var/run/docker.sock` | Точный локальный Unix socket daemon, доступный только исполнителю. Docker Desktop разрешает его внутри VM; это не переносимый сетевой адрес. |
+| `FENCING_SECRET_GID` | `20` | Числовая дополнительная группа только для чтения `secrets/fencing`: каталоги `0750`, файлы `0640`. На площадке задайте фактическую группу доставки; world-readable ключи запрещены. |
 | `FENCING_DOCKER_LOCAL_NODES` | `postgresql-1,postgresql-2,postgresql-3` | Разрешённые местные узлы. На host N укажите только `postgresql-N`, а не чужие географические контейнеры. |
 
 При уже существующей локальной PKI создайте только удостоверение нового исполнителя, не заменяя удостоверения/пароли кластера:

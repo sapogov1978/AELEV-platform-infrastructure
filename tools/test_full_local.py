@@ -134,6 +134,66 @@ class FullLocalContractTests(unittest.TestCase):
             self.assertIn(f"OWNER_UI_PROVISION_UID={os.getuid()}", fresh.read_text())
             self.assertEqual(existing.read_text(), content)
 
+    def test_new_local_runtime_secrets_are_group_readable_without_ca_key_scope(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            translator = root / "translator-service"
+            postgresql = root / "postgresql"
+            translator.mkdir()
+            postgresql.mkdir()
+            (translator / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT=./secrets/database\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT=./secrets/kafka-runtime\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_SECRET_ROOT=./secrets/kafka-admin\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT=./secrets/telemetry\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_API_TLS_ROOT=./runtime/api-pki/api-tls\n"
+            )
+            roots = [
+                translator / "secrets/database",
+                translator / "secrets/kafka-runtime",
+                translator / "secrets/kafka-admin",
+                translator / "secrets/telemetry/client",
+                translator / "runtime/api-pki/api-tls",
+                postgresql / "secrets/fencing",
+            ]
+            for path in roots:
+                path.mkdir(parents=True)
+                path.chmod(0o700)
+                secret = path / "secret.key"
+                secret.write_text("fixture\n")
+                secret.chmod(0o600)
+            ca_key = translator / "runtime/api-pki/api-ca/ca.key"
+            ca_key.parent.mkdir(parents=True)
+            ca_key.write_text("fixture\n")
+            ca_key.chmod(0o600)
+
+            prepared = full_local.prepare_local_runtime_secret_access(set(), root)
+
+            self.assertEqual(len(prepared), 6)
+            for path in roots:
+                self.assertEqual(path.stat().st_mode & 0o777, 0o750)
+                self.assertEqual((path / "secret.key").stat().st_mode & 0o777, 0o640)
+                self.assertEqual((path / "secret.key").stat().st_gid, os.getgid())
+            self.assertEqual(ca_key.stat().st_mode & 0o777, 0o600)
+
+            for path in roots:
+                path.chmod(0o700)
+                (path / "secret.key").chmod(0o600)
+            self.assertEqual(
+                full_local.prepare_local_runtime_secret_access(
+                    {"translator-service/.env", "postgresql/.env"}, root
+                ),
+                [],
+            )
+            self.assertTrue(
+                all(
+                    (path / "secret.key").stat().st_mode & 0o777 == 0o600
+                    for path in roots
+                )
+            )
+
     def test_local_deployment_admin_is_owner_local_and_create_only(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

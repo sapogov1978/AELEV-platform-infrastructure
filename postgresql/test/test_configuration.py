@@ -174,6 +174,7 @@ class PostgresqlConfigurationTest(unittest.TestCase):
             if mode == "docker":
                 executor = model["postgresql-fencer"]
                 self.assertEqual(executor["cpu_shares"], 4096)
+                self.assertEqual(executor["group_add"], ["20"])
                 self.assertEqual(
                     executor["healthcheck"]["test"],
                     ["CMD", "python", "-S", "-m", "aelev_postgresql.fencing_probe"],

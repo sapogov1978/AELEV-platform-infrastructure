@@ -813,6 +813,54 @@ def adapt_created_env_identities(
     return adapted
 
 
+def _grant_local_runtime_group_read(path: Path, owner: Path) -> None:
+    resolved = path.resolve()
+    owner = owner.resolve()
+    if resolved == owner or owner not in resolved.parents:
+        raise FullLocalError("LOCAL_RUNTIME_SECRET_PATH_INVALID")
+    if not resolved.exists():
+        raise FullLocalError("LOCAL_RUNTIME_SECRET_PATH_MISSING")
+    targets = [resolved, *resolved.rglob("*")]
+    if any(
+        target.is_symlink() or not (target.is_dir() or target.is_file())
+        for target in targets
+    ):
+        raise FullLocalError("LOCAL_RUNTIME_SECRET_PATH_INVALID")
+    for target in targets:
+        os.chown(target, -1, os.getgid())
+        target.chmod(0o750 if target.is_dir() else 0o640)
+
+
+def prepare_local_runtime_secret_access(
+    preexisting: set[str], root: Path = ROOT
+) -> list[str]:
+    """Grant the current local runtime group read access only to new inputs."""
+    prepared: list[str] = []
+    translator_env = "translator-service/.env"
+    if translator_env not in preexisting:
+        owner = root / "translator-service"
+        values = read_env(root / translator_env, root)
+        paths = [
+            owner / values["AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT"],
+            owner / values["AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT"],
+            owner / values["AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_SECRET_ROOT"],
+            owner
+            / values["AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT"]
+            / "client",
+            owner / values["AELEV_INFRASTRUCTURE_TRANSLATOR_API_TLS_ROOT"],
+        ]
+        for path in paths:
+            _grant_local_runtime_group_read(path, owner)
+            prepared.append(display_path(path, root))
+    postgresql_env = "postgresql/.env"
+    if postgresql_env not in preexisting:
+        owner = root / "postgresql"
+        path = owner / "secrets/fencing"
+        _grant_local_runtime_group_read(path, owner)
+        prepared.append(display_path(path, root))
+    return sorted(prepared)
+
+
 def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[str]:
     prepared = prepare_local_deployment_admin(manifest, root)
     prepared.extend(prepare_local_oidc_trust(manifest, root))
@@ -900,6 +948,7 @@ def initialize_profile(root: Path = ROOT) -> dict[str, Any]:
         raise FullLocalError(";".join(errors))
     adapted = adapt_created_env_identities(manifest, preexisting, root)
     prepared = prepare_owner_inputs(manifest, root)
+    prepared.extend(prepare_local_runtime_secret_access(preexisting, root))
     return {
         "schema_version": 1,
         "profile": manifest["profile"],
