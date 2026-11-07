@@ -19,7 +19,7 @@ PREFIX = "AELEV_INFRASTRUCTURE_GRAFANA_"
 OPERATOR_USERNAME = "platform-operator"
 OPERATOR_ROLE = "grafana.operator"
 OPERATOR_ROLE_DESCRIPTION = "Grafana organization operator"
-OIDC_CA = Path("/run/secrets/oidc/ca.crt")
+OIDC_CA = Path("/run/trust/oidc-ca.crt")
 OIDC_SECRET = Path("/run/secrets/oidc/client-secret")
 ADMIN_ROOT = Path("/run/secrets/status-admin")
 

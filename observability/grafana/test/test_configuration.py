@@ -131,10 +131,16 @@ def test_grafana_human_login_is_strict_owner_oidc() -> None:
     assert environment["GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET__FILE"] == (
         "/run/secrets/oidc/client-secret"
     )
+    assert environment["GF_AUTH_GENERIC_OAUTH_TLS_CLIENT_CA"] == (
+        "/run/trust/oidc-ca.crt"
+    )
     assert "GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET" not in environment
     provision = model()["services"]["grafana-oidc-provision"]
     assert provision["profiles"] == ["provision"]
     assert provision["entrypoint"] == ["python", "/opt/aelev/oidc_provision.py"]
+    mounts = {item["target"]: item for item in provision["volumes"]}
+    assert mounts["/run/trust/oidc-ca.crt"]["read_only"] is True
+    assert mounts["/run/secrets/oidc"].get("read_only") is not True
     assert not provision.get("ports")
 
 

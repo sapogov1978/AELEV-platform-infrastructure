@@ -66,7 +66,7 @@ services:
       GF_AUTH_GENERIC_OAUTH_AUTH_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_BROWSER_URL:?set browser OIDC origin}/realms/${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}/protocol/openid-connect/auth
       GF_AUTH_GENERIC_OAUTH_TOKEN_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL:?set internal OIDC origin}/realms/${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}/protocol/openid-connect/token
       GF_AUTH_GENERIC_OAUTH_API_URL: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL:?set internal OIDC origin}/realms/${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM:?set OIDC realm}/protocol/openid-connect/userinfo
-      GF_AUTH_GENERIC_OAUTH_TLS_CLIENT_CA: /run/secrets/oidc/ca.crt
+      GF_AUTH_GENERIC_OAUTH_TLS_CLIENT_CA: /run/trust/oidc-ca.crt
       GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE: "false"
       GF_AUTH_GENERIC_OAUTH_USE_PKCE: "true"
       GF_AUTH_GENERIC_OAUTH_USE_REFRESH_TOKEN: "true"
@@ -112,6 +112,11 @@ services:
       - type: bind
         source: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_SECRET_ROOT:?set Grafana operator OIDC secret root}
         target: /run/secrets/oidc
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CA_FILE:?set Grafana operator OIDC public CA file}
+        target: /run/trust/oidc-ca.crt
         read_only: true
         bind: {create_host_path: false}
     ports:
@@ -201,6 +206,11 @@ services:
       AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID:?set Grafana operator OIDC client}
       AELEV_INFRASTRUCTURE_GRAFANA_OIDC_OPERATOR_USER: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_OPERATOR_USER:?set canonical operator user}
     volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CA_FILE:?set Grafana operator OIDC public CA file}
+        target: /run/trust/oidc-ca.crt
+        read_only: true
+        bind: {create_host_path: false}
       - type: bind
         source: ${AELEV_INFRASTRUCTURE_GRAFANA_OIDC_SECRET_ROOT:?set Grafana operator OIDC secret root}
         target: /run/secrets/oidc

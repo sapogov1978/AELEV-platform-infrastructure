@@ -504,6 +504,27 @@ def _write_new_local_secret(path: Path, value: bytes) -> bool:
     return True
 
 
+def _write_new_local_public_file(path: Path, value: bytes) -> bool:
+    """Create one public owner-local trust file without replacing it."""
+    parent_created = not path.parent.exists()
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o755)
+    if parent_created:
+        os.chown(path.parent, os.getuid(), os.getgid())
+        path.parent.chmod(0o755)
+    if path.exists() or path.is_symlink():
+        if path.is_symlink() or not path.is_file():
+            raise FullLocalError("LOCAL_PUBLIC_TRUST_INVALID:" + path.name)
+        return False
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+    with os.fdopen(descriptor, "wb") as output:
+        os.fchown(output.fileno(), os.getuid(), os.getgid())
+        os.fchmod(output.fileno(), 0o644)
+        output.write(value)
+        output.flush()
+        os.fsync(output.fileno())
+    return True
+
+
 def prepare_local_deployment_admin(
     manifest: dict[str, Any], root: Path = ROOT
 ) -> list[str]:
@@ -553,13 +574,13 @@ def prepare_local_oidc_trust(manifest: dict[str, Any], root: Path = ROOT) -> lis
         env_path = root / relative
         owner = env_path.parent.resolve()
         for key, value in read_env(env_path, root).items():
-            if not key.endswith("_OIDC_SECRET_ROOT"):
+            if not key.endswith("_OIDC_CA_FILE"):
                 continue
-            oidc_root = (owner / value).resolve()
-            if oidc_root != owner and owner not in oidc_root.parents:
+            ca_file = (owner / value).resolve()
+            if ca_file == owner or owner not in ca_file.parents:
                 raise FullLocalError(f"OWNER_OIDC_PATH_INVALID:{relative}")
-            if _write_new_local_secret(oidc_root / "ca.crt", certificate):
-                prepared.append(display_path(oidc_root, root))
+            if _write_new_local_public_file(ca_file, certificate):
+                prepared.append(display_path(ca_file, root))
     return sorted(set(prepared))
 
 

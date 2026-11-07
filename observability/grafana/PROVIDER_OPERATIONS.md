@@ -49,7 +49,7 @@ grafana/
 
 Скопируйте `.env.example` в `.env`, задайте реальные HTTPS-адреса UI, IdP и собственного продукта, доступность DNS/портов и правильные SAN сертификатов. Удалённому издателю не нужна Docker-сеть другого узла. Локальный `UI_HEALTH_URL` использует имя собственного процесса в собственной сети; удалённая проба использует маршрутизируемый HTTPS-адрес. Никаких запасных значений Compose не содержит; отсутствие переменной запрещает разрешение конфигурации.
 
-Секреты `secrets/status`: `shell-ca.crt`, `identity-ca.crt`, собственные `publisher.crt/key`, `client-secret`, а также `probe-ca.crt`, `probe.crt/key` для чтения своего health-интерфейса. `secrets/oidc` содержит проверенную публичную CA Keycloak и выданный только OIDC-клиенту Grafana `client-secret`. Закрытые ключи CA рабочим процессам не передаются. Для явной одноразовой подготовки обоих Keycloak-клиентов используется отдельный `secrets/status-admin` с `admin-user/admin-password`, не монтируемый в постоянные процессы. Генерация и установка публичного клиента издателя описаны в [руководстве](../../platform-ui/USER_MANUAL.md#создание-и-подключение-ui-нового-сервиса).
+Секреты `secrets/status`: `shell-ca.crt`, `identity-ca.crt`, собственные `publisher.crt/key`, `client-secret`, а также `probe-ca.crt`, `probe.crt/key` для чтения своего health-интерфейса. `OIDC_CA_FILE` — отдельный публичный PEM CA Keycloak с read-only mount; `secrets/oidc` содержит только выданный OIDC-клиенту Grafana `client-secret` и остаётся writable только одноразовой задаче. Закрытые ключи CA рабочим процессам не передаются. Для явной одноразовой подготовки обоих Keycloak-клиентов используется отдельный `secrets/status-admin` с `admin-user/admin-password`, не монтируемый в постоянные процессы. Генерация и установка публичного клиента издателя описаны в [руководстве](../../platform-ui/USER_MANUAL.md#создание-и-подключение-ui-нового-сервиса).
 
 Из этого каталога:
 
@@ -78,7 +78,7 @@ docker compose --env-file .env --profile ui stop grafana-status-publisher
 | `UI_NETWORK` | Собственная сеть издателя; при совместном запуске только его нативный процесс подключается к ней. |
 | `UI_MEMORY_LIMIT` | Ограничение памяти издателя, не нативного продукта. |
 | `OIDC_BROWSER_URL`, `OIDC_INTERNAL_URL`, `OIDC_REALM` | Публичный адрес Keycloak для браузера, внутренний проверяемый адрес для Grafana и realm. |
-| `OIDC_CLIENT_ID`, `OIDC_OPERATOR_USER`, `OIDC_SECRET_ROOT` | Собственный OIDC-клиент Grafana, единственная человеческая identity `platform-operator` и каталог его CA/секрета. |
+| `OIDC_CLIENT_ID`, `OIDC_OPERATOR_USER`, `OIDC_CA_FILE`, `OIDC_SECRET_ROOT` | Собственный OIDC-клиент Grafana, единственная человеческая identity `platform-operator`, отдельная публичная CA IdP и закрытый каталог только его client-secret. |
 
 При ошибке транспорта или TLS результат `UNKNOWN`, а не выдуманный отказ. Подтверждённый ответ собственного интерфейса 503 означает `OFFLINE`; 200 означает готовность только с подтверждённым `database=ok`. Штатная подтверждённая отписка скрывает строку; отсутствие публикаций без отписки оставляет строку с «Нет связи» после срока свежести приёмника. Техническая проба не доказывает отсутствие потерь, производительность или правильность содержимого хранилища.
 
@@ -116,7 +116,7 @@ Grafana имеет собственный confidential OIDC-клиент и то
 
 Браузер переадресуется на Keycloak автоматически: действующая SSO-сессия впускает `platform-operator` без повторного ввода пароля. Platform UI не передаёт Grafana свой token. Локальная форма, Basic Auth и анонимный доступ отключены; первичный локальный администратор остаётся только аварийным/bootstrap-механизмом, не обычным входом оператора.
 
-До запуска `grafana-oidc-provision` оператор доставляет проверенную публичную CA Keycloak как `OIDC_SECRET_ROOT/ca.crt`. Каталог имеет `0750`, CA и создаваемый `client-secret` — `0640`; владец из `UI_PROVISION_UID` должен иметь право записи, а нативная Grafana — только чтение через `SECRET_GID`. Не копируйте частный ключ CA и не создавайте `client-secret` случайной строкой: его получает и атомарно сохраняет только одноразовая роль.
+До запуска `grafana-oidc-provision` оператор доставляет проверенную публичную CA Keycloak как отдельный `OIDC_CA_FILE` с режимом `0644` в каталоге `0755`; это публичное доверие, не secret. `OIDC_SECRET_ROOT` имеет `0750`, а создаваемый `client-secret` — `0640`; владелец из `UI_PROVISION_UID` должен иметь право записи, нативная Grafana — только чтение через `SECRET_GID`. Не копируйте частный ключ CA и не создавайте `client-secret` случайной строкой: его получает и атомарно сохраняет только одноразовая роль.
 
 ### Секреты издателя состояния
 
@@ -238,7 +238,7 @@ docker compose --env-file .env --profile ui down
 | `DATA_VOLUME`, `DATA_OWNER` | Постоянное имя тома и неизменная идентичность его маркера; переименование не переносит данные. |
 | `ADMIN_USER` | Начальный администратор пустой БД; первоначальный пароль в собственном `SECRET_ROOT/admin-password`. Это аварийный/bootstrap-материал; обычный оператор входит как `platform-operator` через OIDC. |
 | `OIDC_BROWSER_URL`, `OIDC_INTERNAL_URL`, `OIDC_REALM` | Точные HTTPS-адреса Keycloak для браузера и контейнера, а также realm. |
-| `OIDC_CLIENT_ID`, `OIDC_OPERATOR_USER`, `OIDC_SECRET_ROOT` | Имя собственного confidential client, точная identity `platform-operator` и каталог `ca.crt`/`client-secret`. |
+| `OIDC_CLIENT_ID`, `OIDC_OPERATOR_USER`, `OIDC_CA_FILE`, `OIDC_SECRET_ROOT` | Имя собственного confidential client, точная identity `platform-operator`, отдельный публичный PEM CA IdP и закрытый каталог client-secret. |
 | `SMTP_ENABLED` | Явное включение почты; сейчас false, доставки писем нет. |
 | `SMTP_HOST` | Внешний SMTP host:port с проверяемым STARTTLS; обязателен при включённой почте. |
 | `SMTP_USER` | SMTP-пользователь; пароль в smtp-password, не env. |

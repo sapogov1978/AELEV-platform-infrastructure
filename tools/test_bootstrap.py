@@ -162,6 +162,27 @@ class BootstrapTest(unittest.TestCase):
         ):
             self.assertEqual(provider.docker_bridge_gateway(), "172.31.0.1")
 
+    def test_additive_public_trust_path_preserves_existing_settings(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            owner = root / "owner"
+            owner.mkdir()
+            (owner / ".env.example").write_text(
+                "OWNER_VALUE=template\n" "OWNER_OIDC_CA_FILE=./trust/oidc-ca.crt\n"
+            )
+            (owner / ".env").write_text("OWNER_VALUE=custom\n")
+
+            with mock.patch.object(provider, "ROOT", root):
+                provider.initialize_additive_local_paths()
+
+            self.assertEqual(
+                provider.read_env(owner / ".env"),
+                {
+                    "OWNER_VALUE": "custom",
+                    "OWNER_OIDC_CA_FILE": "./trust/oidc-ca.crt",
+                },
+            )
+
     def test_local_bridge_routes_reject_wildcard_primary_listener(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()

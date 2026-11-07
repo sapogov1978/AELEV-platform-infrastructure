@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-07: публичная OIDC CA отделена от writable client-secret: `OIDC_CA_FILE` монтируется read-only из отдельного public trust path, `OIDC_SECRET_ROOT` содержит только secret output provisioner. Постоянная Grafana получает оба read-only; закрытый CA key не передаётся.
+
 - 2026-11-07: OIDC provisioner при отказе выдаёт только фиксированный stage-specific type marker для clean-room evidence; raw exception, пути и secrets не сериализуются. Full-local bootstrap create-only доставляет локальный deployment-admin и публичную CA IdP в отдельные owner roots, закрытый ключ не передаётся; самостоятельная и production-доставка не меняются.
 
 - 2026-11-07: публичная owner-local CA IdP читается процессом один раз и передаётся OpenSSL как PEM `cadata`, без повторного открытия bind-пути внутри loader. Набор доверия не расширяется; отдельные type-only markers различают отказ чтения и загрузки.

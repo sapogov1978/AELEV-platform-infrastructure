@@ -169,6 +169,23 @@ def update_env(path: Path, updates: dict[str, str]) -> None:
         raise
 
 
+def initialize_additive_local_paths() -> None:
+    """Add new non-secret local path settings without changing existing values."""
+    for example in sorted(ROOT.glob("**/.env.example")):
+        path = example.with_name(".env")
+        if not path.is_file():
+            continue
+        template = read_env(example)
+        current = read_env(path)
+        updates = {
+            key: value
+            for key, value in template.items()
+            if key.endswith("_OIDC_CA_FILE") and key not in current
+        }
+        if updates:
+            update_env(path, updates)
+
+
 def openssl(*arguments: str) -> None:
     run(["openssl", *arguments], capture=True)
 
@@ -398,6 +415,7 @@ def initialize() -> None:
     for example in sorted(ROOT.glob("**/.env.example")):
         if example.parent not in {KEYCLOAK, PLATFORM, MINIO}:
             initialize_env(example.with_name(".env"))
+    initialize_additive_local_paths()
     initialize_keycloak()
     initialize_minio()
     initialize_postgresql()

@@ -184,19 +184,19 @@ class FullLocalContractTests(unittest.TestCase):
             ca.write_bytes(b"public-local-ca\n")
             owner_env = root / "owner/.env"
             owner_env.parent.mkdir()
-            owner_env.write_text("OWNER_OIDC_SECRET_ROOT=./secrets/oidc\n")
+            owner_env.write_text("OWNER_OIDC_CA_FILE=./trust/oidc-ca.crt\n")
             manifest = {"environment_files": ["owner/.env"]}
 
             self.assertEqual(
                 full_local.prepare_local_oidc_trust(manifest, root),
-                ["owner/secrets/oidc"],
+                ["owner/trust/oidc-ca.crt"],
             )
-            delivered = owner_env.parent / "secrets/oidc/ca.crt"
+            delivered = owner_env.parent / "trust/oidc-ca.crt"
             self.assertEqual(delivered.read_bytes(), b"public-local-ca\n")
-            self.assertEqual(delivered.stat().st_mode & 0o777, 0o640)
+            self.assertEqual(delivered.stat().st_mode & 0o777, 0o644)
             self.assertEqual(delivered.stat().st_uid, os.getuid())
             self.assertEqual(delivered.stat().st_gid, os.getgid())
-            self.assertEqual(delivered.parent.stat().st_mode & 0o777, 0o750)
+            self.assertEqual(delivered.parent.stat().st_mode & 0o777, 0o755)
 
             delivered.write_bytes(b"approved-existing-ca\n")
             self.assertEqual(full_local.prepare_local_oidc_trust(manifest, root), [])
