@@ -1,0 +1,4 @@
+services:
+  platform-ui:
+    ports:
+      - "${AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND:?set Docker bridge gateway}:${AELEV_INFRASTRUCTURE_PLATFORM_UI_PORT:?set UI port}:8443"

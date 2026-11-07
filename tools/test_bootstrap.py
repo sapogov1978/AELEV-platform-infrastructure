@@ -104,12 +104,84 @@ class BootstrapTest(unittest.TestCase):
                 mock.patch.object(provider, "initialize_platform"),
                 mock.patch.object(provider, "initialize_postgresql"),
                 mock.patch.object(
+                    provider, "docker_bridge_gateway", return_value="172.31.0.1"
+                ),
+                mock.patch.object(provider, "initialize_local_bridge_routes"),
+                mock.patch.object(
                     provider, "initialize_minio", side_effect=prepare_minio
                 ),
                 mock.patch.object(provider, "compose"),
             ):
                 provider.initialize()
             self.assertEqual((minio / ".env").read_text(), "MINIO_EXAMPLE=prepared\n")
+
+    def test_local_bridge_routes_follow_docker_gateway_without_overriding_custom(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            keycloak = root / "keycloak"
+            platform = root / "platform-ui"
+            keycloak.mkdir()
+            platform.mkdir()
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND=127.0.0.1\n"
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND=172.17.0.1\n"
+            )
+            (platform / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_BIND=127.0.0.1\n"
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND=172.30.0.1\n"
+            )
+
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(provider, "PLATFORM", platform),
+            ):
+                provider.initialize_local_bridge_routes("172.31.0.1")
+
+            self.assertEqual(
+                provider.read_env(keycloak / ".env")[
+                    "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND"
+                ],
+                "172.31.0.1",
+            )
+            self.assertEqual(
+                provider.read_env(platform / ".env")[
+                    "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND"
+                ],
+                "172.30.0.1",
+            )
+
+    def test_docker_bridge_gateway_is_private(self) -> None:
+        with mock.patch.object(
+            provider,
+            "run",
+            return_value=subprocess.CompletedProcess(
+                [], 0, stdout="172.31.0.1\n", stderr=""
+            ),
+        ):
+            self.assertEqual(provider.docker_bridge_gateway(), "172.31.0.1")
+
+    def test_local_bridge_routes_reject_wildcard_primary_listener(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            keycloak = root / "keycloak"
+            platform = root / "platform-ui"
+            keycloak.mkdir()
+            platform.mkdir()
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND=0.0.0.0\n"
+            )
+            (platform / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_BIND=127.0.0.1\n"
+            )
+
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(provider, "PLATFORM", platform),
+                self.assertRaisesRegex(provider.QuickstartError, "must not overlap"),
+            ):
+                provider.initialize_local_bridge_routes("172.31.0.1")
 
     def test_platform_adds_identity_but_kafka_does_not(self) -> None:
         self.assertIn("keycloak", provider.selected(["platform-ui"]))

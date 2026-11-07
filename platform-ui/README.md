@@ -22,6 +22,8 @@ docker compose up -d --no-build --pull never
 
 Для совместного локального размещения с Keycloak используйте владельческий overlay после запуска IdP: `docker compose -f compose.yml -f compose.local-keycloak.yml ...`. Он подключает только API и одноразовую задачу к объявленной ingress-сети IdP; удалённый режим использует основной Compose и маршрутизируемый HTTPS endpoint. Первоначальная сборка, обновление и восстановление описаны в руководстве. При работе через общую инфраструктурную композицию не запускайте отдельный проект поверх тех же данных.
 
+Корневая локальная композиция также включает `compose.local-bridge.yml`: тот же TLS endpoint оболочки публикуется только на private IPv4 gateway стандартного Docker bridge, чтобы самостоятельные status publishers достигали его через `host.docker.internal`. Основной listener остаётся отдельным; wildcard/LAN bind и отключение TLS не используются.
+
 UI-сборка устанавливает security patches в принятой Alpine 3.22 и работает под UID 101. CI сохраняет scan/SBOM фактического image ID по [общему правилу проверки образов](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/security/supply-chain.md).
 
 ## Навигация

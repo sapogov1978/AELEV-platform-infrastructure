@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import http.client
+import ipaddress
 import json
 import os
 import secrets
@@ -170,6 +171,58 @@ def update_env(path: Path, updates: dict[str, str]) -> None:
 
 def openssl(*arguments: str) -> None:
     run(["openssl", *arguments], capture=True)
+
+
+def docker_bridge_gateway() -> str:
+    result = run(
+        [
+            "docker",
+            "network",
+            "inspect",
+            "bridge",
+            "--format",
+            "{{(index .IPAM.Config 0).Gateway}}",
+        ],
+        capture=True,
+    ).stdout.strip()
+    try:
+        address = ipaddress.ip_address(result)
+    except ValueError as error:
+        raise QuickstartError("Docker bridge gateway is unavailable") from error
+    if (
+        address.version != 4
+        or not address.is_private
+        or address.is_loopback
+        or address.is_link_local
+        or address.is_unspecified
+    ):
+        raise QuickstartError("Docker bridge gateway must be a private IPv4 address")
+    return str(address)
+
+
+def initialize_local_bridge_routes(gateway: str) -> None:
+    routes = {
+        KEYCLOAK
+        / ".env": (
+            "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND",
+            "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND",
+        ),
+        PLATFORM
+        / ".env": (
+            "AELEV_INFRASTRUCTURE_PLATFORM_UI_BIND",
+            "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND",
+        ),
+    }
+    for path, (primary_key, bridge_key) in routes.items():
+        settings = read_env(path)
+        primary = settings.get(primary_key)
+        if primary in {"0.0.0.0", "::", gateway}:
+            raise QuickstartError(
+                f"{primary_key} must not overlap the Docker bridge listener"
+            )
+        value = settings.get(bridge_key)
+        if value is None or value == "172.17.0.1":
+            update_env(path, {bridge_key: gateway})
 
 
 def initialize_keycloak() -> None:
@@ -345,6 +398,7 @@ def initialize() -> None:
     initialize_minio()
     initialize_postgresql()
     initialize_platform()
+    initialize_local_bridge_routes(docker_bridge_gateway())
     compose(ROOT, "config", "--quiet")
 
 

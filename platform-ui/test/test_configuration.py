@@ -31,6 +31,14 @@ def test_local_keycloak_overlay_only_adds_tls_routing() -> None:
         assert forbidden not in overlay
 
 
+def test_local_bridge_overlay_only_adds_provider_port() -> None:
+    overlay = (ROOT / "compose.local-bridge.yml").read_text()
+    assert "  platform-ui:" in overlay
+    assert "LOCAL_BRIDGE_BIND:?" in overlay
+    for forbidden in ("image:", "build:", "volumes:", "environment:"):
+        assert forbidden not in overlay
+
+
 def test_required_settings(tmp_path: Path) -> None:
     cfg = tmp_path / ".env"
     data = env(ROOT / ".env.example")

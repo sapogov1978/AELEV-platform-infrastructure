@@ -24,12 +24,15 @@ include:
   - path: ./minio/compose.yml
     project_directory: ./minio
     env_file: ./minio/.env
-  - path: ./keycloak/compose.yml
+  - path:
+      - ./keycloak/compose.yml
+      - ./keycloak/compose.local-bridge.yml
     project_directory: ./keycloak
     env_file: ./keycloak/.env
   - path:
       - ./platform-ui/compose.yml
       - ./platform-ui/compose.local-keycloak.yml
+      - ./platform-ui/compose.local-bridge.yml
     project_directory: ./platform-ui
     env_file: ./platform-ui/.env
   - path: ./observability/compose.yml

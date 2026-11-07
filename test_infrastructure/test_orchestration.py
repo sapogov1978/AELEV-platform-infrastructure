@@ -78,6 +78,8 @@ def test_root_is_only_inclusion_not_runtime() -> None:
     assert "./translator-service/compose.remote.yml" in compose
     assert compose.count("./kafka/compose.yml") == 1
     assert compose.count("./platform-ui/compose.local-keycloak.yml") == 1
+    assert compose.count("./platform-ui/compose.local-bridge.yml") == 1
+    assert compose.count("./keycloak/compose.local-bridge.yml") == 1
     assert compose.count("env_file:") == 8
     assert compose.count("./public-egress-gateway/compose.yml") == 1
     assert compose.count("./spire/compose.group.yml") == 1

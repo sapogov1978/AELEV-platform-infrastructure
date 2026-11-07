@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Clean-room run `42376256081` подтвердил PASS Keycloak, TLS и `platform-ui-configuration-init`, затем локализовал следующий отказ в `grafana-oidc-provision`: остальные самостоятельные владельцы используют `host-gateway`, недостижимый при loopback-only host bind на Linux. Keycloak и Platform UI получили отдельные владельческие TLS listeners только на private IPv4 gateway стандартного Docker bridge; bootstrap определяет адрес и закрыто отклоняет wildcard/пересечение, основной listener и CA/SAN сохраняются.
 - Clean-room run `42371470675` безопасно локализовал `platform-ui-configuration-init` как `ConnectError`: Linux bridge не достигает опубликованного только на host loopback Keycloak через `host-gateway`. Владелец Platform UI добавил co-location overlay к ingress-сети Keycloak и внутреннему TLS-port `8443`; root включает тот же рецепт, удалённый HTTPS-режим сохранён, IdP не открывается на LAN.
 - Неуспешная одноразовая provision-задача root lifecycle теперь сохраняет только имя задачи, exit code и фиксированный type-only marker в `provision-task-diagnostic.json`; raw stdout/stderr и Compose environment никогда не сериализуются. Это локализует новый отказ после подтверждённого PASS Keycloak/TLS в clean-room run `42370489139`.
 - Новый локальный Keycloak TLS private key теперь получает `0640` в той же runtime-группе, что и password files; clean-room run `42369497625` подтвердил прохождение чтения паролей, импорт realm и выявил недоступность прежнего host-only `0600`. Существующий TLS-материал bootstrap не изменяет.

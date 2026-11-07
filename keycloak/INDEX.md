@@ -13,7 +13,7 @@
 | Происхождение секретов | [secrets/README.md](secrets/README.md) |
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
-| Настройки и запуск | `.env.example`, `compose.yml`, `realm.json` |
+| Настройки и запуск | `.env.example`, `compose.yml`, `compose.local-bridge.yml`, `realm.json` |
 | Наследуемая тема входа | `themes/aelev/login/`; поведение — [SPEC.md](SPEC.md#восстановление-формы-входа) |
 | Проверки исправления формы и результат выкладки | [test/login-recovery-result.md](test/login-recovery-result.md) |
 | Проверки и результаты | `test/` |

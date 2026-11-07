@@ -11,6 +11,7 @@ from pathlib import Path
 
 COMPONENT_ROOT = Path(__file__).resolve().parents[1]
 COMPOSE_PATH = COMPONENT_ROOT / "compose.yml"
+LOCAL_BRIDGE_PATH = COMPONENT_ROOT / "compose.local-bridge.yml"
 ENV_PATH = COMPONENT_ROOT / ".env.example"
 
 
@@ -66,7 +67,9 @@ class KeycloakConfigurationTest(unittest.TestCase):
             self.assertTrue((COMPONENT_ROOT / name).is_file(), name)
 
     def test_environment_has_one_service_owned_namespace(self) -> None:
-        compose = COMPOSE_PATH.read_text(encoding="utf-8")
+        compose = COMPOSE_PATH.read_text(
+            encoding="utf-8"
+        ) + LOCAL_BRIDGE_PATH.read_text(encoding="utf-8")
         variables = _declared_variables()
         self.assertTrue(variables)
         for variable in variables:
@@ -75,6 +78,13 @@ class KeycloakConfigurationTest(unittest.TestCase):
             )
             self.assertIn(f"${{{variable}:?", compose, variable)
         self.assertNotRegex(compose, r"\$\{AELEV_INFRASTRUCTURE_KEYCLOAK_[A-Z0-9_]+:-")
+
+    def test_local_bridge_overlay_only_adds_provider_port(self) -> None:
+        overlay = LOCAL_BRIDGE_PATH.read_text(encoding="utf-8")
+        self.assertIn("  keycloak:", overlay)
+        self.assertIn("LOCAL_BRIDGE_BIND:?", overlay)
+        for forbidden in ("image:", "build:", "volumes:", "environment:"):
+            self.assertNotIn(forbidden, overlay)
 
     def test_missing_environment_fails_closed(self) -> None:
         result = subprocess.run(

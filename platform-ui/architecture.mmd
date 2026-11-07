@@ -1,6 +1,7 @@
 flowchart LR
     Operator["Операторский браузер"] -->|OIDC| Shell["Platform UI shell"]
     Publishers["Owner status publishers"] -->|signed owner projection| Registry[("Owner-local published state")]
+    Publishers -->|"mTLS через private Docker bridge bind локально"| Shell
     Registry --> Shell
     Owners["Owner UI origins"] -->|isolated iframe| Shell
     Shell <-->|exact postMessage contract| Owners

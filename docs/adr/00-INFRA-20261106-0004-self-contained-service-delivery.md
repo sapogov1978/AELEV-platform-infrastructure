@@ -14,6 +14,7 @@
 - Корневая композиция включает владельческие рецепты без переименования ролей, исправления env и повторного объявления runtime.
 - Локальные сети, volumes и административные задачи принадлежат тому сервису, который их создаёт.
 - Совместно размещённый потребитель подключается к объявленной ingress-сети провайдера только своим владельческим overlay; удалённый режим использует маршрутизируемый HTTPS endpoint. Общая сеть не заменяет TLS, SAN или workload identity и не открывает backend-хранилище.
+- Когда существующие самостоятельные потребители используют локальный `host-gateway`, провайдер может вторично опубликовать тот же TLS endpoint только на private IPv4 gateway стандартного Docker bridge. Такой listener не заменяет основной адрес, не использует wildcard/LAN bind и не ослабляет CA/SAN.
 - Общий build только собирает выбранные образы и никогда не запускает контейнеры.
 - Общие и самостоятельные режимы не могут одновременно писать в одни данные.
 - Публичный план установки стабилен; изменение capability, владельца или межсервисного контракта требует отдельного ADR.
@@ -33,4 +34,5 @@ CI inventory обнаруживает каждый Python/UI-проект, Compo
 
 - [Docker Compose include](https://docs.docker.com/reference/compose-file/include/) определяет включаемые самостоятельные application models.
 - [Compose services](https://docs.docker.com/reference/compose-file/services/), [networks](https://docs.docker.com/reference/compose-file/networks/) и [volumes](https://docs.docker.com/reference/compose-file/volumes/) определяют владельческие runtime-ресурсы.
+- [Compose ports long syntax](https://docs.docker.com/reference/compose-file/services/#ports) определяет явный host IP для каждого опубликованного listener.
 - [Compose secrets](https://docs.docker.com/reference/compose-file/secrets/) отделяет секреты от образов и обычной конфигурации.

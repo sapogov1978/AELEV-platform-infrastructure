@@ -1,0 +1,4 @@
+services:
+  keycloak:
+    ports:
+      - "${AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND:?set Docker bridge gateway}:${AELEV_INFRASTRUCTURE_KEYCLOAK_HTTPS_PORT:?set HTTPS port}:8443"

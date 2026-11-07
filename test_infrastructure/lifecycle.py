@@ -268,8 +268,17 @@ def validate_owner_models(model: dict[str, Any]) -> None:
         "public-egress-gateway",
     ):
         compose_files = ["-f", "compose.yml"]
+        if owner == "keycloak":
+            compose_files.extend(["-f", "compose.local-bridge.yml"])
         if owner == "platform-ui":
-            compose_files.extend(["-f", "compose.local-keycloak.yml"])
+            compose_files.extend(
+                [
+                    "-f",
+                    "compose.local-keycloak.yml",
+                    "-f",
+                    "compose.local-bridge.yml",
+                ]
+            )
         native = json.loads(
             execute(
                 [

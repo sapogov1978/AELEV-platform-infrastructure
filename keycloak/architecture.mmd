@@ -1,6 +1,7 @@
 flowchart LR
     Human["Оператор"] -->|OIDC / OAuth 2.0| Keycloak["Keycloak"]
     Services["Служебные клиенты"] -->|client credentials| Keycloak
+    HostGateway["Локальные host-gateway потребители"] -->|"TLS через private Docker bridge bind"| Keycloak
     Realm["Realm bootstrap"] --> Keycloak
     Keycloak --> Database[("Owner database")]
     TLS["Owner TLS lifecycle"] --> Keycloak
