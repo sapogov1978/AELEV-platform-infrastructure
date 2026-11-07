@@ -113,7 +113,7 @@ chmod 600 .env
 
 Числовой `KEYCLOAK_SECRET_GID` должен совпадать с `AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID` в `.env`: контейнеры получают эту дополнительную группу и только групповое чтение файлов. В `.env` находятся только пути `AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_PASSWORD_FILE` и `AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PASSWORD_FILE`, а не значения. PostgreSQL использует `POSTGRES_PASSWORD_FILE`; entrypoint Keycloak проверяет отдельные обычные файлы и экспортирует значения только внутри памяти запускаемого процесса, поэтому Docker Compose/inspect их не хранит. Одноразовый provisioner получает только административный файл. В production эти же пути указывают на доставленные внешним secret manager временные файлы с group-read для настроенного runtime GID; локальная схема не является обходом.
 
-Не повторяйте генерацию ключей поверх существующих `https/tls.key`/`https/tls.crt`: для новой установки сначала убедитесь, что файлов нет; для ротации создайте отдельный набор. Закреплённый образ Keycloak работает с UID 1000. На Linux после доставки назначьте ключу этого владельца (`sudo chown 1000 secrets/https/tls.key`, `chmod 600 secrets/https/tls.key`); read-only mount не меняет владельца автоматически. Каталог должен допускать проход, сертификат может иметь `0644`. Изменение файлов паролей после инициализации не обновляет пользователей или SQL-роли. SQL-пароль меняют согласованно в существующей БД и подключении Keycloak; административный — в Keycloak и файле одноразового provision. При смене TLS используйте проверенный сертификат и контролируемый рестарт собственного Keycloak, без смены issuer или удаления базы.
+Не повторяйте генерацию ключей поверх существующих `https/tls.key`/`https/tls.crt`: для новой установки сначала убедитесь, что файлов нет; для ротации создайте отдельный набор. Закреплённый образ Keycloak работает с UID 1000 и дополнительной группой `AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID`. После доставки назначьте private key этой группе и режим `0640`; read-only mount не меняет права автоматически. Каталог должен допускать проход, сертификат может иметь `0644`. Изменение файлов паролей после инициализации не обновляет пользователей или SQL-роли. SQL-пароль меняют согласованно в существующей БД и подключении Keycloak; административный — в Keycloak и файле одноразового provision. При смене TLS используйте проверенный сертификат и контролируемый рестарт собственного Keycloak, без смены issuer или удаления базы.
 
 ### Секреты издателя состояния
 
@@ -254,6 +254,7 @@ sudo dnf install openssl java-21-openjdk-devel
 ```sh
 umask 077
 mkdir -p secrets/https
+KEYCLOAK_SECRET_GID="${KEYCLOAK_SECRET_GID:-$(id -g)}"
 KEYCLOAK_PUBLIC_HOST=identity.example.com
 test ! -e secrets/https/tls.key && test ! -e secrets/https/tls.crt || exit 1
 openssl genpkey \
@@ -267,7 +268,9 @@ openssl req \
   -out secrets/https/tls.csr \
   -subj "/CN=${KEYCLOAK_PUBLIC_HOST}" \
   -addext "subjectAltName=DNS:${KEYCLOAK_PUBLIC_HOST}"
-chmod 600 secrets/https/tls.key secrets/https/tls.csr
+chgrp "$KEYCLOAK_SECRET_GID" secrets/https/tls.key
+chmod 640 secrets/https/tls.key
+chmod 600 secrets/https/tls.csr
 ```
 
 Передайте `secrets/https/tls.csr` доверенному центру сертификации и сохраните возвращённый сертификат вместе с необходимой цепочкой как `secrets/https/tls.crt`, затем задайте ему права `0644`. Публичную цепочку issuer сохраните как `secrets/https/ca.crt`; при смене CA сначала включите старую и новую цепочки. Если публичный URL использует IP-адрес и выбранный CA подписывает IP-сертификаты, SAN задаётся в виде `IP:203.0.113.10`, а не `DNS:203.0.113.10`. Внутреннее имя `keycloak` добавляется только в сертификат частного CA, когда административный endpoint действительно использует `https://keycloak:8443`.
@@ -281,6 +284,7 @@ chmod 644 secrets/https/tls.crt secrets/https/ca.crt
 ```sh
 umask 077
 mkdir -p secrets/https
+KEYCLOAK_SECRET_GID="${KEYCLOAK_SECRET_GID:-$(id -g)}"
 KEYCLOAK_LOCAL_IP=127.0.0.1
 test ! -e secrets/https/tls.key && test ! -e secrets/https/tls.crt || exit 1
 openssl req \
@@ -293,7 +297,8 @@ openssl req \
   -out secrets/https/tls.crt \
   -subj "/CN=${KEYCLOAK_LOCAL_IP}" \
   -addext "subjectAltName=IP:${KEYCLOAK_LOCAL_IP},DNS:keycloak"
-chmod 600 secrets/https/tls.key
+chgrp "$KEYCLOAK_SECRET_GID" secrets/https/tls.key
+chmod 640 secrets/https/tls.key
 chmod 644 secrets/https/tls.crt
 cp secrets/https/tls.crt secrets/https/ca.crt
 chmod 644 secrets/https/ca.crt

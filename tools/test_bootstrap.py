@@ -20,6 +20,29 @@ SPEC.loader.exec_module(provider)
 
 
 class BootstrapTest(unittest.TestCase):
+    def test_keycloak_creates_group_readable_tls_key(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            keycloak = Path(temporary).resolve()
+            (keycloak / ".env.example").write_text("")
+
+            def create_openssl_outputs(*arguments: str) -> None:
+                for option in ("-keyout", "-out"):
+                    if option in arguments:
+                        output = Path(arguments[arguments.index(option) + 1])
+                        output.write_text("fixture\n")
+
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(
+                    provider, "openssl", side_effect=create_openssl_outputs
+                ),
+            ):
+                provider.initialize_keycloak()
+
+            tls_key = keycloak / "secrets/https/tls.key"
+            self.assertEqual(tls_key.stat().st_mode & 0o777, 0o640)
+            self.assertEqual(tls_key.stat().st_gid, os.getgid())
+
     def test_keycloak_creates_group_readable_password_files(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             keycloak = Path(temporary).resolve()

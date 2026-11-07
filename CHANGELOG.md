@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Новый локальный Keycloak TLS private key теперь получает `0640` в той же runtime-группе, что и password files; clean-room run `42369497625` подтвердил прохождение чтения паролей, импорт realm и выявил недоступность прежнего host-only `0600`. Существующий TLS-материал bootstrap не изменяет.
 - Новые локальные Keycloak password files теперь получают `0640` и группу оператора, совпадающую с runtime GID контейнеров; это устраняет обнаруженный clean-room отказ чтения на GitHub-hosted Linux. Существующие секреты и их режимы bootstrap не изменяет.
 - Неуспешный Keycloak startup теперь также сохраняет до cleanup ограниченные State, health-output и объединённый stdout/stderr-хвост только серверного лога в `keycloak-startup-diagnostic.json`; environment, realm и inspect-конфигурация не сериализуются. Терминально завершившаяся healthchecked-роль с `restart: no` прекращает ожидание сразу, а не после общего deadline.
 - Root lifecycle readiness больше не считает постоянную healthchecked-роль одноразовой job только из-за `restart: no`: Kafka с осознанно внешним recovery budget принимается по `Running=true` и `Health=healthy`. Одноразовые роли без healthcheck по-прежнему обязаны завершиться с exit 0.

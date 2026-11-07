@@ -227,7 +227,7 @@ def initialize_keycloak() -> None:
             "-out",
             str(tls / "tls.crt"),
         )
-    (tls / "tls.key").chmod(0o600)
+    (tls / "tls.key").chmod(0o640)
     (tls / "tls.crt").chmod(0o644)
     (tls / "ca.crt").chmod(0o644)
 
