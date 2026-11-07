@@ -2,6 +2,7 @@
 
 ## 2026-11-07
 
+- Run `42392523339` закрыто остановился с `SOURCE_TREE_NOT_CLEAN`, потому что новый локальный public-trust path ещё не был исключён из source tree. `observability/grafana/trust/` теперь игнорируется Git и Docker build context; сама CA остаётся проверяемым owner-local bind input.
 - Run `42387191359` уточнил отказ как `GrafanaOidcCaReadPermissionError`: публичная CA и writable client-secret больше не используют общий mount. Grafana получила отдельный owner-local `OIDC_CA_FILE` (`0755/0644`, read-only), а закрытый `OIDC_SECRET_ROOT` остаётся writable только provisioner и read-only runtime; закрытый CA key не передаётся.
 - Run `42383294244` сохранил `GrafanaOidcCaPermissionError` даже после явных UID/GID/mode, тогда как Platform UI с тем же bind-контрактом прошёл. Grafana теперь один раз читает owner-local публичную CA и передаёт PEM OpenSSL как `cadata`, исключая повторное открытие bind-пути; trust не расширяется, read/load имеют разные безопасные markers.
 - После safe marker `GrafanaOidcCaPermissionError` в run `42382324606` create-only clean-room writer явно закрепляет новые owner-local каталоги и файлы за UID/GID текущего host-оператора с режимами `0750/0640`. Существующие secrets и ownership не изменяются; numeric UID/GID контейнеров берутся из тех же новых env.

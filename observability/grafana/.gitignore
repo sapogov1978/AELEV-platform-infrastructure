@@ -1,4 +1,5 @@
 secrets/
+trust/
 .env
 
 runtime/

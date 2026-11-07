@@ -2,6 +2,8 @@
 **/.env
 secrets/
 **/secrets/
+trust/
+**/trust/
 test/
 __pycache__/
 .venv/
