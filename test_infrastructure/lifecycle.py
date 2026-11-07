@@ -153,6 +153,61 @@ def states(project: str) -> dict[str, dict[str, Any]]:
     return result
 
 
+def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
+    identities = execute(
+        [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=" + project,
+            "--filter",
+            "label=com.docker.compose.service=kafka",
+        ]
+    ).splitlines()
+    if len(identities) != 1:
+        payload: dict[str, Any] = {
+            "schema_version": 1,
+            "service": "kafka",
+            "code": "KAFKA_STARTUP_CONTAINER_CARDINALITY",
+            "containers": len(identities),
+        }
+    else:
+        identity = identities[0]
+        state = json.loads(
+            execute(["docker", "inspect", "--format", "{{json .State}}", identity])
+        )
+        health = state.get("Health", {})
+        payload = {
+            "schema_version": 1,
+            "service": "kafka",
+            "code": "KAFKA_STARTUP_NOT_READY",
+            "container_id": identity,
+            "status": state.get("Status"),
+            "exit_code": state.get("ExitCode"),
+            "oom_killed": state.get("OOMKilled"),
+            "error": str(state.get("Error", ""))[-1024:],
+            "health": {
+                "status": health.get("Status"),
+                "failing_streak": health.get("FailingStreak"),
+                "log": [
+                    {
+                        "exit_code": row.get("ExitCode"),
+                        "output": str(row.get("Output", ""))[-1024:],
+                    }
+                    for row in health.get("Log", [])[-10:]
+                ],
+            },
+            # Kafka receives no credentials in this profile. Keep only a bounded
+            # startup tail; never serialize its environment or inspect payload.
+            "startup_tail": execute(["docker", "logs", "--tail", "100", identity])[
+                -16384:
+            ],
+        }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
 def validate_owner_models(model: dict[str, Any]) -> None:
     for owner in (
         "keycloak",
@@ -383,7 +438,16 @@ def run(args: argparse.Namespace) -> int:
         admitted = True
         passed("Исходные ресурсы учтены; существующих писателей общих томов нет")
         execute([*prefix, "up", "-d", "--no-build", "--pull", "never", "kafka"])
-        wait_ready(project, {"kafka": regular["kafka"]}, args.timeout)
+        try:
+            # The image health contract exhausts its own 20 x 10-second retry
+            # window after a 20-second start period. A five-minute outer bound
+            # retains scheduling margin without hiding a deterministic failure.
+            wait_ready(project, {"kafka": regular["kafka"]}, min(args.timeout, 300))
+        except RuntimeError:
+            capture_kafka_startup_diagnostic(
+                project, args.report.with_name("kafka-startup-diagnostic.json")
+            )
+            raise
         if any(name.startswith("translator-") for name in states(project)):
             raise RuntimeError("Kafka startup unexpectedly created translator roles")
         passed("Kafka самостоятельно healthy: ни одна роль переводчика не запущена")

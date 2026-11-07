@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import copy
 import argparse
+import copy
+import json
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,7 @@ import pytest
 
 from lifecycle import (
     assert_sequence_advanced,
+    capture_kafka_startup_diagnostic,
     compose_prefix,
     run,
     status_provision_tasks,
@@ -186,6 +188,42 @@ def test_status_provisioning_is_limited_to_active_publishers() -> None:
     assert status_provision_tasks(description, {"active-status-publisher"}) == [
         "active-status-provision"
     ]
+
+
+def test_kafka_startup_diagnostic_is_bounded_and_excludes_environment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "diagnostic.json"
+
+    def diagnostic(arguments: list[str], cwd: Path = ROOT) -> str:
+        if arguments[1:3] == ["ps", "-aq"]:
+            return "container-id\n"
+        if arguments[1:3] == ["inspect", "--format"]:
+            return json.dumps(
+                {
+                    "Status": "running",
+                    "ExitCode": 0,
+                    "OOMKilled": False,
+                    "Error": "",
+                    "Health": {
+                        "Status": "unhealthy",
+                        "FailingStreak": 20,
+                        "Log": [{"ExitCode": 1, "Output": "KAFKA_HEALTH_CONNECT\n"}],
+                    },
+                }
+            )
+        if arguments[1:3] == ["logs", "--tail"]:
+            return "x" * 20000
+        raise AssertionError(arguments)
+
+    monkeypatch.setattr("lifecycle.execute", diagnostic)
+    capture_kafka_startup_diagnostic("project", output)
+    payload = json.loads(output.read_text())
+    assert payload["health"]["log"] == [
+        {"exit_code": 1, "output": "KAFKA_HEALTH_CONNECT\n"}
+    ]
+    assert len(payload["startup_tail"]) == 16384
+    assert "environment" not in payload
 
 
 def test_interrupted_preflight_is_reported_as_failure(
