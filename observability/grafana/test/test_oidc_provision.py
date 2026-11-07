@@ -47,3 +47,17 @@ def test_client_secret_is_replaced_atomically(tmp_path: Path) -> None:
     oidc_provision._write_secret("second", destination)
     assert destination.read_text() == "second\n"
     assert not destination.with_suffix(".pending").exists()
+
+
+def test_main_reports_only_failure_type(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def fail() -> None:
+        raise FileNotFoundError("sensitive-local-path")
+
+    monkeypatch.setattr(oidc_provision, "provision", fail)
+    with pytest.raises(FileNotFoundError):
+        oidc_provision.main()
+    diagnostic = capsys.readouterr().err
+    assert diagnostic.strip() == "Provisioning failed: FileNotFoundError"
+    assert "sensitive-local-path" not in diagnostic

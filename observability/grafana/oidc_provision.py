@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import ssl
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -265,6 +266,15 @@ def provision() -> None:
     LOGGER.info(json.dumps({"event": "grafana_operator_oidc_configured"}))
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run provisioning with a secret-free failure type for lifecycle evidence."""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    provision()
+    try:
+        provision()
+    except Exception as error:
+        print("Provisioning failed: " + type(error).__name__, file=sys.stderr)
+        raise
+
+
+if __name__ == "__main__":
+    main()

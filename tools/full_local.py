@@ -394,20 +394,20 @@ def preflight(
     missing_images: list[str] = []
     if require_images:
         for reference in images:
-            result = subprocess.run(
+            inspection = subprocess.run(
                 ["docker", "image", "inspect", reference],
                 cwd=root,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            if result.returncode:
+            if inspection.returncode:
                 missing_images.append(reference)
         check(
             "local-images",
             not missing_images,
             "LOCAL_IMAGES_MISSING:" + str(len(missing_images)),
         )
-    result = {
+    result: dict[str, Any] = {
         "schema_version": 1,
         "profile": "full-local",
         "release": manifest.get("release"),
@@ -483,6 +483,57 @@ def prepare_status_output_roots(
     return sorted(set(prepared))
 
 
+def _write_new_local_secret(path: Path, value: bytes) -> bool:
+    """Create one owner-local secret without replacing an existing file."""
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
+    if path.exists() or path.is_symlink():
+        if path.is_symlink() or not path.is_file():
+            raise FullLocalError("LOCAL_ADMIN_SECRET_INVALID:" + path.name)
+        return False
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640)
+    with os.fdopen(descriptor, "wb") as output:
+        os.fchmod(output.fileno(), 0o640)
+        output.write(value)
+        output.flush()
+        os.fsync(output.fileno())
+    return True
+
+
+def prepare_local_deployment_admin(
+    manifest: dict[str, Any], root: Path = ROOT
+) -> list[str]:
+    """Deliver the generated local IdP admin to separate owner-local roots."""
+    root = root.resolve()
+    source = root / "keycloak/secrets/admin-password"
+    if source.is_symlink() or not source.is_file():
+        raise FullLocalError("LOCAL_IDP_ADMIN_SECRET_INVALID")
+    password = source.read_bytes()
+    if not password.strip():
+        raise FullLocalError("LOCAL_IDP_ADMIN_SECRET_EMPTY")
+    admin_user = read_env(root / "keycloak/.env", root).get(
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER", ""
+    )
+    if not admin_user or "\n" in admin_user or "\r" in admin_user:
+        raise FullLocalError("LOCAL_IDP_ADMIN_USER_INVALID")
+    prepared: list[str] = []
+    for relative in manifest["environment_files"]:
+        env_path = root / relative
+        owner = env_path.parent.resolve()
+        for key, value in read_env(env_path, root).items():
+            if not key.endswith("_UI_ADMIN_ROOT"):
+                continue
+            admin_root = (owner / value).resolve()
+            if admin_root != owner and owner not in admin_root.parents:
+                raise FullLocalError(f"OWNER_ADMIN_PATH_INVALID:{relative}")
+            changed = _write_new_local_secret(
+                admin_root / "admin-user", (admin_user + "\n").encode()
+            )
+            changed |= _write_new_local_secret(admin_root / "admin-password", password)
+            if changed:
+                prepared.append(display_path(admin_root, root))
+    return sorted(set(prepared))
+
+
 def adapt_created_env_identities(
     manifest: dict[str, Any], preexisting: set[str], root: Path = ROOT
 ) -> list[str]:
@@ -519,7 +570,7 @@ def adapt_created_env_identities(
 
 
 def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[str]:
-    prepared: list[str] = []
+    prepared = prepare_local_deployment_admin(manifest, root)
     observability = root / "observability"
     issuer = observability / "runtime/local-issuer"
     if shutil.which("poetry") is None:

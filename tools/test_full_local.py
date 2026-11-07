@@ -133,6 +133,49 @@ class FullLocalContractTests(unittest.TestCase):
             self.assertIn(f"OWNER_UI_PROVISION_UID={os.getuid()}", fresh.read_text())
             self.assertEqual(existing.read_text(), content)
 
+    def test_local_deployment_admin_is_owner_local_and_create_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            keycloak_secret = root / "keycloak/secrets/admin-password"
+            keycloak_secret.parent.mkdir(parents=True)
+            keycloak_secret.write_bytes(b"generated-local-password\n")
+            (root / "keycloak/.env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER=local-admin\n"
+            )
+            first_env = root / "first/.env"
+            second_env = root / "second/.env"
+            first_env.parent.mkdir()
+            second_env.parent.mkdir()
+            first_env.write_text("FIRST_UI_ADMIN_ROOT=./secrets/status-admin\n")
+            second_env.write_text("SECOND_UI_ADMIN_ROOT=./secrets/status-admin\n")
+            existing = second_env.parent / "secrets/status-admin/admin-password"
+            existing.parent.mkdir(parents=True)
+            existing.write_bytes(b"preserved-password\n")
+            manifest = {"environment_files": ["first/.env", "second/.env"]}
+
+            prepared = full_local.prepare_local_deployment_admin(manifest, root)
+
+            self.assertEqual(
+                prepared, ["first/secrets/status-admin", "second/secrets/status-admin"]
+            )
+            self.assertEqual(
+                (first_env.parent / "secrets/status-admin/admin-password").read_bytes(),
+                b"generated-local-password\n",
+            )
+            self.assertEqual(existing.read_bytes(), b"preserved-password\n")
+            for owner in (first_env.parent, second_env.parent):
+                admin_root = owner / "secrets/status-admin"
+                self.assertEqual(
+                    (admin_root / "admin-user").read_text(), "local-admin\n"
+                )
+                self.assertEqual(
+                    (admin_root / "admin-user").stat().st_mode & 0o777, 0o640
+                )
+
+            self.assertEqual(
+                full_local.prepare_local_deployment_admin(manifest, root), []
+            )
+
     def test_complete_evidence_verifies_and_tamper_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
