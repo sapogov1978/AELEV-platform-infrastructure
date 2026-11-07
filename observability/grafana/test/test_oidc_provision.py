@@ -72,3 +72,24 @@ def test_admin_permission_error_is_stage_specific(
     monkeypatch.setattr(Path, "read_text", denied)
     with pytest.raises(oidc_provision.GrafanaAdminSecretPermissionError):
         oidc_provision._read_admin("admin-password")
+
+
+def test_provision_loads_owner_ca_as_data(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(oidc_provision, "exact_operator", lambda: "platform-operator")
+    monkeypatch.setattr(
+        oidc_provision, "https_origin", lambda name: "https://keycloak:18443"
+    )
+    monkeypatch.setattr(oidc_provision, "required", lambda name: "fixture")
+    monkeypatch.setattr(Path, "read_text", lambda self: "fixture-ca")
+    observed: dict[str, str] = {}
+
+    def context(*, cadata: str) -> object:
+        observed["cadata"] = cadata
+        raise RuntimeError("stop-after-trust")
+
+    monkeypatch.setattr(oidc_provision.ssl, "create_default_context", context)
+    with pytest.raises(RuntimeError, match="stop-after-trust"):
+        oidc_provision.provision()
+    assert observed == {"cadata": "fixture-ca"}

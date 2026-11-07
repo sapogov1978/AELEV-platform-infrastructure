@@ -24,8 +24,12 @@ OIDC_SECRET = Path("/run/secrets/oidc/client-secret")
 ADMIN_ROOT = Path("/run/secrets/status-admin")
 
 
-class GrafanaOidcCaPermissionError(PermissionError):
-    """The one-off role cannot read its public IdP trust input."""
+class GrafanaOidcCaReadPermissionError(PermissionError):
+    """The one-off role cannot read its owner-local public IdP trust input."""
+
+
+class GrafanaOidcCaLoadPermissionError(PermissionError):
+    """OpenSSL cannot load the already read owner-local public IdP trust."""
 
 
 class GrafanaAdminSecretPermissionError(PermissionError):
@@ -181,9 +185,13 @@ def provision() -> None:
     realm_name = required("OIDC_REALM")
     client_id = required("OIDC_CLIENT_ID")
     try:
-        context = ssl.create_default_context(cafile=str(OIDC_CA))
+        oidc_ca = OIDC_CA.read_text()
     except PermissionError as error:
-        raise GrafanaOidcCaPermissionError from error
+        raise GrafanaOidcCaReadPermissionError from error
+    try:
+        context = ssl.create_default_context(cadata=oidc_ca)
+    except PermissionError as error:
+        raise GrafanaOidcCaLoadPermissionError from error
     opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=context))
     _, token_response = _call(
         opener,
