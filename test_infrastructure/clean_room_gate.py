@@ -406,6 +406,7 @@ def run_diagnostics(arguments: argparse.Namespace, output: Path, bom_path: Path)
                 if (
                     stage.identity == "postgresql-lifecycle"
                     and arguments.diagnostic_repetitions == 3
+                    and not getattr(arguments, "diagnostic_natural_primary", False)
                 ):
                     stage_command += ("--fault-target", str(repetition))
                 run_logged(
@@ -475,6 +476,7 @@ def main() -> int:
     parser.add_argument(
         "--diagnostic-repetitions", type=int, choices=range(1, 4), default=1
     )
+    parser.add_argument("--diagnostic-natural-primary", action="store_true")
     arguments = parser.parse_args()
     if arguments.diagnostic_repetitions != 1 and not arguments.diagnostic_stage:
         parser.error("--diagnostic-repetitions requires --diagnostic-stage")

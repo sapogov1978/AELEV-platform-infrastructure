@@ -308,6 +308,7 @@ def write_failure_diagnostic(
                 "scenario": scenario,
                 "fault_target": fault_target,
                 "services": snapshot,
+                "fencing_audit": fencing_audit(),
             },
             indent=2,
             sort_keys=True,
@@ -315,6 +316,59 @@ def write_failure_diagnostic(
         + "\n",
         encoding="utf-8",
     )
+
+
+def fencing_audit() -> list[dict[str, Any]]:
+    """Retain bounded owner audit fields, without native logs or credentials."""
+    response = compose(
+        "exec",
+        "-T",
+        "postgresql-fencer",
+        "tail",
+        "-n",
+        "128",
+        "/var/lib/aelev-fencing/audit.jsonl",
+        check=False,
+    )
+    rows: list[dict[str, Any]] = []
+    for line in response.stdout.splitlines():
+        try:
+            row = json.loads(line)
+        except ValueError:
+            continue
+        if not isinstance(row, dict):
+            continue
+        safe: dict[str, Any] = {}
+        for field in ("candidate", "node"):
+            if row.get(field) in {"postgresql-1", "postgresql-2", "postgresql-3"}:
+                safe[field] = row[field]
+        phases = {
+            "intent",
+            "terminated",
+            "confirmed",
+            "failed",
+            "restart_reconciled",
+            "return_reconciled",
+            "return_requested",
+            "returned",
+            "return_blocked",
+        }
+        if row.get("phase") in phases:
+            safe["phase"] = row["phase"]
+        for field in ("reason_code", "return_admission"):
+            value = row.get(field)
+            if isinstance(value, str) and re.fullmatch(r"[A-Z_]{1,64}", value):
+                safe[field] = value
+        for field in ("recorded_at", "start_attempts"):
+            if type(row.get(field)) in (int, float):
+                safe[field] = row[field]
+        for field in ("lease", "revision"):
+            value = row.get(field)
+            if isinstance(value, str) and value.isdecimal() and len(value) <= 24:
+                safe[field] = value
+        if safe:
+            rows.append(safe)
+    return rows
 
 
 def verify_role_isolation(node: int) -> None:

@@ -77,6 +77,41 @@ def test_failure_signals_exclude_private_native_output() -> None:
     }
 
 
+def test_fencing_diagnostic_retains_timeline_without_private_fields(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import json
+
+    payload = {
+        "node": "postgresql-2",
+        "candidate": "postgresql-3",
+        "phase": "failed",
+        "reason_code": "NO_LEADER_LEASE",
+        "recorded_at": 123.5,
+        "lease": "123",
+        "revision": "10",
+        "password": "must-not-survive",
+        "message": "must-not-survive",
+        "identities": ["must-not-survive"],
+    }
+    monkeypatch.setattr(
+        cluster_lifecycle,
+        "compose",
+        lambda *args, **kwargs: SimpleNamespace(stdout=json.dumps(payload)),
+    )
+    assert cluster_lifecycle.fencing_audit() == [
+        {
+            "node": "postgresql-2",
+            "candidate": "postgresql-3",
+            "phase": "failed",
+            "reason_code": "NO_LEADER_LEASE",
+            "recorded_at": 123.5,
+            "lease": "123",
+            "revision": "10",
+        }
+    ]
+
+
 def test_quorum_waits_for_actual_streaming_peer(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

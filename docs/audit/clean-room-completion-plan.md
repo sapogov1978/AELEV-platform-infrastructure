@@ -16,6 +16,7 @@
 | [42487453085](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42487453085) | `b7a6b4b` | три полных PostgreSQL HA/backup lifecycles с отказами 1→2, 2→3, 3→1, все cleanup/source baselines | Нет | Адресный PASS всех трёх fault targets; native safety/fencing/DCS таймеры сохранены |
 | [42487455393](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42487455393) | `b7a6b4b` | полный telemetry onboarding с outage/recovery и Chromium; Translator queue/dedup/restart/Kafka outage без провайдера | Нет | Обе ранее недоступные функции получили адресный PASS |
 | [42489907582](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42489907582) | `b7a6b4b` | Полная приёмка, все 11 функций, чистый source/Docker baseline, cleanup | Нет | PASS; [проверяемый пакет](clean-room-b7a6b4b/RESULT.md) независимо проверен усиленным verifier |
+| [42494484872](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42494484872) | `0662a28` | root, Kafka, SQL/TLS/quorum/provision/isolation | pair-loss target 1: SQL 1/2 stopped, 3 replica, etcd 2/3 и fencer healthy; `NO_LEADER_LEASE` | Общий допуск открыт заново; audit timeline и natural-primary повторы обязательны до следующей полной приёмки |
 
 Не выполненные в конкретном run стадии не наследуют PASS из другого commit. Предыдущие отчёты сохраняются как доказательства своих ограниченных условий.
 

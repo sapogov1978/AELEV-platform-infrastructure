@@ -189,6 +189,42 @@ class FullLocalContractTests(unittest.TestCase):
             )
             self.assertFalse((output / "clean-room-evidence.json").exists())
 
+    def test_natural_and_directed_primary_repetitions_are_distinct(self) -> None:
+        for natural in (False, True):
+            with self.subTest(natural=natural), tempfile.TemporaryDirectory() as tmp:
+                output = Path(tmp)
+                bom = output / "release-bom.json"
+                bom.write_text(json.dumps({"source_commit": "a" * 40}))
+                stage = clean_room_gate.Stage("postgresql-lifecycle", (), ("test",), ())
+                arguments = argparse.Namespace(
+                    diagnostic_stage=[stage.identity],
+                    diagnostic_repetitions=3,
+                    diagnostic_natural_primary=natural,
+                )
+                with (
+                    mock.patch.object(
+                        clean_room_gate, "stage_plan", return_value=[stage]
+                    ),
+                    mock.patch.object(
+                        clean_room_gate, "docker_inventory", return_value={}
+                    ),
+                    mock.patch.object(
+                        clean_room_gate, "command", return_value=mock.Mock(stdout="")
+                    ),
+                    mock.patch.object(clean_room_gate, "run_logged") as run,
+                ):
+                    self.assertEqual(
+                        clean_room_gate.run_diagnostics(arguments, output, bom), 0
+                    )
+                self.assertEqual(
+                    [call.args[1] for call in run.call_args_list],
+                    (
+                        [("test",)] * 3
+                        if natural
+                        else [("test", "--fault-target", str(n)) for n in range(1, 4)]
+                    ),
+                )
+
     def test_diagnostic_stops_when_cleanup_changes_baseline(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary)
