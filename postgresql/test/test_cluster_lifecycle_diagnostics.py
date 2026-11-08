@@ -60,3 +60,18 @@ def test_command_failure_never_exposes_raw_output(
             "docker", "compose", operation="VERIFY_CLUSTER_SAFETY"
         )
     assert "must-not-survive" not in str(failure.value)
+
+
+def test_failure_signals_exclude_private_native_output() -> None:
+    output = (
+        "secret=must-not-survive https://private.invalid\n"
+        "reason_code=LEASE_CHANGED\n"
+        "reason_code=ARBITRARY_PRIVATE_TEXT\n"
+        "pre_promote script failed\nPermission denied\n"
+    )
+    assert cluster_lifecycle.failure_signals(output) == {
+        "PRE_PROMOTE_FAILED": 1,
+        "PRE_PROMOTE_COMMAND": 1,
+        "LEASE_CHANGED": 1,
+        "PERMISSION_DENIED": 1,
+    }

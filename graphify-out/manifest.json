@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794124703.968627,
-    "seen": 1794124801.081435,
-    "ast_hash": "e36848c49833d44214eec21895984630",
+    "mtime": 1794144390.8531373,
+    "seen": 1794144475.6528692,
+    "ast_hash": "0296f5dcddc87884938327e388a61b0b",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1812,9 +1812,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/cluster-lifecycle.py": {
-    "mtime": 1794104032.8848238,
-    "seen": 1794116042.325727,
-    "ast_hash": "a6316783a59d8dd665492d8894d2ee6b",
+    "mtime": 1794144411.439341,
+    "seen": 1794144475.6501849,
+    "ast_hash": "1106ae92bcd6f3931d199890b1af89c9",
     "semantic_hash": ""
   },
   "postgresql/test/fencing-lifecycle.py": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794104032.8858967,
-    "seen": 1794116042.34621,
-    "ast_hash": "6b972870c4d92a2ebbf53b00647ee006",
+    "mtime": 1794144390.8455157,
+    "seen": 1794144475.657131,
+    "ast_hash": "e94f6819e68d06aefbc5493babeecd53",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -4146,9 +4146,9 @@
     "semantic_hash": ""
   },
   "postgresql/USER_MANUAL.md": {
-    "mtime": 1793957755.110173,
-    "seen": 1793958131.6836019,
-    "ast_hash": "7bfa2f59c0d4877e0a4483687ce5b4cd",
+    "mtime": 1794144390.844598,
+    "seen": 1794144475.657182,
+    "ast_hash": "a4263c291d703310b3f67bbf7f93c67c",
     "semantic_hash": ""
   },
   "postgresql/test/client-renewal-result-20261023.md": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794100219.8880599,
-    "seen": 1794100259.733484,
-    "ast_hash": "cbd6bb1edef8f889d8f15faa6bce3595",
+    "mtime": 1794144464.3106997,
+    "seen": 1794144475.657783,
+    "ast_hash": "2a39395a68cb19cb72d47917479f2eaf",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6156,9 +6156,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794124746.4190931,
-    "seen": 1794124801.080439,
-    "ast_hash": "c3ddf789a62047257dbe9c46bf5d6a0d",
+    "mtime": 1794144411.4195402,
+    "seen": 1794144475.6518478,
+    "ast_hash": "81aa0f771e310f349469fbdb586cb955",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6174,15 +6174,15 @@
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1794095523.4936159,
-    "seen": 1794096174.095278,
-    "ast_hash": "7f3d82d033b9a43ed8204079ddc5b6dd",
+    "mtime": 1794144464.31029,
+    "seen": 1794144475.646879,
+    "ast_hash": "455e5430759097360e3843582042600c",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
-    "mtime": 1794096059.321081,
-    "seen": 1794096174.0994618,
-    "ast_hash": "cdc0855642e6f797b53907028cad74d3",
+    "mtime": 1794144411.4164565,
+    "seen": 1794144475.651328,
+    "ast_hash": "ba9801a276755485f734853b1c2ee209",
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
@@ -6252,15 +6252,21 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_cluster_lifecycle_diagnostics.py": {
-    "mtime": 1794104032.8853478,
-    "seen": 1794116042.325786,
-    "ast_hash": "a23ad9c0f0d6e35aae28a4ff4c715d63",
+    "mtime": 1794144321.3740427,
+    "seen": 1794144475.650222,
+    "ast_hash": "ea4d23ad3c98da5870daa5ea090a3c0e",
     "semantic_hash": ""
   },
   "public-egress-gateway/test/test_lifecycle_model.py": {
     "mtime": 1794121976.117744,
     "seen": 1794122165.930401,
     "ast_hash": "724addf095608d294b60e0466a60a784",
+    "semantic_hash": ""
+  },
+  "docs/audit/clean-room-completion-plan.md": {
+    "mtime": 1794144390.8539286,
+    "seen": 1794144475.65326,
+    "ast_hash": "97fe1daebbe896a6c799f40cf295658f",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

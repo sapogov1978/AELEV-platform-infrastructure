@@ -371,6 +371,83 @@ def ensure_external_output(path: Path) -> Path:
     return resolved
 
 
+def run_diagnostics(arguments: argparse.Namespace, output: Path, bom_path: Path) -> int:
+    """Exercise selected stages without manufacturing full acceptance evidence."""
+    selected = set(arguments.diagnostic_stage)
+    baseline = docker_inventory()
+    results: list[dict[str, Any]] = []
+    for repetition in range(1, arguments.diagnostic_repetitions + 1):
+        attempt = output / f"attempt-{repetition}"
+        for stage in stage_plan(arguments, attempt):
+            if stage.identity not in selected:
+                continue
+            started = datetime.now(UTC)
+            print(
+                json.dumps(
+                    {
+                        "stage": stage.identity,
+                        "attempt": repetition,
+                        "status": "STARTED",
+                    }
+                ),
+                flush=True,
+            )
+            environment = dict(os.environ)
+            environment.update(dict(stage.environment))
+            code: str | None = None
+            try:
+                run_logged(
+                    stage.identity,
+                    stage.command,
+                    attempt,
+                    cwd=stage.cwd,
+                    environment=environment,
+                    timeout=stage.timeout,
+                )
+                if any(
+                    not path.is_file() or not path.stat().st_size
+                    for path in stage.artifacts
+                ):
+                    raise GateError(f"STAGE_ARTIFACT_MISSING:{stage.identity}")
+            except (GateError, subprocess.TimeoutExpired) as error:
+                code = (
+                    str(error)
+                    if isinstance(error, GateError)
+                    else f"STAGE_TIMEOUT:{stage.identity}"
+                )
+            cleanup_preserved = docker_inventory() == baseline
+            source_clean = not command(["git", "status", "--porcelain"]).stdout
+            if not cleanup_preserved:
+                code = "DOCKER_BASELINE_NOT_PRESERVED"
+            if not source_clean:
+                code = "SOURCE_TREE_CHANGED_BY_GATE"
+            row = {
+                "stage": stage.identity,
+                "attempt": repetition,
+                "status": "FAIL" if code else "PASS",
+                "blocking_code": code,
+                "cleanup_preserved": cleanup_preserved,
+                "source_clean": source_clean,
+                "started_at": started.isoformat(),
+                "finished_at": datetime.now(UTC).isoformat(),
+            }
+            results.append(row)
+            write_json(
+                output / "diagnostic-run.json",
+                {
+                    "schema_version": 1,
+                    "profile": "full-local-diagnostic",
+                    "source_commit": json.loads(bom_path.read_text())["source_commit"],
+                    "bom_sha256": sha256(bom_path),
+                    "results": results,
+                },
+            )
+            print(json.dumps(row), flush=True)
+            if not cleanup_preserved or not source_clean:
+                return 2
+    return 2 if any(row["status"] != "PASS" for row in results) else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -380,7 +457,15 @@ def main() -> int:
     parser.add_argument("--chromium", type=Path, required=True)
     parser.add_argument("--allow-local-certificate", action="store_true")
     parser.add_argument("--list-stages", action="store_true")
+    parser.add_argument(
+        "--diagnostic-stage", action="append", choices=sorted(FUNCTION_STAGES)
+    )
+    parser.add_argument(
+        "--diagnostic-repetitions", type=int, choices=range(1, 4), default=1
+    )
     arguments = parser.parse_args()
+    if arguments.diagnostic_repetitions != 1 and not arguments.diagnostic_stage:
+        parser.error("--diagnostic-repetitions requires --diagnostic-stage")
     if arguments.list_stages:
         print(json.dumps(FUNCTION_STAGES, indent=2, sort_keys=True))
         return 0
@@ -413,6 +498,8 @@ def main() -> int:
             [sys.executable, "tools/full_local.py", "bom", "--output", str(bom_path)],
             output,
         )
+        if arguments.diagnostic_stage:
+            return run_diagnostics(arguments, output, bom_path)
         baseline = docker_inventory()
         function_artifacts: dict[str, list[dict[str, str]]] = {}
         for stage in stage_plan(arguments, output):

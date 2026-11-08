@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import argparse
 import importlib.util
 import json
 import os
@@ -115,6 +116,65 @@ class FullLocalContractTests(unittest.TestCase):
             sorted(mapped), sorted(manifest["acceptance"]["required_functions"])
         )
         self.assertEqual(len(mapped), len(set(mapped)))
+
+    def test_diagnostic_repeats_continue_after_failure_without_admission(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            bom = output / "release-bom.json"
+            bom.write_text(json.dumps({"source_commit": "a" * 40}))
+            stage = clean_room_gate.Stage("postgresql-lifecycle", (), ("test",), ())
+            arguments = argparse.Namespace(
+                diagnostic_stage=[stage.identity], diagnostic_repetitions=2
+            )
+            with (
+                mock.patch.object(clean_room_gate, "stage_plan", return_value=[stage]),
+                mock.patch.object(clean_room_gate, "docker_inventory", return_value={}),
+                mock.patch.object(
+                    clean_room_gate, "command", return_value=mock.Mock(stdout="")
+                ),
+                mock.patch.object(
+                    clean_room_gate,
+                    "run_logged",
+                    side_effect=[clean_room_gate.GateError("STAGE_FAILED:test"), None],
+                ) as run,
+            ):
+                code = clean_room_gate.run_diagnostics(arguments, output, bom)
+            self.assertEqual(code, 2)
+            self.assertEqual(run.call_count, 2)
+            result = json.loads((output / "diagnostic-run.json").read_text())
+            self.assertEqual(result["profile"], "full-local-diagnostic")
+            self.assertEqual(
+                [row["status"] for row in result["results"]], ["FAIL", "PASS"]
+            )
+            self.assertFalse((output / "clean-room-evidence.json").exists())
+
+    def test_diagnostic_stops_when_cleanup_changes_baseline(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            bom = output / "release-bom.json"
+            bom.write_text(json.dumps({"source_commit": "a" * 40}))
+            stage = clean_room_gate.Stage("postgresql-lifecycle", (), ("test",), ())
+            arguments = argparse.Namespace(
+                diagnostic_stage=[stage.identity], diagnostic_repetitions=3
+            )
+            with (
+                mock.patch.object(clean_room_gate, "stage_plan", return_value=[stage]),
+                mock.patch.object(
+                    clean_room_gate, "docker_inventory", side_effect=[{}, {"leak": []}]
+                ),
+                mock.patch.object(
+                    clean_room_gate, "command", return_value=mock.Mock(stdout="")
+                ),
+                mock.patch.object(clean_room_gate, "run_logged") as run,
+            ):
+                self.assertEqual(
+                    clean_room_gate.run_diagnostics(arguments, output, bom), 2
+                )
+            self.assertEqual(run.call_count, 1)
+            result = json.loads((output / "diagnostic-run.json").read_text())
+            self.assertEqual(
+                result["results"][0]["blocking_code"], "DOCKER_BASELINE_NOT_PRESERVED"
+            )
 
     def test_digest_pinned_image_is_not_a_build_tag(self) -> None:
         manifest = json.loads((ROOT / "full-local.json").read_text())
