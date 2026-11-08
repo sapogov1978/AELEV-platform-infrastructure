@@ -15,7 +15,9 @@ from lifecycle import (
     assert_sequence_advanced,
     capture_group_startup_diagnostic,
     capture_kafka_startup_diagnostic,
+    classify_group_start_failure,
     compose_prefix,
+    execute_group_start,
     execute_provision_task,
     run,
     status_provision_tasks,
@@ -286,6 +288,70 @@ def test_group_startup_diagnostic_has_only_bounded_state(
     assert len(payload["services"]["created"]["health"]["log"]) == 3
     assert len(payload["services"]["created"]["health"]["log"][-1]["output"]) == 1024
     assert "SECRET" not in output.read_text()
+
+
+@pytest.mark.parametrize(
+    ("message", "code"),
+    [
+        (
+            "network shared declared as external, but could not be found",
+            "EXTERNAL_NETWORK_MISSING",
+        ),
+        ("bind source path does not exist", "BIND_MOUNT_UNAVAILABLE"),
+        ("No such image: owner/image@sha256:secret", "IMAGE_UNAVAILABLE"),
+        ("port is already allocated", "HOST_PORT_CONFLICT"),
+        (
+            "container name x is already in use by container y",
+            "CONTAINER_NAME_CONFLICT",
+        ),
+        (
+            "dependency failed to start: container x is unhealthy",
+            "DEPENDENCY_NOT_READY",
+        ),
+        ("permission denied: /secret/path", "RUNTIME_PERMISSION_DENIED"),
+        ("unexpected token=must-not-survive", "COMPOSE_UP_FAILED"),
+    ],
+)
+def test_group_start_failure_is_reduced_to_fixed_code(message: str, code: str) -> None:
+    assert classify_group_start_failure(message) == code
+
+
+def test_repeated_group_start_failure_persists_no_raw_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "nested" / "group-startup-diagnostic.json"
+    monkeypatch.setattr(
+        "lifecycle.subprocess.run",
+        lambda *args, **kwargs: SimpleNamespace(
+            returncode=1,
+            stdout="expanded credential=must-not-survive\n",
+            stderr="dependency failed to start: token=must-not-survive\n",
+        ),
+    )
+    monkeypatch.setattr("lifecycle.states", lambda project: {})
+
+    with pytest.raises(
+        RuntimeError,
+        match="stage=down-up; reason=DEPENDENCY_NOT_READY",
+    ):
+        execute_group_start(
+            ["docker", "compose"],
+            "project",
+            {"service": {}},
+            output,
+            "down-up",
+        )
+
+    payload = json.loads(output.read_text())
+    assert payload == {
+        "code": "GROUP_STARTUP_FAILED",
+        "exit_code": 1,
+        "reason_code": "DEPENDENCY_NOT_READY",
+        "schema_version": 1,
+        "services": {"service": {"status": "not-created"}},
+        "stage": "down-up",
+    }
+    assert "must-not-survive" not in output.read_text()
 
 
 def test_provision_failure_keeps_only_fixed_safe_marker(

@@ -259,7 +259,13 @@ def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
 
 
 def capture_group_startup_diagnostic(
-    project: str, services: dict[str, Any], output: Path
+    project: str,
+    services: dict[str, Any],
+    output: Path,
+    *,
+    stage: str = "unspecified",
+    reason_code: str = "COMPOSE_UP_FAILED",
+    exit_code: int | None = None,
 ) -> None:
     current = states(project)
     rows: dict[str, dict[str, Any]] = {}
@@ -292,10 +298,109 @@ def capture_group_startup_diagnostic(
     payload = {
         "schema_version": 1,
         "code": "GROUP_STARTUP_FAILED",
+        "stage": stage,
+        "reason_code": reason_code,
+        "exit_code": exit_code,
         "services": rows,
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
+def classify_group_start_failure(output: str) -> str:
+    normalized = output.lower()
+    classifications = (
+        (
+            "EXTERNAL_NETWORK_MISSING",
+            (
+                "declared as external, but could not be found",
+                "network declared as external, but could not be found",
+            ),
+        ),
+        (
+            "BIND_MOUNT_UNAVAILABLE",
+            (
+                "bind source path does not exist",
+                "invalid mount config",
+                "error while creating mount source path",
+            ),
+        ),
+        (
+            "IMAGE_UNAVAILABLE",
+            ("no such image", "pull access denied", "manifest unknown"),
+        ),
+        (
+            "HOST_PORT_CONFLICT",
+            ("port is already allocated", "address already in use"),
+        ),
+        (
+            "CONTAINER_NAME_CONFLICT",
+            ("container name", "is already in use by container"),
+        ),
+        (
+            "DEPENDENCY_NOT_READY",
+            (
+                "dependency failed to start",
+                "dependency failed to complete",
+                "didn't complete successfully",
+                "is unhealthy",
+            ),
+        ),
+        ("RUNTIME_PERMISSION_DENIED", ("permission denied",)),
+    )
+    for code, markers in classifications:
+        if any(marker in normalized for marker in markers):
+            return code
+    return "COMPOSE_UP_FAILED"
+
+
+def execute_group_start(
+    prefix: list[str],
+    project: str,
+    services: dict[str, Any],
+    output: Path,
+    stage: str,
+) -> str:
+    arguments = [*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"]
+    try:
+        result = subprocess.run(
+            arguments, cwd=ROOT, capture_output=True, text=True, timeout=1200
+        )
+    except subprocess.TimeoutExpired:
+        reason_code = "COMPOSE_UP_TIMEOUT"
+        exit_code = None
+    else:
+        if not result.returncode:
+            return result.stdout
+        reason_code = classify_group_start_failure(result.stdout + "\n" + result.stderr)
+        exit_code = result.returncode
+    try:
+        capture_group_startup_diagnostic(
+            project,
+            services,
+            output,
+            stage=stage,
+            reason_code=reason_code,
+            exit_code=exit_code,
+        )
+    except Exception:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "code": "GROUP_STARTUP_FAILED",
+                    "stage": stage,
+                    "reason_code": reason_code,
+                    "exit_code": exit_code,
+                    "diagnostic_code": "GROUP_STATE_CAPTURE_FAILED",
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        )
+    raise RuntimeError("group start failed: stage=" + stage + "; reason=" + reason_code)
 
 
 def validate_owner_models(model: dict[str, Any]) -> None:
@@ -689,13 +794,14 @@ def run(args: argparse.Namespace) -> int:
         )
         passed("Реальная проверка/настройка MinIO site replication: exit 0")
         try:
-            execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
-        except RuntimeError:
-            capture_group_startup_diagnostic(
+            execute_group_start(
+                prefix,
                 project,
                 regular,
                 args.report.with_name("group-startup-diagnostic.json"),
+                "initial",
             )
+        except RuntimeError:
             capture_startup_diagnostic(
                 project,
                 "postgresql-fencer",
@@ -721,7 +827,13 @@ def run(args: argparse.Namespace) -> int:
         if any(row.get("Running") for row in states(project).values()):
             raise RuntimeError("a project container is still running after stop")
         passed("Общая остановка: ни один контейнер группы не работает")
-        execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
+        execute_group_start(
+            prefix,
+            project,
+            regular,
+            args.report.with_name("group-startup-diagnostic.json"),
+            "stop-up",
+        )
         wait_ready(project, regular, args.timeout)
         resumed = ui_snapshot(args, ids)
         assert_sequence_advanced(rows, resumed)
@@ -743,7 +855,13 @@ def run(args: argparse.Namespace) -> int:
         ):
             raise RuntimeError("persistent data missing")
         passed("Общее down сняло контейнеры; постоянные тома сохранены")
-        execute([*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"])
+        execute_group_start(
+            prefix,
+            project,
+            regular,
+            args.report.with_name("group-startup-diagnostic.json"),
+            "down-up",
+        )
         wait_ready(project, regular, args.timeout)
         recreated = ui_snapshot(args, ids)
         assert_sequence_advanced(rows, recreated)
