@@ -29,6 +29,28 @@ NATIVE = "public-egress-gateway"
 IDENTITY = "spiffe://example.test/workload/client-a"
 
 
+def classify_command_failure(output: str) -> str:
+    normalized = output.lower()
+    classifications = (
+        (
+            "BIND_MOUNT_UNAVAILABLE",
+            (
+                "bind source path does not exist",
+                "invalid mount config",
+                "error while creating mount source path",
+            ),
+        ),
+        ("HOST_PORT_CONFLICT", ("port is already allocated", "address already in use")),
+        ("IMAGE_UNAVAILABLE", ("no such image", "manifest unknown")),
+        ("DEPENDENCY_NOT_READY", ("dependency failed to start", "is unhealthy")),
+        ("RUNTIME_PERMISSION_DENIED", ("permission denied",)),
+    )
+    for code, markers in classifications:
+        if any(marker in normalized for marker in markers):
+            return code
+    return "PROCESS_FAILED"
+
+
 def run(
     arguments: list[str],
     *,
@@ -62,7 +84,10 @@ def run(
             if arguments[-1].isidentifier() or arguments[-1].replace("-", "").isalnum()
             else "target"
         )
-        raise RuntimeError("command failed: " + operation + " " + role)
+        reason = classify_command_failure(result.stdout + "\n" + result.stderr)
+        raise RuntimeError(
+            "command failed: " + operation + " " + role + "; reason=" + reason
+        )
     return result.stdout
 
 
@@ -161,6 +186,32 @@ def applied(root: Path, value: dict[str, object]) -> None:
     provision.apply(source, root / "grants", root / "audit", "lifecycle-operator")
 
 
+def validate_isolated_model(model: dict[str, Any], token: str) -> None:
+    service = model["services"][NATIVE]
+    missing = [
+        mount["target"]
+        for mount in service.get("volumes", [])
+        if mount["type"] == "bind" and not Path(mount["source"]).exists()
+    ]
+    if missing:
+        raise RuntimeError(
+            "isolated lifecycle bind source missing: " + ", ".join(sorted(missing))
+        )
+    for kind in ("networks", "volumes"):
+        foreign = [
+            name
+            for name, row in model.get(kind, {}).items()
+            if not str(row.get("name", "")).startswith(token + "-")
+        ]
+        if foreign:
+            raise RuntimeError(
+                "isolated lifecycle has non-temporary "
+                + kind
+                + ": "
+                + ", ".join(sorted(foreign))
+            )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -238,6 +289,10 @@ def main() -> None:
                 PREFIX + "UI_STATE_VOLUME": token + "-status",
                 PREFIX + "UI_SECRET_ROOT": str(root / "status"),
                 PREFIX + "UI_ADMIN_ROOT": str(root / "status-admin"),
+                PREFIX + "TELEMETRY_SECRET_ROOT": str(root / "secrets/telemetry"),
+                PREFIX + "TELEMETRY_SECRET_GID": str(os.getgid()),
+                PREFIX + "TELEMETRY_VOLUME": token + "-telemetry",
+                PREFIX + "TELEMETRY_NETWORK": token + "-telemetry",
             }
         )
         env_file = root / "settings.env"
@@ -260,7 +315,10 @@ def main() -> None:
             for name in ("client-a", "client-b", "unknown", None)
         )
         try:
-            run(compose + ["config", "--quiet"], environment=environment)
+            model = json.loads(
+                run(compose + ["config", "--format", "json"], environment=environment)
+            )
+            validate_isolated_model(model, token)
             run(compose + ["build", NATIVE], environment=environment)
             checks.append(
                 "Изолированная сборка только каталога провайдера: "

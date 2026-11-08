@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794104032.8863697,
-    "seen": 1794116042.333287,
-    "ast_hash": "dcb10b405ee8d708566f48d92a00dde8",
+    "mtime": 1794121948.9618006,
+    "seen": 1794122165.9352992,
+    "ast_hash": "2751b15f467a23db86cbe499cf240f5b",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1980,9 +1980,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/test/lifecycle.py": {
-    "mtime": 1793966284.5442655,
-    "seen": 1793966970.234624,
-    "ast_hash": "0cb75dbc6da96c0a919cf8bd8e2a49f3",
+    "mtime": 1794121948.9597058,
+    "seen": 1794122165.930253,
+    "ast_hash": "dbd57d0fd697f75b7fa2e8952a085a71",
     "semantic_hash": ""
   },
   "public-egress-gateway/test/renewal_artifact_sandbox.py": {
@@ -4248,9 +4248,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/CHANGELOG.md": {
-    "mtime": 1794007590.1385124,
-    "seen": 1794007607.275341,
-    "ast_hash": "0e38185093b08b11f598490a6d81cc51",
+    "mtime": 1794121948.9610782,
+    "seen": 1794122165.945096,
+    "ast_hash": "dcf6c48aff6d18b952851d4adb2d7d50",
     "semantic_hash": ""
   },
   "public-egress-gateway/ENDPOINTS.md": {
@@ -4284,9 +4284,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/test/README.md": {
-    "mtime": 1793957794.0828888,
-    "seen": 1793958131.6836412,
-    "ast_hash": "26a93f7de94dfe243277b7ecb8b920cb",
+    "mtime": 1794121948.9606032,
+    "seen": 1794122165.945232,
+    "ast_hash": "4d68850dc1e2e83a466ab8822f1a36dc",
     "semantic_hash": ""
   },
   "public-egress-gateway/test/lifecycle-result.md": {
@@ -6255,6 +6255,12 @@
     "mtime": 1794104032.8853478,
     "seen": 1794116042.325786,
     "ast_hash": "a23ad9c0f0d6e35aae28a4ff4c715d63",
+    "semantic_hash": ""
+  },
+  "public-egress-gateway/test/test_lifecycle_model.py": {
+    "mtime": 1794121976.117744,
+    "seen": 1794122165.930401,
+    "ast_hash": "724addf095608d294b60e0466a60a784",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
