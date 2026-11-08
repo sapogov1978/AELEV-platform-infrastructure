@@ -71,6 +71,8 @@ def main() -> None:
             "basicConstraints=critical,CA:TRUE",
             "-addext",
             "keyUsage=critical,keyCertSign,cRLSign",
+            "-addext",
+            "subjectKeyIdentifier=hash",
             "-keyout",
             str(issuer / f"{domain}.key"),
             "-out",
@@ -100,6 +102,8 @@ def main() -> None:
         )
         extensions = [
             "basicConstraints=critical,CA:FALSE",
+            "subjectKeyIdentifier=hash",
+            "authorityKeyIdentifier=keyid:always",
             "keyUsage=critical,digitalSignature,keyEncipherment",
             (
                 "extendedKeyUsage=clientAuth"
@@ -223,6 +227,8 @@ def prepare_fencing(values: dict[str, str]) -> None:
     extensions = destination / "server.extensions"
     extensions.write_text(
         "basicConstraints=critical,CA:FALSE\n"
+        "subjectKeyIdentifier=hash\n"
+        "authorityKeyIdentifier=keyid:always\n"
         "keyUsage=critical,digitalSignature,keyEncipherment\n"
         "extendedKeyUsage=serverAuth\nsubjectAltName=" + ",".join(alternatives) + "\n"
     )

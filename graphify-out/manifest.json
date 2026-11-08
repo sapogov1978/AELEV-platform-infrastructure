@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794144390.8531373,
-    "seen": 1794144475.6528692,
-    "ast_hash": "0296f5dcddc87884938327e388a61b0b",
+    "mtime": 1794144929.8312469,
+    "seen": 1794144995.969513,
+    "ast_hash": "a00439e6aec8ffae4bcb5e3881f621e1",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1728,9 +1728,9 @@
     "semantic_hash": ""
   },
   "postgresql/prepare-tls.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.1505332,
-    "ast_hash": "3e65d97cef55efc61de233aaa7af09ce",
+    "mtime": 1794144929.8280656,
+    "seen": 1794144995.966581,
+    "ast_hash": "b97dcccd92e4862f35bb50685086dc41",
     "semantic_hash": ""
   },
   "postgresql/pyproject.toml": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794144390.8455157,
-    "seen": 1794144475.657131,
-    "ast_hash": "e94f6819e68d06aefbc5493babeecd53",
+    "mtime": 1794144929.830349,
+    "seen": 1794144995.973922,
+    "ast_hash": "b3ed67ab208ff86f423dfbca461aa43d",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -4146,9 +4146,9 @@
     "semantic_hash": ""
   },
   "postgresql/USER_MANUAL.md": {
-    "mtime": 1794144390.844598,
-    "seen": 1794144475.657182,
-    "ast_hash": "a4263c291d703310b3f67bbf7f93c67c",
+    "mtime": 1794144929.8295217,
+    "seen": 1794144995.973975,
+    "ast_hash": "33c34d22bc9af15be0013e0d2969dd22",
     "semantic_hash": ""
   },
   "postgresql/test/client-renewal-result-20261023.md": {
@@ -6267,6 +6267,12 @@
     "mtime": 1794144390.8539286,
     "seen": 1794144475.65326,
     "ast_hash": "97fe1daebbe896a6c799f40cf295658f",
+    "semantic_hash": ""
+  },
+  "postgresql/test/test_prepare_tls.py": {
+    "mtime": 1794144946.8448741,
+    "seen": 1794144995.966849,
+    "ast_hash": "fd4c55833dabf52286138d2cf0168ca2",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
