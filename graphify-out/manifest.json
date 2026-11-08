@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794146010.691544,
-    "seen": 1794146144.59333,
-    "ast_hash": "0062943e30513cbc8521f3a59cf73a94",
+    "mtime": 1794151060.2690156,
+    "seen": 1794151189.373611,
+    "ast_hash": "3982ccee6e64a0e711e6cd0655fe1f2e",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794095826.7794538,
-    "seen": 1794096174.100906,
-    "ast_hash": "cb3505cf204351e06ea73dfa20535466",
+    "mtime": 1794151129.4213777,
+    "seen": 1794151189.37363,
+    "ast_hash": "97f271449b688f5b81bb80f62dfb575a",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -222,9 +222,9 @@
     "semantic_hash": ""
   },
   "docs/api/installation.md": {
-    "mtime": 1794069616.4566026,
-    "seen": 1794069656.6218581,
-    "ast_hash": "ef61ed9f19f30f36d66e40defaab96dd",
+    "mtime": 1794151129.4229195,
+    "seen": 1794151189.373894,
+    "ast_hash": "74ffd3a82b350ee1bac94260d64e971f",
     "semantic_hash": ""
   },
   "docs/api/internal-events.md": {
@@ -3090,9 +3090,9 @@
     "semantic_hash": ""
   },
   "TASKS.md": {
-    "mtime": 1794095967.1389973,
-    "seen": 1794096174.100925,
-    "ast_hash": "a90fb82c3b31b059fa4b21f34389815a",
+    "mtime": 1794151060.2644308,
+    "seen": 1794151189.373648,
+    "ast_hash": "0da783ff1312d1d90203e586da91c0e0",
     "semantic_hash": ""
   },
   "USER_MANUAL.md": {
@@ -3552,9 +3552,9 @@
     "semantic_hash": ""
   },
   "observability/grafana/README.md": {
-    "mtime": 1793961294.8954995,
-    "seen": 1793961484.0437691,
-    "ast_hash": "a35e6491e243a7a8f089a32aacd22afc",
+    "mtime": 1794151060.266114,
+    "seen": 1794151189.3766441,
+    "ast_hash": "39d0cd0acfe49f29fba0dc8e5179ed4d",
     "semantic_hash": ""
   },
   "observability/grafana/SPEC.md": {
@@ -4650,9 +4650,9 @@
     "semantic_hash": ""
   },
   "translator-service/TASKS.md": {
-    "mtime": 1793968045.8452756,
-    "seen": 1793968650.807504,
-    "ast_hash": "7d632fb5072ae1107d683039fbe37d12",
+    "mtime": 1794151129.4222958,
+    "seen": 1794151189.378677,
+    "ast_hash": "366de5d4db709f1f2f9a282116d8edd0",
     "semantic_hash": ""
   },
   "translator-service/USER_MANUAL.md": {
@@ -5088,9 +5088,9 @@
     "semantic_hash": ""
   },
   "docs/audit/production-readiness.md": {
-    "mtime": 1794096134.2786226,
-    "seen": 1794096174.102933,
-    "ast_hash": "7efc1189213c53c2fa108e8992290894",
+    "mtime": 1794151060.2670925,
+    "seen": 1794151189.3756301,
+    "ast_hash": "96db385df157081570e5d128de72f350",
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
@@ -6144,9 +6144,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
-    "mtime": 1793966748.7568605,
-    "seen": 1793966970.235414,
-    "ast_hash": "e1bb3c8f5aa6790365608aaeed1d4c61",
+    "mtime": 1794148698.9384487,
+    "seen": 1794151189.372087,
+    "ast_hash": "ab7cae9087abcd00f1792e1894c8711b",
     "semantic_hash": ""
   },
   "tools/full_local.py": {
@@ -6156,9 +6156,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794146093.6783133,
-    "seen": 1794146144.592333,
-    "ast_hash": "b52df3fa621b53673eda6b138d3104c1",
+    "mtime": 1794151131.1283903,
+    "seen": 1794151189.372612,
+    "ast_hash": "025932eff2b94cd8b1bb67046e477d17",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794146010.6910434,
-    "seen": 1794146144.5954938,
-    "ast_hash": "5117c099afd387fabd908cd9462d4e8a",
+    "mtime": 1794148697.7676775,
+    "seen": 1794151189.375659,
+    "ast_hash": "639ac54b79020a58a7222d5c83fd5b9a",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
@@ -6264,15 +6264,21 @@
     "semantic_hash": ""
   },
   "docs/audit/clean-room-completion-plan.md": {
-    "mtime": 1794145798.1890323,
-    "seen": 1794146144.5937212,
-    "ast_hash": "c803ad6169666eda1ce8d7f51190fd8a",
+    "mtime": 1794151060.268022,
+    "seen": 1794151189.373972,
+    "ast_hash": "9ccdc54b7369f9660a6915d16a9e5af8",
     "semantic_hash": ""
   },
   "postgresql/test/test_prepare_tls.py": {
     "mtime": 1794144946.8448741,
     "seen": 1794144995.966849,
     "ast_hash": "fd4c55833dabf52286138d2cf0168ca2",
+    "semantic_hash": ""
+  },
+  "docs/audit/clean-room-b7a6b4b/RESULT.md": {
+    "mtime": 1794151060.262824,
+    "seen": 1794151189.373971,
+    "ast_hash": "5665e06020fb4ab37d497e6e44241e59",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

@@ -45,9 +45,22 @@ def verify(evidence_path: Path, bom_path: Path, root: Path = ROOT) -> dict[str, 
     evidence = load_object(evidence_path)
     bom_bytes = bom_path.read_bytes()
     bom = json.loads(bom_bytes)
+    if not isinstance(bom, dict):
+        raise EvidenceError("BOM_OBJECT_REQUIRED")
     errors: list[str] = []
 
-    if evidence.get("schema_version") != 1:
+    if type(bom.get("schema_version")) is not int or bom.get("schema_version") != 1:
+        errors.append("BOM_SCHEMA_UNSUPPORTED")
+    if bom.get("profile") != "full-local":
+        errors.append("BOM_PROFILE_INVALID")
+    if bom.get("release") != release.get("version"):
+        errors.append("BOM_RELEASE_MISMATCH")
+    if bom.get("source_dirty") is not False:
+        errors.append("BOM_SOURCE_NOT_CLEAN")
+    if (
+        type(evidence.get("schema_version")) is not int
+        or evidence.get("schema_version") != 1
+    ):
         errors.append("EVIDENCE_SCHEMA_UNSUPPORTED")
     if evidence.get("profile") != "full-local":
         errors.append("EVIDENCE_PROFILE_INVALID")

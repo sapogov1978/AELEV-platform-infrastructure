@@ -124,7 +124,7 @@ python3 test_infrastructure/clean_room.py \
   --evidence evidence/clean-room-evidence.json
 ```
 
-Verifier сверяет точный набор функций, release/source, digest BOM, SHA-256 каждого артефакта, чистый baseline, успешную сохранность cleanup и итог `PASS`. Он не превращает старые отчёты в новый прогон.
+Verifier сверяет точный набор функций, schema/profile/release обоих документов, согласованный source commit, строгое `source_dirty=false` в BOM, digest BOM, SHA-256 каждого артефакта, чистый baseline, успешную сохранность cleanup и итог `PASS`. Чужая версия/profile/schema, dirty или отсутствующий флаг чистоты отклоняются даже при правильно пересчитанном хеше BOM. Он не превращает старые отчёты в новый прогон.
 
 Ручной workflow `clean-room-full-local` создаёт одноразовый GitHub-hosted Ubuntu runner, получает exact digests из версионируемого manifest, использует созданную `init` временную operator identity и уничтожает всю машину после job. Пользовательский сервер, постоянный runner, repository variables и передача пароля в GitHub Secrets не требуются. `GITHUB_TOKEN` имеет только `contents:read` и `packages:read`. Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
 

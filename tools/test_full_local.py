@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import tarfile
 import tempfile
 import unittest
 from pathlib import Path
@@ -527,6 +528,30 @@ class FullLocalContractTests(unittest.TestCase):
                 )
             command.assert_not_called()
 
+    def test_archived_full_evidence_is_immutable_and_verifiable(self) -> None:
+        archive = ROOT / "docs/audit/clean-room-b7a6b4b/evidence.tar.gz"
+        self.assertEqual(
+            hashlib.sha256(archive.read_bytes()).hexdigest(),
+            "a51d0bc577ecdc5d060458663491a6176c0eea7c2c91dc9b6f2fc86c6af467c0",
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            extracted = Path(temporary)
+            with tarfile.open(archive) as package:
+                self.assertTrue(
+                    all(
+                        member.isfile() or member.isdir()
+                        for member in package.getmembers()
+                    )
+                )
+                package.extractall(extracted, filter="data")
+            result = clean_room.verify(
+                extracted / "clean-room-evidence.json",
+                extracted / "release-bom.json",
+                extracted,
+            )
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(result["verified_functions"], 11)
+
     def test_complete_evidence_verifies_and_tamper_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -545,6 +570,7 @@ class FullLocalContractTests(unittest.TestCase):
                 "profile": "full-local",
                 "release": "0.2.0",
                 "source_commit": source_commit,
+                "source_dirty": False,
             }
             bom_path = root / "release-bom.json"
             bom_path.write_text(
@@ -576,6 +602,27 @@ class FullLocalContractTests(unittest.TestCase):
 
             result = clean_room.verify(evidence_path, bom_path, root)
             self.assertEqual(result["status"], "PASS")
+
+            for field, value, expected in (
+                ("schema_version", 2, "BOM_SCHEMA_UNSUPPORTED"),
+                ("profile", "core", "BOM_PROFILE_INVALID"),
+                ("release", "0.0.0", "BOM_RELEASE_MISMATCH"),
+                ("source_dirty", True, "BOM_SOURCE_NOT_CLEAN"),
+                ("source_dirty", 0, "BOM_SOURCE_NOT_CLEAN"),
+            ):
+                original = bom[field]
+                bom[field] = value
+                bom_path.write_text(json.dumps(bom), encoding="utf-8")
+                evidence["bom_sha256"] = hashlib.sha256(
+                    bom_path.read_bytes()
+                ).hexdigest()
+                evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
+                invalid = clean_room.verify(evidence_path, bom_path, root)
+                self.assertIn(expected, invalid["blocking_codes"])
+                bom[field] = original
+            bom_path.write_text(json.dumps(bom), encoding="utf-8")
+            evidence["bom_sha256"] = hashlib.sha256(bom_path.read_bytes()).hexdigest()
+            evidence_path.write_text(json.dumps(evidence), encoding="utf-8")
 
             artifact.write_text("tampered\n", encoding="utf-8")
             result = clean_room.verify(evidence_path, bom_path, root)
