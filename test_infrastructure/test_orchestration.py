@@ -486,6 +486,46 @@ def test_bounded_on_failure_role_is_ready_after_successful_exit(
     )
 
 
+def test_native_postgresql_return_waits_for_health_within_existing_deadline(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from unittest.mock import Mock
+
+    stopped = {
+        "Status": "exited",
+        "Running": False,
+        "ExitCode": 0,
+        "OOMKilled": False,
+        "Health": {"Status": "unhealthy"},
+    }
+    ready = {"Status": "running", "Running": True, "Health": {"Status": "healthy"}}
+    description = {
+        "restart": "no",
+        "healthcheck": {"test": ["CMD", "probe"]},
+        "labels": {
+            "io.aelev.postgresql.node": "postgresql-3",
+            "io.aelev.postgresql.cluster": "test",
+        },
+        "environment": {
+            "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER": "test",
+            "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE": "docker",
+        },
+    }
+    samples = Mock(
+        side_effect=[
+            {"postgresql-3": stopped, "postgresql-fencer": ready},
+            {"postgresql-3": ready, "postgresql-fencer": ready},
+        ]
+    )
+    monkeypatch.setattr("lifecycle.states", samples)
+    monkeypatch.setattr("lifecycle.time.sleep", lambda _: None)
+    wait_ready("project", {"postgresql-3": description}, 1)
+    assert samples.call_count == 2
+    monkeypatch.setattr("lifecycle.states", lambda _: {"postgresql-3": stopped})
+    with pytest.raises(RuntimeError, match="exited before readiness"):
+        wait_ready("project", {"postgresql-3": description}, 1)
+
+
 def test_ui_timeout_diagnostic_contains_only_bounded_status_fields(
     tmp_path: Path,
 ) -> None:

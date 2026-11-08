@@ -492,10 +492,28 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
                 ready = state.get("Running") is True
             if not ready:
                 pending.append(name)
+                environment = description.get("environment", {})
+                labels = description.get("labels", {})
+                fencer = current.get("postgresql-fencer", {})
+                native_return = (
+                    labels.get("io.aelev.postgresql.node")
+                    in {"postgresql-1", "postgresql-2", "postgresql-3"}
+                    and bool(labels.get("io.aelev.postgresql.cluster"))
+                    and labels.get("io.aelev.postgresql.cluster")
+                    == environment.get("AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER")
+                    and environment.get("AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE")
+                    == "docker"
+                    and fencer.get("Running") is True
+                    and fencer.get("Health", {}).get("Status") == "healthy"
+                    and state.get("Status") == "exited"
+                    and state.get("ExitCode") in {0, 137}
+                    and state.get("OOMKilled") is False
+                )
                 if (
                     description.get("healthcheck")
                     and description.get("restart") == "no"
                     and state.get("Status") in {"dead", "exited"}
+                    and not native_return
                 ):
                     terminal.append(name)
         if terminal:

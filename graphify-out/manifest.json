@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794154744.6063368,
-    "seen": 1794154753.5927129,
-    "ast_hash": "2264b414ec033be5b108fc8ed0d253df",
+    "mtime": 1794171507.4448152,
+    "seen": 1794171516.823832,
+    "ast_hash": "e81969fcaa3fdd7185ac4263142c14cb",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1770,9 +1770,9 @@
     "semantic_hash": ""
   },
   "postgresql/src/aelev_postgresql/fencing.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150538,
-    "ast_hash": "015bb400c311e68345909f2bf0d3e3a7",
+    "mtime": 1794171243.0711644,
+    "seen": 1794171516.821088,
+    "ast_hash": "cbde48f183c4270b01b2825db7d1d0cc",
     "semantic_hash": ""
   },
   "postgresql/src/aelev_postgresql/fencing_intent.py": {
@@ -1788,9 +1788,9 @@
     "semantic_hash": ""
   },
   "postgresql/src/aelev_postgresql/fencing_return.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.15054,
-    "ast_hash": "730dbd361018f55da3c4d0f1cd33fead",
+    "mtime": 1794171242.9835835,
+    "seen": 1794171516.821114,
+    "ast_hash": "495414ff19217de796412a22eb8e5da3",
     "semantic_hash": ""
   },
   "postgresql/src/aelev_postgresql/health.py": {
@@ -1848,9 +1848,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_fencing_return.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.1505458,
-    "ast_hash": "b5f9ddb0c683e46087ffcea0bcfb02cb",
+    "mtime": 1794171321.215151,
+    "seen": 1794171516.8212302,
+    "ast_hash": "7a4583f205afa7caf34ee337a4690137",
     "semantic_hash": ""
   },
   "postgresql/test/test_health.py": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794100225.664938,
-    "seen": 1794100259.727295,
-    "ast_hash": "447476ff7e5ab6e3365ecb0a3aa09fa8",
+    "mtime": 1794171321.336321,
+    "seen": 1794171516.82231,
+    "ast_hash": "0a6e7ac12ded2aa7d3dafd24063f268f",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -2496,9 +2496,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_orchestration.py": {
-    "mtime": 1794100219.887538,
-    "seen": 1794100259.727412,
-    "ast_hash": "423d424f2b47d2d60c50e44cef806c00",
+    "mtime": 1794171321.2593849,
+    "seen": 1794171516.822434,
+    "ast_hash": "daa8fe31898d514829ae9bde87b9a336",
     "semantic_hash": ""
   },
   "test_infrastructure/test_recovery.py": {
@@ -4116,15 +4116,15 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794146185.758962,
-    "seen": 1794146258.756576,
-    "ast_hash": "3f8462548ad73af978e606805cd79a9a",
+    "mtime": 1794171507.4454825,
+    "seen": 1794171516.8287418,
+    "ast_hash": "688aaea20f915b3801e0937e5a03dcef",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
-    "mtime": 1794082276.4135265,
-    "seen": 1794082371.928011,
-    "ast_hash": "b5b069aad0213cce8a3bc831c84f07be",
+    "mtime": 1794171507.4467182,
+    "seen": 1794171516.828743,
+    "ast_hash": "b3a8314919a7f91897f6cfd96a20db26",
     "semantic_hash": ""
   },
   "postgresql/README.md": {
@@ -4134,9 +4134,9 @@
     "semantic_hash": ""
   },
   "postgresql/SPEC.md": {
-    "mtime": 1793957755.0752387,
-    "seen": 1793958131.683591,
-    "ast_hash": "94769365479c58b7d4d8de5747f8a210",
+    "mtime": 1794171507.44599,
+    "seen": 1794171516.828765,
+    "ast_hash": "3f4ae15962c9fe77be0dbb873adc8ba5",
     "semantic_hash": ""
   },
   "postgresql/TASKS.md": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794146092.4806046,
-    "seen": 1794146144.5982,
-    "ast_hash": "041afb4d59bfd22a3fbee601a0ce77f7",
+    "mtime": 1794171507.447284,
+    "seen": 1794171516.82952,
+    "ast_hash": "9842ca03608cc32c54c67ec3b5b203b8",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6264,9 +6264,9 @@
     "semantic_hash": ""
   },
   "docs/audit/clean-room-completion-plan.md": {
-    "mtime": 1794154744.6067333,
-    "seen": 1794154753.5931342,
-    "ast_hash": "cff0e04b8ec460b1a2089e5a598c5e76",
+    "mtime": 1794171507.4478426,
+    "seen": 1794171516.8242319,
+    "ast_hash": "7e65dfd527b3bdf1a572c9480178b0ef",
     "semantic_hash": ""
   },
   "postgresql/test/test_prepare_tls.py": {
@@ -6279,6 +6279,12 @@
     "mtime": 1794151060.262824,
     "seen": 1794151189.373971,
     "ast_hash": "5665e06020fb4ab37d497e6e44241e59",
+    "semantic_hash": ""
+  },
+  "postgresql/test/test_dcs_transport.py": {
+    "mtime": 1794171242.942963,
+    "seen": 1794171516.821218,
+    "ast_hash": "56d602cafcf488faf6d12dd8654fe737",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

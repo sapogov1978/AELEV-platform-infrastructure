@@ -25,6 +25,7 @@ from aelev_postgresql.fencing import (
     Claim,
     Docker,
     FencingError,
+    read_dcs,
     request_json,
 )
 from aelev_postgresql.fencing_intent import RETURN_DELAYS, IntentStore
@@ -49,18 +50,19 @@ def confirmed_claim() -> Claim | None:
     members: set[str] = set()
     cluster: str | None = None
     revision = 0
-    for number in range(1, 4):
-        endpoint = (
-            f"https://{setting(f'NODE_{number}_ETCD_HOST')}:"
-            f"{setting(f'NODE_{number}_ETCD_CLIENT_PORT')}/v3/kv/range"
-        )
-        if endpoint in endpoints:
-            continue
-        endpoints.add(endpoint)
+    for _ in range(3):
         try:
-            data = request_json(endpoint, {"key": key, "serializable": False}, context)
-        except OSError:
-            continue
+            endpoint, data = read_dcs(
+                context,
+                {"key": key, "serializable": False},
+                endpoints,
+                reader=request_json,
+            )
+        except FencingError as error:
+            if error.code != "DCS_UNAVAILABLE":
+                raise
+            break
+        endpoints.add(endpoint)
         if not isinstance(data, dict) or not isinstance(data.get("header"), dict):
             raise FencingError("Invalid native DCS header", "DCS_RESPONSE_INVALID")
         header = data["header"]

@@ -15,6 +15,23 @@ from aelev_postgresql import fencing, fencing_intent, fencing_return
 from aelev_postgresql.configuration import PREFIX
 
 
+def use_ordered_dcs_fixture(monkeypatch: Any) -> None:
+    """Keep validation cases deterministic; transport races have their own tests."""
+
+    def read(context: Any, payload: Any, excluded: set[str], reader: Any) -> Any:
+        for number in range(1, 4):
+            endpoint = f"https://etcd-{number}:2379/v3/kv/range"
+            if endpoint in excluded:
+                continue
+            try:
+                return endpoint, reader(endpoint, payload, context)
+            except OSError:
+                continue
+        raise fencing.FencingError("No reachable endpoint", "DCS_UNAVAILABLE")
+
+    monkeypatch.setattr(fencing_return, "read_dcs", read)
+
+
 @pytest.fixture
 def rig(monkeypatch: Any, tmp_path: Path) -> Any:
     monkeypatch.setattr(fencing_intent, "ROOT", tmp_path / "state")
@@ -250,6 +267,7 @@ def test_journal_failure_before_dispatch_never_starts(rig: Any) -> None:
 def test_native_dcs_reads_require_two_matching_linearizable_answers(
     monkeypatch: Any, values: list[Any], code: str | None
 ) -> None:
+    use_ordered_dcs_fixture(monkeypatch)
     monkeypatch.setenv(PREFIX + "CLUSTER", "unit")
     for n in (1, 2, 3):
         monkeypatch.setenv(PREFIX + f"NODE_{n}_ETCD_HOST", f"etcd-{n}")
@@ -338,6 +356,7 @@ def test_lease_appears_or_disappears_before_start_defers(
 def test_absence_needs_two_valid_native_member_responses(
     monkeypatch: Any, bad: str
 ) -> None:
+    use_ordered_dcs_fixture(monkeypatch)
     monkeypatch.setenv(PREFIX + "CLUSTER", "unit")
     for n in (1, 2, 3):
         monkeypatch.setenv(PREFIX + f"NODE_{n}_ETCD_HOST", f"etcd-{n}")

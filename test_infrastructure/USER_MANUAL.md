@@ -12,6 +12,8 @@
 
 ## Файлы и операторское окружение
 
+При общем старте native Docker fencing может временно остановить собственный SQL peer. Тест допускает ожидание его возврата только до прежнего readiness deadline, при совпадающих labels/cluster, Docker-fencing и здоровом исполнителе, без OOM; готовность требует реального `healthy` процесса. Отсутствие исполнителя, чужая роль, другой механизм и прочие terminal exits по-прежнему прекращают проверку. Тест не запускает остановленную роль сам и не обходит защиту Patroni.
+
 `lifecycle.py` — настоящий совместный жизненный цикл; `resources.py` — учёт владения/очистка; `test_orchestration.py` — отдельные регрессии конфигурационной границы и защиты ресурсов; `test_dependency_security.py` — безопасность собственного кэша Black и временного каталога pytest с проверкой сохранения результата форматирования. `pyproject.toml` и `poetry.lock` закрепляют инструменты на прежнем Python 3.13/Poetry 2.2.1; Playwright 1.56.0 используется только операторским тестом, не runtime. [Результат жизненного цикла](lifecycle-result.md) и [снимок](lifecycle-result.png) предназначены человеку; [прежние модульные проверки](pytest-result.md) и [проверка обновления инструментов](dependency-security-result.md) не выдаются за запуск Docker.
 
 Проверьте `python3.13 --version`, `poetry --version`, `docker version`, `docker compose version` и наличие Chromium. Установка Python/Docker описана в README наблюдения, Poetry — в [официальном руководстве](https://python-poetry.org/docs/#installation). Из этого каталога:

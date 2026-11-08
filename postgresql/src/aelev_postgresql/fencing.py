@@ -13,6 +13,7 @@ import http.client
 import json
 import logging
 import os
+import queue
 import re
 import socket
 import ssl
@@ -27,10 +28,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from aelev_postgresql.__main__ import SECRETS, setting, tls_context
+from aelev_postgresql.__main__ import SECRETS, safety_config, setting, tls_context
 from aelev_postgresql.fencing_intent import IntentStore
 
 NODES = {f"postgresql-{number}" for number in range(1, 4)}
+DCS_SLOTS = {number: threading.BoundedSemaphore(1) for number in range(1, 4)}
 CLUSTER_LABEL = "io.aelev.postgresql.cluster"
 NODE_LABEL = "io.aelev.postgresql.node"
 KUBERNETES_NAMESPACE = Path("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
@@ -101,6 +103,67 @@ def request_json(
         return value
 
 
+def read_dcs(
+    context: ssl.SSLContext,
+    payload: dict[str, Any],
+    excluded: set[str] | None = None,
+    reader: Any = None,
+) -> tuple[str, dict[str, Any]]:
+    """Race fresh linearizable reads within the native retry budget.
+
+    DNS resolution is not covered by urllib's socket timeout. Daemon workers
+    and one in-flight network request per endpoint bound that uncertainty;
+    delayed responses belong only to this call and are never reused.
+    """
+    deadline = time.monotonic() + float(safety_config()["retry_timeout"])
+    responses: queue.Queue[tuple[str, dict[str, Any] | Exception]] = queue.Queue()
+    finished = threading.Event()
+    read = request_json if reader is None else reader
+
+    def worker(number: int, endpoint: str) -> None:
+        remaining = max(0.0, deadline - time.monotonic())
+        slot = DCS_SLOTS[number]
+        if not slot.acquire(timeout=remaining):
+            responses.put((endpoint, OSError("DCS endpoint busy")))
+            return
+        try:
+            if finished.is_set() or time.monotonic() >= deadline:
+                raise TimeoutError("DCS read budget exhausted")
+            data = read(endpoint, payload, context)
+            responses.put((endpoint, data))
+        except Exception as error:
+            responses.put((endpoint, error))
+        finally:
+            slot.release()
+
+    endpoints: set[str] = set()
+    for number in range(1, 4):
+        endpoint = (
+            f"https://{setting(f'NODE_{number}_ETCD_HOST')}:"
+            f"{setting(f'NODE_{number}_ETCD_CLIENT_PORT')}/v3/kv/range"
+        )
+        if endpoint in endpoints or endpoint in (excluded or set()):
+            continue
+        endpoints.add(endpoint)
+        threading.Thread(target=worker, args=(number, endpoint), daemon=True).start()
+    for _ in endpoints:
+        try:
+            endpoint, data = responses.get(
+                timeout=max(0.0, deadline - time.monotonic())
+            )
+        except queue.Empty:
+            break
+        if isinstance(data, OSError):
+            continue
+        if isinstance(data, Exception):
+            finished.set()
+            raise data
+        finished.set()
+        return endpoint, data
+    finished.set()
+    raise FencingError("No reachable linearizable DCS endpoint", "DCS_UNAVAILABLE")
+
+
 @dataclass(frozen=True)
 class Claim:
     """Identity of Patroni's existing etcd leader-key incarnation, not a new lock."""
@@ -117,33 +180,21 @@ class Claim:
         context.load_cert_chain(
             SECRETS / "etcd-client.crt", SECRETS / "etcd-client.key"
         )
-        for number in range(1, 4):
-            endpoint = (
-                f"https://{setting(f'NODE_{number}_ETCD_HOST')}:"
-                f"{setting(f'NODE_{number}_ETCD_CLIENT_PORT')}/v3/kv/range"
-            )
-            try:
-                data = request_json(
-                    endpoint,
-                    {
-                        "key": base64.b64encode(key.encode()).decode(),
-                        "serializable": False,
-                    },
-                    context,
-                )
-            except OSError:
-                continue
-            rows = data.get("kvs", [])
-            if len(rows) != 1:
-                raise FencingError("No current Patroni leader lease", "NO_LEADER_LEASE")
-            row = rows[0]
-            name = base64.b64decode(row["value"], validate=True).decode()
-            if name not in NODES or str(row.get("lease", "0")) == "0":
-                raise FencingError(
-                    "Invalid Patroni leader lease", "INVALID_LEADER_LEASE"
-                )
-            return cls(name, str(row["lease"]), str(row["create_revision"]))
-        raise FencingError("No reachable linearizable DCS endpoint", "DCS_UNAVAILABLE")
+        _, data = read_dcs(
+            context,
+            {
+                "key": base64.b64encode(key.encode()).decode(),
+                "serializable": False,
+            },
+        )
+        rows = data.get("kvs", [])
+        if len(rows) != 1:
+            raise FencingError("No current Patroni leader lease", "NO_LEADER_LEASE")
+        row = rows[0]
+        name = base64.b64decode(row["value"], validate=True).decode()
+        if name not in NODES or str(row.get("lease", "0")) == "0":
+            raise FencingError("Invalid Patroni leader lease", "INVALID_LEADER_LEASE")
+        return cls(name, str(row["lease"]), str(row["create_revision"]))
 
     def verify(self) -> None:
         """Reject a changed, expired, or unreachable Patroni leader lease."""
