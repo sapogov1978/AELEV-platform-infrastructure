@@ -117,6 +117,46 @@ class FullLocalContractTests(unittest.TestCase):
         )
         self.assertEqual(len(mapped), len(set(mapped)))
 
+    def test_telemetry_uses_sender_sdk_and_locked_browser_driver(self) -> None:
+        model = {
+            "services": {
+                "delivery": {"image": "archive-with-different-entrypoint"},
+                "spire-telemetry-sender": {"image": "spire-sender"},
+                "grafana": {"image": "grafana"},
+                "translator-api": {"image": "translator"},
+            }
+        }
+        arguments = argparse.Namespace(
+            ui_url="https://127.0.0.1:18082",
+            viewer_user="operator",
+            viewer_password_file=Path("/tmp/password"),
+            chromium=Path("/usr/bin/chromium"),
+            allow_local_certificate=True,
+        )
+        with (
+            mock.patch.object(
+                clean_room_gate, "rendered_root_model", return_value=model
+            ),
+            mock.patch.object(
+                clean_room_gate, "exact_image", side_effect=lambda ref: ref
+            ),
+        ):
+            stages = clean_room_gate.stage_plan(arguments, Path("/tmp/evidence"))
+        telemetry = next(
+            stage for stage in stages if stage.identity == "telemetry-onboarding"
+        )
+        self.assertEqual(
+            telemetry.command[0:4],
+            ("poetry", "--directory", "test_infrastructure", "run"),
+        )
+        reference = json.loads((ROOT / "full-local.json").read_text())["build_inputs"][
+            0
+        ]["admitted_reference"]
+        self.assertEqual(
+            telemetry.command[telemetry.command.index("--sender-image") + 1], reference
+        )
+        self.assertNotIn("archive-with-different-entrypoint", telemetry.command)
+
     def test_diagnostic_repeats_continue_after_failure_without_admission(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary)
@@ -192,7 +232,7 @@ class FullLocalContractTests(unittest.TestCase):
         self.assertEqual(pinned_pulls, ["release-pull"])
         self.assertEqual(manifest["profile"], "full-local")
 
-    def test_build_fetches_declared_acceptance_image_without_starting(self) -> None:
+    def test_build_fetches_acceptance_and_sdk_inputs_without_starting(self) -> None:
         reference = (
             "python:3.13.7-alpine3.22@sha256:"
             "9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844"
@@ -205,6 +245,12 @@ class FullLocalContractTests(unittest.TestCase):
                 }
             ],
             "local_builds": [],
+            "build_inputs": [
+                {
+                    "kind": "container-image-digest",
+                    "admitted_reference": "example.invalid/sdk@sha256:" + "b" * 64,
+                }
+            ],
         }
         initialized = {"profile": "full-local", "containers_started": False}
         model = {"root": {"services": {}}}
@@ -221,8 +267,15 @@ class FullLocalContractTests(unittest.TestCase):
         ):
             result = full_local.build_profile(ROOT)
 
-        stream.assert_called_once_with(["docker", "pull", reference], cwd=ROOT)
-        self.assertEqual(result["pinned_pull_images"], [reference])
+        sdk = manifest["build_inputs"][0]["admitted_reference"]
+        self.assertEqual(
+            stream.call_args_list,
+            [
+                mock.call(["docker", "pull", reference], cwd=ROOT),
+                mock.call(["docker", "pull", sdk], cwd=ROOT),
+            ],
+        )
+        self.assertEqual(result["pinned_pull_images"], sorted([reference, sdk]))
         self.assertFalse(result["containers_started"])
 
     def test_new_env_identity_adaptation_preserves_existing_files(self) -> None:

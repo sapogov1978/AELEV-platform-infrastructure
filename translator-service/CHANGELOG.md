@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-08: run `42485163225` подтвердил ложный missing-image preflight: нужный PostgreSQL digest присутствовал, но snapshot видел только `postgres:<none>`. Владельческий lifecycle теперь учитывает exact repository digests из `image ls --digests`; тест подтверждает допуск нужного digest без tag и отказ подмены другим digest. Runtime, Kafka-контракты и provider boundary сохраняются.
+
 - 2026-11-08: необязательная provider/worker compute-ячейка исключена из `full-local`, release BOM, production admission и владельческой строки Platform UI. Способ размещения провайдера не выбран; прежний standalone-рецепт сохранён отдельно. Реальный lifecycle проверяет сохранение и дедупликацию обеих очередей без провайдера, полный restart и отказ Kafka без потери ожидающей работы.
 
 - 2026-11-07: шаблон telemetry sender закреплён на подписанном owner-controlled multi-architecture GHCR digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` вместо недоступного Docker Hub sender 1.0.7. Очередь, provider boundary, compute images, журналы и исторический rollout evidence не меняются.

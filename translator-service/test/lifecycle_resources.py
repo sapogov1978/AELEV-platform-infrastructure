@@ -15,7 +15,7 @@ def snapshot(execute: Callable[[list[str]], str]) -> Inventory:
         "containers": ["container", "ls", "--all", "--no-trunc"],
         "networks": ["network", "ls", "--no-trunc"],
         "volumes": ["volume", "ls"],
-        "images": ["image", "ls", "--no-trunc"],
+        "images": ["image", "ls", "--no-trunc", "--digests"],
     }.items():
         output = execute(["docker", *arguments, "--format", "json"])
         resources: dict[str, dict[str, str]] = {}
@@ -28,12 +28,17 @@ def snapshot(execute: Callable[[list[str]], str]) -> Inventory:
                 if "=" in item
             )
             if kind == "images":
-                reference = row["Repository"] + ":" + row["Tag"]
                 references = set(
                     resources.get(identity, {}).get("references", "").split(",")
                 )
                 references.discard("")
-                references.add(reference)
+                repository = row["Repository"]
+                if repository and repository != "<none>":
+                    if row["Tag"] != "<none>":
+                        references.add(repository + ":" + row["Tag"])
+                    digest = row.get("Digest", "")
+                    if digest.startswith("sha256:"):
+                        references.add(repository + "@" + digest)
                 resources[identity] = {"references": ",".join(sorted(references))}
             else:
                 resources[identity] = {

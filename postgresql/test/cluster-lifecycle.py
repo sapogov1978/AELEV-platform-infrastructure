@@ -157,15 +157,66 @@ def wait_writer(excluded: int | None = None) -> int:
     """Wait for exactly one reachable writable member."""
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline:
-        writers = [
-            node
-            for node, replica in roles().items()
-            if not replica and node != excluded
-        ]
-        if len(writers) == 1:
+        writers = [node for node, replica in roles().items() if not replica]
+        if len(writers) == 1 and writers[0] != excluded:
             return writers[0]
         time.sleep(2)
     raise TimeoutError("A unique new writer did not become available")
+
+
+def synchronous_quorum(node: int) -> dict[str, Any]:
+    """Read actual SQL readiness independently of process health and DCS config."""
+    response = execute(
+        node,
+        "import json\nwith connection() as c:\n"
+        " print(json.dumps({'commit_on':c.execute('SHOW synchronous_commit').fetchone()[0]=='on',"
+        "'quorum_rule':c.execute('SHOW synchronous_standby_names').fetchone()[0].startswith('ANY 1'),"
+        "'sync_replicas':c.execute(\"SELECT count(*) FROM pg_stat_replication WHERE state='streaming' AND sync_state IN ('sync','quorum')\").fetchone()[0]}))",
+        operation="READ_SYNCHRONOUS_QUORUM",
+    )
+    result: dict[str, Any] = json.loads(response.stdout)
+    return result
+
+
+def wait_synchronous_quorum(node: int) -> None:
+    """Wait for the configured strict quorum to acquire a real streaming peer."""
+    deadline = time.monotonic() + 120
+    while time.monotonic() < deadline:
+        state = synchronous_quorum(node)
+        if state.get("commit_on") is not True:
+            raise AssertionError("SYNCHRONOUS_COMMIT_DISABLED")
+        if state.get("quorum_rule") is True and state.get("sync_replicas", 0) >= 1:
+            return
+        time.sleep(2)
+    raise TimeoutError("SYNCHRONOUS_QUORUM_NOT_READY")
+
+
+def select_fault_target(writer: int, target: int) -> int:
+    """Ask native Patroni to make a specified member the future failed primary."""
+    if writer != target:
+        execute(
+            writer,
+            "import base64,json,urllib.request\n"
+            "from aelev_postgresql.configuration import tls_context\n"
+            "authorization=base64.b64encode((setting('ADMIN_USER')+':'+secret('admin-password')).encode()).decode()\n"
+            f"url='https://'+setting('NODE_{writer}_HOST')+':'+setting('NODE_{writer}_REST_PORT')+'/switchover'\n"
+            f"request=urllib.request.Request(url,data=json.dumps({{'leader':'postgresql-{writer}','candidate':'postgresql-{target}'}}).encode(),headers={{'Authorization':'Basic '+authorization,'Content-Type':'application/json'}})\n"
+            "with urllib.request.urlopen(request,context=tls_context(),timeout=15) as response:\n"
+            " assert response.status in (200,202)\n",
+            operation="SELECT_NATIVE_FAULT_TARGET",
+        )
+    deadline = time.monotonic() + 120
+    while time.monotonic() < deadline:
+        state = roles()
+        if (
+            len(state) == 3
+            and state.get(target) is False
+            and sum(not value for value in state.values()) == 1
+        ):
+            wait_synchronous_quorum(target)
+            return target
+        time.sleep(2)
+    raise TimeoutError("REQUESTED_FAULT_TARGET_NOT_READY")
 
 
 def failure_signals(output: str) -> dict[str, int]:
@@ -214,9 +265,17 @@ def write_failure_diagnostic(
         "postgresql-fencer",
     )
     snapshot: list[dict[str, Any]] = []
+    sql_roles = roles()
     for service in services:
         identities = compose("ps", "-a", "-q", service, check=False).stdout.split()
         row: dict[str, Any] = {"service": service, "present": len(identities) == 1}
+        if service.startswith("postgresql-") and service != "postgresql-fencer":
+            node = int(service.rsplit("-", 1)[1])
+            row["sql_role"] = (
+                ("REPLICA" if sql_roles[node] else "PRIMARY")
+                if node in sql_roles
+                else "UNREACHABLE"
+            )
         if len(identities) == 1:
             response = command(
                 "docker",
@@ -386,7 +445,7 @@ with tempfile.TemporaryDirectory(prefix='aelev-postgresql-restore-') as temporar
     )
 
 
-def main(report: Path) -> None:
+def main(report: Path, requested_fault_target: int | None = None) -> None:
     """Run failure scenarios and always inventory/clean newly owned resources."""
     started = datetime.datetime.now(datetime.UTC)
     steps: list[tuple[str, str]] = []
@@ -462,11 +521,7 @@ def main(report: Path) -> None:
             "verify",
             operation="VERIFY_CLUSTER_SAFETY",
         )
-        execute(
-            writer,
-            "with connection() as c:\n assert c.execute('SHOW synchronous_commit').fetchone()[0]=='on'\n assert c.execute('SHOW synchronous_standby_names').fetchone()[0].startswith('ANY 1')",
-            operation="VERIFY_SYNCHRONOUS_QUORUM",
-        )
+        wait_synchronous_quorum(writer)
         phase("Один ведущий, две реплики; строгий синхронный кворум ANY 1 и TLS")
         for _ in range(2):
             compose(
@@ -538,6 +593,12 @@ def main(report: Path) -> None:
             "with connection() as c:\n assert c.execute(\"SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname='lifecycle_foreign'\").fetchone()[0]==setting('ADMIN_USER')",
         )
         phase("Provisioner отказался менять владельца существующей чужой базы")
+        if requested_fault_target is not None:
+            scenario, fault_target = "fault-target-selection", requested_fault_target
+            writer = select_fault_target(writer, requested_fault_target)
+            phase(
+                f"Для сценария отказа штатным Patroni выбран ведущий {writer}; три SQL-роли и sync quorum подтверждены"
+            )
         lost = writer
         scenario, fault_target = "pair-loss", lost
         compose("stop", f"postgresql-{lost}", f"etcd-{lost}")
@@ -773,4 +834,6 @@ if __name__ == "__main__":
         type=Path,
         default=ROOT / "test" / "cluster-lifecycle-result.md",
     )
-    main(parser.parse_args().report)
+    parser.add_argument("--fault-target", type=int, choices=(1, 2, 3))
+    arguments = parser.parse_args()
+    main(arguments.report, arguments.fault_target)

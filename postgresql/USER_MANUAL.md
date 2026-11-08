@@ -281,6 +281,10 @@ python3.13 test/fencing-lifecycle.py
 
 При неуспехе рядом с заданным `--report` до cleanup создаётся `.diagnostic.json` с фазой сценария, номером намеренно отключённого узла, bounded Docker state и счётчиками фиксированных ошибок Patroni/fencing/DCS. Он не содержит credentials, SQL, container IDs, host paths или raw logs. Изолированный повтор на чистом GitHub runner запускается полем `diagnostic_stage=postgresql-lifecycle`, `diagnostic_repetitions=3` в общем clean-room workflow; эти результаты не заменяют итоговое evidence всех функций.
 
+Process health и persisted DCS config не доказывают уже сформированный SQL sync quorum. Lifecycle дополнительно ждёт до 120 секунд фактический `ANY 1` и минимум одну `streaming` sync/quorum-реплику, прежде чем проверять транзакции; отключённый `synchronous_commit` немедленно отклоняется. Локальные диагностические logs исключены из Git и Docker build context, а безопасный отчёт сохраняется вне исходников.
+
+Опциональный `--fault-target 1|2|3` выбирает узел, который должен быть ведущим перед pair-loss: один защищённый [Patroni REST switchover](https://patroni.readthedocs.io/en/latest/rest_api.html#switchover-and-failover) и последующая проверка всех SQL-ролей/quorum. Три диагностических повтора покрывают все три цели; автоматический обычный full-local сценарий сохраняет естественный исходный выбор Patroni.
+
 ## Проверка, подключение и подготовка базы
 
 ```sh

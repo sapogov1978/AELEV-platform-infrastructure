@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-08: изолированный clean-room run `42485163225` прошёл image admission и выявил неправильный interpreter для onboarding: status-publisher окружение не содержит Playwright. Общий gate использует существующий lock-pinned операторский драйвер `test_infrastructure`; зависимости и образ Grafana не расширяются.
+
 - 2026-11-08: digest-pinned Python test-driver изолированного onboarding теперь явно объявлен внешним входом `full-local`, заранее получается общим build и проверяется preflight/BOM; тест по-прежнему не скачивает не объявленные образы и не меняет нативный runtime Grafana.
 
 - 2026-11-07: публичная OIDC CA отделена от writable client-secret: `OIDC_CA_FILE` монтируется read-only из отдельного public trust path, `OIDC_SECRET_ROOT` содержит только secret output provisioner. Постоянная Grafana получает оба read-only; закрытый CA key не передаётся.

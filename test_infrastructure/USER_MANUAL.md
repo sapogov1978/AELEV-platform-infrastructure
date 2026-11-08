@@ -55,6 +55,10 @@ WAN, независимые области отказа MinIO/PostgreSQL, апп
 
 В ручном workflow `clean-room-full-local` поле `diagnostic_stage` выбирает один сценарий, а `remaining-stages` запускает telemetry, Translator, SPIRE identity, SPIRE observation и recovery. `diagnostic_repetitions` применим к одному выбранному сценарию. Значение `full` по умолчанию выполняет прежнюю полную приёмку. Разные диагностические сценарии используют независимые одноразовые runners; повтор одного сценария остаётся последовательным.
 
+Три PostgreSQL-повтора дополнительно покрывают отключение каждого узла 1/2/3: lifecycle получает `--fault-target N` и при необходимости один раз выполняет штатный Patroni switchover, затем подтверждает единственного заданного primary, все три SQL-роли и реальную sync-реплику. Прямых promote, новых аренды/координатора или ручного изменения PGDATA нет.
+
+Выбор `telemetry-and-translator` повторяет только эти две стадии после исправления их test-driver входов, сохраняя отдельные отчёты и baseline. Telemetry использует Playwright из lock этого каталога и SDK sender из manifest, включая его native Prometheus и стандартную команду; runtime центрального Delivery с другим ENTRYPOINT для этой роли не подходит.
+
 При отказе PostgreSQL рядом с Markdown-отчётом сохраняется `.diagnostic.json`: фаза сценария, номер намеренно отключённого узла, running/restarting/OOM/exit/health и счётчики фиксированных признаков ошибок. Состояние снимается до удаления тестового кластера. Credentials, raw native logs, host paths и содержимое SQL в этот артефакт не входят.
 
 ## Проверки структуры и секретов

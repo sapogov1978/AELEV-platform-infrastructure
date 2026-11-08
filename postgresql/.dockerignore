@@ -3,6 +3,8 @@
 !.env.example
 .venv
 __pycache__
+test/startup-diagnostics.log
+test/failure-diagnostics.log
 *.pyc
 .*_cache
 secrets/

@@ -132,7 +132,13 @@ def rendered_root_model() -> dict[str, Any]:
 def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
     model = rendered_root_model()
     services = model["services"]
-    sender = exact_image(services["delivery"]["image"])
+    manifest = json.loads((ROOT / "full-local.json").read_text(encoding="utf-8"))
+    sender_reference = next(
+        item["admitted_reference"]
+        for item in manifest["build_inputs"]
+        if item["id"] == "observability-sender-image"
+    )
+    sender = exact_image(sender_reference)
     spire_sender = exact_image(services["spire-telemetry-sender"]["image"])
     grafana = exact_image(services["grafana"]["image"])
     recovery_image = exact_image(services["translator-api"]["image"])
@@ -224,10 +230,10 @@ def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
             (
                 "poetry",
                 "--directory",
-                "observability/grafana",
+                "test_infrastructure",
                 "run",
                 "python",
-                "test/onboarding.py",
+                str(ROOT / "observability/grafana/test/onboarding.py"),
                 "--sender-image",
                 sender,
                 "--chromium",
@@ -396,9 +402,15 @@ def run_diagnostics(arguments: argparse.Namespace, output: Path, bom_path: Path)
             environment.update(dict(stage.environment))
             code: str | None = None
             try:
+                stage_command = stage.command
+                if (
+                    stage.identity == "postgresql-lifecycle"
+                    and arguments.diagnostic_repetitions == 3
+                ):
+                    stage_command += ("--fault-target", str(repetition))
                 run_logged(
                     stage.identity,
-                    stage.command,
+                    stage_command,
                     attempt,
                     cwd=stage.cwd,
                     environment=environment,

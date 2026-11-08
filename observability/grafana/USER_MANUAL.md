@@ -308,6 +308,10 @@ python3.13 -m venv /secure/operator-tools/grafana-onboarding
 
 `/secure/operator-tools/...` замените выбранным новым доступным каталогом; это не обязательный системный путь. Установка браузера скачивает исполняемые файлы: используйте разрешённый источник/процедуру. Это изолированное операторское средство, не второй manifest зависимостей рабочего сервиса. Linux может требовать системные зависимости Chromium по [документации Playwright](https://playwright.dev/python/docs/browsers#install-system-dependencies); не выполняйте автоматическую системную установку на корпоративной станции без согласования. Точный путь Chromium можно получить через `python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()'` в подготовленной среде.
 
+Общий `full-local` gate запускает этот же script через Poetry-окружение `test_infrastructure`, где Playwright 1.56.0 уже закреплён lock-файлом. Собственное окружение status publisher Grafana браузерного драйвера не содержит и для этого сценария не используется.
+
+Для sender/archive примера общий gate получает именно закреплённый `observability-sender-image` из build inputs manifest: он содержит native Prometheus и допускает указанную в примере команду `python /opt/aelev/delivery.py`. Runtime-образ центрального Delivery имеет другой ENTRYPOINT и не заменяет этот SDK-артефакт. `build` получает SDK в Docker image store, preflight требует его присутствия, BOM фиксирует фактический image ID.
+
 Тесту нужны четыре существующих локальных артефакта: собранный отправитель, закреплённые Python 3.13.7, Prometheus 3.5.0 и Grafana 12.1.0. Если публичных образов ещё нет, оператор может доставить их из разрешённого registry либо скачать проверенные публичные digest:
 
 ```sh

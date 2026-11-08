@@ -353,9 +353,7 @@ def preflight(
                 json.JSONDecodeError,
             ):
                 errors.append(f"COMPOSE_RENDER_FAILED:{composition}")
-    for composition, section in (
-        ("root", manifest.get("root_compose", {})),
-    ):
+    for composition, section in (("root", manifest.get("root_compose", {})),):
         if composition not in models:
             continue
         actual = sorted(models[composition].get("services", {}))
@@ -401,6 +399,7 @@ def preflight(
         required_images = set(images) | {
             str(item["admitted_reference"])
             for item in manifest.get("external_inputs", [])
+            + manifest.get("build_inputs", [])
             if item.get("kind") == "container-image-digest"
         }
         for reference in sorted(required_images):
@@ -1029,7 +1028,7 @@ def build_profile(root: Path = ROOT) -> dict[str, Any]:
             raise FullLocalError(f"MUTABLE_PULL_IMAGE_REFUSED:{reference}")
         stream_command(["docker", "pull", reference], cwd=root)
         exact_pull_images.append(reference)
-    for item in manifest.get("external_inputs", []):
+    for item in manifest.get("external_inputs", []) + manifest.get("build_inputs", []):
         if item.get("kind") != "container-image-digest":
             continue
         reference = str(item["admitted_reference"])
@@ -1120,6 +1119,17 @@ def build_bom(
                 "admitted_reference": item["admitted_reference"],
                 "release_run": item["release_run"],
                 "consumers": item["consumers"],
+                "image_id": command(
+                    [
+                        "docker",
+                        "image",
+                        "inspect",
+                        "--format",
+                        "{{.Id}}",
+                        item["admitted_reference"],
+                    ],
+                    cwd=root,
+                ).stdout.strip(),
                 "status": next(
                     row["status"]
                     for row in result["checks"]

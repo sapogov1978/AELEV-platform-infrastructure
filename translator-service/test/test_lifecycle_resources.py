@@ -86,6 +86,31 @@ def test_snapshot_retains_multiple_image_references() -> None:
     assert snapshot(execute)["images"]["image"] == {"references": "repo:a,repo:b"}
 
 
+def test_preflight_recognizes_digest_only_image_and_rejects_another_digest() -> None:
+    import json
+
+    reference = "postgres@sha256:" + "a" * 64
+
+    def execute(arguments: list[str]) -> str:
+        if arguments[1] == "image":
+            assert "--digests" in arguments
+            return json.dumps(
+                {
+                    "ID": "image",
+                    "Repository": "postgres",
+                    "Tag": "<none>",
+                    "Digest": "sha256:" + "a" * 64,
+                }
+            )
+        return ""
+
+    before = snapshot(execute)
+    assert before["images"]["image"]["references"] == reference
+    preflight(before, {"target"}, set(), {reference})
+    with pytest.raises(RuntimeError, match="Prepare working images"):
+        preflight(before, {"target"}, set(), {"postgres@sha256:" + "b" * 64})
+
+
 def test_snapshot_recognizes_only_docker_anonymous_volume_label() -> None:
     def execute(arguments: list[str]) -> str:
         if arguments[1] == "volume":

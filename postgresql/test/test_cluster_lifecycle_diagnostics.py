@@ -75,3 +75,74 @@ def test_failure_signals_exclude_private_native_output() -> None:
         "LEASE_CHANGED": 1,
         "PERMISSION_DENIED": 1,
     }
+
+
+def test_quorum_waits_for_actual_streaming_peer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from unittest.mock import Mock
+
+    samples = Mock(
+        side_effect=[
+            {"commit_on": True, "quorum_rule": False, "sync_replicas": 0},
+            {"commit_on": True, "quorum_rule": True, "sync_replicas": 0},
+            {"commit_on": True, "quorum_rule": True, "sync_replicas": 1},
+        ]
+    )
+    monkeypatch.setattr(cluster_lifecycle, "synchronous_quorum", samples)
+    monkeypatch.setattr(cluster_lifecycle.time, "sleep", lambda _: None)
+    cluster_lifecycle.wait_synchronous_quorum(1)
+    assert samples.call_count == 3
+
+
+def test_quorum_never_waits_away_disabled_sync_commit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        cluster_lifecycle,
+        "synchronous_quorum",
+        lambda _: {"commit_on": False, "quorum_rule": True, "sync_replicas": 2},
+    )
+    with pytest.raises(AssertionError, match="SYNCHRONOUS_COMMIT_DISABLED"):
+        cluster_lifecycle.wait_synchronous_quorum(1)
+
+
+def test_fault_target_requires_one_primary_and_all_three_members(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from unittest.mock import Mock
+
+    execute = Mock()
+    samples = Mock(
+        side_effect=[
+            {1: False, 2: False, 3: True},
+            {1: False, 2: True},
+            {1: False, 2: True, 3: True},
+        ]
+    )
+    quorum = Mock()
+    monkeypatch.setattr(cluster_lifecycle, "execute", execute)
+    monkeypatch.setattr(cluster_lifecycle, "roles", samples)
+    monkeypatch.setattr(cluster_lifecycle, "wait_synchronous_quorum", quorum)
+    monkeypatch.setattr(cluster_lifecycle.time, "sleep", lambda _: None)
+    assert cluster_lifecycle.select_fault_target(2, 1) == 1
+    assert execute.call_count == 1
+    assert samples.call_count == 3
+    quorum.assert_called_once_with(1)
+
+
+def test_new_writer_is_not_accepted_while_excluded_old_writer_is_still_primary(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from unittest.mock import Mock
+
+    samples = Mock(
+        side_effect=[
+            {1: False, 2: False, 3: True},
+            {1: True, 2: False, 3: True},
+        ]
+    )
+    monkeypatch.setattr(cluster_lifecycle, "roles", samples)
+    monkeypatch.setattr(cluster_lifecycle.time, "sleep", lambda _: None)
+    assert cluster_lifecycle.wait_writer(excluded=1) == 2
+    assert samples.call_count == 2

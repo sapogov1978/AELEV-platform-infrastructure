@@ -9,5 +9,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+test/startup-diagnostics.log
+test/failure-diagnostics.log
 kubernetes/.env
 kubernetes/fencing.generated.json

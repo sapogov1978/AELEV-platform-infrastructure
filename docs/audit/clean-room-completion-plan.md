@@ -11,6 +11,8 @@
 | [42455537735](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42455537735) | `f503c76` | root, Kafka, полный PostgreSQL HA/backup, MinIO | isolated Egress startup | `05515cf` исправил временный telemetry bind и проверил изоляцию |
 | [42458205057](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42458205057) | `05515cf` | root, Kafka, PostgreSQL, MinIO, полный Egress | telemetry driver image отсутствовал локально | `2786e21` объявляет exact Python digest в manifest/build/preflight/BOM; сам telemetry сценарий ещё не подтверждён |
 | [42461185054](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42461185054) | `2786e21` | build/preflight/BOM, root, Kafka, первоначальные SQL/TLS/quorum/provision/isolation | новый PostgreSQL writer не появился за 120 секунд после pair-loss | Непостоянный HA-отказ; не считается исправленным или инфраструктурной случайностью |
+| [42485161039](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42485161039) | `1f87c20` | изолированный startup семи healthy ролей | `VERIFY_SYNCHRONOUS_QUORUM/ASSERTION_FAILED` до pair-loss; source baseline отклонил untracked failure-log | Ограниченный барьер фактической streaming quorum-реплики; owner runtime logs исключаются из source/build context. Повторная проверка требуется |
+| [42485163225](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42485163225) | `1f87c20` | реальные SPIRE identity, SPIRE observation/Grafana, bounded recovery, точная cleanup всех стадий | telemetry: отсутствует Playwright в неверно выбранном owner venv; Translator: snapshot не учитывал фактически имеющийся PostgreSQL RepoDigest | Использовать уже закреплённый browser driver venv и учитывать exact digests, не скачивать/подменять образы |
 
 Не выполненные в конкретном run стадии не наследуют PASS из другого commit. Предыдущие отчёты сохраняются как доказательства своих ограниченных условий.
 
@@ -31,5 +33,7 @@
 3. При непостоянном failover сначала исследуются fault target, состояния Patroni/etcd/fencer, native reason codes и временная последовательность. Увеличение timeout, отключение TLS/fencing/quorum и массовая замена стека не являются исправлением.
 4. После сбоя сохраняются безопасные диагностические поля до cleanup. Следующий сценарий разрешён только после подтверждения исходного Docker/source baseline.
 5. Полный clean-room запускается после завершения изолированных проверок. Новый полный запуск обосновывается изменением, проверенным на проблемной стадии; повтор одной общей ошибки без новых данных не считается прогрессом.
+
+Оба старых PostgreSQL PASS отключали исходного ведущего №2. Три новых диагностических повтора должны отключать соответственно 1/2/3: будущая цель при необходимости выбирается стандартным Patroni switchover с mTLS, затем подтверждаются все три SQL-роли, единственный заданный primary и sync quorum. Случайный повтор одного удачного fault target не закрывает эту матрицу.
 
 Открытая гипотеза PostgreSQL: порядок обращения к остановленному DCS endpoint может расходовать срок native-аренды во время `pre_promote`. Она пока не подтверждена и не является основанием менять runtime. Два предыдущих PASS показывают непостоянство, а не безопасность всех исходов отказа.

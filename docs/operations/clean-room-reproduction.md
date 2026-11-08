@@ -41,6 +41,8 @@ python3 tools/full_local.py build
 
 Для полного локального профиля `init` также create-only выдаёт каждому объявленному `UI_SECRET_ROOT` отдельную publisher identity от локальной CA Platform UI, публичные цепочки UI/IdP и отдельные owner-probe identities там, где технический health использует mTLS. Закрытые issuer keys остаются только у operator-side генератора и не монтируются в workload; `client-secret` по-прежнему создаёт только собственная status-provision задача. Это локальная PKI на 30 дней, не production admission и не автоматическая ротация.
 
+`build` также получает объявленные build input images в локальный Docker image store. Telemetry onboarding использует тот же закреплённый Sender SDK с native Prometheus, а не runtime центрального Delivery с другим ENTRYPOINT; одного BuildKit cache для этого недостаточно. Preflight проверяет присутствие SDK, а build-input раздел BOM фиксирует его фактический image ID.
+
 Новый operational `observability/.env` выбирает владельческие `.env`, тогда как версионируемый `.env.example` сохраняет `.env.example` только для проверки шаблонов. Уже существующий выбор оператора bootstrap не меняет.
 
 В локальном профиле собственный `keycloak-status-provision` обращается к Keycloak по внутреннему TLS origin `https://keycloak:8443`; браузерный `PUBLIC_URL` и внешний host bind не меняются. Bootstrap переводит только прежний локальный default `https://127.0.0.1:18443`, но сохраняет любой явно заданный оператором endpoint.

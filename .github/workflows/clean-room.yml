@@ -10,6 +10,7 @@ on:
         options:
           - full
           - remaining-stages
+          - telemetry-and-translator
           - postgresql-lifecycle
           - telemetry-onboarding
           - translator-lifecycle
@@ -96,6 +97,8 @@ jobs:
           DIAGNOSTIC_ARGS=()
           if [ "$DIAGNOSTIC_STAGE" = remaining-stages ]; then
             DIAGNOSTIC_ARGS=(--diagnostic-stage telemetry-onboarding --diagnostic-stage translator-lifecycle --diagnostic-stage spire-lifecycle --diagnostic-stage spire-observation --diagnostic-stage recovery-lifecycle)
+          elif [ "$DIAGNOSTIC_STAGE" = telemetry-and-translator ]; then
+            DIAGNOSTIC_ARGS=(--diagnostic-stage telemetry-onboarding --diagnostic-stage translator-lifecycle)
           elif [ -n "$DIAGNOSTIC_STAGE" ] && [ "$DIAGNOSTIC_STAGE" != full ]; then
             DIAGNOSTIC_ARGS=(--diagnostic-stage "$DIAGNOSTIC_STAGE" --diagnostic-repetitions "$DIAGNOSTIC_REPETITIONS")
           fi

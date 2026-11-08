@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794144929.8312469,
-    "seen": 1794144995.969513,
-    "ast_hash": "a00439e6aec8ffae4bcb5e3881f621e1",
+    "mtime": 1794146010.691544,
+    "seen": 1794146144.59333,
+    "ast_hash": "0062943e30513cbc8521f3a59cf73a94",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1812,9 +1812,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/cluster-lifecycle.py": {
-    "mtime": 1794144411.439341,
-    "seen": 1794144475.6501849,
-    "ast_hash": "1106ae92bcd6f3931d199890b1af89c9",
+    "mtime": 1794146186.9429953,
+    "seen": 1794146258.749541,
+    "ast_hash": "07d50f89bbb8be2ba92f8fe20304135a",
     "semantic_hash": ""
   },
   "postgresql/test/fencing-lifecycle.py": {
@@ -2874,9 +2874,9 @@
     "semantic_hash": ""
   },
   "translator-service/test/lifecycle_resources.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.1507268,
-    "ast_hash": "30141ffaa5d90e4a7afcdd518bbf395f",
+    "mtime": 1794145766.3339064,
+    "seen": 1794146144.5929348,
+    "ast_hash": "0f5b52cc036b6105952c6e70e2fbbad5",
     "semantic_hash": ""
   },
   "translator-service/test/model_comparison/__init__.py": {
@@ -3012,9 +3012,9 @@
     "semantic_hash": ""
   },
   "translator-service/test/test_lifecycle_resources.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150744,
-    "ast_hash": "a0945caf1e72e1c10c13be7ab5f10cd5",
+    "mtime": 1794145863.5251207,
+    "seen": 1794146144.5932002,
+    "ast_hash": "8e519216ff3e81097cf2ba13524c0eaa",
     "semantic_hash": ""
   },
   "translator-service/test/test_local_health.py": {
@@ -3540,9 +3540,9 @@
     "semantic_hash": ""
   },
   "observability/grafana/CHANGELOG.md": {
-    "mtime": 1794124703.9693005,
-    "seen": 1794124801.084616,
-    "ast_hash": "3f1125ad3e38cc874081c1555bcdcfdb",
+    "mtime": 1794145798.1865242,
+    "seen": 1794146144.59645,
+    "ast_hash": "f5e9444de70938240c49af500afdbcbc",
     "semantic_hash": ""
   },
   "observability/grafana/PROVIDER_OPERATIONS.md": {
@@ -3570,9 +3570,9 @@
     "semantic_hash": ""
   },
   "observability/grafana/USER_MANUAL.md": {
-    "mtime": 1794124703.967884,
-    "seen": 1794124801.084668,
-    "ast_hash": "094870cfd07a4cdacfbb1b2a01a52abd",
+    "mtime": 1794146010.6903484,
+    "seen": 1794146144.596506,
+    "ast_hash": "5631f77afec466b1aad26c18beafe289",
     "semantic_hash": ""
   },
   "observability/grafana/dashboards/README.md": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794144929.830349,
-    "seen": 1794144995.973922,
-    "ast_hash": "b3ed67ab208ff86f423dfbca461aa43d",
+    "mtime": 1794146185.758962,
+    "seen": 1794146258.756576,
+    "ast_hash": "3f8462548ad73af978e606805cd79a9a",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -4146,9 +4146,9 @@
     "semantic_hash": ""
   },
   "postgresql/USER_MANUAL.md": {
-    "mtime": 1794144929.8295217,
-    "seen": 1794144995.973975,
-    "ast_hash": "33c34d22bc9af15be0013e0d2969dd22",
+    "mtime": 1794145356.0526478,
+    "seen": 1794145449.587596,
+    "ast_hash": "8f4656fa3b45f13d7cedbc5bf4c51826",
     "semantic_hash": ""
   },
   "postgresql/test/client-renewal-result-20261023.md": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794144464.3106997,
-    "seen": 1794144475.657783,
-    "ast_hash": "2a39395a68cb19cb72d47917479f2eaf",
+    "mtime": 1794146092.4806046,
+    "seen": 1794146144.5982,
+    "ast_hash": "041afb4d59bfd22a3fbee601a0ce77f7",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794095967.140507,
-    "seen": 1794096174.1059961,
-    "ast_hash": "82d88513722376bd5787a90820ea1206",
+    "mtime": 1794145798.187881,
+    "seen": 1794146144.5984519,
+    "ast_hash": "898ca12b4bb7a547f5073ac3638718dc",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -4656,9 +4656,9 @@
     "semantic_hash": ""
   },
   "translator-service/USER_MANUAL.md": {
-    "mtime": 1794095912.5687897,
-    "seen": 1794096174.1060202,
-    "ast_hash": "fdfa67e43f9eafd43599f0d5782a6f37",
+    "mtime": 1794145798.1870897,
+    "seen": 1794146144.598502,
+    "ast_hash": "e61c8dd235b0aa53e271b01aba33c04d",
     "semantic_hash": ""
   },
   "translator-service/compute-runtime/README.md": {
@@ -6150,15 +6150,15 @@
     "semantic_hash": ""
   },
   "tools/full_local.py": {
-    "mtime": 1794124653.5211215,
-    "seen": 1794124801.080368,
-    "ast_hash": "eab3b31ed1b39c6e4c96c4661c8ae78d",
+    "mtime": 1794146093.8555162,
+    "seen": 1794146144.5922618,
+    "ast_hash": "83024536877a59253fc3e206ecfd40a2",
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794144411.4195402,
-    "seen": 1794144475.6518478,
-    "ast_hash": "81aa0f771e310f349469fbdb586cb955",
+    "mtime": 1794146093.6783133,
+    "seen": 1794146144.592333,
+    "ast_hash": "b52df3fa621b53673eda6b138d3104c1",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6168,21 +6168,21 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794124703.9668913,
-    "seen": 1794124801.083688,
-    "ast_hash": "0149f28baa2ec1ca6a8a245b8679cf4a",
+    "mtime": 1794146010.6910434,
+    "seen": 1794146144.5954938,
+    "ast_hash": "5117c099afd387fabd908cd9462d4e8a",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1794144464.31029,
-    "seen": 1794144475.646879,
-    "ast_hash": "455e5430759097360e3843582042600c",
+    "mtime": 1794146092.479622,
+    "seen": 1794146144.587519,
+    "ast_hash": "6f50f566043e1de654483d50c7494fac",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
-    "mtime": 1794144411.4164565,
-    "seen": 1794144475.651328,
-    "ast_hash": "ba9801a276755485f734853b1c2ee209",
+    "mtime": 1794146010.6882102,
+    "seen": 1794146144.591825,
+    "ast_hash": "c11a1147369563f8c3c54dcc657628a0",
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
@@ -6252,9 +6252,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_cluster_lifecycle_diagnostics.py": {
-    "mtime": 1794144321.3740427,
-    "seen": 1794144475.650222,
-    "ast_hash": "ea4d23ad3c98da5870daa5ea090a3c0e",
+    "mtime": 1794146186.8222463,
+    "seen": 1794146258.749579,
+    "ast_hash": "6113b9166af7e7880f4b69dd668b4130",
     "semantic_hash": ""
   },
   "public-egress-gateway/test/test_lifecycle_model.py": {
@@ -6264,9 +6264,9 @@
     "semantic_hash": ""
   },
   "docs/audit/clean-room-completion-plan.md": {
-    "mtime": 1794144390.8539286,
-    "seen": 1794144475.65326,
-    "ast_hash": "97fe1daebbe896a6c799f40cf295658f",
+    "mtime": 1794145798.1890323,
+    "seen": 1794146144.5937212,
+    "ast_hash": "c803ad6169666eda1ce8d7f51190fd8a",
     "semantic_hash": ""
   },
   "postgresql/test/test_prepare_tls.py": {
