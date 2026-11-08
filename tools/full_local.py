@@ -118,9 +118,27 @@ def validate_contract(root: Path = ROOT) -> tuple[dict[str, Any], list[str]]:
         example = (root / relative).with_name(".env.example")
         if not example.is_file():
             errors.append(f"ENVIRONMENT_TEMPLATE_MISSING:{relative}")
+    external_input_ids: list[str] = []
     for item in manifest.get("external_inputs", []):
         if not isinstance(item, dict) or not isinstance(item.get("id"), str):
             errors.append("EXTERNAL_INPUT_INVALID")
+            continue
+        external_input_ids.append(item["id"])
+        kind = item.get("kind")
+        if kind == "container-image-digest":
+            reference = item.get("admitted_reference")
+            consumer = root / str(item.get("consumer", ""))
+            if not isinstance(reference, str) or not DIGEST_REFERENCE.fullmatch(
+                reference
+            ):
+                errors.append(f"EXTERNAL_INPUT_DIGEST_INVALID:{item['id']}")
+            elif not consumer.is_file() or reference not in consumer.read_text(
+                encoding="utf-8"
+            ):
+                errors.append(f"EXTERNAL_INPUT_NOT_ADMITTED:{item['id']}")
+            continue
+        if kind != "operator-confirmation":
+            errors.append(f"EXTERNAL_INPUT_KIND_INVALID:{item['id']}")
             continue
         env_file = item.get("env_file")
         variable = item.get("variable")
@@ -128,6 +146,8 @@ def validate_contract(root: Path = ROOT) -> tuple[dict[str, Any], list[str]]:
             example = (root / str(env_file)).with_name(".env.example")
             if not example.is_file() or variable not in read_env(example, root):
                 errors.append(f"EXTERNAL_INPUT_UNDECLARED:{item['id']}")
+    if len(external_input_ids) != len(set(external_input_ids)):
+        errors.append("EXTERNAL_INPUT_IDS_NOT_UNIQUE")
     build_input_ids: list[str] = []
     for item in manifest.get("build_inputs", []):
         if not isinstance(item, dict) or not isinstance(item.get("id"), str):
@@ -280,14 +300,14 @@ def preflight(
         if item.get("kind") == "operator-confirmation":
             value = os.environ.get(str(item["variable"]), "")
             ok = value == item.get("expected")
+        elif item.get("kind") == "container-image-digest":
+            value = str(item.get("admitted_reference", ""))
+            consumer = root / str(item.get("consumer", ""))
+            ok = bool(DIGEST_REFERENCE.fullmatch(value)) and consumer.is_file()
+            if ok:
+                ok = value in consumer.read_text(encoding="utf-8")
         else:
-            env_path = root / str(item["env_file"])
-            value = (
-                read_env(env_path, root).get(str(item["variable"]), "")
-                if env_path.is_file()
-                else ""
-            )
-            ok = bool(DIGEST_REFERENCE.fullmatch(value))
+            ok = False
         check(
             f"external:{item['id']}",
             ok,
@@ -378,7 +398,12 @@ def preflight(
         )
     missing_images: list[str] = []
     if require_images:
-        for reference in images:
+        required_images = set(images) | {
+            str(item["admitted_reference"])
+            for item in manifest.get("external_inputs", [])
+            if item.get("kind") == "container-image-digest"
+        }
+        for reference in sorted(required_images):
             inspection = subprocess.run(
                 ["docker", "image", "inspect", reference],
                 cwd=root,
@@ -417,11 +442,18 @@ def source_plan(root: Path = ROOT) -> dict[str, Any]:
         "owners": manifest["owners"],
         "root_services": manifest["root_compose"]["required_services"],
         "external_inputs": [
-            {
-                "id": item["id"],
-                "kind": item["kind"],
-                "owner": item["owner"],
-            }
+            dict(
+                {
+                    "id": item["id"],
+                    "kind": item["kind"],
+                    "owner": item["owner"],
+                },
+                **(
+                    {"admitted_reference": item["admitted_reference"]}
+                    if item["kind"] == "container-image-digest"
+                    else {}
+                ),
+            )
             for item in manifest["external_inputs"]
         ],
         "build_inputs": [
@@ -997,6 +1029,19 @@ def build_profile(root: Path = ROOT) -> dict[str, Any]:
             raise FullLocalError(f"MUTABLE_PULL_IMAGE_REFUSED:{reference}")
         stream_command(["docker", "pull", reference], cwd=root)
         exact_pull_images.append(reference)
+    for item in manifest.get("external_inputs", []):
+        if item.get("kind") != "container-image-digest":
+            continue
+        reference = str(item["admitted_reference"])
+        present = subprocess.run(
+            ["docker", "image", "inspect", reference],
+            cwd=root,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if present.returncode:
+            stream_command(["docker", "pull", reference], cwd=root)
+            exact_pull_images.append(reference)
     pinned_pull_images = sorted(
         {model["services"][name]["image"] for name in pinned_pull_services}
         | set(exact_pull_images)
@@ -1049,7 +1094,24 @@ def build_bom(
         "compose_digests": compose_digests,
         "images": dict(sorted(images.items())),
         "external_inputs": [
-            row for row in result["checks"] if row["name"].startswith("external:")
+            dict(
+                {
+                    "id": item["id"],
+                    "kind": item["kind"],
+                    "owner": item["owner"],
+                    "status": next(
+                        row["status"]
+                        for row in result["checks"]
+                        if row["name"] == f"external:{item['id']}"
+                    ),
+                },
+                **(
+                    {"admitted_reference": item["admitted_reference"]}
+                    if item["kind"] == "container-image-digest"
+                    else {}
+                ),
+            )
+            for item in manifest.get("external_inputs", [])
         ],
         "build_inputs": [
             {

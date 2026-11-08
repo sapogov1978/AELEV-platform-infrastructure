@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -50,6 +51,26 @@ class FullLocalContractTests(unittest.TestCase):
         self.assertEqual(plan["compose_models_included"], ["root"])
         self.assertFalse(plan["translation_provider_implementation_included"])
         self.assertNotIn("compute_services", plan)
+        self.assertEqual(
+            plan["external_inputs"],
+            [
+                {
+                    "id": "grafana-onboarding-python-image",
+                    "kind": "container-image-digest",
+                    "owner": "observability/grafana",
+                    "admitted_reference": (
+                        "python:3.13.7-alpine3.22@sha256:"
+                        "9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30"
+                        "ad48844"
+                    ),
+                },
+                {
+                    "id": "spire-installer-approval",
+                    "kind": "operator-confirmation",
+                    "owner": "operator",
+                },
+            ],
+        )
         self.assertEqual(
             plan["build_inputs"],
             [
@@ -110,6 +131,39 @@ class FullLocalContractTests(unittest.TestCase):
         self.assertEqual(source_builds, ["source-build"])
         self.assertEqual(pinned_pulls, ["release-pull"])
         self.assertEqual(manifest["profile"], "full-local")
+
+    def test_build_fetches_declared_acceptance_image_without_starting(self) -> None:
+        reference = (
+            "python:3.13.7-alpine3.22@sha256:"
+            "9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844"
+        )
+        manifest = {
+            "external_inputs": [
+                {
+                    "kind": "container-image-digest",
+                    "admitted_reference": reference,
+                }
+            ],
+            "local_builds": [],
+        }
+        initialized = {"profile": "full-local", "containers_started": False}
+        model = {"root": {"services": {}}}
+        absent = subprocess.CompletedProcess([], 1)
+
+        with (
+            mock.patch.object(
+                full_local, "initialize_profile", return_value=initialized
+            ),
+            mock.patch.object(full_local, "load_json", return_value=manifest),
+            mock.patch.object(full_local, "rendered_models", return_value=model),
+            mock.patch.object(full_local.subprocess, "run", return_value=absent),
+            mock.patch.object(full_local, "stream_command") as stream,
+        ):
+            result = full_local.build_profile(ROOT)
+
+        stream.assert_called_once_with(["docker", "pull", reference], cwd=ROOT)
+        self.assertEqual(result["pinned_pull_images"], [reference])
+        self.assertFalse(result["containers_started"])
 
     def test_new_env_identity_adaptation_preserves_existing_files(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

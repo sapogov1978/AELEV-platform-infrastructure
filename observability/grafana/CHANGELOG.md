@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-08: digest-pinned Python test-driver изолированного onboarding теперь явно объявлен внешним входом `full-local`, заранее получается общим build и проверяется preflight/BOM; тест по-прежнему не скачивает не объявленные образы и не меняет нативный runtime Grafana.
+
 - 2026-11-07: публичная OIDC CA отделена от writable client-secret: `OIDC_CA_FILE` монтируется read-only из отдельного public trust path, `OIDC_SECRET_ROOT` содержит только secret output provisioner. Постоянная Grafana получает оба read-only; закрытый CA key не передаётся.
 
 - 2026-11-07: локальный `trust/` с публичной CA исключён из Git и Docker build context так же, как доставляемые secrets; его создание больше не делает clean-room source tree грязным.

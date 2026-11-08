@@ -9,7 +9,7 @@
 - Linux Docker Engine либо Docker Desktop с Linux containers, Docker Compose 2.24.4+, Python 3.13, Poetry 2.2.1, OpenSSL и Chromium;
 - чистый checkout точного release commit без существующих контейнеров, сетей и volumes этого Compose project;
 - место и ресурсы по руководствам владельцев;
-- два заранее допущенных digest-pinned образа: owner-controlled Observability Sender и Telemetry Delivery, выпускаемые workflow этого репозитория; реализация перевода не является входом `full-local`;
+- два заранее допущенных digest-pinned owner-controlled образа: Observability Sender и Telemetry Delivery, выпускаемые workflow этого репозитория, а также официальный digest-pinned Python test-driver для изолированной telemetry-приёмки; реализация перевода не является входом `full-local`;
 - отдельное операторское решение на единственный запуск SPIRE installer с Docker socket; подтверждение не сохраняется в `.env`;
 - локальные secrets/PKI и внешние owner inputs, подготовленные владельческими средствами. Они не передаются в Git и не печатаются в evidence.
 
@@ -26,11 +26,11 @@ python3 tools/full_local.py validate
 python3 tools/full_local.py plan > full-local-plan.json
 ```
 
-`git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых ролей, один внешний операторский вход, один build input, один release image и одиннадцать функций приёмки. Provider/worker-ячейка отсутствует: способ исполнения перевода не выбран и не принадлежит обязательной композиции. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
+`git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых ролей, один внешний операторский вход, один внешний digest-pinned test-driver, один build input, один release image и одиннадцать функций приёмки. Provider/worker-ячейка отсутствует: способ исполнения перевода не выбран и не принадлежит обязательной композиции. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
 
 ## 2. Инициализировать и собрать без запуска
 
-Все Dockerfile-потребители SQLite/sender runtime закрепляют multi-architecture build input `ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` из подписанного [sender release 42308900143](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42308900143). Telemetry Delivery также закреплён manifest по digest. Для private GHCR clean runner заранее получает только `read:packages`; credential не пишется в `.env`, Git или evidence. Рабочие `.env` не коммитятся. Provider credentials и image references не требуются, поскольку `full-local` проверяет сохранение очереди без реализации перевода.
+Все Dockerfile-потребители SQLite/sender runtime закрепляют multi-architecture build input `ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` из подписанного [sender release 42308900143](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42308900143). Telemetry Delivery также закреплён manifest по digest. Изолированный onboarding Grafana использует официальный [Python 3.13.7 Alpine image](https://hub.docker.com/_/python) по точному digest из manifest; это acceptance test-driver, а не runtime-сервис. `build` получает его заранее, а сам тест не скачивает не объявленные входы. Для private GHCR clean runner заранее получает только `read:packages`; credential не пишется в `.env`, Git или evidence. Рабочие `.env` не коммитятся. Provider credentials и image references не требуются, поскольку `full-local` проверяет сохранение очереди без реализации перевода.
 
 ```sh
 python3 tools/full_local.py init

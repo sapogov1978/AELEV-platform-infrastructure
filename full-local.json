@@ -106,6 +106,15 @@
   ],
   "external_inputs": [
     {
+      "id": "grafana-onboarding-python-image",
+      "kind": "container-image-digest",
+      "owner": "observability/grafana",
+      "admitted_reference": "python:3.13.7-alpine3.22@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844",
+      "consumer": "observability/grafana/test/onboarding.py",
+      "source_repository": "https://hub.docker.com/_/python",
+      "purpose": "Digest-pinned Python test driver for the isolated telemetry onboarding acceptance scenario."
+    },
+    {
       "id": "spire-installer-approval",
       "kind": "operator-confirmation",
       "variable": "DRP_SPIRE_DOCKER_SOCKET_APPROVAL",
