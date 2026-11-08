@@ -22,9 +22,12 @@ git clone https://github.com/sapogov1978/AELEV-platform-infrastructure.git
 cd AELEV-platform-infrastructure
 git checkout <RELEASE_COMMIT>
 git status --porcelain
+AELEV_REPRO_WORKDIR=$(mktemp -d /var/tmp/aelev-reproduction.XXXXXX)
 python3 tools/full_local.py validate
-python3 tools/full_local.py plan > full-local-plan.json
+python3 tools/full_local.py plan > "$AELEV_REPRO_WORKDIR/full-local-plan.json"
 ```
+
+Выполняйте команды в одной shell-сессии. `AELEV_REPRO_WORKDIR` находится вне checkout: plan, preflight, ручной BOM, временный пароль и итоговое evidence не создают неотслеживаемых файлов в исходниках. Каталог `$AELEV_REPRO_WORKDIR/gate` до запуска gate должен отсутствовать либо быть пустым; сам gate создаёт его. Ручные build/preflight/BOM ниже позволяют проверить отдельные входы; полный gate повторяет эти действия и формирует свой окончательный BOM.
 
 `git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых ролей, один внешний операторский вход, один внешний digest-pinned test-driver, один build input, один release image и одиннадцать функций приёмки. Provider/worker-ячейка отсутствует: способ исполнения перевода не выбран и не принадлежит обязательной композиции. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
 
@@ -51,7 +54,7 @@ python3 tools/full_local.py build
 
 `full_local.py init` вызывает владельческие генераторы для отсутствующих local PKI/runtime, создаёт owner-local output directories и create-only файлы локального deployment-admin для provision-задач и закрыто останавливается при частичном PKI. Существующие `.env`, ключи, admin-файлы и secret roots не заменяются. Для нестандартных либо production identities выполните соответствующие разделы руководств [Keycloak](../../keycloak/USER_MANUAL.md), [PostgreSQL](../../postgresql/USER_MANUAL.md), [MinIO](../../minio/USER_MANUAL.md), [Observability](../../observability/USER_MANUAL.md), [Public Egress Gateway](../../public-egress-gateway/USER_MANUAL.md), [SPIRE](../../spire/USER_MANUAL.md), [Platform UI](../../platform-ui/USER_MANUAL.md) и [Translator](../../translator-service/USER_MANUAL.md). Не создавайте пустые файлы вместо удостоверений и не копируйте целые secret roots между владельцами.
 
-SPIRE installer запускается только в отдельном процессе с одноразовым окружением:
+Следующая команда нужна только для отдельной ручной установки SPIRE. Для полного gate из раздела 6 её выполнять не требуется: его lifecycle-сценарии создают и снимают собственные временные установки. Ручной SPIRE installer запускается только в отдельном процессе с одноразовым окружением:
 
 ```sh
 DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
@@ -68,7 +71,7 @@ DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
 ```sh
 DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
   python3 tools/full_local.py preflight --require-images \
-  > clean-room-preflight.json
+  > "$AELEV_REPRO_WORKDIR/clean-room-preflight.json"
 ```
 
 Код `0` и `status=READY` означают только, что все env и owner input paths существуют, корневой Compose рендерится в точный service set, внешние образы заданы digest, локальные образы присутствуют, pull-only images неизменяемы и одноразовое подтверждение SPIRE присутствует в этом процессе.
@@ -81,7 +84,7 @@ DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
 
 ```sh
 DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
-  python3 tools/full_local.py bom --output evidence/release-bom.json
+  python3 tools/full_local.py bom --output "$AELEV_REPRO_WORKDIR/manual-release-bom.json"
 ```
 
 BOM закрепляет source commit, канонические digest отрендеренных Compose models, image IDs, доступные repository digests, service mapping, состояние внешних входов и точные owner-controlled build inputs с их release evidence и потребителями. По умолчанию грязное дерево отклоняется. `--allow-dirty` существует только для разработки и такое evidence не допускается как release/Production Ready.
@@ -105,12 +108,17 @@ BOM закрепляет source commit, канонические digest отре
 Runner сам устанавливает lock-pinned test drivers, выполняет owner lifecycle-сценарии последовательно, сохраняет внешние отчёты и логи, вычисляет их SHA-256, сверяет Docker baseline и повторно проверяет чистоту source tree. Каталог evidence должен находиться вне checkout и быть пустым:
 
 ```sh
+CHROMIUM=$(command -v google-chrome || command -v chromium || true)
+test -n "$CHROMIUM"
+install -m 600 /dev/null "$AELEV_REPRO_WORKDIR/viewer-password"
+cp platform-ui/secrets/provision/operator-password "$AELEV_REPRO_WORKDIR/viewer-password"
+chmod 600 "$AELEV_REPRO_WORKDIR/viewer-password"
 DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
   python3 test_infrastructure/clean_room_gate.py \
-  --output /var/tmp/aelev-clean-room-evidence \
-  --viewer-user <VIEWER_USER> \
-  --viewer-password-file /run/secrets/aelev-viewer-password \
-  --chromium /path/to/chromium \
+  --output "$AELEV_REPRO_WORKDIR/gate" \
+  --viewer-user platform-operator \
+  --viewer-password-file "$AELEV_REPRO_WORKDIR/viewer-password" \
+  --chromium "$CHROMIUM" \
   --allow-local-certificate
 ```
 
@@ -120,8 +128,8 @@ DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
 
 ```sh
 python3 test_infrastructure/clean_room.py \
-  --bom evidence/release-bom.json \
-  --evidence evidence/clean-room-evidence.json
+  --bom "$AELEV_REPRO_WORKDIR/gate/release-bom.json" \
+  --evidence "$AELEV_REPRO_WORKDIR/gate/clean-room-evidence.json"
 ```
 
 Verifier сверяет точный набор функций, schema/profile/release обоих документов, согласованный source commit, строгое `source_dirty=false` в BOM, digest BOM, SHA-256 каждого артефакта, чистый baseline, успешную сохранность cleanup и итог `PASS`. Чужая версия/profile/schema, dirty или отсутствующий флаг чистоты отклоняются даже при правильно пересчитанном хеше BOM. Он не превращает старые отчёты в новый прогон.

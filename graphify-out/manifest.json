@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794177885.3415632,
-    "seen": 1794177894.898653,
-    "ast_hash": "1b7d5210e811235e4f4494e529cd0764",
+    "mtime": 1794179407.553015,
+    "seen": 1794179433.933842,
+    "ast_hash": "86c40b56fca7b2b68c285693e0b14f62",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794175466.3258543,
-    "seen": 1794175496.4302468,
-    "ast_hash": "c866fe78d4c2519e6e750f0282429954",
+    "mtime": 1794179407.5522206,
+    "seen": 1794179433.9361222,
+    "ast_hash": "1e2ca3c2cd34b0219bca59bbd19f3100",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
@@ -6336,9 +6336,9 @@
     "semantic_hash": ""
   },
   "docs/audit/release-1.0.0.md": {
-    "mtime": 1794177885.3413107,
-    "seen": 1794177894.900885,
-    "ast_hash": "4b1b07ec58fd0205b9c98b3071d652e6",
+    "mtime": 1794179407.5536096,
+    "seen": 1794179433.936091,
+    "ast_hash": "a61bfe8fc4f82a64c649c68a062a3ac4",
     "semantic_hash": ""
   },
   "docs/operations/release.md": {

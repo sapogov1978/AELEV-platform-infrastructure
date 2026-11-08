@@ -6,6 +6,7 @@
 
 | Проверка | Найденное несоответствие | Исправление и защита |
 |---|---|---|
+| Буквальное выполнение runbook | Plan/preflight/BOM создавали untracked-файлы в checkout, verifier читал другой каталог; identity оставалась placeholder | Все выходы вынесены в один `mktemp` вне checkout, gate/verifier используют один подкаталог; оператор и защищённый password-file соответствуют create-only bootstrap; ручной SPIRE install отмечен отдельным сценарием |
 | Самостоятельная документация | Корневые и владельческие entrypoints считали документы потребителя нормативной архитектурой | Собственные [deployment](../architecture/deployment.md), [storage](../architecture/storage.md), [Platform UI](../architecture/platform-ui.md) и [supply chain](../security/supply-chain.md), локальные ссылки |
 | Каталог API | Чужие семейства событий, модельные ячейки и routes оставались в публичном API инфраструктуры | Активные документы описывают только принятые технические контракты; [исходные байты](pre-1.0-api-documents.tar.gz) и [SHA-256](pre-1.0-api-documents.json) сохранены |
 | SDK и история | Историческая документация сохранённого SDK могла восприниматься как текущий общий контракт | [Нейтральная точка входа](../../platform-ui/SDK.md); два прежних документа защищены [описью digest](frozen-sdk-documents.json), published package/CSS не изменены |
