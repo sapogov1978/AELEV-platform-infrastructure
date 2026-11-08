@@ -2,9 +2,11 @@ flowchart LR
     Clients["Владельцы баз данных"] -->|TLS SQL| Primary["PostgreSQL primary"]
     Etcd["etcd quorum"] --> Patroni["Patroni leader election"]
     Patroni --> Primary
-    Primary --> ReplicaA["Synchronous replica A"]
-    Primary --> ReplicaB["Synchronous replica B"]
-    Fencing["Fencing controller"] --> Primary
+    Primary -->|"strict quorum ANY 1: одна подтверждающая реплика"| ReplicaA["Replica A"]
+    Primary --> ReplicaB["Replica B"]
+    Patroni -->|"native pre_promote / текущая аренда"| Fencing["Runtime fencing executor"]
+    Fencing -->|"положительное завершение процессов"| Peers["Обе точные peer-инкарнации"]
+    Fencing -->|"подтверждение той же аренды"| Patroni
     Backup["Backup / restore"] --> Primary
     Primary --> Probe["SQL and replication probe"]
     Probe --> Status["Platform UI status publisher"]

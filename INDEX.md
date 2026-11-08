@@ -1,4 +1,4 @@
-# Инфраструктура DRP: карта каталога
+# Platform Infrastructure: карта каталога
 
 Эта агентская карта дополняет Graphify: она показывает высокоуровневую композицию репозитория и отвечает на вопрос «что и где искать». Назначение и состав находятся в [README](README.md), эксплуатация — в [USER_MANUAL](USER_MANUAL.md), нормативная граница — в [SPEC](SPEC.md), локальная история — в [CHANGELOG](CHANGELOG.md).
 
@@ -42,6 +42,6 @@
 | Журналы и трассы | [Loki](observability/loki/INDEX.md), [Tempo](observability/tempo/INDEX.md) |
 | Панели и уведомления | [Grafana](observability/grafana/INDEX.md) |
 
-Настройки, секреты, данные, подготовка, остановка и восстановление принадлежат каждому указанному владельцу и не дублируются в этом индексе. Общая модель развёртывания находится в [docs/architecture/21-deployment.md](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/21-deployment.md).
+Настройки, секреты, данные, подготовка, остановка и восстановление принадлежат каждому указанному владельцу и не дублируются в этом индексе. Общая модель развёртывания находится в [собственной модели развёртывания](docs/architecture/deployment.md).
 
-Датированные доказательства и границы незавершённых этапов собраны в [общей сверке 21 октября](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/audit/PROVENANCE.md); это не замена текущему состоянию Platform UI.
+Датированные доказательства и границы незавершённых этапов собраны в [общей сверке 21 октября](docs/audit/production-readiness.md); это не замена текущему состоянию Platform UI.

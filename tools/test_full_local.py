@@ -609,10 +609,11 @@ class FullLocalContractTests(unittest.TestCase):
             artifact.write_text("bounded probe\n", encoding="utf-8")
             artifact_digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
             source_commit = "a" * 40
+            release_version = json.loads((root / "release.json").read_text())["version"]
             bom = {
                 "schema_version": 1,
                 "profile": "full-local",
-                "release": "0.2.0",
+                "release": release_version,
                 "source_commit": source_commit,
                 "source_dirty": False,
             }
@@ -624,7 +625,7 @@ class FullLocalContractTests(unittest.TestCase):
             evidence = {
                 "schema_version": 1,
                 "profile": "full-local",
-                "release": "0.2.0",
+                "release": release_version,
                 "source_commit": source_commit,
                 "bom_sha256": hashlib.sha256(bom_path.read_bytes()).hexdigest(),
                 "started_at": "2026-11-06T10:00:00Z",

@@ -2,8 +2,8 @@ flowchart LR
     Requesters["Сервисы-заказчики"] -->|translation requests| KafkaIn["Kafka request topics"]
     KafkaIn --> Consumer["Priority / regular consumers"]
     Consumer --> Jobs[("Owner PostgreSQL: jobs and attempts")]
-    Jobs --> Worker["Translation worker"]
-    Worker -->|opaque text + languages| Provider["Непрозрачный провайдер перевода"]
+    Jobs --> Worker["Dispatcher / техническое исполнение"]
+    Worker -->|opaque text + languages| Provider["Непрозрачный провайдер перевода<br/>Не выбран; не входит в full-local"]
     Provider -->|translation or bounded error| Worker
     Worker --> Outbox[("Transactional outbox")]
     Outbox -->|translation results| KafkaOut["Kafka result topics"]

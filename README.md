@@ -29,10 +29,10 @@
 Потребитель закрепляет версию, исходный Git commit, SHA-256 ZIP и опись файлов. Пакет формата 2 повторяет корень репозитория: код сервисов, Compose, установщик, документация и инструменты; Graphify и агентские навыки остаются только в исходном репозитории. Рабочие `.env`, ключи, пароли, веса и runtime в пакет не входят. Продукт получает проверенный выпуск автоматически и сохраняет его как локальную зависимость, без редактируемой копии исходников в своём Git.
 
 ```sh
-python3 tools/build_bundle.py --output dist/AELEV-platform-infrastructure-0.2.0.zip
+python3 tools/build_bundle.py --output dist/AELEV-platform-infrastructure-1.0.0.zip
 ```
 
-Первый выпуск поставляет закреплённые исходники и рецепты для локальной сборки. Он не объявляется подписанным выпуском готовых production images. Пакеты и образы следующих выпусков должны проходить те же проверки целостности, совместимости и допуска; автоматическая загрузка не даёт права обновить уже работающую общую установку.
+Выпуск 1.0 поставляет закреплённые исходники и рецепты для локальной сборки. Он не объявляется подписанным выпуском готовых production images. [Процедура выпуска](docs/operations/release.md) требует CI, нового полного clean-room evidence точного source commit и проверки ZIP/lock; доказательства опубликованного 1.0 находятся в его release assets. Пакеты и образы следующих выпусков проходят те же проверки целостности, совместимости и допуска; автоматическая загрузка не даёт права обновить уже работающую общую установку.
 
 Закрытый репозиторий требует доступа GitHub при первом получении выпуска. CI потребителя использует отдельный read-only deploy key только к этому репозиторию; личный токен владельца в CI не передаётся.
 
@@ -45,6 +45,7 @@ python3 tools/build_bundle.py --output dist/AELEV-platform-infrastructure-0.2.0.
 - [Решение о самостоятельном продукте](docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md), [ключевые архитектурные решения](docs/adr/INDEX.md), [происхождение унаследованных ADR](docs/audit/extraction.json).
 - [Композиционная диаграмма](infrastructure.mmd), [границы репозиториев](docs/architecture/repositories.mmd), [эксплуатация компонентов](USER_MANUAL.md).
 - [Публичный установочный интерфейс](docs/api/installation.md), [изменения](CHANGELOG.md).
+- [Карта публичных контрактов](docs/api/INDEX.md), [собственная модель развёртывания](docs/architecture/deployment.md), [supply chain](docs/security/supply-chain.md).
 - [Clean-room воспроизведение полного профиля](docs/operations/clean-room-reproduction.md), [машиночитаемый состав](full-local.json).
 - [Аудит документации и Production Readiness](docs/audit/production-readiness.md), [официальные источники решений](docs/references/official-sources.md).
 - [История прежней композиции](docs/obsolete/services/infrastructure/CHANGELOG.md) и [архив прежнего руководства](docs/obsolete/services/infrastructure/README.md).

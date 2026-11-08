@@ -4,9 +4,9 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 from pathlib import Path
-
 
 OWNER_DIRS = (
     "kafka",
@@ -74,10 +74,103 @@ FORBIDDEN_INFRA_ADR_TERMS = (
     "sensor-surface",
 )
 
+FOREIGN_CONSUMER_DOC = re.compile(
+    r"https?://github\.com/sapogov1978/(?:discovery-research-platform|AELEV)(?:/|$)",
+    re.IGNORECASE,
+)
+FROZEN_SDK_DOCUMENTS = {
+    "platform-ui/operator-ui-kit/package/README.md",
+    "platform-ui/operator-ui-kit/package/SPEC.md",
+}
+
+
+def documentation_boundary_errors(root: Path) -> list[str]:
+    """Keep active contracts self-contained while retaining immutable provenance."""
+    errors: list[str] = []
+    ignored = {
+        ".git",
+        ".venv",
+        "node_modules",
+        "graphify-out",
+        ".codex",
+        "obsolete",
+        "inherited-adrs",
+        "dist",
+        "runtime",
+        "__pycache__",
+        ".pytest_cache",
+    }
+    entrypoints = {
+        "README.md",
+        "SPEC.md",
+        "USER_MANUAL.md",
+        "INDEX.md",
+        "TASKS.md",
+        "PROVIDER_OPERATIONS.md",
+    }
+    sections = {"api", "architecture", "operations", "security", "adr", "references"}
+    for path in root.rglob("*.md"):
+        relative = path.relative_to(root)
+        name = relative.as_posix()
+        if ignored.intersection(relative.parts) or name in FROZEN_SDK_DOCUMENTS:
+            continue
+        active = path.name in entrypoints or (
+            len(relative.parts) > 2
+            and relative.parts[0] == "docs"
+            and relative.parts[1] in sections
+        )
+        if not active:
+            continue
+        text = path.read_text(encoding="utf-8")
+        if FOREIGN_CONSUMER_DOC.search(text):
+            errors.append(
+                f"Active documentation depends on consumer repository: {name}"
+            )
+        if relative.parts[:2] == ("docs", "api"):
+            for term in (
+                *FORBIDDEN_INFRA_ADR_TERMS,
+                "advance screening",
+                "base screening",
+                "deep screening",
+                "zone ingestion",
+                "execution brain",
+                "discovery.",
+            ):
+                if term in text.lower():
+                    errors.append(
+                        f"Consumer contract {term!r} in infrastructure API: {name}"
+                    )
+    composition = root / "infrastructure.mmd"
+    if composition.is_file():
+        text = composition.read_text(encoding="utf-8")
+        if re.search(r"Index\s+9B|infrastructure/compose\.yml|\bADR-\d{4}\b", text):
+            errors.append(
+                "Canonical composition diagram contains obsolete model/layout/ADR references"
+            )
+    if any((root / name).is_file() for name in FROZEN_SDK_DOCUMENTS):
+        record_path = root / "docs/audit/frozen-sdk-documents.json"
+        try:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            if (
+                record.get("schema_version") != 1
+                or record.get("version") != "0.1.4"
+                or set(record["documents"]) != FROZEN_SDK_DOCUMENTS
+            ):
+                raise ValueError("unsupported frozen document inventory")
+            if not (root / "platform-ui/SDK.md").is_file():
+                errors.append("Current owner-neutral SDK documentation is missing")
+            for name, expected in record["documents"].items():
+                if hashlib.sha256((root / name).read_bytes()).hexdigest() != expected:
+                    errors.append(f"Immutable SDK document changed: {name}")
+        except (OSError, ValueError, KeyError, TypeError):
+            errors.append("Immutable SDK document provenance is invalid")
+    return errors
+
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     errors: list[str] = []
+    errors.extend(documentation_boundary_errors(root))
     audit = (root / "docs/audit/production-readiness.md").read_text()
     adr_index = (root / "docs/adr/INDEX.md").read_text()
     official_sources = (root / "docs/references/official-sources.md").read_text()
@@ -136,7 +229,9 @@ def main() -> int:
             continue
         text = path.read_text()
         if "агентская карта" not in text.lower():
-            errors.append(f"Agent map does not declare its purpose: {path.relative_to(root)}")
+            errors.append(
+                f"Agent map does not declare its purpose: {path.relative_to(root)}"
+            )
         if "| Что искать | Где находится |" not in text:
             errors.append(f"Agent map is not tabular: {path.relative_to(root)}")
 
@@ -175,7 +270,9 @@ def main() -> int:
         text = path.read_text()
         identifier = path.stem
         if not text.startswith(f"# {identifier} — "):
-            errors.append(f"Infrastructure ADR title does not match filename: {path.name}")
+            errors.append(
+                f"Infrastructure ADR title does not match filename: {path.name}"
+            )
         for heading in REQUIRED_INFRA_ADR_SECTIONS:
             if heading not in text:
                 errors.append(f"Infrastructure ADR lacks {heading}: {path.name}")
@@ -188,7 +285,9 @@ def main() -> int:
         if len(re.findall(r"(?m)^- ", key_section)) < 2:
             errors.append(f"Infrastructure ADR has no key-decision list: {path.name}")
         if re.search(r"(?mi)^## (?:история|изменения|changelog)\b", text):
-            errors.append(f"Infrastructure ADR contains change-log history: {path.name}")
+            errors.append(
+                f"Infrastructure ADR contains change-log history: {path.name}"
+            )
         lowered = text.lower()
         for term in FORBIDDEN_INFRA_ADR_TERMS:
             if term in lowered:
@@ -196,7 +295,9 @@ def main() -> int:
                     f"Consumer-domain term {term!r} in infrastructure ADR: {path.name}"
                 )
         if f"]({path.name})" not in adr_index:
-            errors.append(f"Infrastructure ADR missing from decision index: {path.name}")
+            errors.append(
+                f"Infrastructure ADR missing from decision index: {path.name}"
+            )
         if identifier not in official_sources:
             errors.append(
                 f"Infrastructure ADR missing from official-source registry: {path.name}"
@@ -221,11 +322,15 @@ def main() -> int:
     if not archive_index.is_file():
         errors.append("Inherited ADR disposition index is missing")
     elif len(re.findall(r"(?m)^\| \[ADR-", archive_index.read_text())) != 132:
-        errors.append("Inherited ADR disposition index does not cover all 132 decisions")
+        errors.append(
+            "Inherited ADR disposition index does not cover all 132 decisions"
+        )
 
     compatibility_paths = (
-        root / "docs/audit/inherited-adrs/20261105-0001-independent-infrastructure-product.md",
-        root / "docs/audit/inherited-adrs/20261106-0002-infrastructure-repository-layout.md",
+        root
+        / "docs/audit/inherited-adrs/20261105-0001-independent-infrastructure-product.md",
+        root
+        / "docs/audit/inherited-adrs/20261106-0002-infrastructure-repository-layout.md",
     )
     for path in compatibility_paths:
         text = path.read_text()
@@ -262,9 +367,7 @@ def main() -> int:
     translator_dockerfile = (root / "translator-service/Dockerfile").read_text()
     core_stage = translator_dockerfile.split(
         "FROM python-bookworm AS translator-core-runtime", 1
-    )[-1].split(
-        "FROM ${AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE}", 1
-    )[0]
+    )[-1].split("FROM ${AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE}", 1)[0]
     for forbidden in (
         "COPY translator.lock.json",
         "COPY --from=index-model-assets",
@@ -274,11 +377,15 @@ def main() -> int:
         "AELEV_TRANSLATOR_RUNTIME_PATH",
     ):
         if forbidden in core_stage:
-            errors.append(f"Translator core image contains provider artifact: {forbidden}")
+            errors.append(
+                f"Translator core image contains provider artifact: {forbidden}"
+            )
     compute_compose = (root / "translator-service/compose.compute.yml").read_text()
     full_local = json.loads((root / "full-local.json").read_text())
     if "compute_compose" in full_local:
-        errors.append("Optional Translator compute recipe is still canonical full-local")
+        errors.append(
+            "Optional Translator compute recipe is still canonical full-local"
+        )
     if any(
         item.get("id") in {"translation-provider-image", "translator-worker-image"}
         for item in full_local.get("external_inputs", [])
@@ -294,7 +401,9 @@ def main() -> int:
         "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
     ):
         if required not in compute_compose:
-            errors.append(f"Optional Translator standalone recipe is missing {required}")
+            errors.append(
+                f"Optional Translator standalone recipe is missing {required}"
+            )
     if "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE" in compute_compose:
         errors.append("Translator provider and worker still share one image selector")
     provider_service = compute_compose.split("  translation-provider:", 1)[-1].split(

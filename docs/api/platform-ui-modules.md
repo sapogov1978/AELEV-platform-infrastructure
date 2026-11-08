@@ -18,10 +18,10 @@ Platform UI является технической оболочкой нави�
 
 Status publisher сначала устойчиво записывает owner-local declaration/heartbeat, затем отправляет его в оболочку. Отсутствующий, повреждённый, будущий или устаревший heartbeat не проходит локальную health-проверку. Локальная живость publisher не доказывает доставку оболочке.
 
-Штатное снятие модуля публикует монотонный withdrawal с последней известной identity и sequence. Истечение heartbeat скрывает представление как недоступное, но не создаёт withdrawal и не удаляет историю владельца.
+Штатное снятие модуля публикует монотонный withdrawal с последней известной identity и sequence и скрывает модуль. Отсутствие свежего heartbeat оставляет присутствующую строку с `connection=LOST` и показанием «Нет связи»; оно не создаёт withdrawal, не доказывает остановку контейнера и не удаляет историю владельца.
 
 ## Совместимость
 
 Версия декларации и bridge protocol изменяются независимо. Добавление необязательного presentation field не меняет предметный API владельца; изменение origin, trust rule, required field или семантики команды требует новой major-версии. Общие SDK и stylesheet являются digest-pinned техническими артефактами и не содержат предметных моделей.
 
-Нормативные детали публикации, browser boundary и refresh indicator определены в [контракте инъекции](platform-ui-injection.md), [архитектуре Platform UI](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/22-platform-ui.md) и 00-INFRA-20261106-0008-platform-ui-owner-injection, 00-INFRA-20261106-0008-platform-ui-owner-injection, 00-INFRA-20261106-0008-platform-ui-owner-injection, 00-INFRA-20261106-0008-platform-ui-owner-injection, 00-INFRA-20261106-0008-platform-ui-owner-injection, ADR-0160 и ADR-0161.
+Нормативные детали публикации, browser boundary и refresh indicator определены в [контракте инъекции](platform-ui-injection.md), [архитектуре Platform UI](../architecture/platform-ui.md) и [00-INFRA-20261106-0008-platform-ui-owner-injection](../adr/00-INFRA-20261106-0008-platform-ui-owner-injection.md). Текущий контракт SDK находится у [Platform UI](../../platform-ui/SDK.md); предметные API приложений не определяются оболочкой.

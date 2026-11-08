@@ -1,19 +1,21 @@
-# gRPC
+# Технические gRPC и HTTPS-интерфейсы
 
-gRPC не используется для межсервисных доменных команд, запросов или событий. Единственный разрешённый транспорт доменной коммуникации — Kafka.
+Межсервисные предметные команды, запросы и события используют Kafka по [00-INFRA-20261106-0005-kafka-cloudevents-contracts](../adr/00-INFRA-20261106-0005-kafka-cloudevents-contracts.md). Этот каталог не объявляет RPC, модельные или прикладные API потребителя.
 
-Распределённые вычислительные компоненты одной поставки Advance Screening по [архивное ADR-0153](../audit/inherited-adrs/20261020-0153-distributed-advance-installation.md) остаются внутри одного владельца. Их ограниченный HTTPS/mTLS-канал не является межсервисным исключением и не разрешает другой стадии обращаться к чужой модели, корпусу или хранилищу. Канонические решения и Kafka-публикация остаются у управляющей части; [текущая степень реализации](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/services/discovery-engine/advance-screening/deployment/README.md) отдельно ограничивает применение нового режима.
+| Техническая поверхность | Владелец и контракт | Ограничение |
+|---|---|---|
+| SPIRE Server/Agent и SPIFFE Workload API | [Workload identity](workload-identity.md), [SPIRE SPEC](../../spire/SPEC.md) | Стандартные протоколы удостоверений; административные полномочия не выдаются потребителю |
+| OTLP | [Telemetry](telemetry.md), [Collector](../../observability/otel-collector/SPEC.md) | Только техническая телеметрия; устойчивый межузловой вход определяется HTTPS-квитанциями владельца |
+| Публичный fetch | [Public Egress Gateway](../../public-egress-gateway/SPEC.md) | Собственный HTTPS/mTLS `/v1/fetch`, точный grant, без предметного решения |
+| Операторский browser UI | [Platform UI injection](platform-ui-injection.md) | Собственные HTTPS/OIDC API и ограниченный browser bridge; без передачи токенов |
+| Хранение и пробы | SPEC соответствующего владельца и [health/readiness](health-readiness.md) | Нативные технические протоколы, собственные данные и состояние |
 
-Тот же собственный канал передаёт неизменяемый план обучения, этапы и точные намерения допуска/отката без общего файлового хранилища. Он привязан к удостоверению установки, job ID, digest и известному установленному профилю; повтор не создаёт второй запуск, потеря связи не снимает удержание. Вычислитель не получает SQL/Kafka-полномочия управляющей части и не выдаёт себе допуск качества. Точные ограниченные маршруты определены в [описи владельца](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/services/discovery-engine/advance-screening/ENDPOINTS.md#внутренние-маршруты-распределённого-вычислителя).
+Внутренний протокол одного владельца не создаёт общего интерфейса к чужой БД, сокету, модели или журналу. Translator пользуется только [непрозрачным портом исполнения](model-compute.md); способ перевода и провайдер не определяются этим документом. Новое предметное межсервисное RPC требует отдельного заменяющего ADR, а не дописывания маршрутов в эту таблицу.
 
-Допустимы только:
+## Официальные источники
 
-- доступ сервиса к собственному хранилищу;
-- стандартные технические SPIRE Server/Agent и SPIFFE Workload API по [00-INFRA-20261106-0007-workload-and-operator-identity](../adr/00-INFRA-20261106-0007-workload-and-operator-identity.md) и [контракту удостоверений](workload-identity.md), без доменных команд, каталога приложений и доступа потребителя к административному API;
-- ограниченный HTTPS/mTLS-вызов технического `/v1/fetch` независимого [Public Egress Gateway](../../public-egress-gateway/SPEC.md) по [00-INFRA-20261106-0011-controlled-public-egress](../adr/00-INFRA-20261106-0011-controlled-public-egress.md): публичное внешнее назначение, индивидуальное разрешение и поток байтов, без доменного решения, чужого канонического хранилища или замены Kafka RPC;
-- техническая HTTPS-инъекция описаний UI и состояния по [00-INFRA-20261106-0008-platform-ui-owner-injection](../adr/00-INFRA-20261106-0008-platform-ui-owner-injection.md), ограниченные браузерные сообщения оформления и индикатора по [00-INFRA-20261106-0008-platform-ui-owner-injection](../adr/00-INFRA-20261106-0008-platform-ui-owner-injection.md) и [контракту оболочки](platform-ui-injection.md), без доменных данных и команд;
-- взаимодействие Execution Brain с внешней внешний площадкой;
-- технические точки проверки работоспособности и готовности оркестратора, которые не передают доменные данные и не изменяют состояние другого сервиса.
-- стандартный OTLP технической телеметрии внутри собственной технической поставки по [00-INFRA-20261106-0009-independent-observability-and-telemetry](../adr/00-INFRA-20261106-0009-independent-observability-and-telemetry.md); устойчивый межузловой вход использует [HTTPS и явное подтверждение](telemetry.md), не переносит доменные команды и не заменяет Kafka или защищённый аудит.
+- [SPIFFE concepts и Workload API](https://spiffe.io/docs/latest/spiffe-about/spiffe-concepts/).
+- [OTLP specification](https://opentelemetry.io/docs/specs/otlp/).
+- [Kafka documentation](https://kafka.apache.org/39/documentation/).
 
-Введение доменного межсервисного gRPC требует нового ADR, который явно заменит [00-INFRA-20261106-0005-kafka-cloudevents-contracts](../adr/00-INFRA-20261106-0005-kafka-cloudevents-contracts.md). До такого решения определения доменных сервисов Protobuf в проекте не создаются; стандартные сообщения OTLP не являются таким определением.
+Прежняя ошибочно перенесённая редакция сохранена побайтно в [аудиторском архиве](../audit/pre-1.0-api-documents.tar.gz) с [описью](../audit/pre-1.0-api-documents.json).

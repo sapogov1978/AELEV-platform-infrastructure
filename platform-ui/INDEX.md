@@ -14,4 +14,4 @@
 | Настройки и запуск | `.env.example`, `compose.yml`, `compose.local-keycloak.yml`, `compose.local-bridge.yml` |
 | Проверки и результаты | `test/` |
 
-Контракт инъекции находится в [docs/api/platform-ui-injection.md](../docs/api/platform-ui-injection.md), архитектура — в [docs/architecture/22-platform-ui.md](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/22-platform-ui.md).
+Контракт инъекции находится в [docs/api/platform-ui-injection.md](../docs/api/platform-ui-injection.md), архитектура — в [docs/architecture/22-platform-ui.md](../docs/architecture/platform-ui.md).

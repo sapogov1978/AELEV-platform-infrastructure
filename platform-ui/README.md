@@ -24,15 +24,15 @@ docker compose up -d --no-build --pull never
 
 Корневая локальная композиция также включает `compose.local-bridge.yml`: тот же TLS endpoint оболочки публикуется только на private IPv4 gateway стандартного Docker bridge, чтобы самостоятельные status publishers достигали его через `host.docker.internal`. Основной listener остаётся отдельным; wildcard/LAN bind и отключение TLS не используются.
 
-UI-сборка устанавливает security patches в принятой Alpine 3.22 и работает под UID 101. CI сохраняет scan/SBOM фактического image ID по [общему правилу проверки образов](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/security/supply-chain.md).
+UI-сборка устанавливает security patches в принятой Alpine 3.22 и работает под UID 101. CI сохраняет scan/SBOM фактического image ID по [общему правилу проверки образов](../docs/security/supply-chain.md).
 
 ## Навигация
 
-Согласованная владельческая последовательность кнопок: «Управление политикой», «Область исследования», «Загрузка зон», «Базовый отсев», «Продвинутый отсев», «Глубокий скрининг». Точные значения и граница универсальной оболочки закреплены в [архитектуре Platform UI](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/22-platform-ui.md); исходники оболочки не содержат каталога этих сервисов.
+Порядок разделов объявляет каждый владелец через контракт; оболочка не содержит каталога приложений. Источники правил — [архитектура Platform UI](../docs/architecture/platform-ui.md) и [контракт инъекции](../docs/api/platform-ui-injection.md).
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.
 - [USER_MANUAL.md](USER_MANUAL.md), [SPEC.md](SPEC.md) — использование и правила продукта.
 - [PROVIDER_OPERATIONS.md](PROVIDER_OPERATIONS.md) — установка и эксплуатация поставщика.
 - [client/](client/README.md) — Python-клиент публикации.
-- [operator-ui-kit/package/](operator-ui-kit/package/README.md) — SDK владельческих React-приложений, выпускаемый Platform UI.
+- [SDK.md](SDK.md) — текущая нейтральная граница SDK и происхождение сохранённого пакета.
 - [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, ограничения и история.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "profile": "full-local",
-  "release": "0.2.0",
+  "release": "1.0.0",
   "description": "Clean-room functional profile composed from owner-controlled infrastructure deliveries.",
   "root_compose": {
     "file": "compose.yml",

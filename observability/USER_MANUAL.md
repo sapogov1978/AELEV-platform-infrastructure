@@ -91,14 +91,14 @@ docker compose --env-file .env --profile ui down
 
 ## Проверки
 
-[Workflow GitHub Actions](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/.github/workflows/audit.yml) выполняет независимые проверки границы, JSON, Markdown-ссылок и синтаксиса Python при `push` и `pull_request`. Сервисные тесты наблюдаемости выполняются отдельно из этого каталога по закреплённым инструкциям; эти проверки не являются запуском реальной инфраструктуры, WAN или полным жизненным циклом. Результат прежнего локального воспроизведения сохранён в [отчёте](test/ci-validation-result.md).
+[Workflow GitHub Actions](../.github/workflows/audit.yml) выполняет независимые проверки границы, JSON, Markdown-ссылок и синтаксиса Python при `push` и `pull_request`. Сервисные тесты наблюдаемости выполняются отдельно из этого каталога по закреплённым инструкциям; эти проверки не являются запуском реальной инфраструктуры, WAN или полным жизненным циклом. Результат прежнего локального воспроизведения сохранён в [отчёте](test/ci-validation-result.md).
 
 ```sh
 docker build --target checks --build-context tests=./test -t aelev/observability-checks:local .
 docker run --rm --network none aelev/observability-checks:local pytest -p no:cacheprovider test/test_orchestration.py
 ```
 
-Здесь проверяется только композиция; модульные и реальные жизненные проверки находятся в `test` продуктов. [Спецификация](SPEC.md), [схема](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/architecture/diagrams/infrastructure-observability.mmd). Прежние [результаты доставки](test/delivery-result.md) и [жизненного цикла](test/lifecycle-result.md) исторические и не доказывают новый самостоятельный запуск. Локальная готовность не закрывает WAN, production PKI, нагрузку, внешнюю почту или независимый backup/restore.
+Здесь проверяется только композиция; модульные и реальные жизненные проверки находятся в `test` продуктов. [Спецификация](SPEC.md), [схема](observability.mmd). Прежние [результаты доставки](test/delivery-result.md) и [жизненного цикла](test/lifecycle-result.md) исторические и не доказывают новый самостоятельный запуск. Локальная готовность не закрывает WAN, production PKI, нагрузку, внешнюю почту или независимый backup/restore.
 
 После запуска всех продуктов выполните `python3.13 test/check_routes.py`: это чтение настоящих метрик/проб и запросы Grafana через опубликованные защищённые адреса, без создания тестовых сущностей. [Результат маршрутов](test/routes-result.md). Проверка запуска каждого продукта — его `test/startup.py`; она требует свежего события подтверждённой ONLINE-публикации, а не только heartbeat издателя. Полный жизненный цикл в текущем запуске не повторялся.
 

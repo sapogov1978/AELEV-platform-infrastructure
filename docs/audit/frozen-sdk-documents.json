@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "package": "@aelev/operator-ui-kit",
+  "version": "0.1.4",
+  "source_commit": "8d246a7e8d73e047bef8d58da3b7eb17b6cab0ef",
+  "documents": {
+    "platform-ui/operator-ui-kit/package/README.md": "8327cf97082a2705de341ec5fd0f412d92293451e7c598a989f6be92a455a371",
+    "platform-ui/operator-ui-kit/package/SPEC.md": "cd63c5581c0580fd516e1ba0d319982d0fd4377382269ed082c34a663e3c6b8d"
+  },
+  "current_contract": "platform-ui/SDK.md"
+}

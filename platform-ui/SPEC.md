@@ -1,6 +1,6 @@
 # Platform UI — нормативная спецификация
 
-Сборка Nginx UI устанавливает доступные security patches из принятой ветки Alpine 3.22, сохраняя прежний закреплённый базовый образ и приложение. Конечный пользователь — UID/GID 101; временный build-root не становится runtime user. Фактический image ID, состав пакетов и High/Critical gate подтверждаются [image evidence](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/security/supply-chain.md).
+Сборка Nginx UI устанавливает доступные security patches из принятой ветки Alpine 3.22, сохраняя прежний закреплённый базовый образ и приложение. Конечный пользователь — UID/GID 101; временный build-root не становится runtime user. Фактический image ID, состав пакетов и High/Critical gate подтверждаются [image evidence](../docs/security/supply-chain.md).
 
 Внешние ссылки и внедряемые разделы имеют строго ограниченное исключение HTTP для точных loopback hostname по [00-INFRA-20261106-0007-workload-and-operator-identity](../docs/adr/00-INFRA-20261106-0007-workload-and-operator-identity.md), [00-INFRA-20261106-0007-workload-and-operator-identity](../docs/adr/00-INFRA-20261106-0007-workload-and-operator-identity.md) и [каноническому контракту](../docs/api/platform-ui-injection.md#ссылки-на-собственные-интерфейсы). Это адрес станции браузера, не произвольный сетевой адрес; все ограничения sandbox и самостоятельная целевая авторизация сохраняются. Оболочка не определяет режим чужой установки, не подключается к её API и не передаёт свою сессию.
 

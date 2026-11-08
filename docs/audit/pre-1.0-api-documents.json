@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "source_commit": "8d246a7e8d73e047bef8d58da3b7eb17b6cab0ef",
+  "archive": "pre-1.0-api-documents.tar.gz",
+  "archive_sha256": "578b2a9b20fb80fa8cd725b6c6566786d4a3a742c8733f91a8874945878c14b8",
+  "files": {
+    "docs/api/grpc.md": "e0512d58b6a7fcaf8cb18efdb0845b1628c60e5f25b3555afb7886929fab6d59",
+    "docs/api/internal-events.md": "e9d53659557b92830855ce79230abe39a30e17452b6e02c02e7019e6cd538eda",
+    "docs/api/model-compute.md": "5f583c78275f98cf1bb709247a76a294fac4c9c0da6e2972a5adfd023fad1404"
+  }
+}

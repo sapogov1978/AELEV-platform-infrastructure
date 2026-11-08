@@ -1,84 +1,31 @@
-# Внутренние события
+# Владение Kafka-событиями инфраструктуры
 
-Этот документ задаёт общий нормативный конверт, каталог семейств и правила совместимости Kafka-событий Discovery Research Platform. Поля конкретного `data` определяются владельцем в service-local schema artifact; документация не создаёт второго определения схемы.
+Общая граница определяется [00-INFRA-20261106-0005-kafka-cloudevents-contracts](../adr/00-INFRA-20261106-0005-kafka-cloudevents-contracts.md). Kafka предоставляет транспорт; издатель владеет topic, schema, partition key, версией и provenance. Каталоги предметных событий и схемы конкретных приложений остаются у потребителей.
 
-## Конверт CloudEvents
+## Envelope и устойчивость
 
-Каждое межсервисное предметное сообщение является CloudEvents 1.0 в structured JSON и содержит `specversion`, неизменяемые `id`, `source`, `type`, `time`, `subject`, `datacontenttype`, `dataschema`, `correlationid`, `causationid`, `traceparent` и `data`. `data` содержит `schema_version`, `recorded_at` и `provenance` с точным владельцем, издателем, версией издателя и входными ссылками.
+Межсервисный обмен использует версионированный CloudEvents envelope. Точный набор обязательных полей, ограничения payload и security rules определяет закреплённый контракт владельца, а не второй общий перечень в этой статье. Повтор технической доставки сохраняет исходные bytes и identity; тот же идентификатор с другим содержимым не считается безопасным повтором.
 
-`time` равен неизменяемому `data.recorded_at`. Повторная отправка и replay сохраняют исходные байты, `id`, `time` и `recorded_at`; исправление или новая редакция получает новый идентификатор и явно ссылается на прежнюю запись.
+Consumer проверяет schema и полномочия, обеспечивает идемпотентность и подтверждает offset только после своей устойчивой транзакции. Broker ACK не доказывает предметное применение получателем. Между разными topics не предполагается общий порядок; несовместимое изменение схемы, ключа или смысла требует отдельной версии владельческого контракта. История topic и схем не переписывается при откате.
 
-Идемпотентность проверяется по `source + id` и предметному ключу либо поколению. Точный повтор безопасно игнорируется после подтверждения локального результата; другие байты с тем же `source + id` закрыто отклоняются и попадают в owner-local аудит.
+## Контракты, принадлежащие этому продукту
 
-Потребитель использует `read_committed`, проверяет schema, provenance, допустимого издателя, размер и поколение до предметной обработки и фиксирует offset только после устойчивой локальной транзакции. Между разными topics порядок не предполагается; отзыв или tombstone не позволяет позднему событию вновь активировать отменённую работу.
+| Событие | Topic | Владелец контракта и издатель | Partition key |
+|---|---|---|---|
+| `TranslationRequestedV2` | `translation.requests.v2`, `translation.requests.priority.v2` | Translator; публикует авторизованный технический клиент | `request_id` |
+| `TranslationCompletedV2` | `translation.results.v2` | Translator; публикует translator-service | `request_id` |
+| Миграционные `TranslationRequested` / `TranslationCompleted` v1 | `translation.requests.v1`, `translation.requests.priority.v1`, `translation.results.v1` | Translator; только явно поддерживаемая совместимость | `request_id` |
 
-## Каталог активных и совместимых семейств
+Действующий [Kafka-контракт перевода](translation.md) задаёт поля, limits, dedup и сопоставление результата. Исполняемый источник проверки — [поставляемый schema artifact](../../translator-service/contracts/translation-v1.json), его [SHA-256](../../translator-service/contracts/translation-v1.sha256) и [owner validator](../../translator-service/src/translator_service/contracts.py). Историческое имя файла не ограничивает набор содержащихся в нём v1/v2 schemas. Пример клиента не создаёт инфраструктурного каталога приложений.
 
-| Семейство | Владелец-издатель → потребитель | Topic | Ключ раздела | Исполняемый источник |
-|---|---|---|---|---|
-| `DomainDelegationSnapshot` | Zone Ingestion → Base Screening | `discovery.domain-delegation-snapshots.v1` | `zone_name` | `zone-ingestion/contracts` |
-| `DomainDelegationDeltaBatch` | Zone Ingestion → Base Screening | `discovery.domain-delegation-deltas.v1` | `zone_name` | `zone-ingestion/contracts` |
-| `DomainDelegationLifecycleChanged` | Zone Ingestion → подписанные стадии | `discovery.domain-delegation-lifecycle.v1` | `domain_name` | `zone-ingestion/contracts` |
-| `TemporaryZoneFileSubmitted` | Deep Screening → Zone Ingestion | `discovery.temporary-zone-files.v1` | `temporary_zone_file_id` | `zone-ingestion/contracts` |
-| `DiscoveryStageCommand` | Base Screening → Advance Screening | `discovery.stage-commands.v1` | `frontier_id` | `base-screening/contracts` |
-| `AdvanceScreeningSiteAccepted` | Advance Screening → Deep Screening | `discovery.advance-screening.site-accepted.v1` | `site_id` | `advance-screening/contracts` |
-| `AdvanceScreeningSiteAcceptanceRevoked` | Advance Screening → Deep Screening | `discovery.advance-screening.site-acceptance-revoked.v1` | `site_id` | `advance-screening/contracts` |
-| `DiscoveryScopeModeChangedV2` | Discovery Scope → Deep Screening | `discovery.scope-mode.v2` | `scope_id` | `discovery-scope/contracts.py` |
-| `UserResearchTargetAdmittedV2` | Discovery Scope → Deep Screening | `discovery.user-research-target-admissions.v2` | `target_id` | `discovery-scope/contracts.py` |
-| `UserResearchTargetRevokedV2` | Discovery Scope → Deep Screening | `discovery.user-research-target-revocations.v2` | `target_id` | `discovery-scope/contracts.py` |
-| `SensorSurfacePackagePublishedV4` | Deep Screening → внешний потребитель | `discovery.sensor-surface-packages.v4` | `target_id` | `deep-screening/contracts.py` |
-| `SensorSurfacePackageRevokedV4` | Deep Screening → внешний потребитель | `discovery.sensor-surface-package-revocations.v4` | `target_id` | `deep-screening/contracts.py` |
-| `PolicyPublishedV4` | Policy Management → функциональные потребители | `policy.published.v4` | `policy_ref` | `policy-management/contracts` |
-| `PolicyLocalizationRequestedV4` | функциональный потребитель → Policy Management | `policy.localization-requests.v4` | `request_id` | `policy-management/contracts` |
-| `PolicyLocalizationProvidedV4` | Policy Management → функциональные потребители | `policy.localization-results.v4` | `request_id` | `policy-management/contracts` |
-| `TranslationRequestedV2` | владелец текста → Translator | `translation.requests.v2` | `request_id` | контракт перевода и service-local schemas |
-| `TranslationRequestedPriorityV2` | владелец текста → Translator | `translation.requests.priority.v2` | `request_id` | контракт перевода и service-local schemas |
-| `TranslationCompletedV2` | Translator → владелец текста | `translation.results.v2` | `request_id` | контракт перевода и service-local schemas |
-| `DiscoveryDeliveryRecorded` | отправитель → получатель | owner-declared `*.delivery-recorded.v1` | `delivery_id` | service-local AsyncAPI |
-| `DiscoveryDeliveryAcknowledged` | получатель → отправитель | owner-declared `*.delivery-acknowledged.v1` | `delivery_id` | service-local AsyncAPI |
-| `DiscoveryDeliveryReplayRequested` | получатель → отправитель | owner-declared `*.delivery-replay-requests.v1` | `delivery_id` | service-local AsyncAPI |
-| `RuntimeHealthEvent` | владелец runtime → его технический контур | owner-declared health topic | `component_id` | service-local AsyncAPI |
+Телеметрия и UI presence используют собственные [технические протоколы](telemetry.md) и [контракт инъекции](platform-ui-injection.md), а не выдуманные общие Kafka-семейства. Они не заменяют предметную Kafka-границу. Приватные ключи, access tokens и credentials в события не включаются; разрешённое содержание payload задаёт конкретный контракт.
 
-V1–V3 пакетов Deep Screening и V1–V3 policy/translation families остаются только совместимыми историческими входами там, где это прямо реализовано consumer. Новый издатель использует текущую major-версию; сохранённое событие старой версии не переписывается под новую schema.
+## Канонические источники и история
 
-`DiscoveryClassifierReplica`, `DiscoveryClassifierReplicaChunk` и `DiscoveryStageResult` сохраняются в service-local bundles только для чтения существующей истории и совместимости стадий. Base Screening не публикует model output и не получает право координировать последующие решения.
+Нормативная цепочка: ADR → владельческий API → закреплённый service-local artifact/digest → validator и contract tests. Новый контракт публикуется владельцем; сгенерированный artifact не исправляется как вторая независимая схема. Прежний каталог чужих событий сохранён побайтно в [аудиторском архиве](../audit/pre-1.0-api-documents.tar.gz) с [описью SHA-256](../audit/pre-1.0-api-documents.json) и не является API инфраструктуры.
 
-## Граница Discovery
+## Официальные источники
 
-Zone Ingestion является единственным издателем рабочего domain frontier. `TemporaryZoneFileSubmitted` не создаёт работу Base Screening напрямую: Zone Ingestion проверяет неизменяемый файл, создаёт свою ревизию и публикует обычный delegation event.
-
-`DiscoveryStageCommand` является единственным активным предметным выходом Base Screening. Он содержит точную страницу, сохранённый ограниченный материал, `policy_ref`, буквальные сигналы, происхождение адреса и `delegation_guard`, но не выбирает реализацию или модель следующей стадии.
-
-`AdvanceScreeningSiteAccepted` нейтрален к внешнему использованию и не назначает Deep Screening владельцем чужого состояния. Отзыв содержит точную `acceptance_id`, причину и версию, которую запрещено оживлять поздним повтором.
-
-`target_id` обозначает точный нормализованный URL, включая путь; `origin_id` обозначает только техническую границу origin. Допуск одного target не разрешает соседний путь. Deep Screening связывает пакет с точными `target_id`, `site_id`, `policy_ref`, входными событиями, снимками и digest результата.
-
-## Policy и перевод
-
-`PolicyPublishedV4` переносит полный неизменяемый снимок с `policy_ref`; внутренняя числовая редакция Policy Management не становится межсервисным идентификатором. `PolicyLocalizationRequestedV4` содержит только язык и идентичность запроса; Policy Management сам закрепляет текущий `policy_ref` и создаёт полный набор строк попытки.
-
-Translator получает точные текст, исходный и целевой языки, digest и идентификатор запроса без знания политики, стадии или назначения результата. Он передаёт текст и языки непрозрачному провайдеру, не выбирает модель или движок и не хранит provider-specific сведения. Частичный набор строк не публикуется как готовая локализация.
-
-## Устойчивая доставка
-
-Владелец сохраняет exact payload, SHA-256, topic, partition key, generation и состояние попытки до публикации. ACK Kafka доказывает приём broker, но не подтверждает устойчивое применение получателем; для границ, требующих такого доказательства, используются `DiscoveryDeliveryRecorded` и `DiscoveryDeliveryAcknowledged`.
-
-Replay повторяет исходные байты и не создаёт новую предметную версию. Получатель хранит tombstone и sequence boundaries; пересоздание текущей декларации отправителя не восстанавливает утраченную историю получателя.
-
-## Совместимость
-
-Добавление необязательного поля допустимо только при сохранении прежнего смысла и доказанной совместимости потребителей. Изменение required field, смысла поля, topic, partition key, owner, security rule или порядка применения создаёт новую major-версию схемы и topic. Consumer новой версии развёртывается раньше publisher; версии работают параллельно до подтверждённого drain.
-
-Исторический идентификатор `DISCOVERY_REGISTRY` в ранее выпущенных delivery schemas остаётся только идентификатором совместимости. Он не обозначает общий сервис, registry или владельца данных и не применяется в новых семействах.
-
-## Идентичность и безопасность
-
-Production publisher аутентифицируется в Kafka точной короткоживущей SPIFFE/SPIRE identity. ACL по умолчанию запрещают доступ и разрешают конкретной роли только её topics, consumer groups и операции. Идентичность одной среды недействительна в другой.
-
-Секреты, access token, закрытые ключи, полный текст документов, произвольный операторский ввод и необязательные provider details не входят в конверт, логи или метрики. Ошибка schema, provenance, identity, generation либо размера закрыто отклоняет событие и не подтверждает offset.
-
-## Канонические исполняемые артефакты
-
-Нормативная цепочка для каждого семейства имеет вид: этот каталог → owning API contract → service-local `contracts/manifest.json` и `contracts/asyncapi.json` либо экспортированный schema bundle → consumer tests. [Таблица трассируемости](https://github.com/sapogov1978/discovery-research-platform/blob/8d1a663319ac15d8729cf1422858f37d57096c75/docs/audit/TRACEABILITY.md) закрепляет конкретные пути и проверки.
-
-Существующий service-local artifact изменяется только через его владеющий generator или модель. Сгенерированный JSON не исправляется как канонический источник. Отсутствие export artifact для реализованного Python-контракта является явным audit gap и не разрешает создать второе ручное schema-определение.
+- [CloudEvents 1.0.2](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
+- [Apache Kafka 3.9](https://kafka.apache.org/39/documentation/).
+- [JSON Schema 2020-12](https://json-schema.org/draft/2020-12).

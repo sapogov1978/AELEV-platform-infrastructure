@@ -1,20 +1,20 @@
 flowchart TB
-    %% ADR-0113 защищает план; ADR-0114 явно согласует добавление gateway.
-    %% ADR-0115: SQLite встроена у владельца; общего SQLite-сервера/тома нет.
-    ROOT["infrastructure/compose.yml<br/>Совместный запуск на одном Docker host"]
+    %% 00-INFRA-20261106-0004: канонические рецепты принадлежат владельцам.
+    %% 00-INFRA-20261106-0015: полный профиль не включает реализацию перевода.
+    ROOT["compose.yml + full-local.json<br/>Совместный запуск на одном Docker host"]
     CONFIG["Каждая поставка владеет своим env,<br/>образом, секретами, данными и test"]
     CONFIG ~~~ ROOT
-    RECOVERY["Операторская задача хоста, ADR-0148<br/>LaunchAgent / systemd user / Task Scheduler<br/>Только зарегистрированные exact ID<br/>Общий бюджет 3; затем блокировка<br/>Без Docker socket в runtime"] -. "ограниченный жизненный цикл" .-> ROOT
+    RECOVERY["Операторская задача хоста<br/>LaunchAgent / systemd user / Task Scheduler<br/>Только зарегистрированные exact ID<br/>История, guard и паузы сохраняются<br/>Socket только у явного оператора/fencing"] -. "ограниченный жизненный цикл" .-> ROOT
 
     ROOT --> KAFKA["kafka/compose.yml<br/>Межсервисное взаимодействие<br/>1 broker/controller KRaft"]
     ROOT --> EGRESS["public-egress-gateway/compose.yml<br/>Контролируемый публичный HTTP(S)-доступ<br/>mTLS, отдельные права и квоты identities<br/>Собственный Swagger /docs"]
     ROOT --> IDP["keycloak/compose.yml<br/>Идентификация и доступ<br/>Keycloak + собственная PostgreSQL"]
-    ROOT --> SPIRE["spire/compose.yml + compose.observation.yml, ADR-0154<br/>Отдельно включаемая выдача X.509-SVID<br/>Собственные operator/node state и наблюдение<br/>Зашифрованное offline backup/restore"]
+    ROOT --> SPIRE["spire/compose.yml + compose.observation.yml<br/>Выдача X.509-SVID; включена в full-local<br/>Собственные operator/node state и наблюдение<br/>Зашифрованное offline backup/restore"]
     ROOT --> MINIO["minio/compose.yml<br/>Хранилище артефактов<br/>2 площадки по 4 узла, site replication"]
     ROOT --> PG["postgresql/compose.yml<br/>Хранилище структурированных данных<br/>3 Patroni/PostgreSQL + 3 etcd<br/>Ограждение: docker / kubernetes / watchdog"]
-    ROOT --> TR["translator-service/compose.remote.yml<br/>+ compose.local.yml<br/>Собственная БД, миграция, topics,<br/>2 consumer, Index 9B/worker, outbox, API"]
+    ROOT --> TR["translator-service/compose.remote.yml<br/>+ compose.local.yml<br/>Собственная БД, миграция, topics,<br/>2 consumer, dispatcher, outbox, API<br/>Реализация перевода не входит в full-local"]
     TR -. "Provisioning и readiness требуют Kafka" .-> KAFKA
-    ROOT --> UI["platform-ui/compose.yml<br/>Интерфейс платформы<br/>HTTPS nginx + API<br/>Локальная техническая SQLite, ADR-0115"]
+    ROOT --> UI["platform-ui/compose.yml<br/>Интерфейс платформы<br/>HTTPS nginx + API<br/>Локальная техническая SQLite владельца"]
     ROOT --> OBS["observability/compose.yml<br/>Только композиция семи владельцев"]
 
     OBS --> DELIVERY["delivery/compose.yml<br/>Устойчивый приём и исходный архив<br/>Собственный SQLite-журнал"]
