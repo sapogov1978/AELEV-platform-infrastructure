@@ -27,8 +27,40 @@ COMPOSE = [
 IMPORT = "from aelev_postgresql.__main__ import connection, setting, secret, SECRETS\n"
 
 
+def classify_command_failure(output: str) -> str:
+    normalized = output.lower()
+    classifications = (
+        (
+            "PERSISTED_SAFETY_CONFIG_MISMATCH",
+            ("persisted cluster safety configuration does not match",),
+        ),
+        (
+            "PATRONI_CONFIG_UNREACHABLE",
+            ("no reachable patroni configuration endpoint",),
+        ),
+        (
+            "PATRONI_AUTHORIZATION_FAILED",
+            ("http error 401", "unauthorized"),
+        ),
+        (
+            "TLS_VERIFICATION_FAILED",
+            ("certificate verify failed", "tlsv1 alert unknown ca"),
+        ),
+        ("CONNECTION_REFUSED", ("connection refused",)),
+        ("ASSERTION_FAILED", ("assertionerror",)),
+    )
+    for code, markers in classifications:
+        if any(marker in normalized for marker in markers):
+            return code
+    return "PROCESS_FAILED"
+
+
 def command(
-    *args: str, source: str | None = None, timeout: int = 240, check: bool = True
+    *args: str,
+    source: str | None = None,
+    timeout: int = 240,
+    check: bool = True,
+    operation: str = "DOCKER_COMMAND",
 ) -> subprocess.CompletedProcess[str]:
     """Capture commands privately; never include credentials in reports."""
     result = subprocess.run(
@@ -38,7 +70,10 @@ def command(
         # Compose startup diagnostics contain role names and states, not secrets.
         if "up" in args:
             (ROOT / "test" / "startup-diagnostics.log").write_text(result.stderr)
-        raise RuntimeError(f"Command failed: {args[0]} (exit {result.returncode})")
+        reason = classify_command_failure(result.stdout + "\n" + result.stderr)
+        raise RuntimeError(
+            f"{operation} failed (exit {result.returncode}; reason={reason})"
+        )
     return result
 
 
@@ -83,7 +118,11 @@ def inventory(kind: str) -> set[str]:
 
 
 def execute(
-    node: int, source: str, *, check: bool = True
+    node: int,
+    source: str,
+    *,
+    check: bool = True,
+    operation: str = "POSTGRESQL_SQL_CHECK",
 ) -> subprocess.CompletedProcess[str]:
     """Execute test SQL over verified multi-host TLS from a real cluster member."""
     return compose(
@@ -95,6 +134,7 @@ def execute(
         source=IMPORT + source,
         check=check,
         timeout=30,
+        operation=operation,
     )
 
 
@@ -326,10 +366,12 @@ def main(report: Path) -> None:
             "-m",
             "aelev_postgresql",
             "verify",
+            operation="VERIFY_CLUSTER_SAFETY",
         )
         execute(
             writer,
             "with connection() as c:\n assert c.execute('SHOW synchronous_commit').fetchone()[0]=='on'\n assert c.execute('SHOW synchronous_standby_names').fetchone()[0].startswith('ANY 1')",
+            operation="VERIFY_SYNCHRONOUS_QUORUM",
         )
         phase("Один ведущий, две реплики; строгий синхронный кворум ANY 1 и TLS")
         for _ in range(2):

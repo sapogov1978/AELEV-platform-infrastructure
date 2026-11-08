@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794100219.888722,
-    "seen": 1794100259.7287629,
-    "ast_hash": "7847ee43299d4bfbee51d8e88068f280",
+    "mtime": 1794104032.8863697,
+    "seen": 1794116042.333287,
+    "ast_hash": "dcb10b405ee8d708566f48d92a00dde8",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1812,9 +1812,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/cluster-lifecycle.py": {
-    "mtime": 1793966284.5437346,
-    "seen": 1793966970.2343411,
-    "ast_hash": "6920511b6bd9b71f28d75ecf095bca93",
+    "mtime": 1794104032.8848238,
+    "seen": 1794116042.325727,
+    "ast_hash": "a6316783a59d8dd665492d8894d2ee6b",
     "semantic_hash": ""
   },
   "postgresql/test/fencing-lifecycle.py": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1793957793.6855774,
-    "seen": 1793958131.683579,
-    "ast_hash": "27fe68623c96b4b9dcde99786cf1557b",
+    "mtime": 1794104032.8858967,
+    "seen": 1794116042.34621,
+    "ast_hash": "6b972870c4d92a2ebbf53b00647ee006",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -6249,6 +6249,12 @@
     "mtime": 1794082751.1209848,
     "seen": 1794082767.6104488,
     "ast_hash": "dadf78db8da6b3078d7bb76c1cb82d6c",
+    "semantic_hash": ""
+  },
+  "postgresql/test/test_cluster_lifecycle_diagnostics.py": {
+    "mtime": 1794104032.8853478,
+    "seen": 1794116042.325786,
+    "ast_hash": "a23ad9c0f0d6e35aae28a4ff4c715d63",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
