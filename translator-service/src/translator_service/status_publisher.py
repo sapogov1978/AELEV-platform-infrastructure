@@ -18,7 +18,6 @@ COMPONENTS = {
     "kafka-connection": "Соединение с Kafka",
     "priority-consumer": "Приоритетный consumer",
     "normal-consumer": "Обычный consumer",
-    "provider": "Провайдер перевода",
     "outbox": "Outbox",
     "api": "Операционный API",
     "publisher": "Издатель состояния переводчика",
@@ -57,10 +56,6 @@ def description(cfg: Settings) -> bytes:
 
 
 def probe(cfg: Settings) -> tuple[str, list[dict[str, str]]]:
-    compute_desired_state = os.environ[PREFIX + "COMPUTE_DESIRED_STATE"].strip().upper()
-    if compute_desired_state not in {"RUNNING", "STOPPED"}:
-        raise ValueError("TRANSLATOR_COMPUTE_DESIRED_STATE_INVALID")
-
     def kafka() -> str:
         try:
             verify_kafka()
@@ -88,30 +83,11 @@ def probe(cfg: Settings) -> tuple[str, list[dict[str, str]]]:
             }
             for role in roles
         ]
-        compute = [
-            observation
-            for observation in runtime
-            if observation["id"] in {"provider", "worker"}
-        ]
-        if {observation["id"] for observation in compute} != {"provider", "worker"}:
-            raise ValueError("TRANSLATOR_COMPUTE_OBSERVATION_INCOMPLETE")
         observations.extend(
             observation
             for observation in runtime
             if observation["id"] not in {"provider", "worker"}
         )
-        observations.append(
-            {
-                "id": "provider",
-                "state": aggregate(compute),
-                "observed_at": timestamp(),
-            }
-        )
-        if compute_desired_state == "STOPPED":
-            for observation in observations:
-                if observation["id"] == "provider":
-                    observation["state"] = "OFFLINE"
-                    observation["observed_at"] = timestamp()
     except Exception:
         observations.extend(
             {"id": role, "state": "UNKNOWN", "observed_at": timestamp()}
@@ -119,7 +95,6 @@ def probe(cfg: Settings) -> tuple[str, list[dict[str, str]]]:
                 "database",
                 "priority-consumer",
                 "normal-consumer",
-                "provider",
                 "outbox",
             )
         )

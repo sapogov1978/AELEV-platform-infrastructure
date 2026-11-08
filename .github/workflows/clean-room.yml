@@ -42,39 +42,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Initialize owner-local inputs without starting containers
         run: python3 tools/full_local.py init
-      - name: Admit exact translation images
-        run: |
-          python3 - <<'PY'
-          import json
-          import re
-          from pathlib import Path
-
-          digest = re.compile(r"^[^@\s]+@sha256:[0-9a-f]{64}$")
-          manifest = json.loads(Path("full-local.json").read_text())
-          values = {}
-          for item in manifest["external_inputs"]:
-              if item["kind"] != "container-image-digest":
-                  continue
-              values[item["variable"]] = item.get("admitted_reference", "")
-          if not all(digest.fullmatch(value) for value in values.values()):
-              raise SystemExit("CLEAN_ROOM_TRANSLATION_IMAGE_DIGEST_REQUIRED")
-          if len(values) != 2:
-              raise SystemExit("CLEAN_ROOM_TRANSLATION_IMAGE_SET_INVALID")
-          path = Path("translator-service/.env")
-          rows = []
-          seen = set()
-          for row in path.read_text().splitlines():
-              key = row.partition("=")[0]
-              if key in values:
-                  rows.append(key + "=" + values[key])
-                  seen.add(key)
-              else:
-                  rows.append(row)
-          if seen != set(values):
-              raise SystemExit("CLEAN_ROOM_TRANSLATION_IMAGE_VARIABLE_MISSING")
-          path.write_text("\n".join(rows) + "\n")
-          PY
-      - name: Verify private image admission before the expensive build
+      - name: Verify admitted images before the expensive build
         run: |
           python3 - <<'PY' > "$RUNNER_TEMP/admitted-private-images"
           import json

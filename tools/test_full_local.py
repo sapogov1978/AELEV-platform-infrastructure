@@ -45,13 +45,11 @@ class FullLocalContractTests(unittest.TestCase):
             ),
         )
 
-    def test_plan_includes_compute_and_acceptance(self) -> None:
+    def test_plan_excludes_provider_runtime_and_includes_acceptance(self) -> None:
         plan = full_local.source_plan(ROOT)
-        self.assertEqual(plan["compose_models_included"], ["root", "compute"])
+        self.assertEqual(plan["compose_models_included"], ["root"])
         self.assertFalse(plan["translation_provider_implementation_included"])
-        self.assertEqual(
-            plan["compute_services"], ["translation-provider", "translator-worker"]
-        )
+        self.assertNotIn("compute_services", plan)
         self.assertEqual(
             plan["build_inputs"],
             [

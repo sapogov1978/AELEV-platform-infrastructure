@@ -6,12 +6,9 @@
 - [x] Добавить fail-closed preflight, source/image BOM и verifier неизменяемого evidence.
 - [x] Добавить единый runbook для инженера без знания истории репозитория.
 - [x] Реализовать единый исполняемый gate, который сам запускает одиннадцать реальных функций, формирует evidence и проверяет cleanup.
-- [x] Создать отдельный provider-репозиторий и независимые подписываемые release workflows для provider/worker images.
-- [x] Выпустить подписанный provider image на GitHub-hosted Linux x86_64 runner:
-  `ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9`.
-- [x] Выпустить подписанный Translator worker на GitHub-hosted Linux runner:
-  `ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912`.
-- [ ] Выдать `AELEV-platform-infrastructure` Actions read access к private package `aelev-translation-provider`, затем выполнить новый полный функциональный прогон с одноразовым SPIRE approval; run 42261642805 уже прошёл hosted `init` и остановился до build только на `read_package`.
+- [x] Исключить необязательную provider/worker-ячейку из `full-local`, release BOM, Platform UI ownership и production admission; прежний standalone-рецепт сохранить без объявления каноническим.
+- [x] Проверять реальным Kafka/PostgreSQL lifecycle, что Translator принимает, дедуплицирует и сохраняет обе очереди без выбранного провайдера.
+- [ ] Отдельно выбрать локальный runtime, образ или внешний API провайдера после сравнения стоимости, безопасности, качества и эксплуатационных ограничений; это решение не блокирует готовность данного репозитория.
 - [ ] После успешного прогона повторить Production Ready аудит точного release commit.
 
 Владельческие незавершённые работы по-прежнему ведутся в `TASKS.md` соответствующего продукта и здесь не дублируются. Эти два пункта относятся к межвладельческой композиции и потому остаются в корневом списке.

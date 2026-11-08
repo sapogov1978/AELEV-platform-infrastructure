@@ -15,13 +15,10 @@ from lifecycle import (
     assert_sequence_advanced,
     capture_group_startup_diagnostic,
     capture_kafka_startup_diagnostic,
-    classify_compute_start_failure,
-    compute_prefix,
     compose_prefix,
     execute_provision_task,
     run,
     status_provision_tasks,
-    start_compute,
     ui_status_diagnostic,
     write_ui_status_diagnostic,
     validate_active_mounts,
@@ -73,113 +70,6 @@ def test_root_env_has_only_orchestration() -> None:
                 if line and not line.startswith("#")
             }
             assert keys == {"AELEV_INFRASTRUCTURE_COMPOSE_PROJECT"}
-
-
-def test_compute_prefix_keeps_the_independent_owner_composition() -> None:
-    assert compute_prefix() == [
-        "docker",
-        "compose",
-        "--env-file",
-        str(ROOT / "translator-service/.env"),
-        "-f",
-        str(ROOT / "translator-service/compose.compute.yml"),
-    ]
-
-
-def test_compute_start_requires_both_native_healthchecks(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        "lifecycle.subprocess.run",
-        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout="", stderr=""),
-    )
-    monkeypatch.setattr(
-        "lifecycle.states",
-        lambda project: {
-            "translation-provider": {
-                "Running": True,
-                "Health": {"Status": "healthy"},
-            },
-            "translator-worker": {
-                "Running": True,
-                "Health": {"Status": "healthy"},
-            },
-        },
-    )
-    start_compute(
-        ["docker", "compose"],
-        "compute",
-        {"translation-provider", "translator-worker"},
-        600,
-    )
-
-
-def test_compute_start_failure_persists_only_bounded_state(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    output = tmp_path / "compute-startup-diagnostic.json"
-
-    calls: list[list[str]] = []
-    monkeypatch.setattr(
-        "lifecycle.subprocess.run",
-        lambda arguments, **kwargs: (
-            calls.append(arguments)
-            or SimpleNamespace(
-                returncode=1,
-                stdout="expanded credential=must-not-survive",
-                stderr="network translator-data declared as external, but could not be found",
-            )
-        ),
-    )
-    monkeypatch.setattr(
-        "lifecycle.states",
-        lambda project: {
-            "translation-provider": {
-                "Status": "exited",
-                "Running": False,
-                "ExitCode": 1,
-                "OOMKilled": False,
-                "Error": "provider failed",
-            }
-        },
-    )
-
-    monkeypatch.setattr(
-        "lifecycle.capture_compute_startup_diagnostic",
-        lambda compose, project, services, path, reason: path.write_text(
-            json.dumps({"reason_code": reason})
-        ),
-    )
-
-    with pytest.raises(RuntimeError, match="command failed"):
-        start_compute(
-            ["docker", "compose"],
-            "compute",
-            {"translation-provider", "translator-worker"},
-            600,
-            output,
-        )
-
-    payload = json.loads(output.read_text())
-    assert payload == {"reason_code": "EXTERNAL_NETWORK_MISSING"}
-    assert "credential" not in output.read_text()
-
-
-@pytest.mark.parametrize(
-    ("message", "code"),
-    [
-        (
-            "service provider is required to have a healthcheck configured",
-            "PROVIDER_HEALTHCHECK_NOT_DECLARED",
-        ),
-        ("bind source path does not exist", "BIND_SOURCE_MISSING"),
-        ("arbitrary private error", "COMPUTE_CREATE_FAILED"),
-    ],
-)
-def test_compute_start_failure_is_reduced_to_fixed_code(
-    message: str, code: str
-) -> None:
-    assert classify_compute_start_failure(message) == code
 
 
 def test_root_is_only_inclusion_not_runtime() -> None:

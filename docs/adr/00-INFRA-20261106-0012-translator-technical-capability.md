@@ -14,7 +14,8 @@
 - `translator-service` не владеет моделью или иной реализацией перевода и не знает её семейство, версию, движок, веса, prompt, способ исполнения или внутренний cache.
 - Исполнитель предоставляет узкий непрозрачный порт: получает текст и языки, возвращает перевод либо ограниченную техническую ошибку. Provider-specific identity и параметры исполнения через этот порт не передаются.
 - Модель, словарь, внешний API или человек за портом принадлежат провайдеру перевода. Выбор, выпуск, обновление и эксплуатация провайдера не входят в Kafka-контракт `translator-service`.
-- Исходники реализации провайдера, его модельные артефакты, lock, downloader, prompts и provider-specific tests не входят в поставку Translator. Интеграционный Compose принимает только внешний image по immutable digest и не переопределяет его `ENTRYPOINT`, `CMD`, environment или `HEALTHCHECK`.
+- Исходники реализации провайдера, его модельные артефакты, lock, downloader, prompts и provider-specific tests не входят в поставку Translator. Способ размещения совместимого провайдера — локальный процесс, отдельный образ, удалённый API, человек или их комбинация — не выбран этим решением и не входит в обязательную композицию Platform Infrastructure.
+- `full-local` проверяет, что Translator принимает, дедуплицирует и сохраняет работу при отсутствии провайдера. Сквозное исполнение перевода относится к отдельному допуску выбранного провайдера и не блокирует готовность инфраструктурного посредника.
 - Межсервисные запросы и результаты проходят только через версионированные Kafka contracts; приватный порт провайдера не публикуется потребителям.
 - Потребитель владеет исходным текстом, приоритетом и применением результата; Translator владеет диспетчеризацией и bounded retry, а провайдер — способом получения перевода.
 - Замена провайдера не требует изменения `translator-service`, если непрозрачный порт и публичные Kafka-контракты совместимы. Новый перевод после замены может отличаться; сохранённый результат того же завершённого запроса воспроизводится без изменения.
@@ -28,12 +29,11 @@
 
 ## Проверка и откат
 
-Contract tests проверяют Kafka envelopes, идемпотентность, приоритет, сохранность очереди и одинаковое поведение с фиктивным строковым провайдером. Отдельный gate запрещает активные provider implementation/model/lock/download/runtime файлы, provider-specific параметры порта и Compose-переопределения запуска или healthcheck внешнего образа. Откат переключает совместимый provider image без удаления inbox, outbox, checkpoints или исторических результатов.
+Contract tests проверяют Kafka envelopes, идемпотентность, приоритет, сохранность очереди и одинаковое поведение с фиктивным строковым провайдером. Отдельный gate запрещает активные provider implementation/model/lock/download/runtime файлы и provider-specific параметры порта. Откат или замена совместимого провайдера не удаляет inbox, outbox, checkpoints или исторические результаты.
 
 ## Официальные основания
 
 - [Apache Kafka documentation](https://kafka.apache.org/39/documentation/) описывает durable queues, consumer groups и offset semantics.
 - [CloudEvents specification](https://github.com/cloudevents/spec) определяет переносимый событийный envelope без привязки к реализации обработчика.
 - [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) определяет семантику запросов и ответов для приватного provider-neutral HTTP-порта.
-- [Docker Compose service specification](https://docs.docker.com/reference/compose-file/services/) описывает image-owned command, entrypoint и healthcheck, которые интеграционный Compose сохраняет непрозрачными.
-- [AELEV Translation Provider](https://github.com/sapogov1978/AELEV-translation-provider) является отдельной канонической поставкой реализации перевода и публикует только совместимый image по immutable digest.
+- [Docker Compose service specification](https://docs.docker.com/reference/compose-file/services/) описывает независимые сервисные границы для одного из возможных способов размещения провайдера.

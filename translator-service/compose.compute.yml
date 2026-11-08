@@ -1,3 +1,4 @@
+# Optional legacy standalone recipe. Not part of full-local or production admission.
 name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT:?set a dedicated compute project}
 
 x-provider-image: &provider-image

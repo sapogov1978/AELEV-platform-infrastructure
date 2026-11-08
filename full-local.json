@@ -68,14 +68,6 @@
       "translator-topic-provisioner"
     ]
   },
-  "compute_compose": {
-    "file": "translator-service/compose.compute.yml",
-    "env_file": "translator-service/.env",
-    "required_services": [
-      "translation-provider",
-      "translator-worker"
-    ]
-  },
   "owners": [
     "kafka",
     "keycloak",
@@ -113,30 +105,6 @@
     "translator-service/.env"
   ],
   "external_inputs": [
-    {
-      "id": "translation-provider-image",
-      "kind": "container-image-digest",
-      "env_file": "translator-service/.env",
-      "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
-      "owner": "translation-provider",
-      "source_repository": "https://github.com/sapogov1978/AELEV-translation-provider",
-      "release_workflow": "release-provider-image",
-      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42248923795",
-      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9",
-      "purpose": "Opaque translation capability provider; Translator does not inspect its implementation."
-    },
-    {
-      "id": "translator-worker-image",
-      "kind": "container-image-digest",
-      "env_file": "translator-service/.env",
-      "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
-      "owner": "translator-service",
-      "source_repository": "https://github.com/sapogov1978/AELEV-platform-infrastructure",
-      "release_workflow": "release-translator-worker-image",
-      "release_run": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42259587979",
-      "admitted_reference": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912",
-      "purpose": "Translator worker admitted independently from the opaque provider."
-    },
     {
       "id": "spire-installer-approval",
       "kind": "operator-confirmation",
@@ -216,7 +184,7 @@
       "object-storage-round-trip",
       "public-egress-default-deny-and-exact-allow",
       "telemetry-delivery-query",
-      "opaque-translation-round-trip",
+      "translator-queue-preserves-work-without-provider",
       "workload-identity-issue-rotate-revoke",
       "workload-identity-observation-delivery-recovery",
       "bounded-recovery-preserves-state"

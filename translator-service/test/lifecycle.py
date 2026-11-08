@@ -38,6 +38,8 @@ def probe(action: str, identity: str, argument: str, timestamp: str) -> None:
                     connection.execute(
                         text(
                             "SELECT j.state,j.priority,j.attempt_count,"
+                            "(SELECT count(*) FROM translation_job c "
+                            "WHERE c.request_id=j.request_id) AS job_count,"
                             "EXISTS(SELECT 1 FROM translation_outbox o "
                             "WHERE o.request_id=j.request_id AND o.state='PENDING') "
                             "AS pending_outbox FROM translation_job j "
@@ -145,9 +147,7 @@ def compose_rows(output: str) -> list[dict[str, Any]]:
     return cast(list[dict[str, Any]], data)
 
 
-def run(
-    fail_after_start: bool = False, result_path: Path | None = None
-) -> None:
+def run(fail_after_start: bool = False, result_path: Path | None = None) -> None:
     sys.dont_write_bytecode = True
     from lifecycle_resources import (
         Inventory,
@@ -165,13 +165,15 @@ def run(
         "phases": phases,
         "stopped": False,
         "not_tested": [
+            "Execution or quality of an external translation provider",
             "Semantic fidelity of translations",
             "Remote TLS/mTLS and ACL",
             "Multiple physical hosts",
             "Load test",
         ],
         "resources": (
-            "Real Kafka and translator deliveries, working .env and persistent volumes"
+            "Real Kafka and Translator control-plane deliveries, working .env "
+            "and persistent volumes"
         ),
         "mode": "failure_cleanup" if fail_after_start else "full_lifecycle",
     }
@@ -188,14 +190,6 @@ def run(
         str(ROOT / "compose.remote.yml"),
         "--profile",
         "bundled-database",
-    ]
-    compute = [
-        "docker",
-        "compose",
-        "--env-file",
-        str(ROOT / ".env"),
-        "-f",
-        str(ROOT / "compose.compute.yml"),
     ]
     kafka_compose = [
         "docker",
@@ -297,7 +291,7 @@ def run(
         "--wait-timeout",
         "600",
     ]
-    kafka_started, translator_started, compute_started = False, False, False
+    kafka_started, translator_started = False, False
     before: Inventory | None = None
     projects: set[str] = set()
 
@@ -325,39 +319,12 @@ def run(
                 )
             ),
         )
-        compute_config = cast(
-            dict[str, Any],
-            json.loads(
-                command(
-                    "Resolve opaque compute station",
-                    compute + ["config", "--format", "json"],
-                    record_output=False,
-                )
-            ),
-        )
         check(
             "Kafka owns exactly one broker", set(kafka_config["services"]) == {"kafka"}
         )
         check(
             "Translator does not create a second broker",
             "kafka" not in translator_config["services"],
-        )
-        check(
-            "Compute station has only provider and worker",
-            set(compute_config["services"])
-            == {"translation-provider", "translator-worker"},
-        )
-        provider = compute_config["services"]["translation-provider"]
-        worker = compute_config["services"]["translator-worker"]
-        check(
-            "Provider and worker use distinct admitted images",
-            provider["image"] != worker["image"]
-            and "@sha256:" in provider["image"]
-            and "@sha256:" in worker["image"],
-        )
-        check(
-            "Provider is network-isolated behind the opaque port",
-            provider.get("network_mode") == "none",
         )
         network = translator_config["networks"]["kafka"]
         check(
@@ -379,22 +346,20 @@ def run(
         )
         report["kafka_project"] = kafka_config["name"]
         report["translator_project"] = translator_config["name"]
-        report["compute_project"] = compute_config["name"]
         projects = {
             str(kafka_config["name"]),
             str(translator_config["name"]),
-            str(compute_config["name"]),
         }
         before = snapshot(inventory_command)
         report["inventory_before"] = before
         volumes = {
             str(volume["name"])
-            for config in (kafka_config, translator_config, compute_config)
+            for config in (kafka_config, translator_config)
             for volume in config["volumes"].values()
         }
         images = {
             str(service["image"])
-            for config in (kafka_config, translator_config, compute_config)
+            for config in (kafka_config, translator_config)
             for service in config["services"].values()
         }
         preflight(before, projects, volumes, images)
@@ -408,7 +373,7 @@ def run(
         # A shared network may already exist, but not an active foreign endpoint.
         network_names = {
             str(item["name"])
-            for config in (kafka_config, translator_config, compute_config)
+            for config in (kafka_config, translator_config)
             for item in config["networks"].values()
             if item.get("name")
         }
@@ -433,11 +398,7 @@ def run(
         kafka_started = True
         command("Start real infrastructure Kafka", kafka_compose + up)
         translator_started = True
-        command(
-            "Start Translator contracts, storage and dispatch roles", compose + up
-        )
-        compute_started = True
-        command("Start opaque provider and separate worker", compute + up)
+        command("Start Translator contracts, storage and dispatch roles", compose + up)
         rows = compose_rows(
             command(
                 "Real translator states", compose + ["ps", "--all", "--format", "json"]
@@ -455,15 +416,6 @@ def run(
                 check(role + " running", row["State"] == "running")
                 if role in {"translator-database", "translator-api"}:
                     check(role + " healthy", row["Health"] == "healthy")
-        compute_rows = compose_rows(
-            command(
-                "Opaque compute states", compute + ["ps", "--all", "--format", "json"]
-            )
-        )
-        check("Exactly provider and worker are running", len(compute_rows) == 2)
-        for row in compute_rows:
-            check(row["Service"] + " running", row["State"] == "running")
-            check(row["Service"] + " healthy", row["Health"] == "healthy")
         broker = compose_rows(
             command(
                 "Real Kafka state", kafka_compose + ["ps", "--all", "--format", "json"]
@@ -478,29 +430,27 @@ def run(
         stamp = datetime.now(UTC).isoformat()
         priority = str(uuid.uuid4())
         kafka("send", priority, "translation.requests.priority.v2", stamp)
-        original = kafka("receive", priority, "1", stamp)[0]["sha256"]
+        data = state(priority, "PENDING", stamp)
+        check(
+            "Priority request is preserved without an admitted provider",
+            data["attempt_count"] == 0
+            and data["priority"] == 0
+            and data["job_count"] == 1,
+        )
         kafka("send", priority, "translation.requests.priority.v2", stamp)
-        replay = kafka("receive", priority, "2", stamp)
+        data = state(priority, "PENDING", stamp)
         check(
-            "Duplicate republishes identical saved bytes",
-            all(item["sha256"] == original for item in replay),
-        )
-        data = state(priority, "SUCCEEDED", stamp)
-        check(
-            "Priority computed once",
-            data["attempt_count"] == 1 and data["priority"] == 0,
-        )
-        command(
-            "Stop real worker",
-            compute + ["stop", "--timeout", "20", "translator-worker"],
+            "Duplicate request remains one durable pending job",
+            data["attempt_count"] == 0 and data["job_count"] == 1,
         )
         normal = str(uuid.uuid4())
         kafka("send", normal, "translation.requests.v2", stamp)
         data = state(normal, "PENDING", stamp)
-        check("Normal queue persisted while worker stopped", data["priority"] == 100)
-        command(
-            "Stop compute preserving provider state",
-            compute + ["stop", "--timeout", "20"],
+        check(
+            "Normal request is preserved without an admitted provider",
+            data["priority"] == 100
+            and data["attempt_count"] == 0
+            and data["job_count"] == 1,
         )
         command(
             "Stop real translator preserving data",
@@ -514,21 +464,15 @@ def run(
         command(
             "Restart Translator contracts, storage and dispatch roles", compose + up
         )
-        command("Restart opaque provider and separate worker", compute + up)
         command(
             "Re-run real topic provisioning",
             compose + ["run", "--rm", "-T", "translator-topic-provisioner"],
         )
         ready(200)
-        kafka("receive", normal, "1", stamp)
-        persisted = kafka("receive", priority, "2", stamp)
         check(
-            "Kafka results survive full restart",
-            all(item["sha256"] == original for item in persisted),
-        )
-        command(
-            "Stop worker before Kafka outage",
-            compute + ["stop", "--timeout", "20", "translator-worker"],
+            "Pending jobs survive full restart",
+            state(priority, "PENDING", stamp)["job_count"] == 1
+            and state(normal, "PENDING", stamp)["job_count"] == 1,
         )
         outage = str(uuid.uuid4())
         kafka("send", outage, "translation.requests.v2", stamp)
@@ -538,19 +482,14 @@ def run(
             kafka_compose + ["stop", "--timeout", "20"],
         )
         ready(503)
-        command(
-            "Restore worker with Kafka unavailable",
-            compute + ["start", "translator-worker"],
-        )
-        data = state(outage, "SUCCEEDED", stamp)
-        check(
-            "Completed result retained in outbox during outage", data["pending_outbox"]
-        )
         command("Restore real Kafka", kafka_compose + up)
         command("Verify Translator roles after broker recovery", compose + up)
-        command("Verify compute roles after broker recovery", compute + up)
         ready(200)
-        kafka("receive", outage, "1", stamp)
+        data = state(outage, "PENDING", stamp)
+        check(
+            "Broker outage does not discard provider-independent work",
+            data["job_count"] == 1 and data["attempt_count"] == 0,
+        )
         report["requests"] = {
             "priority": priority,
             "normal": normal,
@@ -582,12 +521,7 @@ def run(
             except Exception as error:
                 cleanup_errors.append(str(error))
 
-        if kafka_started or translator_started or compute_started:
-            if compute_started:
-                cleanup_step(
-                    "Stop compute before cleanup",
-                    compute + ["stop", "--timeout", "20"],
-                )
+        if kafka_started or translator_started:
             if translator_started:
                 cleanup_step(
                     "Stop translator before cleanup",
@@ -679,8 +613,8 @@ def write_readable_report(report: dict[str, object], result_path: Path) -> None:
         f"- Успешные этапы: `{sum(phase['status'] == 'PASS' for phase in phases)}`.",
         "",
         "Использованы канонические поставки Kafka и Translator с рабочими `.env`, "
-        "собственной PostgreSQL и отдельной вычислительной станцией. Translator "
-        "передаёт только текст и языки непрозрачному provider port и не читает "
+        "собственной PostgreSQL без реализации перевода. Translator сохраняет "
+        "работу до допуска совместимого непрозрачного provider port и не читает "
         "модель, её версию или способ исполнения. Отдельные тестовые broker и "
         "подменные provider не создаются. Образы подготовлены "
         "до теста; "
@@ -689,9 +623,9 @@ def write_readable_report(report: dict[str, object], result_path: Path) -> None:
     ]
     if report["status"] == "PASS":
         lines += [
-            "Проверены оба инициализатора, готовность всех ролей, обе очереди, "
-            "повтор точного результата без вычисления, сохранность после полного "
-            "перезапуска и доставка outbox после отказа Kafka.",
+            "Проверены оба инициализатора, готовность управляющих ролей, обе "
+            "очереди, идемпотентное сохранение без провайдера, полный перезапуск "
+            "и отказ/восстановление Kafka без потери ожидающей работы.",
             "",
         ]
     elif report.get("failure"):
@@ -719,10 +653,11 @@ def write_readable_report(report: dict[str, object], result_path: Path) -> None:
     else:
         lines += ["Запуск остановлен до создания ресурсов; очистка не требовалась.", ""]
     lines += [
-        "Качество перевода, удалённые TLS/mTLS и ACL, географически разнесённые "
+        "Исполнение и качество выбранного провайдера, удалённые TLS/mTLS и ACL, "
+        "географически разнесённые "
         "узлы, нагрузочные пределы и внешнее резервное восстановление этим тестом "
-        "не подтверждаются. Проверка транспорта не заменяет оценку смысловой "
-        "точности результата выбранного внешнего provider.",
+        "не подтверждаются. Способ размещения провайдера является отдельным "
+        "непринятым решением и не входит в допуск этого репозитория.",
         "",
         "Подробные этапы, исходная и конечная опись ресурсов — "
         f"[машинный отчёт]({result_path.name}).",

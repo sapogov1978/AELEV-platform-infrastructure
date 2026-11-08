@@ -16,8 +16,9 @@
 | Порядок технических повторов и диагностика | [результат проверки и выкладки](test/stable-retry-result-20261018.md) |
 | Телеметрия владельца | `src/translator_service/observability.py`, `observability/` |
 | Локальная и удалённая управляющие топологии | `compose.local.yml`, `compose.remote.yml`, `compose.yml` |
-| Контракт внешнего провайдера | [compute-runtime/README.md](compute-runtime/README.md), [docs/api/translation.md](../docs/api/translation.md), `compose.compute.yml` |
-| Реализация, модель и версия провайдера | В этом репозитории отсутствуют; принадлежат поставщику provider image |
+| Контракт внешнего провайдера | [docs/api/translation.md](../docs/api/translation.md), [SPEC.md](SPEC.md); способ размещения ещё не выбран |
+| Необязательный прежний standalone-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml`; не входит в `full-local` или production admission |
+| Реализация, модель и версия провайдера | В этом репозитории отсутствуют; принадлежат выбранному поставщику |
 | Проверки совместимости провайдера | [актуальная проверка готовности](test/production-readiness-result.md), `test/` |
 
 Kafka-контракт находится в [docs/api/translation.md](../docs/api/translation.md), инфраструктурная классификация — в [00-INFRA-20261106-0012-translator-technical-capability](../docs/adr/00-INFRA-20261106-0012-translator-technical-capability.md).

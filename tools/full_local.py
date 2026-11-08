@@ -91,7 +91,7 @@ def validate_contract(root: Path = ROOT) -> tuple[dict[str, Any], list[str]]:
         errors.append("MANIFEST_PROFILE_INVALID")
     if manifest.get("release") != release.get("version"):
         errors.append("MANIFEST_RELEASE_MISMATCH")
-    for section in ("root_compose", "compute_compose"):
+    for section in ("root_compose",):
         row = manifest.get(section)
         if not isinstance(row, dict):
             errors.append(f"MANIFEST_SECTION_MISSING:{section}")
@@ -200,19 +200,6 @@ def rendered_model(
 ) -> dict[str, Any]:
     if composition == "root":
         arguments = [*compose_prefix(manifest, root), "config", "--format", "json"]
-    elif composition == "compute":
-        compute = manifest["compute_compose"]
-        arguments = [
-            "docker",
-            "compose",
-            "--env-file",
-            str(root / compute["env_file"]),
-            "-f",
-            str(root / compute["file"]),
-            "config",
-            "--format",
-            "json",
-        ]
     else:
         raise FullLocalError(f"COMPOSITION_UNKNOWN:{composition}")
     result = command(arguments, cwd=root)
@@ -227,7 +214,6 @@ def rendered_models(
 ) -> dict[str, dict[str, Any]]:
     return {
         "root": rendered_model("root", manifest, root),
-        "compute": rendered_model("compute", manifest, root),
     }
 
 
@@ -338,7 +324,7 @@ def preflight(
         code for code in errors if code.startswith("ENV_FILE_MISSING:")
     ]
     if not render_blockers:
-        for composition in ("root", "compute"):
+        for composition in ("root",):
             try:
                 models[composition] = rendered_model(composition, manifest, root)
             except (
@@ -349,7 +335,6 @@ def preflight(
                 errors.append(f"COMPOSE_RENDER_FAILED:{composition}")
     for composition, section in (
         ("root", manifest.get("root_compose", {})),
-        ("compute", manifest.get("compute_compose", {})),
     ):
         if composition not in models:
             continue
@@ -431,7 +416,6 @@ def source_plan(root: Path = ROOT) -> dict[str, Any]:
         "profile": manifest["profile"],
         "owners": manifest["owners"],
         "root_services": manifest["root_compose"]["required_services"],
-        "compute_services": manifest["compute_compose"]["required_services"],
         "external_inputs": [
             {
                 "id": item["id"],
@@ -457,7 +441,7 @@ def source_plan(root: Path = ROOT) -> dict[str, Any]:
             }
             for item in manifest.get("release_images", [])
         ],
-        "compose_models_included": ["root", "compute"],
+        "compose_models_included": ["root"],
         "translation_provider_implementation_included": False,
         "acceptance_functions": manifest["acceptance"]["required_functions"],
     }

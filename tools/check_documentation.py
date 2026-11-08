@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -275,12 +276,25 @@ def main() -> int:
         if forbidden in core_stage:
             errors.append(f"Translator core image contains provider artifact: {forbidden}")
     compute_compose = (root / "translator-service/compose.compute.yml").read_text()
+    full_local = json.loads((root / "full-local.json").read_text())
+    if "compute_compose" in full_local:
+        errors.append("Optional Translator compute recipe is still canonical full-local")
+    if any(
+        item.get("id") in {"translation-provider-image", "translator-worker-image"}
+        for item in full_local.get("external_inputs", [])
+    ):
+        errors.append("Translator provider runtime is still a full-local input")
+    publisher = (
+        root / "translator-service/src/translator_service/status_publisher.py"
+    ).read_text()
+    if '"provider":' in publisher or "COMPUTE_DESIRED_STATE" in publisher:
+        errors.append("Translator UI still claims provider runtime ownership")
     for required in (
         "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
     ):
         if required not in compute_compose:
-            errors.append(f"Translator compute split is missing {required}")
+            errors.append(f"Optional Translator standalone recipe is missing {required}")
     if "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_IMAGE" in compute_compose:
         errors.append("Translator provider and worker still share one image selector")
     provider_service = compute_compose.split("  translation-provider:", 1)[-1].split(

@@ -9,7 +9,7 @@
 - Linux Docker Engine либо Docker Desktop с Linux containers, Docker Compose 2.24.4+, Python 3.13, Poetry 2.2.1, OpenSSL и Chromium;
 - чистый checkout точного release commit без существующих контейнеров, сетей и volumes этого Compose project;
 - место и ресурсы по руководствам владельцев;
-- четыре заранее допущенных digest-pinned образа: непрозрачного translation provider из отдельного private-репозитория [`AELEV-translation-provider`](https://github.com/sapogov1978/AELEV-translation-provider), Translator worker, owner-controlled Observability Sender и Telemetry Delivery, выпускаемые workflow этого репозитория;
+- два заранее допущенных digest-pinned образа: owner-controlled Observability Sender и Telemetry Delivery, выпускаемые workflow этого репозитория; реализация перевода не является входом `full-local`;
 - отдельное операторское решение на единственный запуск SPIRE installer с Docker socket; подтверждение не сохраняется в `.env`;
 - локальные secrets/PKI и внешние owner inputs, подготовленные владельческими средствами. Они не передаются в Git и не печатаются в evidence.
 
@@ -26,15 +26,14 @@ python3 tools/full_local.py validate
 python3 tools/full_local.py plan > full-local-plan.json
 ```
 
-`git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых и две compute-роли, три внешних входа, один build input, один release image и одиннадцать функций приёмки. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
+`git status --porcelain` должен быть пустым. `plan` обязан перечислить 15 владельцев, 55 корневых ролей, один внешний операторский вход, один build input, один release image и одиннадцать функций приёмки. Provider/worker-ячейка отсутствует: способ исполнения перевода не выбран и не принадлежит обязательной композиции. Канонический машиночитаемый состав находится в [`full-local.json`](../../full-local.json); ручное исключение роли создаёт другой профиль.
 
 ## 2. Инициализировать и собрать без запуска
 
-После `init` в `translator-service/.env` оператор указывает `AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE` и `AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE` только как `repository@sha256:<64 hex>`. Допущены Linux amd64 provider `ghcr.io/sapogov1978/aelev-translation-provider@sha256:4a820a13e6a03188589c09d14e52b5f2d05e9359d7df847bad768966016e9ec9` из artifact [provider release 42248923795](https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42248923795) и worker `ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:e006ab2466b6455d6a928e8aa9aa12fc023ac9a7e3c5897082508249b422f912` из artifact [worker release 42259587979](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42259587979). Первый образ реализует непрозрачный приватный порт перевода; Translator не получает модель, её версию или способ исполнения. Все Dockerfile-потребители SQLite/sender runtime закрепляют multi-architecture build input `ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` из подписанного [sender release 42308900143](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42308900143). Для private GHCR clean runner заранее получает только `read:packages`; credential не пишется в `.env`, Git или evidence. Рабочие `.env` не коммитятся.
+Все Dockerfile-потребители SQLite/sender runtime закрепляют multi-architecture build input `ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` из подписанного [sender release 42308900143](https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42308900143). Telemetry Delivery также закреплён manifest по digest. Для private GHCR clean runner заранее получает только `read:packages`; credential не пишется в `.env`, Git или evidence. Рабочие `.env` не коммитятся. Provider credentials и image references не требуются, поскольку `full-local` проверяет сохранение очереди без реализации перевода.
 
 ```sh
 python3 tools/full_local.py init
-# установить два точных digest reference в translator-service/.env
 python3 tools/full_local.py build
 ```
 
@@ -70,7 +69,7 @@ DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
   > clean-room-preflight.json
 ```
 
-Код `0` и `status=READY` означают только, что все env и owner input paths существуют, оба Compose рендерятся в точный service set, внешние образы заданы digest, локальные образы присутствуют, pull-only images неизменяемы и одноразовое подтверждение SPIRE присутствует в этом процессе.
+Код `0` и `status=READY` означают только, что все env и owner input paths существуют, корневой Compose рендерится в точный service set, внешние образы заданы digest, локальные образы присутствуют, pull-only images неизменяемы и одноразовое подтверждение SPIRE присутствует в этом процессе.
 
 Код `2` сопровождается ограниченными `blocking_codes` без значений секретов. Исправляйте причину у владельца; не удаляйте проверку и не подменяйте digest tag-ом.
 
@@ -96,7 +95,7 @@ BOM закрепляет source commit, канонические digest отре
 5. запись/чтение объекта и проверка digest;
 6. default-deny и один exact-allow Public Egress Gateway;
 7. доставка и запрос telemetry;
-8. полный Kafka → Translator → непрозрачный provider → Kafka перевод без сведений о модели;
+8. приём, дедупликация и сохранение обеих очередей Translator без выбранного провайдера, включая полный restart и отказ Kafka;
 9. настоящая выдача, ротация и отзыв workload identity;
 10. сбор, durable delivery, outage/recovery и Grafana-проекция наблюдения SPIRE;
 11. ограниченное восстановление с сохранением состояния.
@@ -125,7 +124,7 @@ python3 test_infrastructure/clean_room.py \
 
 Verifier сверяет точный набор функций, release/source, digest BOM, SHA-256 каждого артефакта, чистый baseline, успешную сохранность cleanup и итог `PASS`. Он не превращает старые отчёты в новый прогон.
 
-Ручной workflow `clean-room-full-local` создаёт одноразовый GitHub-hosted Ubuntu runner, получает три exact digest из версионируемого manifest, использует созданную `init` временную operator identity и уничтожает всю машину после job. Пользовательский сервер, постоянный runner, repository variables и передача пароля в GitHub Secrets не требуются. `GITHUB_TOKEN` имеет только `contents:read` и `packages:read`; private provider package должен предоставить этому репозиторию Actions read access через **Package settings → Manage Actions access → Add repository**, как предписывает [официальное руководство GitHub](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package). Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
+Ручной workflow `clean-room-full-local` создаёт одноразовый GitHub-hosted Ubuntu runner, получает exact digests из версионируемого manifest, использует созданную `init` временную operator identity и уничтожает всю машину после job. Пользовательский сервер, постоянный runner, repository variables и передача пароля в GitHub Secrets не требуются. `GITHUB_TOKEN` имеет только `contents:read` и `packages:read`. Обычный PR CI выполняет только структурные проверки и не выдаёт функциональное evidence.
 
 ## 7. Решение Production Ready
 

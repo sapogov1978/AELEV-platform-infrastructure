@@ -40,7 +40,7 @@ FUNCTION_STAGES: dict[str, tuple[str, ...]] = {
     "minio-lifecycle": ("object-storage-round-trip",),
     "egress-lifecycle": ("public-egress-default-deny-and-exact-allow",),
     "telemetry-onboarding": ("telemetry-delivery-query",),
-    "translator-lifecycle": ("opaque-translation-round-trip",),
+    "translator-lifecycle": ("translator-queue-preserves-work-without-provider",),
     "spire-lifecycle": ("workload-identity-issue-rotate-revoke",),
     "spire-observation": ("workload-identity-observation-delivery-recovery",),
     "recovery-lifecycle": ("bounded-recovery-preserves-state",),
@@ -68,7 +68,9 @@ def command(
 
 def write_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def sha256(path: Path) -> str:
@@ -109,11 +111,15 @@ def exact_image(reference: str) -> str:
 
 def rendered_root_model() -> dict[str, Any]:
     result = command(
-        [sys.executable, "-c", (
-            "import json; from tools.full_local import load_json,rendered_model; "
-            "m=load_json(__import__('pathlib').Path('full-local.json')); "
-            "print(json.dumps(rendered_model('root',m)))"
-        )]
+        [
+            sys.executable,
+            "-c",
+            (
+                "import json; from tools.full_local import load_json,rendered_model; "
+                "m=load_json(__import__('pathlib').Path('full-local.json')); "
+                "print(json.dumps(rendered_model('root',m)))"
+            ),
+        ]
     )
     if result.returncode:
         raise GateError("ROOT_COMPOSE_MODEL_UNAVAILABLE")
@@ -139,64 +145,141 @@ def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
     translator_report = stages / "translator-lifecycle.json"
     recovery_output = stages / "recovery"
     root_command = [
-        "poetry", "--directory", "test_infrastructure", "run", "python",
-        "lifecycle.py", "--ui-url", arguments.ui_url, "--viewer-user",
-        arguments.viewer_user, "--viewer-password-file",
-        str(arguments.viewer_password_file), "--chromium", str(arguments.chromium),
-        "--report", str(root_report),
+        "poetry",
+        "--directory",
+        "test_infrastructure",
+        "run",
+        "python",
+        "lifecycle.py",
+        "--ui-url",
+        arguments.ui_url,
+        "--viewer-user",
+        arguments.viewer_user,
+        "--viewer-password-file",
+        str(arguments.viewer_password_file),
+        "--chromium",
+        str(arguments.chromium),
+        "--report",
+        str(root_report),
     ]
     if arguments.allow_local_certificate:
         root_command.append("--allow-local-certificate")
     return [
         Stage(
-            "root-lifecycle", FUNCTION_STAGES["root-lifecycle"],
+            "root-lifecycle",
+            FUNCTION_STAGES["root-lifecycle"],
             tuple(root_command),
-            (root_report, root_report.with_suffix(".png")), timeout=2400,
-        ),
-        Stage(
-            "kafka-lifecycle", FUNCTION_STAGES["kafka-lifecycle"],
-            ("bash", "kafka/test/single-node-lifecycle.test.sh"), (), timeout=1200,
-        ),
-        Stage(
-            "postgresql-lifecycle", FUNCTION_STAGES["postgresql-lifecycle"],
-            ("poetry", "--directory", "postgresql", "run", "python",
-             "test/cluster-lifecycle.py", "--report", str(pg_report)),
-            (pg_report,), timeout=3600,
-        ),
-        Stage(
-            "minio-lifecycle", FUNCTION_STAGES["minio-lifecycle"],
-            ("bash", "minio/test/multi-site-lifecycle.test.sh"), (), timeout=5400,
-        ),
-        Stage(
-            "egress-lifecycle", FUNCTION_STAGES["egress-lifecycle"],
-            ("poetry", "--directory", "public-egress-gateway", "run", "python",
-             "test/lifecycle.py", "--report", str(egress_report)),
-            (egress_report,), timeout=2400,
-        ),
-        Stage(
-            "telemetry-onboarding", FUNCTION_STAGES["telemetry-onboarding"],
-            ("poetry", "--directory", "observability/grafana", "run", "python",
-             "test/onboarding.py", "--sender-image", sender, "--chromium",
-             str(arguments.chromium), "--report", str(telemetry_report)),
-            (telemetry_report, telemetry_report.with_suffix(".png")), timeout=2400,
-        ),
-        Stage(
-            "translator-lifecycle", FUNCTION_STAGES["translator-lifecycle"],
-            ("poetry", "--directory", "translator-service", "run", "python",
-             "test/lifecycle.py", "--report", str(translator_report)),
-            (translator_report, translator_report.with_suffix(".md")), timeout=3600,
-        ),
-        Stage(
-            "spire-lifecycle", FUNCTION_STAGES["spire-lifecycle"],
-            ("poetry", "--directory", "spire", "run", "pytest", "-q",
-             "test/test_real_spire.py::test_real_issue_rotation_revoke_and_node_restart"),
-            (), environment=(("AELEV_INFRASTRUCTURE_SPIRE_TEST_IMAGE", spire_image),),
+            (root_report, root_report.with_suffix(".png")),
             timeout=2400,
         ),
         Stage(
-            "spire-observation", FUNCTION_STAGES["spire-observation"],
+            "kafka-lifecycle",
+            FUNCTION_STAGES["kafka-lifecycle"],
+            ("bash", "kafka/test/single-node-lifecycle.test.sh"),
+            (),
+            timeout=1200,
+        ),
+        Stage(
+            "postgresql-lifecycle",
+            FUNCTION_STAGES["postgresql-lifecycle"],
             (
-                "poetry", "--directory", "spire", "run", "pytest", "-q",
+                "poetry",
+                "--directory",
+                "postgresql",
+                "run",
+                "python",
+                "test/cluster-lifecycle.py",
+                "--report",
+                str(pg_report),
+            ),
+            (pg_report,),
+            timeout=3600,
+        ),
+        Stage(
+            "minio-lifecycle",
+            FUNCTION_STAGES["minio-lifecycle"],
+            ("bash", "minio/test/multi-site-lifecycle.test.sh"),
+            (),
+            timeout=5400,
+        ),
+        Stage(
+            "egress-lifecycle",
+            FUNCTION_STAGES["egress-lifecycle"],
+            (
+                "poetry",
+                "--directory",
+                "public-egress-gateway",
+                "run",
+                "python",
+                "test/lifecycle.py",
+                "--report",
+                str(egress_report),
+            ),
+            (egress_report,),
+            timeout=2400,
+        ),
+        Stage(
+            "telemetry-onboarding",
+            FUNCTION_STAGES["telemetry-onboarding"],
+            (
+                "poetry",
+                "--directory",
+                "observability/grafana",
+                "run",
+                "python",
+                "test/onboarding.py",
+                "--sender-image",
+                sender,
+                "--chromium",
+                str(arguments.chromium),
+                "--report",
+                str(telemetry_report),
+            ),
+            (telemetry_report, telemetry_report.with_suffix(".png")),
+            timeout=2400,
+        ),
+        Stage(
+            "translator-lifecycle",
+            FUNCTION_STAGES["translator-lifecycle"],
+            (
+                "poetry",
+                "--directory",
+                "translator-service",
+                "run",
+                "python",
+                "test/lifecycle.py",
+                "--report",
+                str(translator_report),
+            ),
+            (translator_report, translator_report.with_suffix(".md")),
+            timeout=3600,
+        ),
+        Stage(
+            "spire-lifecycle",
+            FUNCTION_STAGES["spire-lifecycle"],
+            (
+                "poetry",
+                "--directory",
+                "spire",
+                "run",
+                "pytest",
+                "-q",
+                "test/test_real_spire.py::test_real_issue_rotation_revoke_and_node_restart",
+            ),
+            (),
+            environment=(("AELEV_INFRASTRUCTURE_SPIRE_TEST_IMAGE", spire_image),),
+            timeout=2400,
+        ),
+        Stage(
+            "spire-observation",
+            FUNCTION_STAGES["spire-observation"],
+            (
+                "poetry",
+                "--directory",
+                "spire",
+                "run",
+                "pytest",
+                "-q",
                 "test/test_real_observation.py::test_actual_collection_delivery_outage_and_recovery",
                 "test/test_real_grafana.py::test_native_grafana_scoped_dashboard_rule_and_repeat",
             ),
@@ -209,11 +292,22 @@ def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
             timeout=3600,
         ),
         Stage(
-            "recovery-lifecycle", FUNCTION_STAGES["recovery-lifecycle"],
-            ("poetry", "--directory", "test_infrastructure", "run", "python",
-             "automatic_recovery_sandbox.py", "--image", recovery_image,
-             "--output", str(recovery_output)),
-            (recovery_output / "result.json",), timeout=1200,
+            "recovery-lifecycle",
+            FUNCTION_STAGES["recovery-lifecycle"],
+            (
+                "poetry",
+                "--directory",
+                "test_infrastructure",
+                "run",
+                "python",
+                "automatic_recovery_sandbox.py",
+                "--image",
+                recovery_image,
+                "--output",
+                str(recovery_output),
+            ),
+            (recovery_output / "result.json",),
+            timeout=1200,
         ),
     ]
 
@@ -243,13 +337,24 @@ def prepare_drivers(output: Path) -> None:
     if version.returncode or "2.2.1" not in version.stdout:
         raise GateError("POETRY_VERSION_NOT_ADMITTED")
     for relative in (
-        "test_infrastructure", "postgresql", "public-egress-gateway",
-        "observability/grafana", "translator-service", "spire",
+        "test_infrastructure",
+        "postgresql",
+        "public-egress-gateway",
+        "observability/grafana",
+        "translator-service",
+        "spire",
     ):
         identity = "driver-" + relative.replace("/", "-")
         run_logged(
             identity,
-            ["poetry", "--directory", relative, "install", "--no-interaction", "--no-ansi"],
+            [
+                "poetry",
+                "--directory",
+                relative,
+                "install",
+                "--no-interaction",
+                "--no-ansi",
+            ],
             output,
             timeout=1200,
         )
@@ -292,8 +397,10 @@ def main() -> int:
             raise GateError("CHROMIUM_EXECUTABLE_MISSING")
         prepare_drivers(output)
         run_logged(
-            "full-local-build", [sys.executable, "tools/full_local.py", "build"],
-            output, timeout=7200,
+            "full-local-build",
+            [sys.executable, "tools/full_local.py", "build"],
+            output,
+            timeout=7200,
         )
         run_logged(
             "full-local-preflight",
@@ -312,8 +419,12 @@ def main() -> int:
             environment = dict(os.environ)
             environment.update(dict(stage.environment))
             log = run_logged(
-                stage.identity, stage.command, output, cwd=stage.cwd,
-                environment=environment, timeout=stage.timeout,
+                stage.identity,
+                stage.command,
+                output,
+                cwd=stage.cwd,
+                environment=environment,
+                timeout=stage.timeout,
             )
             artifacts = list(stage.artifacts) or [log]
             if any(not path.is_file() or not path.stat().st_size for path in artifacts):
@@ -346,7 +457,11 @@ def main() -> int:
             "clean_baseline": True,
             "cleanup_preserved": True,
             "functions": [
-                {"id": identity, "status": "PASS", "evidence": function_artifacts[identity]}
+                {
+                    "id": identity,
+                    "status": "PASS",
+                    "evidence": function_artifacts[identity],
+                }
                 for identity in required
             ],
             "result": "PASS",
@@ -354,15 +469,28 @@ def main() -> int:
         evidence_path = output / "clean-room-evidence.json"
         write_json(evidence_path, evidence)
         verification = command(
-            [sys.executable, "test_infrastructure/clean_room.py", "--evidence",
-             str(evidence_path), "--bom", str(bom_path)]
+            [
+                sys.executable,
+                "test_infrastructure/clean_room.py",
+                "--evidence",
+                str(evidence_path),
+                "--bom",
+                str(bom_path),
+            ]
         )
         (output / "verification.json").write_text(verification.stdout, encoding="utf-8")
         if verification.returncode:
             raise GateError("EVIDENCE_VERIFICATION_FAILED")
         print(json.dumps({"status": "PASS", "evidence": str(evidence_path)}, indent=2))
         return 0
-    except (GateError, OSError, KeyError, ValueError, json.JSONDecodeError, subprocess.TimeoutExpired) as error:
+    except (
+        GateError,
+        OSError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+        subprocess.TimeoutExpired,
+    ) as error:
         code = str(error) if isinstance(error, GateError) else type(error).__name__
         payload = {
             "schema_version": 1,

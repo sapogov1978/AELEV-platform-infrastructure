@@ -2,6 +2,7 @@
 
 ## 2026-11-08
 
+- Provider/worker compute-ячейка исключена из канонического `full-local`, release BOM, clean-room admission и владельческой строки Translator в Platform UI: способ исполнения перевода пока не выбран и не принадлежит этому инфраструктурному продукту. Прежний standalone-рецепт сохранён как необязательный; реальный lifecycle теперь доказывает приём, дедупликацию, restart и сохранение обеих очередей без провайдера и при отказе Kafka.
 - Run `42425354213` подтвердил, что compute startup завершается ещё до создания provider/worker. Fail-only evidence теперь сводит raw Compose output к фиксированному reason code и дополнительно сохраняет только availability/healthcheck-флаги образов, наличие логических external networks и существование bind-source для публичных container targets; image references, host paths, environment и raw output не сохраняются.
 
 ## 2026-11-07
