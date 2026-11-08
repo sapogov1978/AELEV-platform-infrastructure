@@ -354,6 +354,42 @@ def test_repeated_group_start_failure_persists_no_raw_output(
     assert "must-not-survive" not in output.read_text()
 
 
+def test_targeted_group_start_restores_network_provider_first(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls: list[list[str]] = []
+
+    def successful(arguments: list[str], **kwargs: Any) -> SimpleNamespace:
+        calls.append(arguments)
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr("lifecycle.subprocess.run", successful)
+    execute_group_start(
+        ["docker", "compose"],
+        "project",
+        {"keycloak": {}},
+        tmp_path / "unused.json",
+        "down-up-identity",
+        ("keycloak",),
+    )
+
+    assert calls == [
+        [
+            "docker",
+            "compose",
+            "--profile",
+            "ui",
+            "up",
+            "-d",
+            "--no-build",
+            "--pull",
+            "never",
+            "keycloak",
+        ]
+    ]
+    assert not (tmp_path / "unused.json").exists()
+
+
 def test_provision_failure_keeps_only_fixed_safe_marker(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

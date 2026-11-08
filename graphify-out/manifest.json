@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794099227.4507945,
-    "seen": 1794099297.168378,
-    "ast_hash": "26bb849358eca3c2c68e98da52bd7fa6",
+    "mtime": 1794100219.888722,
+    "seen": 1794100259.7287629,
+    "ast_hash": "7847ee43299d4bfbee51d8e88068f280",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794099237.5183945,
-    "seen": 1794099297.166843,
-    "ast_hash": "c7fe3191664b1911e470dcdca250951b",
+    "mtime": 1794100225.664938,
+    "seen": 1794100259.727295,
+    "ast_hash": "447476ff7e5ab6e3365ecb0a3aa09fa8",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -2496,9 +2496,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_orchestration.py": {
-    "mtime": 1794099237.4429622,
-    "seen": 1794099297.166975,
-    "ast_hash": "b3fbac174b12ba915144fcc8ce511e3b",
+    "mtime": 1794100219.887538,
+    "seen": 1794100259.727412,
+    "ast_hash": "423d424f2b47d2d60c50e44cef806c00",
     "semantic_hash": ""
   },
   "test_infrastructure/test_recovery.py": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1793961294.8985014,
-    "seen": 1793961484.045311,
-    "ast_hash": "064c4d423e293109e6d754a9ff391e4a",
+    "mtime": 1794100219.8880599,
+    "seen": 1794100259.733484,
+    "ast_hash": "cbd6bb1edef8f889d8f15faa6bce3595",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {

@@ -360,8 +360,18 @@ def execute_group_start(
     services: dict[str, Any],
     output: Path,
     stage: str,
+    targets: tuple[str, ...] = (),
 ) -> str:
-    arguments = [*prefix, *PROFILES, "up", "-d", "--no-build", "--pull", "never"]
+    arguments = [
+        *prefix,
+        *PROFILES,
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        *targets,
+    ]
     try:
         result = subprocess.run(
             arguments, cwd=ROOT, capture_output=True, text=True, timeout=1200
@@ -855,6 +865,16 @@ def run(args: argparse.Namespace) -> int:
         ):
             raise RuntimeError("persistent data missing")
         passed("Общее down сняло контейнеры; постоянные тома сохранены")
+        identity = {name: regular[name] for name in ("keycloak-database", "keycloak")}
+        execute_group_start(
+            prefix,
+            project,
+            identity,
+            args.report.with_name("group-startup-diagnostic.json"),
+            "down-up-identity",
+            ("keycloak",),
+        )
+        wait_ready(project, identity, args.timeout)
         execute_group_start(
             prefix,
             project,
