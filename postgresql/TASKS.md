@@ -1,6 +1,6 @@
 # Задачи PostgreSQL
 
-Статус продукта: `IN_PROGRESS`. Повторный clean-room run `42494484872` воспроизвёл непостоянный pair-loss timeout после отказа узла 1; требуется подтверждение механизма, адресные natural/directed повторы и новый полный gate. Прежние успешные отчёты сохранены в [CHANGELOG.md](CHANGELOG.md), [SPEC.md](SPEC.md) и каталоге `test`.
+Статус продукта: `PRODUCTION_READY` в поддерживаемом локальном профиле. Исправление последовательного ожидания недоступного DCS endpoint в версии `b1e2ee1` подтверждено RED/GREEN, initial-1 3/3 без switchover, root/Kafka/initial-1 и новым полным gate; [пакет evidence](../docs/audit/clean-room-b1e2ee1/RESULT.md) независимо проверен. Прежние отчёты и история сохранены в [CHANGELOG.md](CHANGELOG.md), [SPEC.md](SPEC.md) и каталоге `test`.
 
 ## Допуск конкретной площадки
 

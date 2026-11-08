@@ -131,3 +131,11 @@ Verifier сверяет точный набор функций, schema/profile/r
 ## 7. Решение Production Ready
 
 Статус репозитория может быть `PRODUCTION_READY` для `full-local` только когда на точном release commit одновременно проходят repository CI, preflight, BOM и новое clean-room evidence. Затем площадка отдельно подтверждает PKI/KMS, DNS/firewall/WAN, capacity, failure domains, backup target, alert delivery, RPO/RTO, подпись и admission образов. Ни один из этих выводов не разрешает `RESUME`, миграцию либо воздействие на существующий runtime.
+
+Проверенная исправленная программная версия — [`b1e2ee1`](../audit/clean-room-b1e2ee1/RESULT.md): CI 26/26, адресные PostgreSQL/root проверки и полный gate 11/11 с независимым verifier. Документальная фиксация пакета evidence не меняет runtime этого source commit. Последующие runtime-изменения требуют новой полной приёмки.
+
+## 8. Адресная диагностика без полного допуска
+
+Workflow `clean-room-full-local` позволяет выбрать `postgresql-initial-1` с тремя повторами либо `postgresql-after-root` для root/Kafka и последующего initial-1. В обоих случаях все peer-контейнеры создаются до старта первого SQL-узла; затем штатно запускаются DCS, SQL-узел 1 и остальные SQL-роли. Предварительного switchover нет. Эти fixtures не меняют канонический startup и позволяют воспроизвести отказ первоначального ведущего, который случайные или directed-switchover повторы могли не покрыть.
+
+Для эквивалентного CLI к команде gate из раздела 6 добавляются `--diagnostic-stage postgresql-lifecycle --diagnostic-repetitions 3 --diagnostic-natural-primary --diagnostic-bootstrap-member 1`. Выход имеет отдельный профиль `full-local-diagnostic` и не допускается как полное evidence. После отказа до cleanup сохраняется `attempt-N/stages/postgresql-lifecycle.diagnostic.json`: состояния, SQL-роли, ограниченные native counters и безопасная последовательность собственного fencing audit. Raw logs, env и credentials туда не включаются. Следующий повтор разрешён только после подтверждения source/Docker baseline; новый полный gate выполняется после успешной адресной проверки исправления.
