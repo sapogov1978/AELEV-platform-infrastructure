@@ -403,6 +403,13 @@ def run_diagnostics(arguments: argparse.Namespace, output: Path, bom_path: Path)
             code: str | None = None
             try:
                 stage_command = stage.command
+                if stage.identity == "postgresql-lifecycle" and getattr(
+                    arguments, "diagnostic_bootstrap_member", None
+                ):
+                    stage_command += (
+                        "--bootstrap-member",
+                        str(arguments.diagnostic_bootstrap_member),
+                    )
                 if (
                     stage.identity == "postgresql-lifecycle"
                     and arguments.diagnostic_repetitions == 3
@@ -477,6 +484,7 @@ def main() -> int:
         "--diagnostic-repetitions", type=int, choices=range(1, 4), default=1
     )
     parser.add_argument("--diagnostic-natural-primary", action="store_true")
+    parser.add_argument("--diagnostic-bootstrap-member", type=int, choices=(1, 2, 3))
     arguments = parser.parse_args()
     if arguments.diagnostic_repetitions != 1 and not arguments.diagnostic_stage:
         parser.error("--diagnostic-repetitions requires --diagnostic-stage")

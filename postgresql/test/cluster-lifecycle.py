@@ -499,7 +499,34 @@ with tempfile.TemporaryDirectory(prefix='aelev-postgresql-restore-') as temporar
     )
 
 
-def main(report: Path, requested_fault_target: int | None = None) -> None:
+def start_bootstrap_member(node: int) -> None:
+    """Create all fencing targets, then seed native bootstrap on one member."""
+    compose("create", "--no-build", "--pull", "never")
+    compose(
+        "up",
+        "-d",
+        "--no-build",
+        "--pull",
+        "never",
+        "etcd-1",
+        "etcd-2",
+        "etcd-3",
+        f"postgresql-{node}",
+    )
+    deadline = time.monotonic() + 120
+    while time.monotonic() < deadline:
+        rows = compose("ps", "--format", "json", f"postgresql-{node}").stdout
+        if any(json.loads(row).get("Health") == "healthy" for row in rows.splitlines()):
+            return
+        time.sleep(2)
+    raise TimeoutError("INITIAL_BOOTSTRAP_MEMBER_NOT_HEALTHY")
+
+
+def main(
+    report: Path,
+    requested_fault_target: int | None = None,
+    bootstrap_member: int | None = None,
+) -> None:
     """Run failure scenarios and always inventory/clean newly owned resources."""
     started = datetime.datetime.now(datetime.UTC)
     steps: list[tuple[str, str]] = []
@@ -550,6 +577,8 @@ def main(report: Path, requested_fault_target: int | None = None) -> None:
             "docker", "image", "inspect", config["services"]["postgresql-1"]["image"]
         )
         started_resources = True
+        if bootstrap_member is not None:
+            start_bootstrap_member(bootstrap_member)
         compose(
             "up",
             "-d",
@@ -565,6 +594,11 @@ def main(report: Path, requested_fault_target: int | None = None) -> None:
         state = roles()
         assert len(state) == 3 and sum(not replica for replica in state.values()) == 1
         writer = wait_writer()
+        if bootstrap_member is not None:
+            assert writer == bootstrap_member, "INITIAL_BOOTSTRAP_MEMBER_CHANGED"
+            phase(
+                f"Первоначальный ведущий {writer} выбран порядком штатного старта без switchover"
+            )
         compose(
             "exec",
             "-T",
@@ -889,5 +923,6 @@ if __name__ == "__main__":
         default=ROOT / "test" / "cluster-lifecycle-result.md",
     )
     parser.add_argument("--fault-target", type=int, choices=(1, 2, 3))
+    parser.add_argument("--bootstrap-member", type=int, choices=(1, 2, 3))
     arguments = parser.parse_args()
-    main(arguments.report, arguments.fault_target)
+    main(arguments.report, arguments.fault_target, arguments.bootstrap_member)

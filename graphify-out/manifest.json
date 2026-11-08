@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794153264.828606,
-    "seen": 1794153339.174576,
-    "ast_hash": "7dbe66b263580a0ae95df8278e193390",
+    "mtime": 1794154744.6063368,
+    "seen": 1794154753.5927129,
+    "ast_hash": "2264b414ec033be5b108fc8ed0d253df",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1812,9 +1812,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/cluster-lifecycle.py": {
-    "mtime": 1794153280.8925076,
-    "seen": 1794153339.171959,
-    "ast_hash": "480bd7fd86bebe101074efe8bf5132df",
+    "mtime": 1794154820.1883361,
+    "seen": 1794154839.616576,
+    "ast_hash": "d59cb4c5f91155e4c2c640ab4fc54216",
     "semantic_hash": ""
   },
   "postgresql/test/fencing-lifecycle.py": {
@@ -6156,9 +6156,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794153377.2572358,
-    "seen": 1794153384.878565,
-    "ast_hash": "0de31b11cca2f70bdeaa789726ae5401",
+    "mtime": 1794154847.9972546,
+    "seen": 1794154897.768652,
+    "ast_hash": "8d848e6afa81785691cf57a98d3acb06",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6174,15 +6174,15 @@
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1794153227.3866792,
-    "seen": 1794153339.168895,
-    "ast_hash": "71bec170fdac845589782409395ca361",
+    "mtime": 1794154717.8877106,
+    "seen": 1794154753.586878,
+    "ast_hash": "9d94c966f17e26cbb42f80b6df09ed81",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
-    "mtime": 1794153227.3859131,
-    "seen": 1794153339.173055,
-    "ast_hash": "a618515e2c11be246ae3ae30d765046f",
+    "mtime": 1794154745.8801534,
+    "seen": 1794154753.5911438,
+    "ast_hash": "9b9351803b5e89dcf690e0d09a9f9350",
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
@@ -6252,9 +6252,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_cluster_lifecycle_diagnostics.py": {
-    "mtime": 1794153280.7524521,
-    "seen": 1794153339.171993,
-    "ast_hash": "ab2969087746fc2a5d1c57b597acbe67",
+    "mtime": 1794154820.053903,
+    "seen": 1794154839.6166139,
+    "ast_hash": "d683c2acbe9cac8ed632b8720a72870c",
     "semantic_hash": ""
   },
   "public-egress-gateway/test/test_lifecycle_model.py": {
@@ -6264,9 +6264,9 @@
     "semantic_hash": ""
   },
   "docs/audit/clean-room-completion-plan.md": {
-    "mtime": 1794153264.8287873,
-    "seen": 1794153339.174955,
-    "ast_hash": "db90cf2c431035dea82b368bf2fc6278",
+    "mtime": 1794154744.6067333,
+    "seen": 1794154753.5931342,
+    "ast_hash": "cff0e04b8ec460b1a2089e5a598c5e76",
     "semantic_hash": ""
   },
   "postgresql/test/test_prepare_tls.py": {

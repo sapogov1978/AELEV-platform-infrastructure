@@ -190,7 +190,7 @@ class FullLocalContractTests(unittest.TestCase):
             self.assertFalse((output / "clean-room-evidence.json").exists())
 
     def test_natural_and_directed_primary_repetitions_are_distinct(self) -> None:
-        for natural in (False, True):
+        for natural, bootstrap in ((False, None), (True, None), (True, 1)):
             with self.subTest(natural=natural), tempfile.TemporaryDirectory() as tmp:
                 output = Path(tmp)
                 bom = output / "release-bom.json"
@@ -200,6 +200,7 @@ class FullLocalContractTests(unittest.TestCase):
                     diagnostic_stage=[stage.identity],
                     diagnostic_repetitions=3,
                     diagnostic_natural_primary=natural,
+                    diagnostic_bootstrap_member=bootstrap,
                 )
                 with (
                     mock.patch.object(
@@ -219,7 +220,14 @@ class FullLocalContractTests(unittest.TestCase):
                 self.assertEqual(
                     [call.args[1] for call in run.call_args_list],
                     (
-                        [("test",)] * 3
+                        [
+                            (
+                                ("test", "--bootstrap-member", "1")
+                                if bootstrap
+                                else ("test",)
+                            )
+                        ]
+                        * 3
                         if natural
                         else [("test", "--fault-target", str(n)) for n in range(1, 4)]
                     ),

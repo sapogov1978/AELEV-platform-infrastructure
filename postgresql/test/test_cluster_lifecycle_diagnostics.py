@@ -130,6 +130,37 @@ def test_quorum_waits_for_actual_streaming_peer(
     assert samples.call_count == 3
 
 
+def test_bootstrap_creates_both_fencing_peers_before_starting_initial_member(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from unittest.mock import Mock
+
+    run = Mock(
+        side_effect=[
+            SimpleNamespace(stdout=""),
+            SimpleNamespace(stdout=""),
+            SimpleNamespace(stdout='{"Health":"healthy"}\n'),
+        ]
+    )
+    monkeypatch.setattr(cluster_lifecycle, "compose", run)
+    cluster_lifecycle.start_bootstrap_member(1)
+    assert [call.args for call in run.call_args_list] == [
+        ("create", "--no-build", "--pull", "never"),
+        (
+            "up",
+            "-d",
+            "--no-build",
+            "--pull",
+            "never",
+            "etcd-1",
+            "etcd-2",
+            "etcd-3",
+            "postgresql-1",
+        ),
+        ("ps", "--format", "json", "postgresql-1"),
+    ]
+
+
 def test_quorum_never_waits_away_disabled_sync_commit(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

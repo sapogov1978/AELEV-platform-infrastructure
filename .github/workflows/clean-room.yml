@@ -13,6 +13,8 @@ on:
           - telemetry-and-translator
           - postgresql-lifecycle
           - postgresql-natural
+          - postgresql-initial-1
+          - postgresql-after-root
           - telemetry-onboarding
           - translator-lifecycle
           - spire-lifecycle
@@ -102,6 +104,10 @@ jobs:
             DIAGNOSTIC_ARGS=(--diagnostic-stage telemetry-onboarding --diagnostic-stage translator-lifecycle)
           elif [ "$DIAGNOSTIC_STAGE" = postgresql-natural ]; then
             DIAGNOSTIC_ARGS=(--diagnostic-stage postgresql-lifecycle --diagnostic-repetitions "$DIAGNOSTIC_REPETITIONS" --diagnostic-natural-primary)
+          elif [ "$DIAGNOSTIC_STAGE" = postgresql-initial-1 ]; then
+            DIAGNOSTIC_ARGS=(--diagnostic-stage postgresql-lifecycle --diagnostic-repetitions "$DIAGNOSTIC_REPETITIONS" --diagnostic-natural-primary --diagnostic-bootstrap-member 1)
+          elif [ "$DIAGNOSTIC_STAGE" = postgresql-after-root ]; then
+            DIAGNOSTIC_ARGS=(--diagnostic-stage root-lifecycle --diagnostic-stage kafka-lifecycle --diagnostic-stage postgresql-lifecycle --diagnostic-natural-primary --diagnostic-bootstrap-member 1)
           elif [ -n "$DIAGNOSTIC_STAGE" ] && [ "$DIAGNOSTIC_STAGE" != full ]; then
             DIAGNOSTIC_ARGS=(--diagnostic-stage "$DIAGNOSTIC_STAGE" --diagnostic-repetitions "$DIAGNOSTIC_REPETITIONS")
           fi
