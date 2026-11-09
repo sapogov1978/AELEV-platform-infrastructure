@@ -9,6 +9,7 @@ on:
         default: full
         options:
           - full
+          - root-lifecycle
           - remaining-stages
           - telemetry-and-translator
           - postgresql-lifecycle

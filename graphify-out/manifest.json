@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794240517.5300872,
-    "seen": 1794240543.103353,
-    "ast_hash": "c7544671f881c4d9b83349397e492b2b",
+    "mtime": 1794240581.0449567,
+    "seen": 1794240590.850815,
+    "ast_hash": "99eff1ffa0cd670f4f16a70486ad2dd6",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6174,9 +6174,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1794224002.1675808,
-    "seen": 1794224052.8428469,
-    "ast_hash": "db33bb12fd8aa05e59ab97c51f66a96a",
+    "mtime": 1794240581.044067,
+    "seen": 1794240590.8446531,
+    "ast_hash": "270f5530d5979f8528426b5458ddb5a5",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {

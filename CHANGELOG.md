@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-- Clean-room сохраняет bounded state/health diagnostic всей стартующей группы,
-  если initial readiness не достигнута; секреты, environment и полные логи в
-  артефакт не попадают.
+- Clean-room позволяет отдельно запустить `root-lifecycle` и сохраняет bounded
+  state/health diagnostic всей стартующей группы, если initial readiness не
+  достигнута; секреты, environment и полные логи в артефакт не попадают.
 - Root/full-local больше не превращает принадлежащие Translator data/telemetry
   сети во внешние при подключении общего compute recipe; standalone-станция
   по-прежнему требует явные маршрутизируемые owner networks. Descriptor
