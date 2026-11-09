@@ -414,6 +414,13 @@ def main() -> int:
             errors.append(
                 f"Translator overrides opaque provider image contract: {forbidden}"
             )
+    if "network_mode: none" in provider_service:
+        errors.append("Translator opaque provider is still denied required egress")
+    if (
+        "*provider-secret" not in provider_service
+        or "/run/secrets/provider/credential.env" not in compute_compose
+    ):
+        errors.append("Translator compute recipe is missing the generic provider secret")
     for relative in (
         "translator-service/translator.lock.json",
         "translator-service/download-model.py",

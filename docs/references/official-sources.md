@@ -29,6 +29,7 @@
 | [00-INFRA-20261106-0013-owner-certificate-lifecycle](../adr/00-INFRA-20261106-0013-owner-certificate-lifecycle.md) | [RFC 5280](https://www.rfc-editor.org/rfc/rfc5280.html), [SPIFFE Workload API](https://spiffe.io/docs/latest/spiffe-specs/spiffe_workload_api/), [Docker bind mounts](https://docs.docker.com/engine/storage/bind-mounts/) |
 | [00-INFRA-20261106-0014-product-readiness-and-site-admission](../adr/00-INFRA-20261106-0014-product-readiness-and-site-admission.md) | [SLSA provenance](https://slsa.dev/spec/v1.1/provenance), [GitHub artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations), [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final) |
 | [00-INFRA-20261106-0015-clean-room-full-local-reproduction](../adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md) | [SLSA provenance](https://slsa.dev/spec/v1.1/provenance), [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final), [Compose profiles](https://docs.docker.com/compose/how-tos/profiles/), [Docker image digests](https://docs.docker.com/dhi/core-concepts/digests/) |
+| [00-INFRA-20261109-0016-opaque-provider-runtime-egress](../adr/00-INFRA-20261109-0016-opaque-provider-runtime-egress.md) | [Compose services](https://docs.docker.com/reference/compose-file/services/), [Docker bind mounts](https://docs.docker.com/engine/storage/bind-mounts/), [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) |
 
 ## Унаследованный архив
 

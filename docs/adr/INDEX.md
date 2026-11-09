@@ -21,6 +21,7 @@
 | [00-INFRA-20261106-0013-owner-certificate-lifecycle](00-INFRA-20261106-0013-owner-certificate-lifecycle.md) | Сертификаты, private keys, approval и применение ротации остаются у владельца leaf. |
 | [00-INFRA-20261106-0014-product-readiness-and-site-admission](00-INFRA-20261106-0014-product-readiness-and-site-admission.md) | Готовность продукта отделена от допуска конкретной площадки и полномочий на runtime-воздействие. |
 | [00-INFRA-20261106-0015-clean-room-full-local-reproduction](00-INFRA-20261106-0015-clean-room-full-local-reproduction.md) | Полный локальный профиль фиксируется manifest, preflight, release BOM и доказательством всех обязательных функций из чистого состояния. |
+| [00-INFRA-20261109-0016-opaque-provider-runtime-egress](00-INFRA-20261109-0016-opaque-provider-runtime-egress.md) | Необязательный внешний opaque provider получает исходящую сеть и generic secret mount без раскрытия реализации Translator. |
 
 ## Правило нового ADR
 

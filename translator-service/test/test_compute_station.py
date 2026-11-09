@@ -25,7 +25,23 @@ def station() -> ModuleType:
 def configuration(provider: str, worker: str) -> dict[str, object]:
     return {
         "services": {
-            "translation-provider": {"image": provider, "network_mode": "none"},
+            "translation-provider": {
+                "image": provider,
+                "volumes": [
+                    {
+                        "type": "volume",
+                        "source": "translation-provider-socket",
+                        "target": "/run/aelev-translator",
+                    },
+                    {
+                        "type": "bind",
+                        "source": "/station/provider-credential.env",
+                        "target": "/run/secrets/provider/credential.env",
+                        "read_only": True,
+                        "bind": {"create_host_path": False},
+                    },
+                ],
+            },
             "translator-worker": {"image": worker},
         }
     }
@@ -72,6 +88,20 @@ def test_station_requires_separate_exact_images(
             return json.dumps(value)
 
         monkeypatch.setattr(module, "_execute", coupled_configuration)
+        with pytest.raises(RuntimeError, match="CONFIGURATION_INVALID"):
+            module._configuration(["docker"])
+    for forbidden in ("network_mode", "ports", "expose"):
+        exposed = configuration(provider, worker)
+        exposed["services"]["translation-provider"][forbidden] = (
+            "none" if forbidden == "network_mode" else ["443"]
+        )
+
+        def exposed_configuration(
+            _arguments: list[str], *, capture: bool = False, value: object = exposed
+        ) -> str:
+            return json.dumps(value)
+
+        monkeypatch.setattr(module, "_execute", exposed_configuration)
         with pytest.raises(RuntimeError, match="CONFIGURATION_INVALID"):
             module._configuration(["docker"])
     mutable = "registry.example/translator:latest"

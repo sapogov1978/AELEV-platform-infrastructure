@@ -20,7 +20,7 @@ docker compose --env-file .env ps
 
 `translator-migrator` выполняется до рабочих ролей и не повторяется бесконечно. `translator-topic-provisioner` ждёт healthy Kafka, при ошибке соединения повторяется и не пропускает consumer, outbox или API дальше. Канонический инфраструктурный запуск требует healthy `translator-api`, работающие consumers и outbox; provider в него не входит. Новые задания сохраняются до отдельного допуска совместимого провайдера.
 
-Если Kafka находится на другом сервере, используйте `compose.remote.yml`: он не запускает Kafka на узле переводчика и проверяет реальный endpoint. Защищённый broker должен уже существовать. Для удалённой PostgreSQL задайте маршрутизируемый `DATABASE_HOST`, `DATABASE_NETWORK_INTERNAL=false`, `DATABASE_SSLMODE=verify-full` и доставьте CA/client certificate/key в отдельный `DATABASE_SECRET_ROOT`. Способ размещения провайдера пока не выбран: локальный runtime, отдельный образ и внешний API являются альтернативами, а не частью канонического запуска. Сохранённые `compose.compute.yml` и `compute-runtime/` описывают только прежний необязательный standalone-вариант и не входят в `full-local` или production admission.
+Если Kafka находится на другом сервере, используйте `compose.remote.yml`: он не запускает Kafka на узле переводчика и проверяет реальный endpoint. Защищённый broker должен уже существовать. Для удалённой PostgreSQL задайте маршрутизируемый `DATABASE_HOST`, `DATABASE_NETWORK_INTERNAL=false`, `DATABASE_SSLMODE=verify-full` и доставьте CA/client certificate/key в отдельный `DATABASE_SECRET_ROOT`. Канонический запуск не выбирает реализацию провайдера. Необязательные `compose.compute.yml` и `compute-runtime/` размещают совместимый внешний provider image с исходящей сетью и generic read-only secret file; model ID, endpoint и prompt остаются непрозрачными. Recipe не входит в `full-local` или production admission.
 
 ## Функциональная проверка без провайдера
 
@@ -111,7 +111,7 @@ RESET возвращает только незавершённую работу 
 
 ## Диагностика и восстановление
 
-До выбора провайдера диагностируйте только принадлежащие Translator БД, Kafka, consumers, outbox и API. Наличие ожидающих `PENDING` заданий при отсутствии провайдера является сохранённой работой, а не отказом инфраструктурного посредника. После отдельного решения о способе размещения поставщик обязан документировать собственные identity, transport, health, capacity, стоимость и проверку качества; один зелёный healthcheck не доказывает корректный перевод.
+До допуска provider image диагностируйте только принадлежащие Translator БД, Kafka, consumers, outbox и API. Наличие ожидающих `PENDING` заданий при отсутствии провайдера является сохранённой работой, а не отказом инфраструктурного посредника. Поставщик обязан документировать собственные credential, transport, health, capacity, стоимость и проверку качества; один зелёный healthcheck не доказывает корректный перевод.
 
 ### Согласованное обновление схемы
 

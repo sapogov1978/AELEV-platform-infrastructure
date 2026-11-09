@@ -16,8 +16,8 @@
 | Порядок технических повторов и диагностика | [результат проверки и выкладки](test/stable-retry-result-20261018.md) |
 | Телеметрия владельца | `src/translator_service/observability.py`, `observability/` |
 | Локальная и удалённая управляющие топологии | `compose.local.yml`, `compose.remote.yml`, `compose.yml` |
-| Контракт внешнего провайдера | [docs/api/translation.md](../docs/api/translation.md), [SPEC.md](SPEC.md); способ размещения ещё не выбран |
-| Необязательный прежний standalone-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml`; не входит в `full-local` или production admission |
+| Контракт внешнего провайдера | [docs/api/translation.md](../docs/api/translation.md), [SPEC.md](SPEC.md); реализация остаётся непрозрачной |
+| Необязательный compute-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml`; внешний provider image, исходящая сеть и generic secret mount, не входит в `full-local` или production admission |
 | Реализация, модель и версия провайдера | В этом репозитории отсутствуют; принадлежат выбранному поставщику |
 | Проверки совместимости провайдера | [актуальная проверка готовности](test/production-readiness-result.md), `test/` |
 

@@ -90,6 +90,9 @@ def _resolved_compute(*, overrides: dict[str, str] | None = None) -> dict[str, A
             "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT": (
                 str(COMPONENT_ROOT / "secrets/telemetry")
             ),
+            "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE": (
+                str(COMPONENT_ROOT.parent.parent / "TranslationProvider/.env.local")
+            ),
         },
     )
 
@@ -467,7 +470,15 @@ class TranslatorConfigurationTest(unittest.TestCase):
             )
         }
         self.assertEqual(socket_users, {"translation-provider", "translator-worker"})
-        self.assertEqual(compute["translation-provider"]["network_mode"], "none")
+        self.assertNotIn("network_mode", compute["translation-provider"])
+        self.assertEqual(set(compute["translation-provider"]["networks"]), {"default"})
+        provider_secret = next(
+            volume
+            for volume in compute["translation-provider"]["volumes"]
+            if volume["target"] == "/run/secrets/provider/credential.env"
+        )
+        self.assertEqual(provider_secret["type"], "bind")
+        self.assertTrue(provider_secret["read_only"])
         self.assertEqual(
             set(compute["translator-worker"]["networks"]),
             {"translator-data", "translator-telemetry"},

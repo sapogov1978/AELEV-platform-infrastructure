@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794179407.553015,
-    "seen": 1794179433.933842,
-    "ast_hash": "86c40b56fca7b2b68c285693e0b14f62",
+    "mtime": 1794211230.4284372,
+    "seen": 1794211319.699289,
+    "ast_hash": "835645ddf28fa55f8a1cf8611f9a3d55",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -204,9 +204,9 @@
     "semantic_hash": ""
   },
   "docs/adr/INDEX.md": {
-    "mtime": 1793963942.2277253,
-    "seen": 1793964073.0149078,
-    "ast_hash": "4995a2c9f2747877e5bed20360313a0a",
+    "mtime": 1794211258.1170328,
+    "seen": 1794211319.699554,
+    "ast_hash": "d4373850fc2b54e301afdeb88e857d24",
     "semantic_hash": ""
   },
   "docs/api/grpc.md": {
@@ -2622,9 +2622,9 @@
     "semantic_hash": ""
   },
   "translator-service/compose.compute.yml": {
-    "mtime": 1794095930.998879,
-    "seen": 1794096174.100037,
-    "ast_hash": "b793bd65fc62be8552e950968e8885c4",
+    "mtime": 1794211401.6325748,
+    "seen": 1794211462.361087,
+    "ast_hash": "f9380b66a5004c6a48d2ea7979438f63",
     "semantic_hash": ""
   },
   "translator-service/compose.remote.yml": {
@@ -2652,9 +2652,9 @@
     "semantic_hash": ""
   },
   "translator-service/compute-runtime/station.py": {
-    "mtime": 1793968455.5962439,
-    "seen": 1793968650.801446,
-    "ast_hash": "1f8bcdde9db8c14466ec12bf62aa7dcb",
+    "mtime": 1794211401.6336672,
+    "seen": 1794211462.361131,
+    "ast_hash": "2c568c8fa13818327f1866a05b5ab641",
     "semantic_hash": ""
   },
   "translator-service/contracts/translation-v1.json": {
@@ -2994,15 +2994,15 @@
     "semantic_hash": ""
   },
   "translator-service/test/test_compute_station.py": {
-    "mtime": 1793968478.7608662,
-    "seen": 1793968650.8020182,
-    "ast_hash": "aa4cddf03e6f1506e9a79561c21819b8",
+    "mtime": 1794211401.6338682,
+    "seen": 1794211462.3618188,
+    "ast_hash": "8c6112dbae9c2097ceacd14bec86c019",
     "semantic_hash": ""
   },
   "translator-service/test/test_configuration.py": {
-    "mtime": 1794005405.883526,
-    "seen": 1794005426.1321778,
-    "ast_hash": "947c8cc4db2a786b658b38fcd0f0cf39",
+    "mtime": 1794211401.6343296,
+    "seen": 1794211462.36182,
+    "ast_hash": "004ca5173323e4ea4b86be29c1ec2bd2",
     "semantic_hash": ""
   },
   "translator-service/test/test_deployment.py": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794145798.187881,
-    "seen": 1794146144.5984519,
-    "ast_hash": "898ca12b4bb7a547f5073ac3638718dc",
+    "mtime": 1794211230.4271886,
+    "seen": 1794211319.7049758,
+    "ast_hash": "9e6cd09784b2841e12123be22726ca00",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -4638,9 +4638,9 @@
     "semantic_hash": ""
   },
   "translator-service/README.md": {
-    "mtime": 1794095826.7800217,
-    "seen": 1794096174.106008,
-    "ast_hash": "832dfcda2c55ad26621c539fbe56658c",
+    "mtime": 1794211212.0591307,
+    "seen": 1794211319.704988,
+    "ast_hash": "097e5d50e32da4b794435cf0b28c946f",
     "semantic_hash": ""
   },
   "translator-service/SPEC.md": {
@@ -4650,21 +4650,21 @@
     "semantic_hash": ""
   },
   "translator-service/TASKS.md": {
-    "mtime": 1794151129.4222958,
-    "seen": 1794151189.378677,
-    "ast_hash": "366de5d4db709f1f2f9a282116d8edd0",
+    "mtime": 1794211212.060261,
+    "seen": 1794211319.705,
+    "ast_hash": "2454255af231419980d9190b32c9eeed",
     "semantic_hash": ""
   },
   "translator-service/USER_MANUAL.md": {
-    "mtime": 1794145798.1870897,
-    "seen": 1794146144.598502,
-    "ast_hash": "e61c8dd235b0aa53e271b01aba33c04d",
+    "mtime": 1794211230.4289572,
+    "seen": 1794211319.7050009,
+    "ast_hash": "cf921144c47722d06f19856ebc868917",
     "semantic_hash": ""
   },
   "translator-service/compute-runtime/README.md": {
-    "mtime": 1794095930.9979227,
-    "seen": 1794096174.1060212,
-    "ast_hash": "327a02c05a461e19ef2cd07a568991e2",
+    "mtime": 1794211401.6347923,
+    "seen": 1794211462.368457,
+    "ast_hash": "66dd47d5116f456b75896bb5c0df3f9f",
     "semantic_hash": ""
   },
   "translator-service/test/bounded-recovery-result-20261022.md": {
@@ -5076,9 +5076,9 @@
     "semantic_hash": ""
   },
   "tools/check_documentation.py": {
-    "mtime": 1794177887.2383046,
-    "seen": 1794177894.897461,
-    "ast_hash": "722881b8e11b56b4c0e1e9d2d523feab",
+    "mtime": 1794211401.6345844,
+    "seen": 1794211462.360822,
+    "ast_hash": "464d4a6078cdcd3dbdb5f1528b18be17",
     "semantic_hash": ""
   },
   "tools/test_observability_tools_patch.py": {
@@ -5094,9 +5094,9 @@
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
-    "mtime": 1793968095.437109,
-    "seen": 1793968650.804289,
-    "ast_hash": "30c6e094dc810ed1e7d23b81c45c1fbb",
+    "mtime": 1794211258.1176324,
+    "seen": 1794211319.701629,
+    "ast_hash": "2afa89425e6fb3df00607ba5d568ad17",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md": {
@@ -5172,15 +5172,15 @@
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0011-controlled-public-egress.md": {
-    "mtime": 1793957491.4935467,
-    "seen": 1793958131.682904,
-    "ast_hash": "2cc0f877c3b2e6738f5cee188636b595",
+    "mtime": 1794211258.1182997,
+    "seen": 1794211319.6995142,
+    "ast_hash": "4db78b3ad234636370c2301a95cf5cc1",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0012-translator-technical-capability.md": {
-    "mtime": 1794095826.777728,
-    "seen": 1794096174.101095,
-    "ast_hash": "fb3895ecd44245e6da85a5c97f064512",
+    "mtime": 1794211258.1189208,
+    "seen": 1794211319.6995149,
+    "ast_hash": "47f7422ff17eed1ac43065a5b6fdbef8",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0013-owner-certificate-lifecycle.md": {
@@ -6126,9 +6126,9 @@
     "semantic_hash": ""
   },
   "translator-service/INDEX.md": {
-    "mtime": 1794095826.7803679,
-    "seen": 1794096174.106007,
-    "ast_hash": "8a0095953db44860f6416d8905e01cf8",
+    "mtime": 1794211212.05971,
+    "seen": 1794211319.704988,
+    "ast_hash": "3c1f17dd6c9575103b3ba148f0801d4f",
     "semantic_hash": ""
   },
   "docs/schemas/clean-room-evidence-v1.json": {
@@ -6357,6 +6357,12 @@
     "mtime": 1794177251.2350388,
     "seen": 1794177780.236875,
     "ast_hash": "473c474e5831e6f8304c56c8c380ac35",
+    "semantic_hash": ""
+  },
+  "docs/adr/00-INFRA-20261109-0016-opaque-provider-runtime-egress.md": {
+    "mtime": 1794211401.6351724,
+    "seen": 1794211462.362255,
+    "ast_hash": "e36fa0ec3e6da0f0d33596ae43abb214",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

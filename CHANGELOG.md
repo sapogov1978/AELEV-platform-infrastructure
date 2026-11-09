@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Translator compute recipe больше не блокирует внешний opaque provider через
+  `network_mode: none`: он предоставляет исходящую сеть без входящих портов и
+  generic read-only secret mount. После offline-проверок отсутствующий API key
+  остаётся единственным локальным runtime-вводом выбранного провайдера.
+
 ## 1.0.0 — 2026-11-08
 
 - Буквальный clean-room runbook сохраняет все выходы вне checkout, передаёт verifier тот же каталог, что и gate, и использует создаваемую локальным bootstrap operator identity; отдельная ручная установка SPIRE не навязывается автоматизированной приёмке.

@@ -1,5 +1,10 @@
 # Изменения translator-service
 
+- 2026-11-09: необязательный compute recipe подготовлен для внешнего opaque
+  provider image: provider получает исходящую сеть без опубликованных портов и
+  отдельный generic read-only API secret file. Model ID, endpoint, prompt и
+  credential не входят в Translator environment или opaque port.
+
 - 2026-11-08: run `42485163225` подтвердил ложный missing-image preflight: нужный PostgreSQL digest присутствовал, но snapshot видел только `postgres:<none>`. Владельческий lifecycle теперь учитывает exact repository digests из `image ls --digests`; тест подтверждает допуск нужного digest без tag и отказ подмены другим digest. Runtime, Kafka-контракты и provider boundary сохраняются.
 
 - 2026-11-08: необязательная provider/worker compute-ячейка исключена из `full-local`, release BOM, production admission и владельческой строки Platform UI. Способ размещения провайдера не выбран; прежний standalone-рецепт сохранён отдельно. Реальный lifecycle проверяет сохранение и дедупликацию обеих очередей без провайдера, полный restart и отказ Kafka без потери ожидающей работы.

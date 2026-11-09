@@ -59,14 +59,11 @@ def _local_engine(docker: str) -> tuple[dict[str, Any], str]:
         raise RuntimeError("TRANSLATOR_COMPUTE_LOCAL_DOCKER_REQUIRED")
     endpoint = cast(dict[str, object], docker_value).get("Host")
     system = platform.system()
-    local = (
-        isinstance(endpoint, str)
-        and (
-            (system == "Windows" and endpoint.startswith("npipe:////./pipe/"))
-            or (
-                system != "Windows"
-                and re.fullmatch(r"unix:///[^,\r\n\x00]+", endpoint) is not None
-            )
+    local = isinstance(endpoint, str) and (
+        (system == "Windows" and endpoint.startswith("npipe:////./pipe/"))
+        or (
+            system != "Windows"
+            and re.fullmatch(r"unix:///[^,\r\n\x00]+", endpoint) is not None
         )
     )
     if not local or not isinstance(endpoint, str):
@@ -110,9 +107,7 @@ def _compose(docker: str, endpoint: str, env_file: Path) -> list[str]:
 def _configuration(command: list[str]) -> dict[str, Any]:
     raw = cast(
         object,
-        json.loads(
-            _execute(command + ["config", "--format", "json"], capture=True)
-        ),
+        json.loads(_execute(command + ["config", "--format", "json"], capture=True)),
     )
     if not isinstance(raw, dict):
         raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
@@ -133,13 +128,35 @@ def _configuration(command: list[str]) -> dict[str, Any]:
             raise RuntimeError("TRANSLATOR_COMPUTE_PINNED_IMAGE_REQUIRED")
     provider = cast(dict[str, object], typed_services["translation-provider"])
     worker = cast(dict[str, object], typed_services["translator-worker"])
+    provider_volumes = provider.get("volumes")
+    if not isinstance(provider_volumes, list):
+        raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    typed_volumes = [
+        cast(dict[str, object], volume)
+        for volume in cast(list[object], provider_volumes)
+        if isinstance(volume, dict)
+    ]
+    secret_mounts = [
+        volume
+        for volume in typed_volumes
+        if volume.get("target") == "/run/secrets/provider/credential.env"
+    ]
+    secret_bind = secret_mounts[0].get("bind") if len(secret_mounts) == 1 else None
     if (
         provider["image"] == worker["image"]
-        or provider.get("network_mode") != "none"
+        or provider.get("network_mode") is not None
         or provider.get("command") is not None
         or provider.get("entrypoint") is not None
         or "environment" in provider
         or "healthcheck" in provider
+        or "ports" in provider
+        or "expose" in provider
+        or len(typed_volumes) != len(provider_volumes)
+        or len(secret_mounts) != 1
+        or secret_mounts[0].get("type") != "bind"
+        or secret_mounts[0].get("read_only") is not True
+        or not isinstance(secret_bind, dict)
+        or cast(dict[str, object], secret_bind).get("create_host_path") is not False
     ):
         raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
     return cast(dict[str, Any], configuration)
@@ -154,10 +171,7 @@ def run(action: str, env_file: Path, timeout: int) -> None:
     if action == "prepare":
         _execute(command + ["pull"])
     elif action == "start":
-        _execute(
-            command
-            + ["up", "--detach", "--wait", "--wait-timeout", str(timeout)]
-        )
+        _execute(command + ["up", "--detach", "--wait", "--wait-timeout", str(timeout)])
     elif action == "status":
         _execute(command + ["ps"])
     elif action == "stop":

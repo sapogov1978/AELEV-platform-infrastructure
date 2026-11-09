@@ -1,4 +1,4 @@
-# Optional legacy standalone recipe. Not part of full-local or production admission.
+# Optional opaque-provider compute recipe. Not part of full-local or production admission.
 name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT:?set a dedicated compute project}
 
 x-provider-image: &provider-image
@@ -40,11 +40,19 @@ x-telemetry-identity: &telemetry-identity
   read_only: true
   bind: {create_host_path: false}
 
+x-provider-secret: &provider-secret
+  type: bind
+  source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE:?set provider API secret file}
+  target: /run/secrets/provider/credential.env
+  read_only: true
+  bind: {create_host_path: false}
+
 services:
   translation-provider:
     <<: *provider-image
-    volumes: [translation-provider-socket:/run/aelev-translator]
-    network_mode: none
+    volumes:
+      - translation-provider-socket:/run/aelev-translator
+      - *provider-secret
     restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY:-on-failure:3}
     read_only: true
     tmpfs: [/tmp:size=64m,mode=1777]
