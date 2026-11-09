@@ -56,7 +56,7 @@ services:
       - "${AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID:?set provider credential group}"
     restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY:-on-failure:3}
     read_only: true
-    tmpfs: [/tmp:size=64m,mode=1777]
+    tmpfs: ["/tmp:size=64m,mode=1777"]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT:?set provider memory limit}
@@ -79,7 +79,7 @@ services:
       translation-provider: {condition: service_healthy}
     restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY:-on-failure:3}
     read_only: true
-    tmpfs: [/tmp:size=64m,mode=1777]
+    tmpfs: ["/tmp:size=64m,mode=1777"]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT:?set worker memory limit}

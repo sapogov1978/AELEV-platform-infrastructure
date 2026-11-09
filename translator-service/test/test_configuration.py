@@ -461,6 +461,12 @@ class TranslatorConfigurationTest(unittest.TestCase):
     def test_private_socket_and_network_boundaries(self) -> None:
         services = _resolved_compose()["services"]
         compute = _resolved_compute()["services"]
+        self.assertEqual(
+            (COMPONENT_ROOT / "compose.compute.yml")
+            .read_text()
+            .count('tmpfs: ["/tmp:size=64m,mode=1777"]'),
+            2,
+        )
         socket_users = {
             name
             for name, service in compute.items()
