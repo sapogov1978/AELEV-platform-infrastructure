@@ -97,7 +97,7 @@ class FullLocalContractTests(unittest.TestCase):
                     "owner": "translation-provider",
                     "admitted_reference": (
                         "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
-                        "f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866"
+                        "0a09783d072ccc7c60ec8e6fbe5ce56def95a56601888d5c3e4cf083da3ee016"
                     ),
                 },
                 {
@@ -106,7 +106,7 @@ class FullLocalContractTests(unittest.TestCase):
                     "admitted_reference": (
                         "ghcr.io/sapogov1978/"
                         "aelev-platform-infrastructure-translator-worker@sha256:"
-                        "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35"
+                        "d68d70243a6746cbe9dbdd537b2d773f701c9cd44daabbeac78d88a0e6fa98a5"
                     ),
                 },
                 {

@@ -156,9 +156,9 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1794224737.2242157,
-    "seen": 1794224779.714417,
-    "ast_hash": "79e28b18387eff2e27354ac107f9ad33",
+    "mtime": 1794227214.7859218,
+    "seen": 1794227335.294516,
+    "ast_hash": "c01acd8e4a4d6b7a4ea439e62450d297",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794226563.9285183,
-    "seen": 1794226590.155974,
-    "ast_hash": "1e3d7a0c6de0e5186af86af0c35c0c04",
+    "mtime": 1794227214.788388,
+    "seen": 1794227335.29558,
+    "ast_hash": "d53b4fd904cd3051c1324da5794acbb7",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "bootstrap.py": {
-    "mtime": 1794224737.222787,
-    "seen": 1794224779.7093801,
-    "ast_hash": "d84ef057526416c48bc5b1978e4bd2d4",
+    "mtime": 1794227214.785127,
+    "seen": 1794227335.289675,
+    "ast_hash": "5fe79712eff5c909b83bd94562ea588a",
     "semantic_hash": ""
   },
   "certificate_authority.py": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1794223506.9925935,
-    "seen": 1794224052.843002,
-    "ast_hash": "10aa7509fff4a4a6d28016d14e015a0c",
+    "mtime": 1794227214.7865636,
+    "seen": 1794227335.289793,
+    "ast_hash": "d0bc007b72473c637b55f5cc058a4781",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
@@ -6156,9 +6156,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794223645.69328,
-    "seen": 1794224052.847454,
-    "ast_hash": "d2fd170cdcfaffebd1fe8e2de5e87043",
+    "mtime": 1794227214.7878785,
+    "seen": 1794227335.294539,
+    "ast_hash": "605a089d313012df9ad31ed40da1b66c",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {

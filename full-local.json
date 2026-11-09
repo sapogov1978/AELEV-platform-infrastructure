@@ -162,8 +162,8 @@
       "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
       "source_repository": "https://github.com/sapogov1978/AELEV-translation-provider",
       "release_workflow": "release-provider-image",
-      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42607732356",
-      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866",
+      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42615707050",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:0a09783d072ccc7c60ec8e6fbe5ce56def95a56601888d5c3e4cf083da3ee016",
       "purpose": "Opaque domain-preserving OpenAI Responses translation provider."
     },
     {
@@ -173,8 +173,8 @@
       "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
       "source_repository": "https://github.com/sapogov1978/AELEV-platform-infrastructure",
       "release_workflow": "release-translator-worker-image",
-      "release_run": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42608056754",
-      "admitted_reference": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35",
+      "release_run": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42615706844",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:d68d70243a6746cbe9dbdd537b2d773f701c9cd44daabbeac78d88a0e6fa98a5",
       "purpose": "Provider-neutral Translator worker paired with the opaque provider over UDS."
     },
     {

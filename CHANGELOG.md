@@ -4,6 +4,10 @@
 
 - Translator worker release publishes a signed `linux/amd64`/`linux/arm64`
   image index; Apple Silicon startup no longer depends on amd64 emulation.
+- Startup admits the multi-platform provider release `42615707050` at digest
+  `0a09783d...ee016` and worker release `42615706844` at digest
+  `d68d7024...a98a5`. Init migrates only the exact superseded image references;
+  explicit operator overrides remain unchanged.
 - Root capability `translation` и `full-local` 1.1.0 теперь включают отдельные
   подписанные provider/worker images по точным digests. Startup не клонирует
   mutable repository: create-only импортирует существующий ignored

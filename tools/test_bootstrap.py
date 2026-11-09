@@ -395,6 +395,36 @@ class BootstrapTest(unittest.TestCase):
                 "8g",
             )
 
+    def test_translation_release_migrates_only_exact_legacy_pins(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            translator = Path(temporary) / "translator-service"
+            translator.mkdir()
+            (translator / ".env.example").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=provider@sha256:new\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:new\n"
+            )
+            (translator / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE="
+                + provider.LEGACY_TRANSLATION_IMAGE_REFERENCES[
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"
+                ]
+                + "\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:custom\n"
+            )
+
+            with mock.patch.object(provider, "TRANSLATOR", translator):
+                provider.migrate_legacy_translation_image_references()
+
+            values = provider.read_env(translator / ".env")
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"],
+                "provider@sha256:new",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"],
+                "worker@sha256:custom",
+            )
+
     def test_platform_migrates_only_legacy_local_keycloak_route(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()

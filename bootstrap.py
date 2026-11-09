@@ -86,6 +86,17 @@ ADDITIVE_TEMPLATE_KEYS = {
     "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE",
     "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
 }
+LEGACY_TRANSLATION_IMAGE_REFERENCES = {
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": (
+        "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
+        "f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866"
+    ),
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE": (
+        "ghcr.io/sapogov1978/"
+        "aelev-platform-infrastructure-translator-worker@sha256:"
+        "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35"
+    ),
+}
 
 
 class QuickstartError(RuntimeError):
@@ -221,6 +232,23 @@ def initialize_additive_local_paths() -> None:
         }
         if updates:
             update_env(path, updates)
+
+
+def migrate_legacy_translation_image_references() -> None:
+    """Move exact superseded release pins forward while preserving overrides."""
+    path = TRANSLATOR / ".env"
+    example = TRANSLATOR / ".env.example"
+    if not path.is_file() or not example.is_file():
+        return
+    current = read_env(path)
+    template = read_env(example)
+    updates = {
+        key: template[key]
+        for key, legacy in LEGACY_TRANSLATION_IMAGE_REFERENCES.items()
+        if current.get(key) == legacy and key in template
+    }
+    if updates:
+        update_env(path, updates)
 
 
 def initialize_owner_environments() -> None:
@@ -509,6 +537,7 @@ def initialize() -> None:
     initialize_env(ROOT / ".env")
     initialize_owner_environments()
     initialize_additive_local_paths()
+    migrate_legacy_translation_image_references()
     initialize_translation_provider_credential()
     initialize_keycloak()
     initialize_minio()
