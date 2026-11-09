@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Opaque-provider `translator-worker` снова получает owner-configured
+  supplemental group и на Linux может читать `0640` database/telemetry
+  identities; Docker Desktop больше не маскирует отсутствие этого допуска.
 - Clean-room позволяет отдельно запустить `root-lifecycle` и сохраняет bounded
   state/health diagnostic всей стартующей группы, если initial readiness не
   достигнута; секреты, environment и полные логи в артефакт не попадают.

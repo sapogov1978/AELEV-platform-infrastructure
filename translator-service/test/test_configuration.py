@@ -142,6 +142,7 @@ class TranslatorConfigurationTest(unittest.TestCase):
             )
             self.assertEqual(selected["healthcheck"]["retries"], 3)
         worker = _resolved_compute()["services"]["translator-worker"]
+        self.assertEqual(worker["group_add"], ["20"])
         self.assertEqual(
             worker["environment"]["AELEV_TRANSLATOR_HEALTH_ROLE"], "worker"
         )

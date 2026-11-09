@@ -66,6 +66,8 @@ services:
   translator-worker:
     <<: *worker-image
     command: [python, -m, translator_service.runtime, worker]
+    group_add:
+      - "${AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID:?set runtime secret group}"
     environment:
       <<: *database-environment
       AELEV_TRANSLATOR_SOCKET_PATH: /run/aelev-translator/translator.sock
