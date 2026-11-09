@@ -439,6 +439,27 @@ def test_healthchecked_restart_no_role_is_not_treated_as_one_shot(
     )
 
 
+def test_image_native_healthcheck_is_used_when_compose_model_omits_it(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "translation-provider": {
+                "Status": "running",
+                "Running": True,
+                "ExitCode": 0,
+                "Health": {"Status": "healthy"},
+            }
+        },
+    )
+    wait_ready(
+        "project",
+        {"translation-provider": {"restart": "on-failure:3"}},
+        1,
+    )
+
+
 def test_healthchecked_restart_no_role_fails_immediately_after_exit(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

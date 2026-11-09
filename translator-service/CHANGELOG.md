@@ -4,7 +4,8 @@
   сетями: root/local создаёт сети Translator, standalone compute подключается к
   внешним маршрутизируемым сетям. Ревизия UI descriptor повышена с 11 до 12;
   bootstrap обновляет только точное штатное значение прошлого выпуска. Запись
-  tmpfs provider/worker экранирована от YAML-разбиения mount options.
+  tmpfs provider/worker экранирована от YAML-разбиения mount options; root gate
+  принимает image-owned health provider из фактического Docker State.
 
 - 2026-11-09: root/full-local 1.1.0 канонически включает ранее отдельный compute
   recipe с подписанными provider/worker digests. Bootstrap create-only переносит

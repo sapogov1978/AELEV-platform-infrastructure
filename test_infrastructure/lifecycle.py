@@ -476,12 +476,15 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
         for name, description in services.items():
             state = current.get(name, {})
             restart = str(description["restart"])
+            health_contract = bool(description.get("healthcheck")) or bool(
+                state.get("Health")
+            )
             one_shot = (
                 restart == "no"
                 or restart == "on-failure"
                 or restart.startswith("on-failure:")
             )
-            if description.get("healthcheck"):
+            if health_contract:
                 ready = (
                     state.get("Running") is True
                     and state.get("Health", {}).get("Status") == "healthy"
@@ -510,7 +513,7 @@ def wait_ready(project: str, services: dict[str, Any], timeout: int) -> None:
                     and state.get("OOMKilled") is False
                 )
                 if (
-                    description.get("healthcheck")
+                    health_contract
                     and description.get("restart") == "no"
                     and state.get("Status") in {"dead", "exited"}
                     and not native_return
