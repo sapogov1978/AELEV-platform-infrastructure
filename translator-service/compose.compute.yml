@@ -103,7 +103,7 @@ networks:
         - subnet: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_EGRESS_SUBNET:?set a non-overlapping provider egress subnet}
   translator-data:
     name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK:?set routed database network}
-    external: true
+    external: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK_EXTERNAL:?set false for the root/local owner stack or true for a routed standalone database network}
   translator-telemetry:
     name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_NETWORK:?set routed telemetry network}
-    external: true
+    external: ${AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_NETWORK_EXTERNAL:?set false for the root/local owner stack or true for a routed standalone telemetry network}

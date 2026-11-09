@@ -156,9 +156,9 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1794227214.7859218,
-    "seen": 1794227335.294516,
-    "ast_hash": "c01acd8e4a4d6b7a4ea439e62450d297",
+    "mtime": 1794236721.4704108,
+    "seen": 1794236789.455141,
+    "ast_hash": "ec1a1931d2cde02f191dd0b4b8db0056",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794227214.788388,
-    "seen": 1794227335.29558,
-    "ast_hash": "d53b4fd904cd3051c1324da5794acbb7",
+    "mtime": 1794236721.4720092,
+    "seen": 1794236789.4568908,
+    "ast_hash": "9954b578a7cb64be998c98c5d41d21c2",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "bootstrap.py": {
-    "mtime": 1794227214.785127,
-    "seen": 1794227335.289675,
-    "ast_hash": "5fe79712eff5c909b83bd94562ea588a",
+    "mtime": 1794236801.4877417,
+    "seen": 1794236857.85985,
+    "ast_hash": "a82233b1038003b933c6648ce2b31402",
     "semantic_hash": ""
   },
   "certificate_authority.py": {
@@ -2622,9 +2622,9 @@
     "semantic_hash": ""
   },
   "translator-service/compose.compute.yml": {
-    "mtime": 1794224737.2239027,
-    "seen": 1794224779.714541,
-    "ast_hash": "16f1bfc982e93e267ceccc8bac409f2a",
+    "mtime": 1794236700.1373131,
+    "seen": 1794236789.455349,
+    "ast_hash": "9f71a78894b939bbe0b51637aef75fba",
     "semantic_hash": ""
   },
   "translator-service/compose.remote.yml": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794223823.244802,
-    "seen": 1794224052.853323,
-    "ast_hash": "5040daaef69338b31885afd763b92abc",
+    "mtime": 1794236721.4726827,
+    "seen": 1794236789.46591,
+    "ast_hash": "7d02f09a3e96fb1df194350b0b54ec44",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -4662,9 +4662,9 @@
     "semantic_hash": ""
   },
   "translator-service/compute-runtime/README.md": {
-    "mtime": 1794223776.159067,
-    "seen": 1794224052.853347,
-    "ast_hash": "e1a36558f79161cd3b5fb7561ef5e9eb",
+    "mtime": 1794236801.4881296,
+    "seen": 1794236857.884326,
+    "ast_hash": "19832ce6e9046568b981e729ea46c5fa",
     "semantic_hash": ""
   },
   "translator-service/test/bounded-recovery-result-20261022.md": {

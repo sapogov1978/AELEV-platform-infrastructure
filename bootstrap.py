@@ -84,6 +84,8 @@ ADDITIVE_TEMPLATE_KEYS = {
     "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT",
     "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY",
     "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK_EXTERNAL",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_NETWORK_EXTERNAL",
     "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
 }
 LEGACY_TRANSLATION_IMAGE_REFERENCES = {
@@ -97,6 +99,7 @@ LEGACY_TRANSLATION_IMAGE_REFERENCES = {
         "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35"
     ),
 }
+LEGACY_TRANSLATION_UI_DESCRIPTION_REVISION = "11"
 
 
 class QuickstartError(RuntimeError):
@@ -249,6 +252,22 @@ def migrate_legacy_translation_image_references() -> None:
     }
     if updates:
         update_env(path, updates)
+
+
+def migrate_legacy_translation_ui_description_revision() -> None:
+    """Advance only the descriptor revision shipped by the previous release."""
+    path = TRANSLATOR / ".env"
+    example = TRANSLATOR / ".env.example"
+    if not path.is_file() or not example.is_file():
+        return
+    key = "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION"
+    current = read_env(path)
+    template = read_env(example)
+    if (
+        current.get(key) == LEGACY_TRANSLATION_UI_DESCRIPTION_REVISION
+        and key in template
+    ):
+        update_env(path, {key: template[key]})
 
 
 def initialize_owner_environments() -> None:
@@ -538,6 +557,7 @@ def initialize() -> None:
     initialize_owner_environments()
     initialize_additive_local_paths()
     migrate_legacy_translation_image_references()
+    migrate_legacy_translation_ui_description_revision()
     initialize_translation_provider_credential()
     initialize_keycloak()
     initialize_minio()

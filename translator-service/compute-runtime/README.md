@@ -16,7 +16,10 @@ consumers, outbox или UI и не управляет удалённым Docker
 
 Скопируйте [compute.env.example](compute.env.example) в закрытый файл станции,
 задайте точные образы `name@sha256:...`, маршруты собственной PostgreSQL/Telemetry
-Delivery и пути к identities. Соседний игнорируемый
+Delivery, их external network flags и пути к identities. В корневом локальном
+стеке эти две сети принадлежат Translator и создаются самим Compose; отдельная
+compute-станция подключается к уже маршрутизируемым owner networks. Соседний
+игнорируемый
 `TranslationProvider/.env.local` с правами `0600` служит источником для
 create-only импорта в `translator-service/runtime/provider-credential.env`;
 вручную задайте в нём `OPENAI_API_KEY` и не передавайте значение через Git,

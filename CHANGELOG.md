@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Root/full-local больше не превращает принадлежащие Translator data/telemetry
+  сети во внешние при подключении общего compute recipe; standalone-станция
+  по-прежнему требует явные маршрутизируемые owner networks. Descriptor
+  Translator повышен до revision 12, а bootstrap мигрирует только прежнее
+  штатное значение 11, сохраняя операторские overrides.
 - Translator worker release publishes a signed `linux/amd64`/`linux/arm64`
   image index; Apple Silicon startup no longer depends on amd64 emulation.
 - Startup admits the multi-platform provider release `42615707050` at digest

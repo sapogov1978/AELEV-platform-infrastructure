@@ -360,6 +360,8 @@ class BootstrapTest(unittest.TestCase):
                 "on-failure:3\n"
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE="
                 "./runtime/provider-credential.env\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK_EXTERNAL=false\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_NETWORK_EXTERNAL=false\n"
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:new\n"
             )
             (translator / ".env").write_text(
@@ -394,6 +396,14 @@ class BootstrapTest(unittest.TestCase):
                 values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT"],
                 "8g",
             )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK_EXTERNAL"],
+                "false",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_NETWORK_EXTERNAL"],
+                "false",
+            )
 
     def test_translation_release_migrates_only_exact_legacy_pins(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -423,6 +433,40 @@ class BootstrapTest(unittest.TestCase):
             self.assertEqual(
                 values["AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"],
                 "worker@sha256:custom",
+            )
+
+    def test_translation_release_migrates_only_exact_legacy_ui_revision(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            translator = Path(temporary) / "translator-service"
+            translator.mkdir()
+            (translator / ".env.example").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION=12\n"
+            )
+            path = translator / ".env"
+            path.write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION=11\n"
+            )
+
+            with mock.patch.object(provider, "TRANSLATOR", translator):
+                provider.migrate_legacy_translation_ui_description_revision()
+
+            self.assertEqual(
+                provider.read_env(path)[
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION"
+                ],
+                "12",
+            )
+
+            path.write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION=42\n"
+            )
+            with mock.patch.object(provider, "TRANSLATOR", translator):
+                provider.migrate_legacy_translation_ui_description_revision()
+            self.assertEqual(
+                provider.read_env(path)[
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION"
+                ],
+                "42",
             )
 
     def test_platform_migrates_only_legacy_local_keycloak_route(self) -> None:
