@@ -156,9 +156,9 @@
     "semantic_hash": "3152ff54b026b48b6660d6369382d1ba"
   },
   "tools/test_bootstrap.py": {
-    "mtime": 1794224087.185182,
-    "seen": 1794224135.503243,
-    "ast_hash": "ced904c0a15f0b6ced506e9549f3b372",
+    "mtime": 1794224737.2242157,
+    "seen": 1794224779.714417,
+    "ast_hash": "79e28b18387eff2e27354ac107f9ad33",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794223823.2443886,
-    "seen": 1794224052.8483891,
-    "ast_hash": "c6ecd61c1abfdd0f058c2cfcfc88540f",
+    "mtime": 1794224737.224762,
+    "seen": 1794224779.715433,
+    "ast_hash": "3a160b053f8027e42a5e20464f608207",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "bootstrap.py": {
-    "mtime": 1794224087.1846974,
-    "seen": 1794224135.4987571,
-    "ast_hash": "da1ab864e175fb970e63541b166ea841",
+    "mtime": 1794224737.222787,
+    "seen": 1794224779.7093801,
+    "ast_hash": "d84ef057526416c48bc5b1978e4bd2d4",
     "semantic_hash": ""
   },
   "certificate_authority.py": {
@@ -2622,9 +2622,9 @@
     "semantic_hash": ""
   },
   "translator-service/compose.compute.yml": {
-    "mtime": 1794223871.0182889,
-    "seen": 1794224052.8475368,
-    "ast_hash": "5c18aaf8d88224b96f31d9f6ff9a83cb",
+    "mtime": 1794224737.2239027,
+    "seen": 1794224779.714541,
+    "ast_hash": "16f1bfc982e93e267ceccc8bac409f2a",
     "semantic_hash": ""
   },
   "translator-service/compose.remote.yml": {
@@ -3000,9 +3000,9 @@
     "semantic_hash": ""
   },
   "translator-service/test/test_configuration.py": {
-    "mtime": 1794211401.6343296,
-    "seen": 1794211462.36182,
-    "ast_hash": "004ca5173323e4ea4b86be29c1ec2bd2",
+    "mtime": 1794224753.4366086,
+    "seen": 1794224779.715285,
+    "ast_hash": "10bacba766665e605c74df87d13ca2e2",
     "semantic_hash": ""
   },
   "translator-service/test/test_deployment.py": {

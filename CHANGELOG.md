@@ -6,6 +6,8 @@
   подписанные provider/worker images по точным digests. Startup не клонирует
   mutable repository: create-only импортирует существующий ignored
   `TranslationProvider/.env.local` в generic read-only secret mount.
+- Provider egress использует отдельную именованную сеть с явным owner-configured
+  subnet и не зависит от свободного Docker default address pool.
 - Clean-room manifest и gate получили двенадцатую функцию: image-owned health и
   worker-side opaque UDS probe точной пары images с синтетическим credential и
   без inference. Исторический PASS 11/11 не переносится на новый release.

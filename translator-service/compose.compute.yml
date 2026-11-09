@@ -61,6 +61,7 @@ services:
     security_opt: [no-new-privileges:true]
     mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT:?set provider memory limit}
     cpus: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS:?set provider CPU limit}
+    networks: [translation-provider-egress]
 
   translator-worker:
     <<: *worker-image
@@ -95,6 +96,11 @@ volumes:
   translation-provider-socket:
 
 networks:
+  translation-provider-egress:
+    name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_EGRESS_NETWORK:?set provider egress network}
+    ipam:
+      config:
+        - subnet: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_EGRESS_SUBNET:?set a non-overlapping provider egress subnet}
   translator-data:
     name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NETWORK:?set routed database network}
     external: true

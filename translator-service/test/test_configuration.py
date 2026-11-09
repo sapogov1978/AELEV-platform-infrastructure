@@ -471,7 +471,10 @@ class TranslatorConfigurationTest(unittest.TestCase):
         }
         self.assertEqual(socket_users, {"translation-provider", "translator-worker"})
         self.assertNotIn("network_mode", compute["translation-provider"])
-        self.assertEqual(set(compute["translation-provider"]["networks"]), {"default"})
+        self.assertEqual(
+            set(compute["translation-provider"]["networks"]),
+            {"translation-provider-egress"},
+        )
         provider_secret = next(
             volume
             for volume in compute["translation-provider"]["volumes"]

@@ -350,6 +350,10 @@ class BootstrapTest(unittest.TestCase):
             translator.mkdir()
             (translator / ".env.example").write_text(
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS=2.0\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_EGRESS_NETWORK="
+                "provider-egress\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_EGRESS_SUBNET="
+                "10.253.53.0/28\n"
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=provider@sha256:new\n"
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT=8g\n"
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY="
@@ -381,6 +385,10 @@ class BootstrapTest(unittest.TestCase):
             )
             self.assertEqual(
                 values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS"], "2.0"
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_EGRESS_NETWORK"],
+                "provider-egress",
             )
             self.assertEqual(
                 values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT"],
