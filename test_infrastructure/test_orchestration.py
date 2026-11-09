@@ -460,6 +460,50 @@ def test_image_native_healthcheck_is_used_when_compose_model_omits_it(
     )
 
 
+def test_group_startup_diagnostic_keeps_bounded_health_state(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "translator-worker": {
+                "Status": "running",
+                "Running": True,
+                "ExitCode": 0,
+                "OOMKilled": False,
+                "Error": "",
+                "Health": {
+                    "Status": "unhealthy",
+                    "FailingStreak": 4,
+                    "Log": [
+                        {
+                            "ExitCode": 1,
+                            "Output": "TRANSLATOR_HEALTH_NOT_READY",
+                        }
+                    ],
+                },
+            }
+        },
+    )
+    output = tmp_path / "group-readiness-diagnostic.json"
+    capture_group_startup_diagnostic(
+        "project",
+        {"translator-worker": {}},
+        output,
+        stage="initial-readiness",
+        reason_code="READINESS_FAILED",
+    )
+    payload = json.loads(output.read_text())
+    assert payload["reason_code"] == "READINESS_FAILED"
+    assert payload["services"]["translator-worker"]["health"] == {
+        "status": "unhealthy",
+        "failing_streak": 4,
+        "log": [
+            {"exit_code": 1, "output": "TRANSLATOR_HEALTH_NOT_READY"}
+        ],
+    }
+
+
 def test_healthchecked_restart_no_role_fails_immediately_after_exit(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

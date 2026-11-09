@@ -840,7 +840,17 @@ def run(args: argparse.Namespace) -> int:
                 "POSTGRESQL_FENCER_STARTUP_FAILED",
             )
             raise
-        wait_ready(project, regular, args.timeout)
+        try:
+            wait_ready(project, regular, args.timeout)
+        except RuntimeError:
+            capture_group_startup_diagnostic(
+                project,
+                regular,
+                args.report.with_name("group-readiness-diagnostic.json"),
+                stage="initial-readiness",
+                reason_code="READINESS_FAILED",
+            )
+            raise
         passed(
             "Общий старт: healthcheck, автоматические миграции и topics готовы",
             str(len(regular))
