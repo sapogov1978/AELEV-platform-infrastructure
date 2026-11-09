@@ -20,7 +20,7 @@
 
 `down` останавливает выбранные инфраструктурные процессы и сохраняет данные. Прикладные продукты останавливаются отдельно. Для ограниченного состава повторяйте `--capability`, например `./infrastructure up --capability kafka`. Состав и зависимости возможностей определяет только [владелец](bootstrap.py); зависимость Platform UI от identity добавляется автоматически. `build` не запускает контейнеры. `init` только подготавливает локальные файлы и проверяет Compose.
 
-Полный `full-local` профиль 1.1.0 включает все 15 владельцев, workload identity, наблюдаемость и выбранную пару подписанных provider/worker images. Provider владеет OpenAI Responses API, model lock и предметно-сохраняющим prompt; Infrastructure видит только opaque UDS-контракт и generic secret file. Предыдущая программная версия [`b1e2ee1`](docs/audit/clean-room-b1e2ee1/RESULT.md) имеет исторический PASS 11/11, но не допускает новый runtime автоматически. Для 1.1.0 обязательны 12/12 функций, включая health/UDS-проверку точных images без inference; до нового полного evidence её статус — `BLOCKED`. Машиночитаемый состав, fail-closed preflight, release BOM и воспроизведение из чистого состояния описаны в [clean-room runbook](docs/operations/clean-room-reproduction.md). Допуск конкретной production-площадки ведётся отдельно.
+Полный `full-local` профиль 1.1.1 включает все 15 владельцев, workload identity, наблюдаемость и выбранную пару подписанных provider/worker images. Provider владеет OpenAI Responses API, model lock и предметно-сохраняющим prompt; Infrastructure видит только opaque UDS-контракт и generic secret file. Выпуск 1.1.0 прошёл 12/12 функций на точном source commit, но его evidence не переносится на patch-release с исправленным strict X.509 bootstrap. Для 1.1.1 снова обязательны 12/12 функций, включая health/UDS-проверку точных images без inference; до нового полного evidence её статус — `BLOCKED`. Машиночитаемый состав, fail-closed preflight, release BOM и воспроизведение из чистого состояния описаны в [clean-room runbook](docs/operations/clean-room-reproduction.md). Допуск конкретной production-площадки ведётся отдельно.
 
 Быстрый core-запуск предназначен для локального ознакомления. Для production-площадки реальные grants, сертификаты рабочих нагрузок, защищённые endpoints, backup, ресурсный допуск выбранного провайдера и независимые области отказа подготавливаются по руководствам владельцев. Обычный запуск не разрешает возобновление ранее приостановленной обработки.
 
@@ -29,10 +29,10 @@
 Потребитель закрепляет версию, исходный Git commit, SHA-256 ZIP и опись файлов. Пакет формата 2 повторяет корень репозитория: код сервисов, Compose, установщик, документация и инструменты; Graphify и агентские навыки остаются только в исходном репозитории. Рабочие `.env`, ключи, пароли, веса и runtime в пакет не входят. Продукт получает проверенный выпуск автоматически и сохраняет его как локальную зависимость, без редактируемой копии исходников в своём Git.
 
 ```sh
-python3 tools/build_bundle.py --output dist/AELEV-platform-infrastructure-1.1.0.zip
+python3 tools/build_bundle.py --output dist/AELEV-platform-infrastructure-1.1.1.zip
 ```
 
-Выпуск 1.1.0 поставляет закреплённые исходники и подписанные provider/worker image digests, но до нового clean-room 12/12 остаётся кандидатом, а не допущенным stable bundle. [Процедура выпуска](docs/operations/release.md) требует CI, полного evidence точного source commit и проверки ZIP/lock. Доказательства опубликованного 1.0 остаются в его release assets и не переносятся на 1.1.0; автоматическая загрузка не даёт права обновить уже работающую общую установку.
+Выпуск 1.1.1 поставляет закреплённые исходники, исправленный strict X.509 bootstrap и прежние подписанные provider/worker image digests, но до нового clean-room 12/12 остаётся кандидатом, а не допущенным stable bundle. [Процедура выпуска](docs/operations/release.md) требует CI, полного evidence точного source commit и проверки ZIP/lock. Доказательства опубликованного 1.1.0 остаются в его release assets и не переносятся на 1.1.1; автоматическая загрузка не даёт права обновить уже работающую общую установку.
 
 Закрытый репозиторий требует доступа GitHub при первом получении выпуска. CI потребителя использует отдельный read-only deploy key только к этому репозиторию; личный токен владельца в CI не передаётся.
 

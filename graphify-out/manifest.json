@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794245252.5530286,
-    "seen": 1794245293.7692358,
-    "ast_hash": "d0b795b236ae57f7d496cfc62b5f4d6b",
+    "mtime": 1794245862.1163218,
+    "seen": 1794245890.9949598,
+    "ast_hash": "a58ad1289fa1c5a781d78ce3fd5a5d62",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794224151.8013597,
-    "seen": 1794224177.6667368,
-    "ast_hash": "b9c3a55b107a8d11f015d2ee2db962f2",
+    "mtime": 1794245862.1187599,
+    "seen": 1794245890.995015,
+    "ast_hash": "d4334e0776ecf488365b307da97e1e3c",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -2058,9 +2058,9 @@
     "semantic_hash": ""
   },
   "release.json": {
-    "mtime": 1794223506.9922848,
-    "seen": 1794224052.846331,
-    "ast_hash": "51f197e31d0ff60f669cb4bdf5569366",
+    "mtime": 1794245862.1170819,
+    "seen": 1794245890.985997,
+    "ast_hash": "9690bbd3bb1c15acb6e329d7e95b1e10",
     "semantic_hash": ""
   },
   "release_renewal_delivery.py": {
@@ -3090,15 +3090,15 @@
     "semantic_hash": ""
   },
   "TASKS.md": {
-    "mtime": 1794223727.396813,
-    "seen": 1794224052.848418,
-    "ast_hash": "0780644c3cb07aa2f8192c8a766b9c0f",
+    "mtime": 1794245862.1202898,
+    "seen": 1794245890.9950662,
+    "ast_hash": "b07bee5dca3a6c4a85302ec5d39fd874",
     "semantic_hash": ""
   },
   "USER_MANUAL.md": {
-    "mtime": 1794223727.3965285,
-    "seen": 1794224052.848418,
-    "ast_hash": "e937481fcb7905186bdb43d75536af65",
+    "mtime": 1794245862.119995,
+    "seen": 1794245890.995069,
+    "ast_hash": "237964fd9cbae61566c0e6ff6e69b9d4",
     "semantic_hash": ""
   },
   "docs/obsolete/services/infrastructure/CHANGELOG.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1794227214.7865636,
-    "seen": 1794227335.289793,
-    "ast_hash": "d0bc007b72473c637b55f5cc058a4781",
+    "mtime": 1794245862.1179214,
+    "seen": 1794245890.9761019,
+    "ast_hash": "cb77eccc6613f2713245b5f121f36a12",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794223823.243505,
-    "seen": 1794224052.850414,
-    "ast_hash": "bd368f1032dc13e6feb6a5b558b25901",
+    "mtime": 1794245862.1209958,
+    "seen": 1794245891.0010822,
+    "ast_hash": "6268981e96ca8df34305ec5ebe542402",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {

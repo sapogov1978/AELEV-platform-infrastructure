@@ -140,7 +140,7 @@ Verifier сверяет точный набор функций, schema/profile/r
 
 Статус репозитория может быть `PRODUCTION_READY` для `full-local` только когда на точном release commit одновременно проходят repository CI, preflight, BOM и новое clean-room evidence. Затем площадка отдельно подтверждает PKI/KMS, DNS/firewall/WAN, capacity, failure domains, backup target, alert delivery, RPO/RTO, подпись и admission образов. Ни один из этих выводов не разрешает `RESUME`, миграцию либо воздействие на существующий runtime.
 
-Исторически проверенная программная версия — [`b1e2ee1`](../audit/clean-room-b1e2ee1/RESULT.md): CI 26/26, адресные PostgreSQL/root проверки и полный gate 11/11 с независимым verifier. Она предшествует включению provider/worker в release 1.1.0 и не допускает новый runtime. Текущий выпуск требует нового gate 12/12.
+Исторически проверенная программная версия до включения provider/worker — [`b1e2ee1`](../audit/clean-room-b1e2ee1/RESULT.md): CI 26/26, адресные PostgreSQL/root проверки и полный gate 11/11 с независимым verifier. Release 1.1.0 отдельно прошёл новый gate 12/12 на точном source commit. Patch-release 1.1.1 с исправленным strict X.509 bootstrap требует собственного нового gate 12/12; прежнее evidence автоматически не переносится.
 
 ## 8. Адресная диагностика без полного допуска
 
