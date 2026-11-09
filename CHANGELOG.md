@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Translator worker release publishes a signed `linux/amd64`/`linux/arm64`
+  image index; Apple Silicon startup no longer depends on amd64 emulation.
 - Root capability `translation` и `full-local` 1.1.0 теперь включают отдельные
   подписанные provider/worker images по точным digests. Startup не клонирует
   mutable repository: create-only импортирует существующий ignored
