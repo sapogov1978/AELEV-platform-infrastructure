@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Локальный генератор Public Egress Gateway теперь явно добавляет SKI/AKI в
+  первоначальные server/client leaf-сертификаты: Python 3.13/OpenSSL strict
+  healthcheck принимает новую цепочку сразу, а не только после первого
+  продления; ослабление `VERIFY_X509_STRICT` из TLS-регрессии удалено.
 - Opaque-provider `translator-worker` снова получает owner-configured
   supplemental group и на Linux может читать `0640` database/telemetry
   identities; Docker Desktop больше не маскирует отсутствие этого допуска.

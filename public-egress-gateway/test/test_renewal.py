@@ -185,8 +185,6 @@ def test_hot_reload_real_tls_preserves_listener_and_bad_candidate(
     thread = threading.Thread(target=listener.serve_forever, daemon=True)
     thread.start()
     context = ssl.create_default_context(cafile=str(issuer / "ca.pem"))
-    # The original helper's certificate lacks AKI; the renewed one is strict.
-    context.verify_flags &= ~ssl.VERIFY_X509_STRICT
 
     def probe() -> str:
         connection = http.client.HTTPSConnection(

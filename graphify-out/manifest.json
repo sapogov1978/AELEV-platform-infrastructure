@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794241923.0668738,
-    "seen": 1794241937.7253141,
-    "ast_hash": "fb0827d555b11306b302e798babd885e",
+    "mtime": 1794245252.5530286,
+    "seen": 1794245293.7692358,
+    "ast_hash": "d0b795b236ae57f7d496cfc62b5f4d6b",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1938,9 +1938,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/prepare.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.1505558,
-    "ast_hash": "5291f45261c04b7f39647a711ea278ff",
+    "mtime": 1794245252.5518434,
+    "seen": 1794245293.765617,
+    "ast_hash": "4ed48743b12bd26ba0b4b3ac72681a59",
     "semantic_hash": ""
   },
   "public-egress-gateway/provision.py": {
@@ -2022,9 +2022,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/test/test_renewal.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.1505642,
-    "ast_hash": "fd7fa87a197ab76784ca208c8ef35b9f",
+    "mtime": 1794245252.552377,
+    "seen": 1794245293.7658381,
+    "ast_hash": "cc3ef7d5544376c241ef221e66a0926b",
     "semantic_hash": ""
   },
   "public-egress-gateway/test/test_renewal_description.py": {

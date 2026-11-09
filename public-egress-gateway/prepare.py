@@ -60,7 +60,11 @@ def issue(
             Path(scratch) / "extension.cnf",
         )
         extension.write_text(
-            "basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage="
+            "basicConstraints=critical,CA:FALSE\n"
+            "keyUsage=critical,digitalSignature,keyEncipherment\n"
+            "subjectKeyIdentifier=hash\n"
+            "authorityKeyIdentifier=keyid,issuer\n"
+            "extendedKeyUsage="
             + usage
             + "\nsubjectAltName="
             + alternative
