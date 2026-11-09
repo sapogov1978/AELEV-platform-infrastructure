@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-09)
 
 ## Corpus Check
-- 1032 files · ~651,176 words
+- 1032 files · ~651,234 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 186 file(s) not represented in the graph (top: .whl 48, (none) 45, .example 21)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b3097164`
+- Built from commit: `76ac2dc8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2915,16 +2915,16 @@ Nodes (25): Проверки самостоятельной поставки bla
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `replace` to `Восстановление входа при потере cookie — 2026-10-26`, `Store`, `recovery.py`, `Blackbox Exporter — руководство пользователя`, `Settings`, `re`, `test_automatic_recovery.py`, `test_delivery_http.py`, `Техническая инъекция разделов и состояния`, `platform-ui/test/test_api.py`, `Loki — руководство пользователя`, `OpenTelemetry Collector — руководство пользователя`, `Prometheus — руководство пользователя`, `keycloak/test/test_status_publisher.py`, `test_authorization.py`, `pathlib`, `typing`, `Path`, `Диагностика listener и восстановление приёмника — 21 октября 2026`, `ADR-0171: Восстановление после паузы хоста и передача Compose-инкарнации`, `Руководство: метрики и панели нового владельца`, `Создание и подключение UI нового сервиса`, `Проверка исправления счётчиков и управления Prometheus`, `Обновление журналов инфраструктурных издателей — 23 октября 2026`, `Kafka — руководство пользователя`, `suspend`, `Keycloak — руководство пользователя`, `Tempo — руководство пользователя`, `MinIO — руководство пользователя`, `test_recovery_cli.py`, `json`?**
-  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+  _High betweenness centrality (0.096) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `os` be split into smaller, more focused modules?**
   _Cohesion score 0.040574645699864104 - nodes in this community are weakly interconnected._
 - **Why does `Platform UI — нормативная спецификация` connect `Техническая инъекция разделов и состояния` to `platform-ui-injection.md`, `replace`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Should `recovery.py` be split into smaller, more focused modules?**
   _Cohesion score 0.07887049659201557 - nodes in this community are weakly interconnected._
 - **Why does `PlatformPage()` connect `Техническая инъекция разделов и состояния` to `Changelog`, `ref_react`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Should `tempfile` be split into smaller, more focused modules?**
   _Cohesion score 0.06818181818181818 - nodes in this community are weakly interconnected._

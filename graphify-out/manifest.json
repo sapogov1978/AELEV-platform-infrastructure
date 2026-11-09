@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794245862.1163218,
-    "seen": 1794245890.9949598,
-    "ast_hash": "a58ad1289fa1c5a781d78ce3fd5a5d62",
+    "mtime": 1794246159.5220993,
+    "seen": 1794246177.722068,
+    "ast_hash": "f36a9f9b6bc0240205dc4cef39a9ab40",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6342,9 +6342,9 @@
     "semantic_hash": ""
   },
   "docs/operations/release.md": {
-    "mtime": 1794177251.2359288,
-    "seen": 1794177780.2350469,
-    "ast_hash": "5c4c029ddc09d1cb90e8b8d44bba7d92",
+    "mtime": 1794246159.521306,
+    "seen": 1794246177.725526,
+    "ast_hash": "c43e025498097c1930e3213be94ecd2a",
     "semantic_hash": ""
   },
   "docs/security/supply-chain.md": {

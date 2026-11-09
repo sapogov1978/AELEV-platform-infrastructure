@@ -4,6 +4,9 @@
 
 ## 1.1.1 — 2026-11-09
 
+- Release runbook согласован с текущим manifest: приёмка требует 12/12 функций,
+  exact opaque provider/worker health/UDS без inference и отдельного допуска
+  внешнего API/quota/live smoke; сохранность очереди не означает `RESUME`.
 - Локальный генератор Public Egress Gateway теперь явно добавляет SKI/AKI в
   первоначальные server/client leaf-сертификаты: Python 3.13/OpenSSL strict
   healthcheck принимает новую цепочку сразу, а не только после первого
