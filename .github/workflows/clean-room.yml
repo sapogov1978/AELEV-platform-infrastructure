@@ -17,6 +17,7 @@ on:
           - postgresql-after-root
           - telemetry-onboarding
           - translator-lifecycle
+          - translator-provider-bundle
           - spire-lifecycle
           - spire-observation
           - recovery-lifecycle

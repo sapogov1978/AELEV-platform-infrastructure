@@ -1,5 +1,4 @@
-# Optional opaque-provider compute recipe. Not part of full-local or production admission.
-name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT:?set a dedicated compute project}
+# Opaque-provider compute recipe shared by the root and standalone lifecycles.
 
 x-provider-image: &provider-image
   image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE:?set exact admitted provider image by digest}
@@ -53,6 +52,8 @@ services:
     volumes:
       - translation-provider-socket:/run/aelev-translator
       - *provider-secret
+    group_add:
+      - "${AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID:?set provider credential group}"
     restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY:-on-failure:3}
     read_only: true
     tmpfs: [/tmp:size=64m,mode=1777]

@@ -102,6 +102,8 @@ jobs:
           python-version: "3.13"
       - run: python -m unittest discover -s tools -p 'test_*.py'
       - run: ./infrastructure init
+        env:
+          AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE: health-only-no-inference-v1
       - run: python tools/check_build_plan.py
       - run: ./infrastructure plan
 

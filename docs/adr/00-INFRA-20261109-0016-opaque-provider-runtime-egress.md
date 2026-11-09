@@ -14,7 +14,7 @@ provider-specific transport и отдельные identity/grant, оставля
 
 ## Ключевые решения
 
-- Необязательный `translator-service/compose.compute.yml` предоставляет только
+- `translator-service/compose.compute.yml`, включённый корневой композицией, предоставляет только
   provider service исходящую Compose-сеть. Входящие ports и `expose` запрещены;
   worker продолжает обращаться только к opaque HTTP v1 через Unix socket.
 - Provider image получает один generic read-only файл
@@ -23,10 +23,14 @@ provider-specific transport и отдельные identity/grant, оставля
 - Этот прямой исходящий доступ является узким исключением для отдельного opaque
   provider runtime. Public Egress Gateway остаётся основной generic fetch
   capability по 00-INFRA-20261106-0011 и не ослабляется для других владельцев.
-- Recipe не входит в `full-local`, release BOM или автоматический production
-  admission. API key создаётся вручную вне Git; его отсутствие остаётся
-  единственным локальным runtime-вводом после подготовки exact images и
-  владельческих database/telemetry routes.
+- `full-local` и release BOM закрепляют разные подписанные provider/worker image
+  digests. Startup не клонирует mutable provider repository: `init` create-only
+  импортирует подготовленный соседний `.env.local` в ignored owner-local secret
+  mount. API key создаётся вручную вне Git; отсутствие или недоступность provider
+  balance остаются внешними runtime-условиями реального inference.
+- Clean-room добавляет отдельную health/UDS-проверку exact images с синтетическим
+  credential и `inference_requested=false`; она не расходует API balance и не
+  объявляет семантическую готовность перевода.
 
 ## Последствия
 
@@ -41,8 +45,8 @@ filesystem, dropped capabilities и независимым admission прова�
 Compose tests требуют разные digest-pinned provider/worker images, единственный
 generic secret mount, отсутствие provider environment/command/entrypoint/
 healthcheck и отсутствие входящих ports. Station validation fail-closed
-повторяет эти условия. Откат возвращает прежний provider image или удаляет
-необязательную compute-ячейку; он не удаляет Kafka jobs, checkpoints, UDS volume
+повторяет эти условия. Откат возвращает прежние совместимые digests или адресно
+останавливает compute-ячейку; он не удаляет Kafka jobs, checkpoints, UDS volume
 или Translator database и не означает `RESUME`.
 
 ## Официальные основания

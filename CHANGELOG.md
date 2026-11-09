@@ -2,10 +2,18 @@
 
 ## Unreleased
 
+- Root capability `translation` и `full-local` 1.1.0 теперь включают отдельные
+  подписанные provider/worker images по точным digests. Startup не клонирует
+  mutable repository: create-only импортирует существующий ignored
+  `TranslationProvider/.env.local` в generic read-only secret mount.
+- Clean-room manifest и gate получили двенадцатую функцию: image-owned health и
+  worker-side opaque UDS probe точной пары images с синтетическим credential и
+  без inference. Исторический PASS 11/11 не переносится на новый release.
 - Translator compute recipe больше не блокирует внешний opaque provider через
   `network_mode: none`: он предоставляет исходящую сеть без входящих портов и
   generic read-only secret mount. После offline-проверок отсутствующий API key
-  остаётся единственным локальным runtime-вводом выбранного провайдера.
+  был единственным локальным runtime-вводом до его ручного заполнения; реальный
+  inference дополнительно требует доступного provider balance.
 
 ## 1.0.0 — 2026-11-08
 

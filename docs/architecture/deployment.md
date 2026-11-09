@@ -19,7 +19,7 @@
 
 ## Профили и приёмка
 
-Core CLI по [контракту установки](../api/installation.md) готовит ограниченный ознакомительный состав. Полный `full-local` задаёт только [manifest](../../full-local.json): 15 владельцев, workload identity и наблюдаемость. Реализация перевода не входит в обязательный состав: без выбранного провайдера Translator сохраняет принятую работу.
+Core CLI по [контракту установки](../api/installation.md) готовит локальный состав, включая capability `translation`. Полный `full-local` задаёт [manifest](../../full-local.json): 15 владельцев, workload identity, наблюдаемость и разные подписанные provider/worker image digests. Реализация провайдера остаётся в отдельной поставке и видна композиции только через image-owned healthcheck, generic secret mount и opaque UDS; при её недоступности Translator сохраняет принятую работу.
 
 `init` сохраняет существующие env/identities, `build` не запускает процессы. [Clean-room runbook](../operations/clean-room-reproduction.md) задаёт входы, build, preflight, BOM, реальные lifecycle-проверки и независимый verifier. [Аудит готовности](../audit/production-readiness.md) связывает вывод с точными source commits и evidence; один health endpoint или старый отчёт не допускает новый выпуск.
 

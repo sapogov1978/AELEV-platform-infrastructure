@@ -5,11 +5,12 @@
 - [x] Зафиксировать полный состав, внешние входы и функции приёмки в `full-local.json`.
 - [x] Добавить fail-closed preflight, source/image BOM и verifier неизменяемого evidence.
 - [x] Добавить единый runbook для инженера без знания истории репозитория.
-- [x] Реализовать единый исполняемый gate, который сам запускает одиннадцать реальных функций, формирует evidence и проверяет cleanup.
-- [x] Исключить необязательную provider/worker-ячейку из `full-local`, release BOM, Platform UI ownership и production admission; прежний standalone-рецепт сохранить без объявления каноническим.
+- [x] Реализовать единый исполняемый gate, который сам запускает двенадцать реальных функций, формирует evidence и проверяет cleanup.
+- [x] Включить выбранную provider/worker-ячейку в root/full-local только как два подписанных digest-pinned image с opaque UDS и generic secret mount; не переносить provider ownership в Translator или Platform UI.
 - [x] Проверять реальным Kafka/PostgreSQL lifecycle, что Translator принимает, дедуплицирует и сохраняет обе очереди без выбранного провайдера.
 - [ ] Отдельно выбрать локальный runtime, образ или внешний API провайдера после сравнения стоимости, безопасности, качества и эксплуатационных ограничений; это решение не блокирует готовность данного репозитория.
 - [x] Выполнить полный clean-room run, сохранить проверяемый пакет 11/11 функций и повторить [Production Ready аудит](docs/audit/production-readiness.md) программной версии `b7a6b4b`; каждый следующий release commit допускается только после собственного CI/gate.
 - [x] Закрыть вновь воспроизведённый pair-loss timeout: [исправленная версия `b1e2ee1`](docs/audit/clean-room-b1e2ee1/RESULT.md) прошла initial-1 3/3 без switchover, root/Kafka/initial-1 и новый полный gate 11/11 с независимой проверкой.
+- [ ] Выполнить новый полный gate 12/12 и независимый verifier для release 1.1.0 с exact provider/worker digests; изолированный UDS-health без inference не заменяет этот допуск.
 
 Владельческие незавершённые работы по-прежнему ведутся в `TASKS.md` соответствующего продукта и здесь не дублируются. Эти два пункта относятся к межвладельческой композиции и потому остаются в корневом списке.

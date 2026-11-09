@@ -381,16 +381,16 @@ def main() -> int:
                 f"Translator core image contains provider artifact: {forbidden}"
             )
     compute_compose = (root / "translator-service/compose.compute.yml").read_text()
+    root_compose = (root / "compose.yml").read_text()
     full_local = json.loads((root / "full-local.json").read_text())
-    if "compute_compose" in full_local:
-        errors.append(
-            "Optional Translator compute recipe is still canonical full-local"
-        )
-    if any(
-        item.get("id") in {"translation-provider-image", "translator-worker-image"}
-        for item in full_local.get("external_inputs", [])
-    ):
-        errors.append("Translator provider runtime is still a full-local input")
+    if "./translator-service/compose.compute.yml" not in root_compose:
+        errors.append("Root composition does not include Translator compute recipe")
+    release_image_ids = {
+        item.get("id") for item in full_local.get("release_images", [])
+    }
+    for required in {"translation-provider-image", "translator-worker-image"}:
+        if required not in release_image_ids:
+            errors.append(f"Full-local release BOM is missing {required}")
     publisher = (
         root / "translator-service/src/translator_service/status_publisher.py"
     ).read_text()

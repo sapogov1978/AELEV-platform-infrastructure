@@ -25,6 +25,7 @@ KEYCLOAK = ROOT / "keycloak"
 POSTGRESQL = ROOT / "postgresql"
 MINIO = ROOT / "minio"
 OBSERVABILITY = ROOT / "observability"
+TRANSLATOR = ROOT / "translator-service"
 RELEASE = json.loads((ROOT / "release.json").read_text())["version"]
 
 CAPABILITIES = {
@@ -43,6 +44,18 @@ CAPABILITIES = {
     ),
     "identity": ("keycloak-database", "keycloak"),
     "platform-ui": ("platform-ui-api", "platform-ui"),
+    "translation": (
+        "translator-database",
+        "translator-migrator",
+        "translator-topic-provisioner",
+        "translator-priority-consumer",
+        "translator-normal-consumer",
+        "translator-outbox",
+        "translator-api",
+        "translator-service-status-publisher",
+        "translation-provider",
+        "translator-worker",
+    ),
 }
 BUILDS = {
     "postgresql": ("postgresql-1",),
@@ -50,6 +63,26 @@ BUILDS = {
     "object-storage": ("minio-site-a-1",),
     "identity": ("keycloak",),
     "platform-ui": ("platform-ui-api", "platform-ui", "platform-ui-configuration-init"),
+    "translation": (
+        "translator-migrator",
+        "translator-topic-provisioner",
+        "translator-priority-consumer",
+        "translator-normal-consumer",
+        "translator-outbox",
+        "translator-api",
+        "translator-service-status-publisher",
+    ),
+}
+PULLS = {"translation": ("translation-provider", "translator-worker")}
+ADDITIVE_TEMPLATE_KEYS = {
+    "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND",
+    "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_SECRET_GID",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE",
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
 }
 
 
@@ -181,7 +214,8 @@ def initialize_additive_local_paths() -> None:
         updates = {
             key: value
             for key, value in template.items()
-            if key.endswith("_OIDC_CA_FILE") and key not in current
+            if (key.endswith("_OIDC_CA_FILE") or key in ADDITIVE_TEMPLATE_KEYS)
+            and key not in current
         }
         if updates:
             update_env(path, updates)
@@ -197,7 +231,43 @@ def initialize_owner_environments() -> None:
             updates = {
                 "AELEV_INFRASTRUCTURE_OBSERVABILITY_ENV_FILE": ".env",
             }
+        elif example.parent == TRANSLATOR:
+            updates = {
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID": str(os.getgid()),
+            }
         initialize_env(example.with_name(".env"), updates)
+
+
+def initialize_translation_provider_credential() -> None:
+    values = read_env(TRANSLATOR / ".env")
+    configured = values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE"]
+    secret_gid = int(values["AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID"])
+    if secret_gid < 0:
+        raise QuickstartError("translator provider credential group is invalid")
+    target = (TRANSLATOR / configured).resolve()
+    if target == TRANSLATOR.resolve() or TRANSLATOR.resolve() not in target.parents:
+        raise QuickstartError("translator provider credential path escapes owner root")
+    if target.exists():
+        if target.is_symlink() or not target.is_file():
+            raise QuickstartError("translator provider credential is invalid")
+        return
+    source = ROOT.parent / "TranslationProvider/.env.local"
+    if source.is_file() and not source.is_symlink():
+        value = source.read_bytes()
+    elif (
+        os.environ.get("AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE")
+        == "health-only-no-inference-v1"
+    ):
+        value = b"OPENAI_API_KEY=fixture-openai-key-not-secret\n"
+    else:
+        raise QuickstartError(
+            "translation provider credential source is missing; prepare TranslationProvider/.env.local"
+        )
+    if not value.strip() or len(value) > 4096:
+        raise QuickstartError("translator provider credential is invalid")
+    write_private(target, value, 0o640)
+    os.chown(target, -1, secret_gid)
+    target.chmod(0o640)
 
 
 def openssl(*arguments: str) -> None:
@@ -437,6 +507,7 @@ def initialize() -> None:
     initialize_env(ROOT / ".env")
     initialize_owner_environments()
     initialize_additive_local_paths()
+    initialize_translation_provider_credential()
     initialize_keycloak()
     initialize_minio()
     initialize_postgresql()
@@ -456,6 +527,17 @@ def selected(capabilities: list[str], build: bool = False) -> tuple[str, ...]:
             for capability in catalog
             if capability in requested
             for role in catalog[capability]
+        )
+    )
+
+
+def selected_pulls(capabilities: list[str]) -> tuple[str, ...]:
+    return tuple(
+        dict.fromkeys(
+            role
+            for capability in PULLS
+            if capability in set(capabilities)
+            for role in PULLS[capability]
         )
     )
 
@@ -510,6 +592,7 @@ def execute(command: str, capabilities: list[str], no_build: bool = False) -> No
                     "capabilities": capabilities,
                     "services": selected(capabilities),
                     "models_included": False,
+                    "translation_provider_included": "translation" in capabilities,
                 },
                 indent=2,
             )
@@ -528,6 +611,9 @@ def execute(command: str, capabilities: list[str], no_build: bool = False) -> No
         return
     if command == "up":
         verify_scope()
+    pulls = selected_pulls(capabilities)
+    if pulls:
+        compose(ROOT, "pull", *pulls)
     if command == "build" or not no_build:
         builds = selected(capabilities, build=True)
         if builds:

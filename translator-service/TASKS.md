@@ -1,6 +1,6 @@
 # Задачи translator-service
 
-Статус поставки Translator: `PRODUCTION_READY` для Kafka-посредника и provider-neutral порта после [устранения и установки обнаруженных дефектов 22 октября](test/heartbeat-telemetry-result-20261022.md). Это не допуск внешнего provider image и не общий статус full-local. Прежняя реализация, миграции и проверки находятся в [CHANGELOG.md](CHANGELOG.md) и [историческом отчёте готовности](test/production-readiness-result.md). Архитектурная истина — в [SPEC.md](SPEC.md).
+Статус поставки Translator: `PRODUCTION_READY` для Kafka-посредника и provider-neutral порта после [устранения и установки обнаруженных дефектов 22 октября](test/heartbeat-telemetry-result-20261022.md). Root/full-local 1.1.0 теперь закрепляет внешний provider и worker exact digests, но их production admission и общий статус новой композиции требуют собственного evidence. Прежняя реализация, миграции и проверки находятся в [CHANGELOG.md](CHANGELOG.md) и [историческом отчёте готовности](test/production-readiness-result.md). Архитектурная истина — в [SPEC.md](SPEC.md).
 
 ## Обязательные исправления
 

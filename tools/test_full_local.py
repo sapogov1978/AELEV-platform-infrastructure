@@ -48,10 +48,10 @@ class FullLocalContractTests(unittest.TestCase):
             ),
         )
 
-    def test_plan_excludes_provider_runtime_and_includes_acceptance(self) -> None:
+    def test_plan_includes_pinned_provider_runtime_and_acceptance(self) -> None:
         plan = full_local.source_plan(ROOT)
         self.assertEqual(plan["compose_models_included"], ["root"])
-        self.assertFalse(plan["translation_provider_implementation_included"])
+        self.assertTrue(plan["translation_provider_implementation_included"])
         self.assertNotIn("compute_services", plan)
         self.assertEqual(
             plan["external_inputs"],
@@ -93,6 +93,23 @@ class FullLocalContractTests(unittest.TestCase):
             plan["release_images"],
             [
                 {
+                    "id": "translation-provider-image",
+                    "owner": "translation-provider",
+                    "admitted_reference": (
+                        "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
+                        "f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866"
+                    ),
+                },
+                {
+                    "id": "translator-worker-image",
+                    "owner": "translator-service",
+                    "admitted_reference": (
+                        "ghcr.io/sapogov1978/"
+                        "aelev-platform-infrastructure-translator-worker@sha256:"
+                        "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35"
+                    ),
+                },
+                {
                     "id": "observability-delivery-image",
                     "owner": "observability/delivery",
                     "admitted_reference": (
@@ -104,7 +121,7 @@ class FullLocalContractTests(unittest.TestCase):
                 }
             ],
         )
-        self.assertEqual(len(plan["acceptance_functions"]), 11)
+        self.assertEqual(len(plan["acceptance_functions"]), 12)
 
     def test_gate_stages_cover_each_function_once(self) -> None:
         manifest = json.loads((ROOT / "full-local.json").read_text())

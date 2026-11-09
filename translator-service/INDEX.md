@@ -17,7 +17,7 @@
 | Телеметрия владельца | `src/translator_service/observability.py`, `observability/` |
 | Локальная и удалённая управляющие топологии | `compose.local.yml`, `compose.remote.yml`, `compose.yml` |
 | Контракт внешнего провайдера | [docs/api/translation.md](../docs/api/translation.md), [SPEC.md](SPEC.md); реализация остаётся непрозрачной |
-| Необязательный compute-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml`; внешний provider image, исходящая сеть и generic secret mount, не входит в `full-local` или production admission |
+| Compute-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml`; exact provider/worker images, исходящая сеть, opaque UDS и generic secret mount входят в root/full-local, но не заменяют production admission |
 | Реализация, модель и версия провайдера | В этом репозитории отсутствуют; принадлежат выбранному поставщику |
 | Проверки совместимости провайдера | [актуальная проверка готовности](test/production-readiness-result.md), `test/` |
 

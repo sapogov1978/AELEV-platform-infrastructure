@@ -141,14 +141,27 @@ def test_station_rejects_remote_docker(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_compose_is_pinned_to_the_verified_local_endpoint(tmp_path: Path) -> None:
     module = station()
     env_file = tmp_path / "compute.env"
-    env_file.write_text("OWNER=translator\n")
+    env_file.write_text(
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT="
+        "aelev-translator-compute\n"
+    )
     command = module._compose("/usr/bin/docker", "unix:///run/docker.sock", env_file)
-    assert command[:4] == [
+    assert command[:6] == [
         "/usr/bin/docker",
         "--host",
         "unix:///run/docker.sock",
         "compose",
+        "--project-name",
+        "aelev-translator-compute",
     ]
+
+
+def test_compose_rejects_missing_project_identity(tmp_path: Path) -> None:
+    module = station()
+    env_file = tmp_path / "compute.env"
+    env_file.write_text("OWNER=translator\n")
+    with pytest.raises(RuntimeError, match="COMPUTE_PROJECT_INVALID"):
+        module._compose("/usr/bin/docker", "unix:///run/docker.sock", env_file)
 
 
 def test_unix_and_windows_entries_expose_same_lifecycle() -> None:

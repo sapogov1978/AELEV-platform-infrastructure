@@ -152,6 +152,9 @@ class BootstrapTest(unittest.TestCase):
                 ),
                 mock.patch.object(provider, "initialize_local_bridge_routes"),
                 mock.patch.object(
+                    provider, "initialize_translation_provider_credential"
+                ),
+                mock.patch.object(
                     provider, "initialize_minio", side_effect=prepare_minio
                 ),
                 mock.patch.object(provider, "compose"),
@@ -308,12 +311,81 @@ class BootstrapTest(unittest.TestCase):
     def test_platform_adds_identity_but_kafka_does_not(self) -> None:
         self.assertIn("keycloak", provider.selected(["platform-ui"]))
         self.assertEqual(provider.selected(["kafka"]), ("kafka",))
-        self.assertFalse(
-            any(
-                "translator" in role or "worker" in role
-                for role in provider.selected(list(provider.CAPABILITIES))
-            )
+        self.assertIn("translation-provider", provider.selected(["translation"]))
+        self.assertIn("translator-worker", provider.selected(["translation"]))
+        self.assertEqual(
+            provider.selected_pulls(["translation"]),
+            ("translation-provider", "translator-worker"),
         )
+
+    def test_provider_credential_is_imported_without_changing_contents(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            translator = root / "translator-service"
+            source = root.parent / "TranslationProvider/.env.local"
+            translator.mkdir()
+            source.parent.mkdir(exist_ok=True)
+            source.write_bytes(b"OPENAI_API_KEY=fixture-value\n")
+            (translator / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE="
+                "./runtime/provider-credential.env\n"
+                f"AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID={os.getgid()}\n"
+            )
+
+            with (
+                mock.patch.object(provider, "ROOT", root),
+                mock.patch.object(provider, "TRANSLATOR", translator),
+            ):
+                provider.initialize_translation_provider_credential()
+
+            imported = translator / "runtime/provider-credential.env"
+            self.assertEqual(imported.read_bytes(), source.read_bytes())
+            self.assertEqual(imported.stat().st_mode & 0o777, 0o640)
+            self.assertEqual(imported.stat().st_gid, os.getgid())
+
+    def test_additive_translation_pins_preserve_existing_values(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            translator = root / "translator-service"
+            translator.mkdir()
+            (translator / ".env.example").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS=2.0\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=provider@sha256:new\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT=8g\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY="
+                "on-failure:3\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE="
+                "./runtime/provider-credential.env\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:new\n"
+            )
+            (translator / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE="
+                "provider@sha256:existing\n"
+            )
+
+            with mock.patch.object(provider, "ROOT", root):
+                provider.initialize_additive_local_paths()
+
+            values = provider.read_env(translator / ".env")
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"],
+                "provider@sha256:existing",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE"],
+                "./runtime/provider-credential.env",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"],
+                "worker@sha256:new",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS"], "2.0"
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT"],
+                "8g",
+            )
 
     def test_platform_migrates_only_legacy_local_keycloak_route(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -23,17 +23,17 @@ docker compose --env-file .env up --build -d --wait --wait-timeout 900
 Для удалённого Kafka используется `compose.remote.yml`. Основной Compose
 собирает `translator-core-runtime` без весов, движка, provider lock или
 реализации перевода. Worker передаёт совместимому непрозрачному порту только
-текст и языки и получает строку перевода. Поэтому `full-local` не запускает
-provider/worker-ячейку и не публикует provider как собственный компонент
-Platform UI. `compose.compute.yml` — необязательный recipe выбранного внешнего
-provider image: он предоставляет исходящую сеть, UDS и generic secret mount,
-но не знает model ID, endpoint или prompt и не является production admission.
+текст и языки и получает строку перевода. Root/full-local запускает отдельные
+digest-pinned provider/worker images через `compose.compute.yml`, но не публикует
+provider как собственный компонент Translator в Platform UI. Recipe предоставляет
+исходящую сеть, UDS и generic secret mount, не зная model ID, endpoint или prompt;
+само включение образов не является production admission реального inference.
 
 ## Навигация
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.
 - [src/](src), [alembic/](alembic) — реализация и миграции.
-- [compute-runtime/](compute-runtime/README.md) — необязательный recipe внешнего provider image, не входящий в `full-local`.
+- [compute-runtime/](compute-runtime/README.md) — самостоятельный lifecycle той же provider/worker-ячейки, которую root/full-local включает канонически.
 - [USER_MANUAL.md](USER_MANUAL.md), [SPEC.md](SPEC.md), [ENDPOINTS.md](ENDPOINTS.md) — эксплуатация, поведение и API.
 - [test/](test), [secrets/](secrets/README.md) — проверки и описание секретов.
 - [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, готовность и история.

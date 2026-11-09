@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "profile": "full-local",
-  "release": "1.0.0",
-  "description": "Clean-room functional profile composed from owner-controlled infrastructure deliveries.",
+  "release": "1.1.0",
+  "description": "Clean-room functional profile composed from owner-controlled infrastructure deliveries and an immutable opaque translation provider.",
   "root_compose": {
     "file": "compose.yml",
     "profiles": [
@@ -58,6 +58,7 @@
       "spire-telemetry-sender",
       "tempo",
       "tempo-status-publisher",
+      "translation-provider",
       "translator-api",
       "translator-database",
       "translator-migrator",
@@ -65,7 +66,8 @@
       "translator-outbox",
       "translator-priority-consumer",
       "translator-service-status-publisher",
-      "translator-topic-provisioner"
+      "translator-topic-provisioner",
+      "translator-worker"
     ]
   },
   "owners": [
@@ -154,6 +156,28 @@
   ],
   "release_images": [
     {
+      "id": "translation-provider-image",
+      "owner": "translation-provider",
+      "env_file": "translator-service/.env",
+      "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
+      "source_repository": "https://github.com/sapogov1978/AELEV-translation-provider",
+      "release_workflow": "release-provider-image",
+      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42607732356",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866",
+      "purpose": "Opaque domain-preserving OpenAI Responses translation provider."
+    },
+    {
+      "id": "translator-worker-image",
+      "owner": "translator-service",
+      "env_file": "translator-service/.env",
+      "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
+      "source_repository": "https://github.com/sapogov1978/AELEV-platform-infrastructure",
+      "release_workflow": "release-translator-worker-image",
+      "release_run": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/42608056754",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35",
+      "purpose": "Provider-neutral Translator worker paired with the opaque provider over UDS."
+    },
+    {
       "id": "observability-delivery-image",
       "owner": "observability/delivery",
       "env_file": "observability/delivery/.env",
@@ -194,6 +218,7 @@
       "public-egress-default-deny-and-exact-allow",
       "telemetry-delivery-query",
       "translator-queue-preserves-work-without-provider",
+      "translation-provider-uds-health",
       "workload-identity-issue-rotate-revoke",
       "workload-identity-observation-delivery-recovery",
       "bounded-recovery-preserves-state"

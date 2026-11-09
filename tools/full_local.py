@@ -473,7 +473,7 @@ def source_plan(root: Path = ROOT) -> dict[str, Any]:
             for item in manifest.get("release_images", [])
         ],
         "compose_models_included": ["root"],
-        "translation_provider_implementation_included": False,
+        "translation_provider_implementation_included": True,
         "acceptance_functions": manifest["acceptance"]["required_functions"],
     }
 
@@ -957,7 +957,15 @@ def initialize_profile(root: Path = ROOT) -> dict[str, Any]:
         for relative in initial_manifest["environment_files"]
         if (root / relative).exists()
     }
-    command([sys.executable, str(root / "bootstrap.py"), "init"], cwd=root)
+    environment = dict(os.environ)
+    environment["AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE"] = (
+        "health-only-no-inference-v1"
+    )
+    command(
+        [sys.executable, str(root / "bootstrap.py"), "init"],
+        cwd=root,
+        environment=environment,
+    )
     manifest, errors = validate_contract(root)
     if errors:
         raise FullLocalError(";".join(errors))

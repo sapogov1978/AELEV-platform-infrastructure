@@ -16,6 +16,7 @@ include:
   - path:
       - ./translator-service/compose.remote.yml
       - ./translator-service/compose.local.yml
+      - ./translator-service/compose.compute.yml
     project_directory: ./translator-service
     env_file: ./translator-service/.env
   - path: ./postgresql/compose.yml

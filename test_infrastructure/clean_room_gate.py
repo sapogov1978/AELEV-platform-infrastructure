@@ -41,6 +41,7 @@ FUNCTION_STAGES: dict[str, tuple[str, ...]] = {
     "egress-lifecycle": ("public-egress-default-deny-and-exact-allow",),
     "telemetry-onboarding": ("telemetry-delivery-query",),
     "translator-lifecycle": ("translator-queue-preserves-work-without-provider",),
+    "translator-provider-bundle": ("translation-provider-uds-health",),
     "spire-lifecycle": ("workload-identity-issue-rotate-revoke",),
     "spire-observation": ("workload-identity-observation-delivery-recovery",),
     "recovery-lifecycle": ("bounded-recovery-preserves-state",),
@@ -149,6 +150,17 @@ def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
     egress_report = stages / "egress-lifecycle.md"
     telemetry_report = stages / "telemetry-onboarding.md"
     translator_report = stages / "translator-lifecycle.json"
+    provider_report = stages / "translator-provider-bundle.json"
+    provider_image = next(
+        item["admitted_reference"]
+        for item in manifest["release_images"]
+        if item["id"] == "translation-provider-image"
+    )
+    worker_image = next(
+        item["admitted_reference"]
+        for item in manifest["release_images"]
+        if item["id"] == "translator-worker-image"
+    )
     recovery_output = stages / "recovery"
     root_command = [
         "poetry",
@@ -259,6 +271,26 @@ def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
             ),
             (translator_report, translator_report.with_suffix(".md")),
             timeout=3600,
+        ),
+        Stage(
+            "translator-provider-bundle",
+            FUNCTION_STAGES["translator-provider-bundle"],
+            (
+                "poetry",
+                "--directory",
+                "translator-service",
+                "run",
+                "python",
+                "test/provider_bundle.py",
+                "--provider-image",
+                provider_image,
+                "--worker-image",
+                worker_image,
+                "--report",
+                str(provider_report),
+            ),
+            (provider_report,),
+            timeout=600,
         ),
         Stage(
             "spire-lifecycle",

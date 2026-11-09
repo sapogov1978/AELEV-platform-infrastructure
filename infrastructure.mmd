@@ -1,6 +1,6 @@
 flowchart TB
     %% 00-INFRA-20261106-0004: канонические рецепты принадлежат владельцам.
-    %% 00-INFRA-20261106-0015: полный профиль не включает реализацию перевода.
+    %% 00-INFRA-20261109-0016: полный профиль включает opaque provider только как immutable image.
     ROOT["compose.yml + full-local.json<br/>Совместный запуск на одном Docker host"]
     CONFIG["Каждая поставка владеет своим env,<br/>образом, секретами, данными и test"]
     CONFIG ~~~ ROOT
@@ -12,7 +12,7 @@ flowchart TB
     ROOT --> SPIRE["spire/compose.yml + compose.observation.yml<br/>Выдача X.509-SVID; включена в full-local<br/>Собственные operator/node state и наблюдение<br/>Зашифрованное offline backup/restore"]
     ROOT --> MINIO["minio/compose.yml<br/>Хранилище артефактов<br/>2 площадки по 4 узла, site replication"]
     ROOT --> PG["postgresql/compose.yml<br/>Хранилище структурированных данных<br/>3 Patroni/PostgreSQL + 3 etcd<br/>Ограждение: docker / kubernetes / watchdog"]
-    ROOT --> TR["translator-service/compose.remote.yml<br/>+ compose.local.yml<br/>Собственная БД, миграция, topics,<br/>2 consumer, dispatcher, outbox, API<br/>Реализация перевода не входит в full-local"]
+    ROOT --> TR["translator-service/compose.remote.yml<br/>+ compose.local.yml + compose.compute.yml<br/>Собственная БД, миграция, topics,<br/>2 consumer, dispatcher, outbox, API<br/>Exact provider/worker images; opaque UDS"]
     TR -. "Provisioning и readiness требуют Kafka" .-> KAFKA
     ROOT --> UI["platform-ui/compose.yml<br/>Интерфейс платформы<br/>HTTPS nginx + API<br/>Локальная техническая SQLite владельца"]
     ROOT --> OBS["observability/compose.yml<br/>Только композиция семи владельцев"]

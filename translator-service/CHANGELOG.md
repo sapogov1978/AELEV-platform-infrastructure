@@ -1,5 +1,10 @@
 # Изменения translator-service
 
+- 2026-11-09: root/full-local 1.1.0 канонически включает ранее отдельный compute
+  recipe с подписанными provider/worker digests. Bootstrap create-only переносит
+  существующий ignored provider env в generic secret mount, а clean-room
+  проверяет health/UDS без inference; provider ownership не переходит Translator.
+
 - 2026-11-09: необязательный compute recipe подготовлен для внешнего opaque
   provider image: provider получает исходящую сеть без опубликованных портов и
   отдельный generic read-only API secret file. Model ID, endpoint, prompt и

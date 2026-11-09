@@ -1,8 +1,8 @@
 # Ячейка внешнего провайдера перевода
 
-> Этот recipe размещает выбранный непрозрачный provider image рядом с worker. Он
-> не входит в `full-local`, release BOM или production admission Platform
-> Infrastructure и не раскрывает реализацию провайдера.
+> Этот recipe размещает выбранный непрозрачный provider image рядом с worker.
+> Root/full-local и release BOM используют тот же recipe с exact image digests;
+> это не раскрывает реализацию и само по себе не является production admission.
 
 Этот каталог соединяет внешний provider image и принадлежащий Translator worker
 через `doctor`, `prepare`, `start`, `status` и `stop`. Реализация провайдера в
@@ -15,13 +15,12 @@ secret file `/run/secrets/provider/credential.env`. Модель, prompt, endpoi
 consumers, outbox или UI и не управляет удалённым Docker daemon.
 
 Скопируйте [compute.env.example](compute.env.example) в закрытый файл станции,
-задайте точный образ `name@sha256:...`, маршруты собственной PostgreSQL/Telemetry
-Delivery и пути к identities. Создайте игнорируемый файл
-соседний игнорируемый `TranslationProvider/.env.local` с правами `0600` уже
-указан в шаблоне; вручную замените в нём только значение `OPENAI_API_KEY` и не
-передавайте его через Git, журнал или командную строку. После подготовки
-остальных параметров отсутствие содержимого этого файла остаётся единственным
-локальным блокером выбранного provider runtime. На macOS/Linux используйте:
+задайте точные образы `name@sha256:...`, маршруты собственной PostgreSQL/Telemetry
+Delivery и пути к identities. Соседний игнорируемый
+`TranslationProvider/.env.local` с правами `0600` служит источником для
+create-only импорта в `translator-service/runtime/provider-credential.env`;
+вручную задайте в нём `OPENAI_API_KEY` и не передавайте значение через Git,
+журнал или командную строку. На macOS/Linux используйте:
 
 ```sh
 sh compute-runtime/bootstrap.sh doctor --env-file compute-runtime/compute.env

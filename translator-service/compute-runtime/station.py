@@ -92,11 +92,24 @@ def _compose(docker: str, endpoint: str, env_file: Path) -> list[str]:
         or env_file.stat().st_size > 1024 * 1024
     ):
         raise RuntimeError("TRANSLATOR_COMPUTE_ENV_FILE_INVALID")
+    project = ""
+    for row in env_file.read_text(encoding="utf-8").splitlines():
+        key, separator, value = row.partition("=")
+        if (
+            key == "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT"
+            and separator
+        ):
+            project = value.strip()
+            break
+    if re.fullmatch(r"[a-z0-9][a-z0-9_-]{1,62}", project) is None:
+        raise RuntimeError("TRANSLATOR_COMPUTE_PROJECT_INVALID")
     return [
         docker,
         "--host",
         endpoint,
         "compose",
+        "--project-name",
+        project,
         "--env-file",
         str(env_file.resolve()),
         "-f",
