@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794384371.635541,
-    "seen": 1794384481.298571,
-    "ast_hash": "84d6767d2dd50bb0d11b00fe6d5585a8",
+    "mtime": 1794390501.2558308,
+    "seen": 1794390591.291177,
+    "ast_hash": "8cea9b61e19f930115092cc4c088db6e",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794383080.6847062,
-    "seen": 1794383171.698761,
-    "ast_hash": "e624475f6262d6b235e4e6b041f0d802",
+    "mtime": 1794390501.252715,
+    "seen": 1794390591.291214,
+    "ast_hash": "a468f68db32eb23fbff532d3058e8c0a",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -4362,9 +4362,9 @@
     "semantic_hash": ""
   },
   "spire/TASKS.md": {
-    "mtime": 1794383080.6920226,
-    "seen": 1794383171.711839,
-    "ast_hash": "3248bd5de124b13158ad0806d0cd26f6",
+    "mtime": 1794390501.2546818,
+    "seen": 1794390591.3146958,
+    "ast_hash": "dc6bbaf2530daa3b72e92723133cdbb6",
     "semantic_hash": ""
   },
   "spire/USER_MANUAL.md": {
@@ -5088,9 +5088,9 @@
     "semantic_hash": ""
   },
   "docs/audit/production-readiness.md": {
-    "mtime": 1794383080.6895645,
-    "seen": 1794383171.70448,
-    "ast_hash": "b45b4f4889d25fb337803e5812b8f5a9",
+    "mtime": 1794390501.2533755,
+    "seen": 1794390591.302769,
+    "ast_hash": "0364dc5958fddccdd4a41722ffbb59a7",
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
@@ -6024,9 +6024,9 @@
     "semantic_hash": ""
   },
   "INDEX.md": {
-    "mtime": 1794177469.1870947,
-    "seen": 1794177780.232863,
-    "ast_hash": "abc1115128247c6de5c4c3cf8e2b20bf",
+    "mtime": 1794390501.25537,
+    "seen": 1794390591.29121,
+    "ast_hash": "3d6a93fbe99ade0e3d355d894eb50332",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20261106_100611_edb34e8e_\u043a\u0442\u043e_\u0432\u043b\u0430\u0434\u0435\u0435\u0442_\u043c\u043e\u0434\u0435\u043b\u044c\u044e_\u0438_\u0432\u0435\u0440\u0441\u0438\u0435\u0439_\u043f\u0435\u0440\u0435\u0432\u043e\u0434\u0430_\u0432_translato.md": {
@@ -6168,9 +6168,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794383080.6868546,
-    "seen": 1794383171.704594,
-    "ast_hash": "cd8a694cd61ebd3311548178d5fc1405",
+    "mtime": 1794390501.2542062,
+    "seen": 1794390591.303097,
+    "ast_hash": "671546b9ec1e99e8e8a72a727e1884bc",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
