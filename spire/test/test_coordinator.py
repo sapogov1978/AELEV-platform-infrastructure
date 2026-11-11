@@ -203,8 +203,12 @@ def test_server_apply_scopes_foreign_shared_project_and_keeps_volume_names(
 
 
 @pytest.mark.parametrize("native_no", [False, True])
+@pytest.mark.parametrize("recovered", [False, True])
 def test_observation_commands_use_physical_coordinator(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native_no: bool
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    native_no: bool,
+    recovered: bool,
 ) -> None:
     value = object.__new__(Installer)
     value.project, value.root, value.image, value.image_id = (
@@ -252,13 +256,49 @@ def test_observation_commands_use_physical_coordinator(
 
     value.resolve = resolve
     commands: list[tuple[str, ...]] = []
+    records: dict[str, dict[str, Any]] = {}
+    history: dict[Path, bytes] = {}
+    if recovered:
+        for role, service, number in (
+            ("sender", "spire-telemetry-sender", 2),
+            ("observer", "spire-observer", 3),
+        ):
+            path = tmp_path / (role + "-recovery.json")
+            atomic(
+                path,
+                {
+                    "owner": "infrastructure-spire",
+                    "restart": "no",
+                    "image": IMAGE,
+                    "old_container": OLD,
+                    "old_restart_count": 3,
+                    "state": "COMPLETE",
+                },
+            )
+            history[path] = path.read_bytes()
+            row = runtime(service, number)
+            row["Config"]["Labels"]["io.aelev." + role + "-recovery"] = OLD
+            row["HostConfig"] = {"RestartPolicy": {"Name": "no"}}
+            row["State"] = {"Status": "running"}
+            records[PHYSICAL + "-" + service + "-1"] = row
 
     def docker(*args: str, payload: bytes | None = None) -> bytes:
         if args[0] == "ps":
             return b""
+        if args[0] == "inspect":
+            return json.dumps([records[args[1]]]).encode()
         if args[0] == "compose":
             commands.append(args)
             assert args[args.index("-p") + 1] == PHYSICAL
+            if "up" in args:
+                installed = read(tmp_path / "observation-compose.json")
+                for row in records.values():
+                    service = row["Config"]["Labels"]["com.docker.compose.service"]
+                    row["Config"]["Labels"] = {
+                        **installed["services"][service]["labels"],
+                        "com.docker.compose.project": PHYSICAL,
+                        "com.docker.compose.service": service,
+                    }
         return b"[]"
 
     value.docker = docker
@@ -267,13 +307,24 @@ def test_observation_commands_use_physical_coordinator(
     current = read(tmp_path / "observation-compose.json")
     assert current["name"] == LOGICAL
     assert all(
-        service["restart"] == ("no" if native_no else "on-failure:3")
-        for service in current["services"].values()
+        service["restart"]
+        == (
+            "no"
+            if native_no or (recovered and name != "spire-status-publisher")
+            else "on-failure:3"
+        )
+        for name, service in current["services"].items()
     )
     assert all(
         s["labels"]["io.aelev.installation"] == LOGICAL
         for s in current["services"].values()
     )
+    if recovered:
+        require_running(value, role="sender")
+        require_running(value, role="observer")
+        observation_setup.install(value, plan(), tmp_path)
+        for path, raw in history.items():
+            assert path.read_bytes() == raw
 
 
 def test_export_accepts_shared_coordinator_but_refuses_partial_transfer(

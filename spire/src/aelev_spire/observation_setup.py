@@ -612,7 +612,6 @@ def install(installer: Installer, plan: dict[str, Any], source: Path) -> None:
     model = installer.resolve("compose.observation.yml", values)
     from .sender_recovery import apply_override
 
-    apply_override(installer.root, model["services"]["spire-telemetry-sender"])
     for key, definition in model["volumes"].items():
         model["volumes"][key] = {"name": definition["name"], "external": True}
     for service in model["services"].values():
@@ -628,6 +627,7 @@ def install(installer: Installer, plan: dict[str, Any], source: Path) -> None:
     revision = read(revision_path)["revision"]
     for service in model["services"].values():
         service["labels"]["io.aelev.configuration-revision"] = revision
+    apply_override(installer.root, model["services"]["spire-telemetry-sender"])
     apply_override(installer.root, model["services"]["spire-observer"], role="observer")
     installer.preserve_restart_policies(model)
     path = installer.root / "observation-compose.json"
