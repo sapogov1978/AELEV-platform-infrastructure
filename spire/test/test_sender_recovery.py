@@ -1,6 +1,7 @@
 """Recovery replaces only the exhausted owned sender and preserves its budget."""
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,7 @@ from aelev_spire.installation import Installer
 from aelev_spire.sender_recovery import (
     SERVICE,
     apply_override,
+    main,
     recover,
     require_running,
 )
@@ -140,6 +142,57 @@ def test_recovery_and_lost_ack_do_not_repeat_start(tmp_path: Path) -> None:
     require_running(installer)
     with pytest.raises(ValueError, match="INTENT_MISMATCH"):
         recover(installer, OLD, IMAGE, "e" * 64)
+
+
+@pytest.mark.parametrize("role", ["sender", "observer"])
+def test_recovery_entrypoint_preserves_native_no_marker_and_exhaustion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, role: str
+) -> None:
+    installer, _record, calls = fixture(tmp_path, role)
+    selected = ["spire-server"]
+    atomic(
+        tmp_path / "owner.json",
+        {**read(tmp_path / "owner.json"), "native_restart_no_roles": selected},
+    )
+
+    def transport(self: Installer, *args: str, payload: bytes | None = None) -> bytes:
+        if args == ("info", "--format", "{{.ID}}"):
+            return b"fixture"
+        return installer.docker(*args, payload=payload)
+
+    def bind(self: Installer) -> None:
+        assert self.project == installer.project
+
+    monkeypatch.setattr(Installer, "docker", transport)
+    monkeypatch.setattr(Installer, "bind_compose_project", bind)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "sender-recovery",
+            "--project",
+            installer.project,
+            "--daemon-id",
+            "fixture",
+            "--root",
+            str(tmp_path),
+            "--expected-container",
+            OLD,
+            "--image",
+            IMAGE,
+            "--backup-sha256",
+            "d" * 64,
+            "--role",
+            role,
+        ],
+    )
+    main()
+    main()
+    assert read(tmp_path / "owner.json")["native_restart_no_roles"] == selected
+    assert read(tmp_path / "owner.json")[role + "_recovery_schema"] == 1
+    state = read(tmp_path / (role + "-recovery.json"))
+    assert state["state"] == "COMPLETE" and state["old_restart_count"] == 3
+    assert len([call for call in calls if call[0] == "compose"]) == 1
 
 
 def test_observer_reuses_exact_recovery_without_changing_sender_or_health(

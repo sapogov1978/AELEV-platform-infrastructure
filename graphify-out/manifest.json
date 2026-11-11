@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794384031.067685,
-    "seen": 1794384149.934261,
-    "ast_hash": "a9b59511a275fbf9747342a564106338",
+    "mtime": 1794384371.635541,
+    "seen": 1794384481.298571,
+    "ast_hash": "84d6767d2dd50bb0d11b00fe6d5585a8",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2268,9 +2268,9 @@
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/sender_recovery.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.15059,
-    "ast_hash": "dc76325c88adfdd227085c808307641e",
+    "mtime": 1794384371.6339996,
+    "seen": 1794384481.296705,
+    "ast_hash": "9158f4e73c5d6cb3d995ac43007e46ec",
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/settings.py": {
@@ -2406,9 +2406,9 @@
     "semantic_hash": ""
   },
   "spire/test/test_sender_recovery.py": {
-    "mtime": 1793282598.0,
-    "seen": 1793926130.150605,
-    "ast_hash": "a0db67120c6ad4b2a5559858ee43677b",
+    "mtime": 1794384372.754038,
+    "seen": 1794384481.2969759,
+    "ast_hash": "9cc16787a8f778a0e3dd66fc4e2db95f",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic_recovery_sandbox.py": {
@@ -4338,9 +4338,9 @@
     "semantic_hash": ""
   },
   "spire/CHANGELOG.md": {
-    "mtime": 1794384031.0681791,
-    "seen": 1794384149.9404411,
-    "ast_hash": "fc6fd5ee31f4f550881fa249135ee801",
+    "mtime": 1794384371.6358728,
+    "seen": 1794384481.303322,
+    "ast_hash": "0fc732ca994b2820e07276b6b8a1608f",
     "semantic_hash": ""
   },
   "spire/ENDPOINTS.md": {
@@ -4356,9 +4356,9 @@
     "semantic_hash": ""
   },
   "spire/SPEC.md": {
-    "mtime": 1794383995.1549332,
-    "seen": 1794384149.940468,
-    "ast_hash": "791f32c5d3bd47642158738655d8db1e",
+    "mtime": 1794384371.6363978,
+    "seen": 1794384481.303352,
+    "ast_hash": "6cadc5002e8d65e4db91b53cc6136d2c",
     "semantic_hash": ""
   },
   "spire/TASKS.md": {

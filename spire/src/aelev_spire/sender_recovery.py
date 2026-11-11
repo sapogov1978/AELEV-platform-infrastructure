@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .files import atomic, read, writer
-from .installation import Installer
+from .installation import Installer, restart_no_roles
 
 OWNER = "infrastructure-spire"
 SERVICE = "spire-telemetry-sender"
@@ -309,6 +309,10 @@ def main() -> None:
                 and actual_marker[role + "_recovery_schema"] == 1
             ):
                 marker[role + "_recovery_schema"] = 1
+        if "native_restart_no_roles" in actual_marker:
+            marker["native_restart_no_roles"] = restart_no_roles(
+                actual_marker["native_restart_no_roles"]
+            )
         if actual_marker != marker:
             raise ValueError("SPIRE_SENDER_RECOVERY_OWNER_MISMATCH")
         with writer(args.root, "installation.lock"):
