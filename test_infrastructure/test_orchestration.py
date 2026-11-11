@@ -19,6 +19,7 @@ from lifecycle import (
     compose_prefix,
     execute_group_start,
     execute_provision_task,
+    grafana_startup_markers,
     run,
     status_provision_tasks,
     ui_status_diagnostic,
@@ -290,6 +291,59 @@ def test_group_startup_diagnostic_has_only_bounded_state(
     assert "SECRET" not in output.read_text()
 
 
+def test_grafana_failure_keeps_only_fixed_markers_and_no_message_values(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls: list[list[str]] = []
+
+    def selected(arguments: list[str], cwd: Path = ROOT) -> str:
+        calls.append(arguments)
+        return "exact-owned-grafana\n"
+
+    monkeypatch.setattr("lifecycle.execute", selected)
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda project: {
+            "grafana": {"Status": "exited", "Running": False, "ExitCode": 1},
+            "other": {"Status": "exited", "Running": False, "ExitCode": 1},
+        },
+    )
+
+    def native_logs(identity: str) -> str:
+        assert identity == "exact-owned-grafana"
+        return 'level=error msg="database is locked" path="/var/lib/grafana/grafana.db" secret="must-not-survive"\n'
+
+    monkeypatch.setattr("lifecycle.bounded_container_logs", native_logs)
+    output = tmp_path / "group.json"
+    capture_group_startup_diagnostic(
+        "exact-project", {"grafana": {}, "other": {}}, output
+    )
+    value = json.loads(output.read_text())
+    assert value["services"]["grafana"]["startup_markers"] == {
+        "codes": ["DATABASE_LOCKED"],
+        "path_markers": ["/var/lib/grafana"],
+    }
+    assert "startup_markers" not in value["services"]["other"]
+    assert "must-not-survive" not in output.read_text()
+    assert "database is locked" not in output.read_text()
+    assert calls == [
+        [
+            "docker",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=exact-project",
+            "--filter",
+            "label=com.docker.compose.service=grafana",
+        ]
+    ]
+
+
+def test_unknown_grafana_message_never_becomes_persisted_text() -> None:
+    value = grafana_startup_markers("unknown=must-not-survive")
+    assert value == {"codes": ["UNCLASSIFIED_STARTUP_FAILURE"], "path_markers": []}
+
+
 @pytest.mark.parametrize(
     ("message", "code"),
     [
@@ -498,9 +552,7 @@ def test_group_startup_diagnostic_keeps_bounded_health_state(
     assert payload["services"]["translator-worker"]["health"] == {
         "status": "unhealthy",
         "failing_streak": 4,
-        "log": [
-            {"exit_code": 1, "output": "TRANSLATOR_HEALTH_NOT_READY"}
-        ],
+        "log": [{"exit_code": 1, "output": "TRANSLATOR_HEALTH_NOT_READY"}],
     }
 
 

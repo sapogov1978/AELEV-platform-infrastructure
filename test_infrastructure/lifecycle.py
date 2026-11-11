@@ -258,6 +258,82 @@ def capture_kafka_startup_diagnostic(project: str, output: Path) -> None:
     capture_startup_diagnostic(project, "kafka", output, "KAFKA_STARTUP_NOT_READY")
 
 
+def grafana_startup_markers(raw: str) -> dict[str, Any]:
+    """Keep only fixed public markers; never persist native message values."""
+    normalized = raw[-16384:].lower()
+    signatures = {
+        "DATABASE_LOCKED": ("database is locked", "database table is locked"),
+        "DATABASE_OPEN_FAILED": (
+            "unable to open database",
+            "failed to connect to database",
+        ),
+        "DATABASE_MIGRATION_FAILED": ("migration failed", "failed to run migration"),
+        "PERMISSION_DENIED": ("permission denied", "is not writable"),
+        "READONLY_FILESYSTEM": ("read-only file system", "readonly filesystem"),
+        "PORT_CONFLICT": ("address already in use", "bind: permission denied"),
+        "DISK_FULL": ("no space left on device", "database or disk is full"),
+        "TLS_LOAD_FAILED": (
+            "failed to load certificate",
+            "failed to load private key",
+            "failed to parse private key",
+        ),
+        "CONFIGURATION_INVALID": (
+            "failed to parse configuration",
+            "failed to read config",
+            "invalid configuration",
+        ),
+        "RESOURCE_EXHAUSTED": (
+            "cannot allocate memory",
+            "resource temporarily unavailable",
+            "failed to create new os thread",
+        ),
+        "RUNTIME_PANIC": ("panic:", "fatal error:"),
+        "LOGS_UNAVAILABLE": ("docker_logs_unavailable",),
+    }
+    return {
+        "codes": [
+            code
+            for code, markers in signatures.items()
+            if any(marker in normalized for marker in markers)
+        ]
+        or ["UNCLASSIFIED_STARTUP_FAILURE"],
+        "path_markers": [
+            path
+            for path in (
+                "/var/lib/grafana",
+                "/etc/grafana",
+                "/usr/share/grafana",
+                "/var/log/grafana",
+                "/run/secrets",
+            )
+            if path in normalized
+        ],
+    }
+
+
+def capture_grafana_startup_markers(project: str) -> dict[str, Any]:
+    try:
+        identities = execute(
+            [
+                "docker",
+                "ps",
+                "-aq",
+                "--filter",
+                "label=com.docker.compose.project=" + project,
+                "--filter",
+                "label=com.docker.compose.service=grafana",
+            ]
+        ).splitlines()
+        if len(identities) != 1:
+            return {
+                "codes": ["CONTAINER_CARDINALITY_INVALID"],
+                "containers": len(identities),
+            }
+        return grafana_startup_markers(bounded_container_logs(identities[0]))
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError):
+        return {"codes": ["STARTUP_DIAGNOSTIC_UNAVAILABLE"]}
+
+
 def capture_group_startup_diagnostic(
     project: str,
     services: dict[str, Any],
@@ -295,6 +371,12 @@ def capture_group_startup_diagnostic(
                 ],
             },
         }
+        if (
+            name == "grafana"
+            and state.get("Status") in {"dead", "exited"}
+            and state.get("ExitCode") != 0
+        ):
+            rows[name]["startup_markers"] = capture_grafana_startup_markers(project)
     payload = {
         "schema_version": 1,
         "code": "GROUP_STARTUP_FAILED",
