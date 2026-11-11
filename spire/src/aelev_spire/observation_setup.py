@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import base64
 import http.client
-import ipaddress
 import json
 import os
 import re
@@ -17,6 +16,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 from urllib.parse import urlsplit
 
+from . import desktop_host
 from .files import atomic, read, reserve
 
 if TYPE_CHECKING:
@@ -397,22 +397,64 @@ def gateway_aliases(plan: dict[str, Any]) -> dict[str, str]:
     return {name: "host-gateway" for name in selected}
 
 
-def gateway_routes(aliases: dict[str, str], host_os: str) -> dict[str, str]:
+def gateway_routes(
+    aliases: dict[str, str], host_os: str, *, confirmed_address: str | None = None
+) -> dict[str, str]:
     """Docker Desktop's host is not the Linux VM's bridge gateway."""
     if not aliases or host_os == "Linux":
         return aliases
     if host_os not in {"Darwin", "Windows"}:
         raise ValueError("SPIRE_OBSERVATION_HOST_OS_INVALID")
     try:
-        records = socket.getaddrinfo(
-            "host.docker.internal", None, socket.AF_INET, socket.SOCK_STREAM
-        )
-        address = ipaddress.IPv4Address(str(records[0][4][0]))
-        if not address.is_private or address.is_loopback or address.is_unspecified:
-            raise ValueError("invalid Docker Desktop host")
+        if confirmed_address is None:
+            records = socket.getaddrinfo(
+                "host.docker.internal", None, socket.AF_INET, socket.SOCK_STREAM
+            )
+            confirmed_address = str(records[0][4][0])
+        address = desktop_host.private_address(confirmed_address)
     except (OSError, ValueError, IndexError):
         raise ValueError("SPIRE_OBSERVATION_DESKTOP_HOST_UNAVAILABLE") from None
     return {name: str(address) for name in aliases}
+
+
+def installation_routes(
+    installer: Installer, aliases: dict[str, str]
+) -> dict[str, str]:
+    """Keep the socket-bearing operator offline; resolve only declared aliases."""
+    address = None
+    if aliases and installer.host_os in {"Darwin", "Windows"}:
+        try:
+            raw = installer.docker(
+                "run",
+                "--rm",
+                "--user",
+                "10001:10001",
+                "--network",
+                "bridge",
+                "--read-only",
+                "--cap-drop",
+                "ALL",
+                "--security-opt",
+                "no-new-privileges:true",
+                "--pids-limit",
+                "32",
+                "--memory",
+                "64m",
+                "--env",
+                "RES_OPTIONS=timeout:2 attempts:1",
+                "--entrypoint",
+                "python",
+                installer.image,
+                "-S",
+                "-P",
+                "/opt/aelev/src/aelev_spire/desktop_host.py",
+            )
+            if not 1 <= len(raw) <= 16:
+                raise ValueError(desktop_host.CODE)
+            address = raw.decode("ascii").strip()
+        except (OSError, UnicodeError, ValueError):
+            raise ValueError(desktop_host.CODE) from None
+    return gateway_routes(aliases, installer.host_os, confirmed_address=address)
 
 
 def seed(root: Path, value: dict[str, Any]) -> None:
@@ -460,9 +502,9 @@ def install(installer: Installer, plan: dict[str, Any], source: Path) -> None:
     aliases = gateway_aliases(plan)
     if aliases and deployment["plan"]["environment"] == "production":
         raise ValueError("SPIRE_OBSERVATION_GATEWAY_ALIASES_LOCAL_ONLY")
-    routes = gateway_routes(aliases, installer.host_os)
     if deployment["role"] != "server" or deployment["image_id"] != installer.image_id:
         raise ValueError("SPIRE_OBSERVATION_SERVER_RELEASE_REQUIRED")
+    routes = installation_routes(installer, aliases)
     if deployment["plan"]["environment"] == "production" and not re.fullmatch(
         r".+@sha256:[0-9a-f]{64}", plan["sender_image"]
     ):

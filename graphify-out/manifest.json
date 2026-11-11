@@ -6,8 +6,8 @@
     "semantic_hash": "c88dd2c7ee4e1ffe888ed1cfc4d89b24"
   },
   ".github/workflows/audit.yml": {
-    "mtime": 1794382097.1293871,
-    "seen": 1794383171.679915,
+    "mtime": 1794399001.5590513,
+    "seen": 1794399237.967822,
     "ast_hash": "db1f538163a87957dd87896501104edb",
     "semantic_hash": ""
   },
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794394117.5533311,
-    "seen": 1794394135.024674,
-    "ast_hash": "d182fe58ebb41203fd53edb8ec7256c2",
+    "mtime": 1794399080.5535934,
+    "seen": 1794399238.008384,
+    "ast_hash": "5643fb8f74ee449612ecd485932b6375",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2058,9 +2058,9 @@
     "semantic_hash": ""
   },
   "release.json": {
-    "mtime": 1794394117.5516984,
-    "seen": 1794394135.014986,
-    "ast_hash": "b9fb535c36e27335ed0d189e741b0c4c",
+    "mtime": 1794397284.152968,
+    "seen": 1794398633.719954,
+    "ast_hash": "3335247a1e56b1efc977befa08f370f3",
     "semantic_hash": ""
   },
   "release_renewal_delivery.py": {
@@ -2142,14 +2142,14 @@
     "semantic_hash": ""
   },
   "spire/install.ps1": {
-    "mtime": 1794383995.1544726,
-    "seen": 1794384149.931903,
+    "mtime": 1794399001.5583599,
+    "seen": 1794399237.994352,
     "ast_hash": "84b5f746b4f87bc5a820ad74dd8cc932",
     "semantic_hash": ""
   },
   "spire/install.sh": {
-    "mtime": 1794383995.1541007,
-    "seen": 1794384149.931905,
+    "mtime": 1794399001.5580306,
+    "seen": 1794399237.994356,
     "ast_hash": "edd26d6b931b9809c2461f960bf90ea0",
     "semantic_hash": ""
   },
@@ -2250,9 +2250,9 @@
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/observation_setup.py": {
-    "mtime": 1794393095.429083,
-    "seen": 1794394135.016095,
-    "ast_hash": "878a83990441d6732053b7ca010ae518",
+    "mtime": 1794399324.8007534,
+    "seen": 1794399424.469576,
+    "ast_hash": "8470e145cec625892903e6337a80e117",
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/operator.py": {
@@ -4338,9 +4338,9 @@
     "semantic_hash": ""
   },
   "spire/CHANGELOG.md": {
-    "mtime": 1794393095.4303665,
-    "seen": 1794394135.052473,
-    "ast_hash": "db7fe96ddbadce5767092731c7fbc39d",
+    "mtime": 1794399080.553761,
+    "seen": 1794399238.029585,
+    "ast_hash": "4d496c43761c1d271f307bcee6b2c55e",
     "semantic_hash": ""
   },
   "spire/ENDPOINTS.md": {
@@ -4350,15 +4350,15 @@
     "semantic_hash": ""
   },
   "spire/README.md": {
-    "mtime": 1794384031.0683715,
-    "seen": 1794384149.940467,
-    "ast_hash": "a9bc8ef7d6272405b2a24b9dd815c2d9",
+    "mtime": 1794399080.5516725,
+    "seen": 1794399238.029669,
+    "ast_hash": "13b1da94e133d9a7b4be1adaafb62b80",
     "semantic_hash": ""
   },
   "spire/SPEC.md": {
-    "mtime": 1794393095.430756,
-    "seen": 1794394135.05257,
-    "ast_hash": "c0babe6eb7490256e6043b115048a577",
+    "mtime": 1794399080.5525503,
+    "seen": 1794399238.029676,
+    "ast_hash": "324245f27897a3b6c4455f46d1282fe7",
     "semantic_hash": ""
   },
   "spire/TASKS.md": {
@@ -4368,9 +4368,9 @@
     "semantic_hash": ""
   },
   "spire/USER_MANUAL.md": {
-    "mtime": 1794383995.1555111,
-    "seen": 1794384149.940481,
-    "ast_hash": "0b85ddb7c22ea6952537b23f31a739ff",
+    "mtime": 1794399080.5528688,
+    "seen": 1794399238.029715,
+    "ast_hash": "8dfce72464ec3e378267f74874f68754",
     "semantic_hash": ""
   },
   "spire/licenses/README.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1794394117.5527189,
-    "seen": 1794394135.00354,
-    "ast_hash": "199fcf8137b27d40020ab160475373c8",
+    "mtime": 1794397284.1535442,
+    "seen": 1794398633.712203,
+    "ast_hash": "3517b48f736dde77d79e8c702574fe6f",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
@@ -6387,6 +6387,18 @@
     "mtime": 1794380827.7329335,
     "seen": 1794383171.693585,
     "ast_hash": "8bec7432de144cb4c28405882260bc7b",
+    "semantic_hash": ""
+  },
+  "spire/src/aelev_spire/desktop_host.py": {
+    "mtime": 1794399001.5595129,
+    "seen": 1794399237.994709,
+    "ast_hash": "7594cbc17d49464fe96baa56ad83c5f5",
+    "semantic_hash": ""
+  },
+  "spire/test/test_desktop_host.py": {
+    "mtime": 1794399080.5651114,
+    "seen": 1794399237.99754,
+    "ast_hash": "eb71a57c6e6795257a307eef33296ded",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

@@ -18,6 +18,8 @@
 
 На Linux одноразовый установщик использует `cap-drop ALL` и только `DAC_READ_SEARCH` для чтения собственных явно подключённых read-only входов оператора с другим UID. Он не изменяет host permissions и не получает обхода прав записи. Подробнее — [спецификация](SPEC.md#владение-и-полномочия).
 
+Для объявленных локальных маршрутов наблюдения на Docker Desktop общий Python-оператор Shell/PowerShell разрешает только `host.docker.internal` отдельным read-only helper от UID 10001 без Docker socket, секретов и host mounts. Подтверждённый private IPv4 попадает в `extra_hosts` собственных runtime-рецептов; оператор с socket сохраняет `network=none`. Без объявленных aliases resolver не запускается.
+
 ## Навигация
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.

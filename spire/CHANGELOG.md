@@ -1,5 +1,6 @@
 # История SPIRE
 
+- 2026-11-11: общий Python observation installer Shell/PowerShell на Docker Desktop разрешает фиксированный host alias через непривилегированный helper без секретов и socket. Установщик с Docker socket сохраняет `network=none` и формирует `extra_hosts` по проверенному адресу; native Linux и отсутствие aliases не требуют resolver.
 - 2026-11-11: общая компиляция наблюдения применяет recovery-метки sender и observer после общих labels и configuration revision. Повторная установка после адресного восстановления сохраняет обе цепочки и `restart=no`; regression проверяет следующий допуск `require_running` и неизменные байты recovery-журналов.
 - 2026-11-11: entrypoint адресного восстановления observer/sender сохраняет валидированный marker `native_restart_no_roles`; совместимость с ужесточённым установщиком проверена вместе с lost-ack и прежним исчерпанным бюджетом.
 - 2026-11-11: одноразовый Shell/PowerShell installer получает `DAC_READ_SEARCH` для read-only входов другого Linux UID; без него закрытый host-каталог вызывал PermissionError при первом плане. Host permissions и полномочия постоянных runtime-ролей сохраняются.
