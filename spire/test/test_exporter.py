@@ -1,6 +1,8 @@
 """Delivery ownership, exact identity and durable generation invariants."""
 
 import json
+import os
+import stat
 from pathlib import Path
 from typing import Any
 
@@ -78,3 +80,51 @@ def test_foreign_volume_is_not_adopted(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="UNKNOWN_STATE_PRESERVED"):
         Exporter(root, PLAN)
     assert (root / "keep").read_text() == "not an installation"
+
+
+def test_consumer_policy_is_preserved_across_delivery_and_repeat(
+    tmp_path: Path, credential: tuple[bytes, bytes, bytes]
+) -> None:
+    root = tmp_path / "svid"
+    Exporter(root, PLAN)
+    mountpoint = root / "identity.json"
+    assert mountpoint.read_bytes() == b""
+    assert stat.S_IMODE(mountpoint.stat().st_mode) == 0o444
+    mountpoint.chmod(0o600)
+    mountpoint.write_bytes(b'{"consumer-owned":"opaque"}')
+    before = mountpoint.stat()
+    delivery = Exporter(root, PLAN)
+    delivery.publish(*credential)
+    delivery.unavailable("SPIRE_WORKLOAD_NOT_AUTHORIZED")
+    Exporter(root, PLAN)
+    after = mountpoint.stat()
+    assert mountpoint.read_bytes() == b'{"consumer-owned":"opaque"}'
+    assert (after.st_ino, after.st_mode, after.st_mtime_ns) == (
+        before.st_ino,
+        before.st_mode,
+        before.st_mtime_ns,
+    )
+
+
+@pytest.mark.parametrize("kind", ["directory", "symlink", "fifo"])
+def test_nonregular_policy_mountpoint_is_rejected_without_following(
+    tmp_path: Path, kind: str
+) -> None:
+    root = tmp_path / "svid"
+    Exporter(root, PLAN)
+    mountpoint = root / "identity.json"
+    mountpoint.unlink()
+    outside = tmp_path / "outside"
+    outside.write_bytes(b"must remain unchanged")
+    if kind == "directory":
+        mountpoint.mkdir()
+    elif kind == "symlink":
+        mountpoint.symlink_to(outside)
+    else:
+        os.mkfifo(mountpoint)
+    before = mountpoint.lstat()
+    with pytest.raises(ValueError, match="SPIRE_SVID_POLICY_MOUNTPOINT_INVALID"):
+        Exporter(root, PLAN)
+    after = mountpoint.lstat()
+    assert (after.st_ino, after.st_mode) == (before.st_ino, before.st_mode)
+    assert outside.read_bytes() == b"must remain unchanged"

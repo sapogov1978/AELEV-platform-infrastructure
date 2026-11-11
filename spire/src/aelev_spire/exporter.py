@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
+import stat
 import subprocess
 import tempfile
 from datetime import UTC, datetime
@@ -91,6 +92,34 @@ class Exporter:
                 "environment": self.environment,
             },
         )
+        self.reserve_policy_mountpoint()
+
+    def reserve_policy_mountpoint(self) -> None:
+        """Reserve a nested read-only mount without owning consumer policy."""
+        directory = os.open(self.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            try:
+                descriptor = os.open(
+                    "identity.json",
+                    os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                    0o444,
+                    dir_fd=directory,
+                )
+            except FileExistsError:
+                existing = os.stat(
+                    "identity.json", dir_fd=directory, follow_symlinks=False
+                )
+                if not stat.S_ISREG(existing.st_mode):
+                    raise ValueError("SPIRE_SVID_POLICY_MOUNTPOINT_INVALID") from None
+            else:
+                try:
+                    os.fchmod(descriptor, 0o444)
+                    os.fsync(descriptor)
+                finally:
+                    os.close(descriptor)
+                os.fsync(directory)
+        finally:
+            os.close(directory)
 
     def unavailable(self, code: str) -> None:
         atomic(self.root / "current.json", self.metadata("UNAVAILABLE", code=code))

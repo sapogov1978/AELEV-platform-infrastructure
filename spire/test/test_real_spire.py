@@ -9,6 +9,7 @@ import subprocess
 import time
 import uuid
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any, cast
 
 import pytest
@@ -207,6 +208,57 @@ class Sandbox:
         except (ValueError, TypeError):
             return {}
 
+    def readonly_consumer(self, volume: str, policy: Path) -> dict[str, Any]:
+        raw = self.docker(
+            "run",
+            "--rm",
+            "--network",
+            "none",
+            "--read-only",
+            "--cap-drop",
+            "ALL",
+            "--security-opt",
+            "no-new-privileges:true",
+            "--memory",
+            "128m",
+            "--pids-limit",
+            "32",
+            "--entrypoint",
+            "python",
+            "-v",
+            volume + ":/run/svid:ro",
+            "--mount",
+            f"type=bind,source={policy},target=/run/svid/identity.json,readonly",
+            IMAGE,
+            "-c",
+            """
+import errno
+import json
+from datetime import UTC, datetime
+from pathlib import Path
+from aelev_spire.exporter import verify
+
+root = Path('/run/svid')
+policy = json.loads((root / 'identity.json').read_bytes())
+current = json.loads((root / 'current.json').read_bytes())
+assert current['state'] == 'READY'
+updated = datetime.fromisoformat(current['updated_at'])
+age = (datetime.now(UTC) - updated).total_seconds()
+assert 0 <= age <= 20
+generation = root / 'generations' / current['generation']
+pem = (generation / 'tls.pem').read_bytes()
+verify(pem, pem, (generation / 'bundle.pem').read_bytes(), policy['expected_spiffe_id'])
+try:
+    (root / 'forbidden-write').write_bytes(b'x')
+except OSError as error:
+    assert error.errno == errno.EROFS
+else:
+    raise AssertionError('SPIRE_TEST_WRITABLE_CONSUMER')
+print(json.dumps(current))
+""",
+        )
+        return json.loads(raw)
+
     def cleanup(self) -> None:
         for name in reversed(self.containers):
             label = (
@@ -263,7 +315,7 @@ def wait(predicate: Callable[[], bool], code: str, seconds: int = 90) -> None:
     raise AssertionError(code)
 
 
-def test_real_issue_rotation_revoke_and_node_restart() -> None:
+def test_real_issue_rotation_revoke_and_node_restart(tmp_path: Path) -> None:
     sandbox = Sandbox()
     try:
         sandbox.private_network()
@@ -298,6 +350,7 @@ def test_real_issue_rotation_revoke_and_node_restart() -> None:
         requests: list[str] = []
         outputs: list[str] = []
         agent_states: list[str] = []
+        svid_volumes: list[str] = []
 
         def operate(
             action: str, request_volume: str, output_volume: str, *, check: bool = True
@@ -347,6 +400,7 @@ def test_real_issue_rotation_revoke_and_node_restart() -> None:
             operate("authorize", request_volume, output_volume)
             operate("authorize", request_volume, output_volume)
             svid = sandbox.volume("svid-" + str(index), ephemeral=True)
+            svid_volumes.append(svid)
             agent_state = sandbox.volume("agent-" + str(index))
             agent_states.append(agent_state)
             agent = sandbox.start(
@@ -366,6 +420,12 @@ def test_real_issue_rotation_revoke_and_node_restart() -> None:
             )
         first = [sandbox.public_state(agent) for agent in agents]
         assert first[0]["spiffe_id"] != first[1]["spiffe_id"]
+        policy = tmp_path / "consumer-identity.json"
+        policy.write_text(json.dumps({"expected_spiffe_id": first[1]["spiffe_id"]}))
+        policy.chmod(0o444)
+        policy_bytes = policy.read_bytes()
+        initial_consumer = sandbox.readonly_consumer(svid_volumes[1], policy)
+        assert initial_consumer["spiffe_id"] == first[1]["spiffe_id"]
         wait(
             lambda: all(
                 sandbox.public_state(agent).get("serial")
@@ -374,6 +434,8 @@ def test_real_issue_rotation_revoke_and_node_restart() -> None:
             ),
             "SPIRE_TEST_SVID_DID_NOT_ROTATE",
         )
+        rotated_consumer = sandbox.readonly_consumer(svid_volumes[1], policy)
+        assert rotated_consumer["serial"] != first[1]["serial"]
         operate("revoke", requests[0], outputs[0])
         wait(
             lambda: sandbox.public_state(agents[0]).get("state") == "UNAVAILABLE",
@@ -388,6 +450,11 @@ def test_real_issue_rotation_revoke_and_node_restart() -> None:
             "SPIRE_TEST_NODE_STATE_NOT_RECOVERED",
         )
         assert sandbox.public_state(agents[1])["spiffe_id"] == first[1]["spiffe_id"]
+        assert (
+            sandbox.readonly_consumer(svid_volumes[1], policy)["spiffe_id"]
+            == first[1]["spiffe_id"]
+        )
+        assert policy.read_bytes() == policy_bytes
         # Offline encrypted full-state recovery. No running writer is copied,
         # and both native registration state and the operator's terminal
         # revocation are restored, not recreated by authorizing again.
