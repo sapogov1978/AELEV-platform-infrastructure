@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794411300.0586832,
-    "seen": 1794411432.3775842,
-    "ast_hash": "85e6f04dc33b4ee4384a335f070aa704",
+    "mtime": 1794412793.9658787,
+    "seen": 1794412829.814212,
+    "ast_hash": "dfc984c17b9fe1fa4b1b1052016db9f4",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2058,9 +2058,9 @@
     "semantic_hash": ""
   },
   "release.json": {
-    "mtime": 1794397284.152968,
-    "seen": 1794398633.719954,
-    "ast_hash": "3335247a1e56b1efc977befa08f370f3",
+    "mtime": 1794412793.96363,
+    "seen": 1794412829.8009212,
+    "ast_hash": "d850c720ac5aae5909d78abe07920f78",
     "semantic_hash": ""
   },
   "release_renewal_delivery.py": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1794397284.1535442,
-    "seen": 1794398633.712203,
-    "ast_hash": "3517b48f736dde77d79e8c702574fe6f",
+    "mtime": 1794412793.9648247,
+    "seen": 1794412829.791192,
+    "ast_hash": "ee6823648c5566b745b267f77ead4c99",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
