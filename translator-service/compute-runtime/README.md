@@ -14,6 +14,8 @@ secret file `/run/secrets/provider/credential.env`. Модель, prompt, endpoi
 исполнения остаются у поставщика провайдера. Каталог не запускает Kafka
 consumers, outbox или UI и не управляет удалённым Docker daemon.
 
+Текущий шаблон закрепляет [provider v0.1.1](https://github.com/sapogov1978/AELEV-translation-provider/releases/tag/v0.1.1) и прежний совместимый worker. Component evidence содержит проверки подписи, обеих native-архитектур, ограниченного security-профиля и отдельный live quality run. Штатные read-only root, non-root UID образа, dropped capabilities и no-new-privileges обязательны для этого профиля; собственный worker не получает implementation settings провайдера.
+
 Скопируйте [compute.env.example](compute.env.example) в закрытый файл станции,
 задайте точные образы `name@sha256:...`, маршруты собственной PostgreSQL/Telemetry
 Delivery, их external network flags и пути к identities. В корневом локальном

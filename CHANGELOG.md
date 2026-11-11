@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Профиль 1.1.2 закрепляет подписанный Translation Provider v0.1.1 после проверки обоих native security-профилей, 20 live-переводов с отдельным смысловым review и изолированной UDS-пары с прежним exact worker. Bootstrap переводит только два прежних заводских provider pins; операторские overrides, секреты и очередь сохраняются. Новый полный clean-room требуется для точного source commit этого выпуска.
 ## 1.1.1 — 2026-11-09
 
 - Release runbook согласован с текущим manifest: приёмка требует 12/12 функций,

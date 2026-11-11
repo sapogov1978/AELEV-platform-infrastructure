@@ -215,7 +215,7 @@ class BootstrapTest(unittest.TestCase):
             owner = root / "owner"
             owner.mkdir()
             (owner / ".env.example").write_text(
-                "OWNER_VALUE=template\n" "OWNER_OIDC_CA_FILE=./trust/oidc-ca.crt\n"
+                "OWNER_VALUE=template\nOWNER_OIDC_CA_FILE=./trust/oidc-ca.crt\n"
             )
             (owner / ".env").write_text("OWNER_VALUE=custom\n")
 
@@ -406,6 +406,52 @@ class BootstrapTest(unittest.TestCase):
             )
 
     def test_translation_release_migrates_only_exact_legacy_pins(self) -> None:
+        references = (
+            "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
+            "f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866",
+            "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
+            "0a09783d072ccc7c60ec8e6fbe5ce56def95a56601888d5c3e4cf083da3ee016",
+        )
+        for reference in references:
+            with (
+                self.subTest(reference=reference),
+                tempfile.TemporaryDirectory() as temp,
+            ):
+                translator = Path(temp) / "translator-service"
+                translator.mkdir()
+                (translator / ".env.example").write_text(
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=provider@sha256:new\n"
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:new\n"
+                )
+                path = translator / ".env"
+                path.write_text(
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=" + reference + "\n"
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:custom\n"
+                    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE=./private.env\n"
+                )
+                with mock.patch.object(provider, "TRANSLATOR", translator):
+                    provider.migrate_legacy_translation_image_references()
+                    values = provider.read_env(path)
+                    self.assertEqual(
+                        values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"],
+                        "provider@sha256:new",
+                    )
+                    self.assertEqual(
+                        values["AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"],
+                        "worker@sha256:custom",
+                    )
+                    self.assertEqual(
+                        values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE"],
+                        "./private.env",
+                    )
+                    with mock.patch.object(
+                        provider,
+                        "update_env",
+                        side_effect=AssertionError("second write"),
+                    ):
+                        provider.migrate_legacy_translation_image_references()
+
+    def test_translation_pin_migration_preserves_custom_provider(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             translator = Path(temporary) / "translator-service"
             translator.mkdir()
@@ -413,26 +459,29 @@ class BootstrapTest(unittest.TestCase):
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=provider@sha256:new\n"
                 "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:new\n"
             )
-            (translator / ".env").write_text(
-                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE="
-                + provider.LEGACY_TRANSLATION_IMAGE_REFERENCES[
-                    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"
-                ]
-                + "\n"
-                "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE=worker@sha256:custom\n"
+            path = translator / ".env"
+            path.write_text(
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE=provider@sha256:custom\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE="
+                "ghcr.io/sapogov1978/"
+                "aelev-platform-infrastructure-translator-worker@sha256:"
+                "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35\n"
+                "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE=./private.env\n"
             )
-
             with mock.patch.object(provider, "TRANSLATOR", translator):
                 provider.migrate_legacy_translation_image_references()
-
-            values = provider.read_env(translator / ".env")
+            values = provider.read_env(path)
             self.assertEqual(
                 values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE"],
-                "provider@sha256:new",
+                "provider@sha256:custom",
             )
             self.assertEqual(
                 values["AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"],
-                "worker@sha256:custom",
+                "worker@sha256:new",
+            )
+            self.assertEqual(
+                values["AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE"],
+                "./private.env",
             )
 
     def test_translation_release_migrates_only_exact_legacy_ui_revision(self) -> None:
@@ -580,9 +629,9 @@ class BootstrapTest(unittest.TestCase):
                     [], 0, stdout="/different/installation\n"
                 ),
             ),
+            self.assertRaises(provider.QuickstartError),
         ):
-            with self.assertRaises(provider.QuickstartError):
-                provider.verify_scope()
+            provider.verify_scope()
 
     def test_kafka_start_does_not_launch_other_capabilities(self) -> None:
         with (

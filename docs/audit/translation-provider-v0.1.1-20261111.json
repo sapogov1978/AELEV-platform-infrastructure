@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "OPAQUE_PROVIDER_COMPONENT_PAIR_PASS",
+  "profile_release": "1.1.2",
+  "provider_image": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:97d7604113008b93781061a0bbba2404bcd7769b864e3ade268b71a483e4f70a",
+  "worker_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:d68d70243a6746cbe9dbdd537b2d773f701c9cd44daabbeac78d88a0e6fa98a5",
+  "component_release": "https://github.com/sapogov1978/AELEV-translation-provider/releases/tag/v0.1.1",
+  "component_report_sha256": "540f8b4efeab7372e6bbece7bad0131870c7337d201147810a4aa0c2f908acfb",
+  "component_source": "185c5a7b5ad7bdce24a6f5dc5dba18f1eeaa62d1",
+  "signature_and_source_provenance": "VERIFIED_AMD64_ARM64",
+  "native_security": {
+    "status": "SCOPED_SECURITY_PASS",
+    "architectures": {
+      "linux/amd64": {
+        "status": "SCOPED_SECURITY_PASS",
+        "raw_severity_counts": {
+          "CRITICAL": 1,
+          "HIGH": 35,
+          "LOW": 88,
+          "MEDIUM": 96,
+          "UNKNOWN": 10
+        },
+        "unresolved_high_critical_package_findings": 0,
+        "reviewed_profile_sha256": "8956c19c1451ba52541a6ff8aff3b4c93ef592e01c65d0d048e816b5ea4dbe75"
+      },
+      "linux/arm64": {
+        "status": "SCOPED_SECURITY_PASS",
+        "raw_severity_counts": {
+          "CRITICAL": 1,
+          "HIGH": 35,
+          "LOW": 88,
+          "MEDIUM": 96,
+          "UNKNOWN": 10
+        },
+        "unresolved_high_critical_package_findings": 0,
+        "reviewed_profile_sha256": "8956c19c1451ba52541a6ff8aff3b4c93ef592e01c65d0d048e816b5ea4dbe75"
+      }
+    },
+    "scope": "Default reviewed opaque Python entrypoint, UID 10001, read-only root, zero effective capabilities, no-new-privileges, empty fstab. Findings remain in raw scans; no claim that distribution packages are patched.",
+    "future_unreviewed_high_critical": "BLOCK"
+  },
+  "bounded_provider_quality": {
+    "case_count": 20,
+    "automated_checks": "PASS",
+    "semantic_review": "PASS",
+    "reviewer": "Codex",
+    "scope": "Twenty repository-owned synthetic translation segments; all actual source/output pairs reviewed separately against expected meanings. Not an independent linguistic benchmark or all-language admission."
+  },
+  "exact_uds_pair": {
+    "cleanup_preserved": true,
+    "inference_requested": false,
+    "provider_health": "healthy",
+    "provider_image": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:97d7604113008b93781061a0bbba2404bcd7769b864e3ade268b71a483e4f70a",
+    "provider_network": "none",
+    "schema_version": 1,
+    "status": "PASS",
+    "worker_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:d68d70243a6746cbe9dbdd537b2d773f701c9cd44daabbeac78d88a0e6fa98a5",
+    "worker_uds_probe": "PASS"
+  },
+  "pair_receipt_sha256": "42486d26c33e8e7b4767aa436602872be9222e3a38bc80a84a41def3584639e9",
+  "runtime_conditions": [
+    "non-root image UID",
+    "read-only root",
+    "drop all capabilities",
+    "no-new-privileges",
+    "default image entrypoint and environment"
+  ],
+  "remaining_gates": [
+    "FRESH_FULL_INFRASTRUCTURE_CLEAN_ROOM",
+    "DEPLOYMENT_SITE_ADMISSION"
+  ],
+  "working_deployment_changed": false,
+  "queue_resume_issued": false
+}

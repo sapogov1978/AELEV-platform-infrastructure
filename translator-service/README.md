@@ -29,6 +29,8 @@ provider как собственный компонент Translator в Platform
 исходящую сеть, UDS и generic secret mount, не зная model ID, endpoint или prompt;
 само включение образов не является production admission реального inference.
 
+Профиль 1.1.2 закрепляет [provider v0.1.1](https://github.com/sapogov1978/AELEV-translation-provider/releases/tag/v0.1.1) после [отдельной проверки exact UDS-пары](../docs/audit/translation-provider-v0.1.1-20261111.json) с текущим worker. Подпись, обе архитектуры, ограниченный security-профиль и live quality evidence принадлежат этому component release; полный clean-room инфраструктуры и допуск площадки проверяются отдельно.
+
 ## Навигация
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.

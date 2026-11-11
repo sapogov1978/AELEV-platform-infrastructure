@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "profile": "full-local",
-  "release": "1.1.1",
+  "release": "1.1.2",
   "description": "Clean-room functional profile composed from owner-controlled infrastructure deliveries and an immutable opaque translation provider.",
   "root_compose": {
     "file": "compose.yml",
@@ -162,9 +162,9 @@
       "variable": "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
       "source_repository": "https://github.com/sapogov1978/AELEV-translation-provider",
       "release_workflow": "release-provider-image",
-      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42615707050",
-      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:0a09783d072ccc7c60ec8e6fbe5ce56def95a56601888d5c3e4cf083da3ee016",
-      "purpose": "Opaque domain-preserving OpenAI Responses translation provider."
+      "release_run": "https://github.com/sapogov1978/AELEV-translation-provider/actions/runs/42925405066",
+      "admitted_reference": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:97d7604113008b93781061a0bbba2404bcd7769b864e3ade268b71a483e4f70a",
+      "purpose": "Immutable opaque translation provider verified over the private UDS contract."
     },
     {
       "id": "translator-worker-image",

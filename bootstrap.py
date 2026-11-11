@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Public local infrastructure lifecycle entry; application resources stay with consumers."""
+"""Public local infrastructure lifecycle; consumers own application resources."""
 
 from __future__ import annotations
 
@@ -89,14 +89,20 @@ ADDITIVE_TEMPLATE_KEYS = {
     "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE",
 }
 LEGACY_TRANSLATION_IMAGE_REFERENCES = {
-    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": (
-        "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
-        "f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866"
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE": frozenset(
+        {
+            "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
+            "f21a70673fbd03dec14b7ed733ee2d7ecccd6e69aea6766dfd7e3dd8b38a6866",
+            "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
+            "0a09783d072ccc7c60ec8e6fbe5ce56def95a56601888d5c3e4cf083da3ee016",
+        }
     ),
-    "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE": (
-        "ghcr.io/sapogov1978/"
-        "aelev-platform-infrastructure-translator-worker@sha256:"
-        "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35"
+    "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE": frozenset(
+        {
+            "ghcr.io/sapogov1978/"
+            "aelev-platform-infrastructure-translator-worker@sha256:"
+            "a65a59b771e5cf4314db1b5fde8fbca5c00e72f5b1a729073b6025f94779df35"
+        }
     ),
 }
 LEGACY_TRANSLATION_UI_DESCRIPTION_REVISION = "11"
@@ -248,7 +254,7 @@ def migrate_legacy_translation_image_references() -> None:
     updates = {
         key: template[key]
         for key, legacy in LEGACY_TRANSLATION_IMAGE_REFERENCES.items()
-        if current.get(key) == legacy and key in template
+        if current.get(key) in legacy and key in template
     }
     if updates:
         update_env(path, updates)
@@ -310,7 +316,8 @@ def initialize_translation_provider_credential() -> None:
         value = b"OPENAI_API_KEY=fixture-openai-key-not-secret\n"
     else:
         raise QuickstartError(
-            "translation provider credential source is missing; prepare TranslationProvider/.env.local"
+            "translation provider credential source is missing; "
+            "prepare TranslationProvider/.env.local"
         )
     if not value.strip() or len(value) > 4096:
         raise QuickstartError("translator provider credential is invalid")
@@ -352,13 +359,11 @@ def docker_bridge_gateway() -> str:
 
 def initialize_local_bridge_routes(gateway: str) -> None:
     routes = {
-        KEYCLOAK
-        / ".env": (
+        KEYCLOAK / ".env": (
             "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND",
             "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND",
         ),
-        PLATFORM
-        / ".env": (
+        PLATFORM / ".env": (
             "AELEV_INFRASTRUCTURE_PLATFORM_UI_BIND",
             "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND",
         ),
@@ -482,7 +487,7 @@ def initialize_keycloak() -> None:
 
 
 def initialize_platform() -> None:
-    keycloak_network = read_env(KEYCLOAK / ".env")[
+    network = read_env(KEYCLOAK / ".env")[
         "AELEV_INFRASTRUCTURE_KEYCLOAK_INGRESS_NETWORK"
     ]
     initialize_env(
@@ -490,7 +495,7 @@ def initialize_platform() -> None:
         {
             "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID": str(os.getgid()),
             "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_BACKCHANNEL_URL": "https://keycloak:8443",
-            "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK": keycloak_network,
+            "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK": network,
         },
     )
     platform_env = read_env(PLATFORM / ".env")
@@ -503,9 +508,7 @@ def initialize_platform() -> None:
             "https://keycloak:8443"
         )
     if "AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK" not in platform_env:
-        updates["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK"] = (
-            keycloak_network
-        )
+        updates["AELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_INGRESS_NETWORK"] = network
     if updates:
         update_env(PLATFORM / ".env", updates)
     secrets_root = PLATFORM / "secrets"
@@ -542,7 +545,8 @@ def initialize_postgresql() -> None:
     issuer = POSTGRESQL / "secrets/issuer/postgresql.crt"
     if not issuer.exists() and (POSTGRESQL / "secrets/node-1/server.crt").exists():
         info(
-            "preserving the existing PostgreSQL installation without restoring its offline issuer"
+            "preserving the existing PostgreSQL installation "
+            "without restoring its offline issuer"
         )
         return
     if not issuer.exists():
@@ -610,7 +614,8 @@ def verify_scope() -> None:
     for directory in result.stdout.splitlines():
         if not directory or Path(directory).resolve() != ROOT:
             raise QuickstartError(
-                "infrastructure project belongs to another installation; choose an explicit separate environment"
+                "infrastructure project belongs to another installation; "
+                "choose an explicit separate environment"
             )
 
 
@@ -703,7 +708,8 @@ def main() -> int:
             lock.mkdir()
         except FileExistsError:
             raise QuickstartError(
-                "another lifecycle operation is pending; inspect runtime/lifecycle.lock before retrying"
+                "another lifecycle operation is pending; "
+                "inspect runtime/lifecycle.lock before retrying"
             ) from None
         try:
             execute(args.command, args.capability or list(CAPABILITIES), args.no_build)
@@ -711,7 +717,8 @@ def main() -> int:
             lock.rmdir()
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         print(
-            f"[infrastructure] {type(error).__name__}: operation failed; local state preserved",
+            f"[infrastructure] {type(error).__name__}: "
+            "operation failed; local state preserved",
             file=sys.stderr,
         )
         return 2

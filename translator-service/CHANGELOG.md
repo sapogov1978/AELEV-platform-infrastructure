@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-11: шаблоны профиля 1.1.2 закрепляют внешний provider v0.1.1 по подписанному digest после проверки ограниченного security-профиля обеих архитектур, отдельного live quality run и exact UDS-пары с текущим worker. Контракт, очередь и worker pin сохранены; полный инфраструктурный clean-room и допуск площадки остаются отдельными gates.
+
 - 2026-11-09: Общий compute recipe параметризует владение data/telemetry
   сетями: root/local создаёт сети Translator, standalone compute подключается к
   внешним маршрутизируемым сетям. Ревизия UI descriptor повышена с 11 до 12;

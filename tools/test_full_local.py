@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import hashlib
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -97,7 +97,7 @@ class FullLocalContractTests(unittest.TestCase):
                     "owner": "translation-provider",
                     "admitted_reference": (
                         "ghcr.io/sapogov1978/aelev-translation-provider@sha256:"
-                        "0a09783d072ccc7c60ec8e6fbe5ce56def95a56601888d5c3e4cf083da3ee016"
+                        "97d7604113008b93781061a0bbba2404bcd7769b864e3ade268b71a483e4f70a"
                     ),
                 },
                 {
@@ -118,7 +118,7 @@ class FullLocalContractTests(unittest.TestCase):
                         "@sha256:d54693da1819b78a20af65d3fc5eaab12b6b12873dd231f6"
                         "5f18f4aa5f3aedc0"
                     ),
-                }
+                },
             ],
         )
         self.assertEqual(len(plan["acceptance_functions"]), 12)
