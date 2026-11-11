@@ -43,7 +43,7 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'SPIRE_INSTALL_STATE_UNAVAILABLE' }
     }
     if (-not $spireAuthority) { $spireAuthority = $spireEmpty }
-    docker run --rm --user 0:0 --read-only --network none --pids-limit 128 --memory 512m --cap-drop ALL --security-opt no-new-privileges:true `
+    docker run --rm --user 0:0 --read-only --network none --pids-limit 128 --memory 512m --cap-drop ALL --cap-add DAC_READ_SEARCH --security-opt no-new-privileges:true `
         --label io.aelev.owner=infrastructure-spire --label io.aelev.role=operator-installer --label "io.aelev.installation=$Project" `
         --tmpfs /tmp:size=16m,mode=1777 `
         --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock `

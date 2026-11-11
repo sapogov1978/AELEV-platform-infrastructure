@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794383436.6137726,
-    "seen": 1794383459.6662521,
-    "ast_hash": "0c4bf9c618b594e2c290dc6aabf37686",
+    "mtime": 1794384031.067685,
+    "seen": 1794384149.934261,
+    "ast_hash": "a9b59511a275fbf9747342a564106338",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -264,8 +264,8 @@
     "semantic_hash": ""
   },
   "docs/api/workload-identity.md": {
-    "mtime": 1794380940.9171755,
-    "seen": 1794383171.699771,
+    "mtime": 1794383995.1562119,
+    "seen": 1794384149.934695,
     "ast_hash": "a37139f24aea898b60214ab9055ca837",
     "semantic_hash": ""
   },
@@ -2142,15 +2142,15 @@
     "semantic_hash": ""
   },
   "spire/install.ps1": {
-    "mtime": 1793831225.1921122,
-    "seen": 1793926130.1505768,
-    "ast_hash": "5181df2fa59375ea7c21dd755354437f",
+    "mtime": 1794383995.1544726,
+    "seen": 1794384149.931903,
+    "ast_hash": "84b5f746b4f87bc5a820ad74dd8cc932",
     "semantic_hash": ""
   },
   "spire/install.sh": {
-    "mtime": 1793831225.108353,
-    "seen": 1793926130.1505768,
-    "ast_hash": "eb4717e84d19774f7cfd4a4f07456ac9",
+    "mtime": 1794383995.1541007,
+    "seen": 1794384149.931905,
+    "ast_hash": "edd26d6b931b9809c2461f960bf90ea0",
     "semantic_hash": ""
   },
   "spire/pyproject.toml": {
@@ -4338,9 +4338,9 @@
     "semantic_hash": ""
   },
   "spire/CHANGELOG.md": {
-    "mtime": 1794383142.2833943,
-    "seen": 1794383171.7117739,
-    "ast_hash": "321816e394bec6f17f4f4d6bc353086f",
+    "mtime": 1794384031.0681791,
+    "seen": 1794384149.9404411,
+    "ast_hash": "fc6fd5ee31f4f550881fa249135ee801",
     "semantic_hash": ""
   },
   "spire/ENDPOINTS.md": {
@@ -4350,15 +4350,15 @@
     "semantic_hash": ""
   },
   "spire/README.md": {
-    "mtime": 1794383080.6906455,
-    "seen": 1794383171.7118342,
-    "ast_hash": "3d56d51500d5385bae9e8de909f74318",
+    "mtime": 1794384031.0683715,
+    "seen": 1794384149.940467,
+    "ast_hash": "a9bc8ef7d6272405b2a24b9dd815c2d9",
     "semantic_hash": ""
   },
   "spire/SPEC.md": {
-    "mtime": 1794380940.9166014,
-    "seen": 1794383171.7118368,
-    "ast_hash": "a32cf58846d30b6326e69c4bae642c89",
+    "mtime": 1794383995.1549332,
+    "seen": 1794384149.940468,
+    "ast_hash": "791f32c5d3bd47642158738655d8db1e",
     "semantic_hash": ""
   },
   "spire/TASKS.md": {
@@ -4368,9 +4368,9 @@
     "semantic_hash": ""
   },
   "spire/USER_MANUAL.md": {
-    "mtime": 1794380940.916114,
-    "seen": 1794383171.711842,
-    "ast_hash": "98b57dfa0a0493f5d35edc356e63c738",
+    "mtime": 1794383995.1555111,
+    "seen": 1794384149.940481,
+    "ast_hash": "0b85ddb7c22ea6952537b23f31a739ff",
     "semantic_hash": ""
   },
   "spire/licenses/README.md": {
