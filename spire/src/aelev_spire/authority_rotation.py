@@ -9,6 +9,7 @@ import secrets
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any, cast
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
@@ -62,7 +63,7 @@ def prepare(source: Path, output: Path, *, days: int = 365) -> dict[str, object]
                 raise ValueError("SPIRE_AUTHORITY_ROTATION_RECEIPT_INVALID")
             return value
         now = datetime.now(UTC)
-        records = []
+        records: list[dict[str, object]] = []
         for name in AUTHORITIES:
             old = x509.load_pem_x509_certificate((source / f"{name}.crt").read_bytes())
             old_basic = old.extensions.get_extension_for_class(x509.BasicConstraints)
@@ -95,8 +96,8 @@ def prepare(source: Path, output: Path, *, days: int = 365) -> dict[str, object]
                         key_agreement=False,
                         key_cert_sign=True,
                         crl_sign=True,
-                        encipher_only=None,
-                        decipher_only=None,
+                        encipher_only=False,
+                        decipher_only=False,
                     ),
                     True,
                 )
@@ -150,14 +151,18 @@ def stage_trust(
         or receipt.get("automatic_activation") is not False
     ):
         raise ValueError("SPIRE_AUTHORITY_ROTATION_RECEIPT_INVALID")
-    records = receipt.get("authorities")
-    if not isinstance(records, list) or len(records) != len(AUTHORITIES):
+    raw_records = receipt.get("authorities")
+    if not isinstance(raw_records, list):
         raise ValueError("SPIRE_AUTHORITY_ROTATION_RECEIPT_INVALID")
-    declared = {
-        item.get("id"): item
-        for item in records
-        if isinstance(item, dict) and item.get("id") in AUTHORITIES
-    }
+    records = cast(list[object], raw_records)
+    if len(records) != len(AUTHORITIES):
+        raise ValueError("SPIRE_AUTHORITY_ROTATION_RECEIPT_INVALID")
+    declared: dict[str, dict[str, Any]] = {}
+    for raw in records:
+        if isinstance(raw, dict):
+            item = cast(dict[str, Any], raw)
+            if item.get("id") in AUTHORITIES:
+                declared[item["id"]] = item
     if set(declared) != set(AUTHORITIES):
         raise ValueError("SPIRE_AUTHORITY_ROTATION_RECEIPT_INVALID")
     old: dict[str, x509.Certificate] = {}

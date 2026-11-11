@@ -7,4 +7,10 @@ flowchart LR
     Observer["Identity observer"] --> Server
     Observer --> Status["Platform UI status publisher"]
     Observer --> Telemetry["Telemetry sender"]
-    Backup["Зашифрованная копия"] --> State
+    Backup["Зашифрованная копия"] --> Restore["Пустые roots с UID/GID своих писателей"]
+    Restore --> State
+    Restore --> InstallerState[("Состояние установщика UID 0")]
+    Operator --> InstallerState
+    InstallerState --> Policy["Сохранённый native no по ролям"]
+    Policy --> Server
+    Policy --> Agent

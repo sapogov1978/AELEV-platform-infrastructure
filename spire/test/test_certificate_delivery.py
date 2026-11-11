@@ -10,6 +10,7 @@ import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -39,12 +40,59 @@ def authority(
         .not_valid_after(now + timedelta(days=days))
         .add_extension(x509.BasicConstraints(ca=True, path_length=0), True)
         .add_extension(
-            x509.KeyUsage(False, False, False, False, False, True, True, None, None),
+            x509.KeyUsage(False, False, False, False, False, True, True, False, False),
             True,
         )
         .sign(key, hashes.SHA256())
     )
     return key, certificate
+
+
+@pytest.mark.parametrize("certificates", [None, {}, ["invalid"]])
+def test_malformed_report_cannot_publish_or_replace_material(
+    tmp_path: Path, certificates: object
+) -> None:
+    secrets = tmp_path / "status-secrets"
+    receipts = tmp_path / "certificate-renewal-status"
+    secrets.mkdir()
+    receipts.mkdir()
+    owner = json.dumps(
+        {"owner": "infrastructure-spire", "role": "observation-status"}
+    ).encode()
+    (secrets / "owner.json").write_bytes(owner)
+    request = {
+        "owner": "telemetry-certificate-renewal",
+        "schema_version": 2,
+        "consumer_owner": "infrastructure-spire",
+        "installation_id": "fixture",
+        "destinations": [
+            {
+                "id": "status-publisher",
+                "volume": "fixture_status",
+                "role": "status-secrets",
+                "file": "publisher.crt",
+            }
+        ],
+        "report_destination": {
+            "volume": "fixture_status",
+            "role": "certificate-renewal-status",
+            "file": "status-publisher.json",
+        },
+        "certificates": [],
+        "report": {
+            "owner": "telemetry-certificate-renewal",
+            "consumer_owner": "infrastructure-spire",
+            "schema_version": 1,
+            "healthy": False,
+            "checked_at": datetime.now(UTC).timestamp(),
+            "certificates": certificates,
+        },
+    }
+    with pytest.raises(ValueError, match="CERTIFICATE_DELIVERY_SCOPE_INVALID"):
+        run(request, tmp_path)
+    assert (secrets / "owner.json").read_bytes() == owner
+    assert not list(secrets.glob("*.crt"))
+    assert not list(receipts.glob("*.json"))
 
 
 def leaf(
@@ -91,9 +139,9 @@ def test_complete_delivery_updates_leafs_and_retains_old_trust(tmp_path: Path) -
     # skipped after signature verification rather than aborting the bundle.
     old_key, old_ca = authority("local", 120)
     new_key, new_ca = authority("local", 365)
-    records = []
-    destinations = []
-    certificates = []
+    records: list[dict[str, object]] = []
+    destinations: list[dict[str, object]] = []
+    certificates: list[dict[str, object]] = []
     for name, (role, filename, key_name) in PROFILE.items():
         private = ec.generate_private_key(ec.SECP256R1())
         current = leaf(name, private, old_key, old_ca, 1)
@@ -175,9 +223,9 @@ def test_status_delivery_is_a_separate_exact_profile(tmp_path: Path) -> None:
         json.dumps({"owner": "infrastructure-spire", "role": "observation-status"})
     )
     issuer_key, issuer = authority("status-issuer", 365)
-    destinations = []
-    certificates = []
-    records = []
+    destinations: list[dict[str, object]] = []
+    certificates: list[dict[str, object]] = []
+    records: list[dict[str, object]] = []
     for name, (role, filename, key_name) in STATUS_PUBLISHER_PROFILE.items():
         private = ec.generate_private_key(ec.SECP256R1())
         current = leaf(name, private, issuer_key, issuer, 1)

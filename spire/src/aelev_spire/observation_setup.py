@@ -629,6 +629,7 @@ def install(installer: Installer, plan: dict[str, Any], source: Path) -> None:
     for service in model["services"].values():
         service["labels"]["io.aelev.configuration-revision"] = revision
     apply_override(installer.root, model["services"]["spire-observer"], role="observer")
+    installer.preserve_restart_policies(model)
     path = installer.root / "observation-compose.json"
     atomic(previous, plan)
     atomic(path, model)

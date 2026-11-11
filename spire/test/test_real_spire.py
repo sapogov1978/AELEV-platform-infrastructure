@@ -9,7 +9,7 @@ import subprocess
 import time
 import uuid
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
@@ -38,7 +38,9 @@ class Sandbox:
         )
         used: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = []
         for row in rows:
-            for configuration in (row.get("IPAM") or {}).get("Config") or []:
+            ipam = cast(dict[str, Any], row.get("IPAM") or {})
+            configurations = cast(list[dict[str, Any]], ipam.get("Config") or [])
+            for configuration in configurations:
                 subnet = configuration.get("Subnet")
                 if subnet:
                     used.append(ipaddress.ip_network(subnet, strict=False))

@@ -13,11 +13,12 @@ import tempfile
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
+from cryptography.x509.oid import ExtensionOID
 
 ROOT = Path("/var/lib/aelev-renewal")
 OWNER = "infrastructure-spire"
@@ -67,6 +68,16 @@ MARKERS = {
 def require(value: bool) -> None:
     if not value:
         raise ValueError("SPIRE_CERTIFICATE_DELIVERY_SCOPE_INVALID")
+
+
+def object_value(value: object) -> dict[str, Any]:
+    require(isinstance(value, dict))
+    return cast(dict[str, Any], value)
+
+
+def list_value(value: object) -> list[object]:
+    require(isinstance(value, list))
+    return cast(list[object], value)
 
 
 def encoded(value: Any) -> bytes:
@@ -135,8 +146,8 @@ def extensions(value: x509.Certificate) -> tuple[tuple[str, bool, bytes], ...]:
         for item in value.extensions
         if item.oid
         not in {
-            x509.ExtensionOID.AUTHORITY_KEY_IDENTIFIER,
-            x509.ExtensionOID.SUBJECT_KEY_IDENTIFIER,
+            ExtensionOID.AUTHORITY_KEY_IDENTIFIER,
+            ExtensionOID.SUBJECT_KEY_IDENTIFIER,
         }
     )
 
@@ -152,7 +163,7 @@ def verify_candidate(path: Path, key_path: Path, raw: bytes, issuer_raw: bytes) 
     current = certificate(current_raw)
     candidate = certificate(raw)
     issuers = certificate_bundle(issuer_raw)
-    matching = []
+    matching: list[x509.Certificate] = []
     for issuer in issuers:
         require(
             issuer.extensions.get_extension_for_class(x509.BasicConstraints).value.ca
@@ -221,22 +232,18 @@ def run(value: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
         and value["consumer_owner"] == OWNER
         and isinstance(value["installation_id"], str)
     )
-    destinations = value["destinations"]
-    certificates = value["certificates"]
-    report = value["report"]
-    target = value["report_destination"]
+    target = object_value(value["report_destination"])
     require(
-        isinstance(target, dict)
-        and set(target) == {"volume", "role", "file"}
+        set(target) == {"volume", "role", "file"}
         and target["role"] == "certificate-renewal-status"
         and target["file"] in PROFILES
     )
     profile = PROFILES[target["file"]]
+    destinations = list_value(value["destinations"])
+    certificates = list_value(value["certificates"])
+    report = object_value(value["report"])
     require(
-        isinstance(destinations, list)
-        and isinstance(certificates, list)
-        and len(destinations) == len(profile)
-        and isinstance(report, dict)
+        len(destinations) == len(profile)
         and report.get("owner") == "telemetry-certificate-renewal"
         and report.get("consumer_owner") == OWNER
         and report.get("schema_version") == 1
@@ -245,10 +252,10 @@ def run(value: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
         and 0 <= time.time() - float(report["checked_at"]) <= 120
     )
     selected: dict[str, dict[str, Any]] = {}
-    for item in destinations:
+    for raw_item in destinations:
+        item = object_value(raw_item)
         require(
-            isinstance(item, dict)
-            and set(item) == {"id", "volume", "role", "file"}
+            set(item) == {"id", "volume", "role", "file"}
             and item["id"] in profile
             and item["id"] not in selected
             and (item["role"], item["file"]) == profile[item["id"]][:2]
@@ -277,12 +284,14 @@ def run(value: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
         require(not report["healthy"] or len(certificates) == len(profile))
         hashes: dict[str, str] = {}
         prepared: list[tuple[str, bytes, bytes]] = []
-        report_entries = {item["id"]: item for item in report.get("certificates", [])}
-        for item in certificates:
+        reported = [
+            object_value(item) for item in list_value(report.get("certificates", []))
+        ]
+        report_entries = {item["id"]: item for item in reported}
+        for raw_item in certificates:
+            item = object_value(raw_item)
             require(
-                isinstance(item, dict)
-                and set(item)
-                == {"id", "certificate_base64", "issuer_certificate_base64"}
+                set(item) == {"id", "certificate_base64", "issuer_certificate_base64"}
                 and item["id"] in selected
                 and item["id"] not in hashes
             )

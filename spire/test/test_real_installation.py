@@ -1,4 +1,4 @@
-"""Opt-in Mac Docker Desktop installation, repeat and revocation lifecycle."""
+"""Opt-in native Linux/macOS installation, repeat and revocation lifecycle."""
 
 from __future__ import annotations
 
@@ -19,13 +19,15 @@ from test_real_spire import IMAGE, Sandbox
 
 INSTALLER = os.environ.get("AELEV_INFRASTRUCTURE_SPIRE_INSTALLER_TEST_IMAGE", "")
 pytestmark = pytest.mark.skipif(
-    not IMAGE or not INSTALLER or platform.system() != "Darwin",
-    reason="Explicit isolated images and Mac Docker Desktop required",
+    not IMAGE or not INSTALLER or platform.system() not in {"Darwin", "Linux"},
+    reason="Explicit isolated images and a local Linux Docker Engine required",
 )
 
 
 @pytest.mark.parametrize(
-    ("shared_coordinator", "exported"), [(False, False), (True, False), (False, True)]
+    ("shared_coordinator", "exported"),
+    [(False, False), (True, False), (False, True)],
+    ids=["managed-native-no", "shared-coordinator", "exported-bootstrap"],
 )
 def test_shell_install_repeat_register_and_revoke(
     tmp_path: Path, shared_coordinator: bool, exported: bool
@@ -33,6 +35,8 @@ def test_shell_install_repeat_register_and_revoke(
     sandbox = Sandbox()
     projects = [sandbox.prefix + "-server", sandbox.prefix + "-agent"]
     source = Path(__file__).resolve().parents[1]
+    managed_native = not shared_coordinator and not exported
+    native_options = ("--native-restart-policy", "no") if managed_native else ()
 
     def install(
         project: str,
@@ -79,12 +83,20 @@ def test_shell_install_repeat_register_and_revoke(
             check=False,
         )
         if result.returncode and role != "authorize" and not expected_refusal:
+            diagnostic = tmp_path / (role + "-" + uuid.uuid4().hex + ".stderr")
+            descriptor = os.open(
+                diagnostic, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600
+            )
+            with os.fdopen(descriptor, "wb") as output:
+                output.write(result.stderr)
             codes = re.findall(
                 r'"code"\s*:\s*"(SPIRE_[A-Z0-9_]+)"',
                 result.stderr.decode(errors="replace"),
             )
             raise AssertionError(
-                "SPIRE_INSTALLATION_TEST_FAILED " + " ".join(codes)[-300:]
+                "SPIRE_INSTALLATION_TEST_FAILED "
+                + " ".join(codes)[-300:]
+                + f" exit={result.returncode} private_stderr={diagnostic}"
             )
         return result.returncode
 
@@ -151,6 +163,7 @@ def test_shell_install_repeat_register_and_revoke(
                 str(port),
                 "--svid-ttl",
                 "20",
+                *native_options,
             )
             == 0
         )
@@ -251,6 +264,16 @@ def test_shell_install_repeat_register_and_revoke(
             .strip()
         )
         assert install(projects[0], "server") == 0
+        if managed_native:
+            policy = json.loads(
+                sandbox.docker(
+                    "inspect",
+                    "--format",
+                    "{{json .HostConfig.RestartPolicy}}",
+                    container,
+                )
+            )
+            assert policy == {"Name": "no", "MaximumRetryCount": 0}
         assert (
             sandbox.docker(
                 "ps",
@@ -355,10 +378,30 @@ def test_shell_install_repeat_register_and_revoke(
                     operation,
                     "--access-network",
                     projects[0] + "-access",
+                    *native_options,
                 )
                 == 0
             )
         assert install(projects[1], "agent") == 0
+        if managed_native:
+            agent = (
+                sandbox.docker(
+                    "ps",
+                    "-q",
+                    "--filter",
+                    "label=io.aelev.installation=" + projects[1],
+                    "--filter",
+                    "label=com.docker.compose.service=spire-agent",
+                )
+                .decode()
+                .strip()
+            )
+            policy = json.loads(
+                sandbox.docker(
+                    "inspect", "--format", "{{json .HostConfig.RestartPolicy}}", agent
+                )
+            )
+            assert policy == {"Name": "no", "MaximumRetryCount": 0}
         assert install(projects[0], "revoke", request=True) == 0
         assert install(projects[0], "authorize", request=True) != 0
         if exported:

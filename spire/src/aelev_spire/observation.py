@@ -67,7 +67,10 @@ def snapshot(path: Path = SOURCE) -> dict[str, Any]:
 def _renewal_receipt(path: Path, identities: set[str]) -> dict[str, Any]:
     value = read(path)
     now = time.time()
-    certificates = value.get("certificates")
+    raw_certificates = value.get("certificates")
+    if not isinstance(raw_certificates, list):
+        raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
+    certificates = cast(list[object], raw_certificates)
     if (
         value.get("owner") != "telemetry-certificate-renewal"
         or value.get("consumer_owner") != OWNER
@@ -77,15 +80,16 @@ def _renewal_receipt(path: Path, identities: set[str]) -> dict[str, Any]:
         or type(value.get("checked_at")) not in (int, float)
         or not 0 <= now - float(value["checked_at"]) <= 180
         or type(value.get("last_success_at")) not in (int, float)
-        or not isinstance(certificates, list)
         or len(certificates) != len(identities)
     ):
         raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
     names: set[str] = set()
-    for item in certificates:
+    for raw_item in certificates:
+        if not isinstance(raw_item, dict):
+            raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
+        item = cast(dict[str, Any], raw_item)
         if (
-            not isinstance(item, dict)
-            or item.get("id") not in identities
+            item.get("id") not in identities
             or item["id"] in names
             or item.get("healthy") is not True
             or type(item.get("certificate_expires_at")) not in (int, float)
@@ -137,6 +141,7 @@ def metrics(
     except (OSError, ValueError, KeyError, TypeError):
         fresh, ready, age = 0, 0, 15.0
     values = {"source_fresh": fresh, "native_ready": ready, "source_age_seconds": age}
+    certificates: list[dict[str, Any]]
     try:
         renewal = renewal_snapshot(renewal_path)
         renewal_ready = 1

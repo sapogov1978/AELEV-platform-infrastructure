@@ -170,6 +170,13 @@ def restore(
     root: Path, roles: list[str], source: Path, key_path: Path, trusted_receipt: Path
 ) -> None:
     paths, key = roots_at(root, roles), key_bytes(key_path)
+    owners = {
+        role: (path.stat().st_uid, path.stat().st_gid) for role, path in paths.items()
+    }
+    # The socket-bearing installer runs as root with no capabilities. Its
+    # private state must remain readable without DAC_OVERRIDE after recovery.
+    if "installation" in owners and owners["installation"] != (0, 0):
+        raise ValueError("SPIRE_RESTORE_INSTALLER_OWNER_REQUIRED")
     if (
         source.is_symlink()
         or not source.is_file()
@@ -257,16 +264,23 @@ def restore(
                 destination.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
                 with destination.open("xb") as target:
                     os.chmod(destination, 0o600)
+                    owner = owners[Path(name).parts[0]]
+                    info = os.fstat(target.fileno())
+                    if (info.st_uid, info.st_gid) != owner:
+                        os.fchown(target.fileno(), *owner)
                     while block := data.read(1024**2):
                         target.write(block)
                     target.flush()
                     os.fsync(target.fileno())
-            for base in paths.values():
+            for role, base in paths.items():
                 directories = [p for p in base.rglob("*") if p.is_dir()]
                 for directory in [
                     *sorted(directories, key=lambda p: len(p.parts), reverse=True),
                     base,
                 ]:
+                    info = directory.stat()
+                    if (info.st_uid, info.st_gid) != owners[role]:
+                        os.chown(directory, *owners[role])
                     descriptor = os.open(directory, os.O_RDONLY | os.O_DIRECTORY)
                     try:
                         os.fsync(descriptor)

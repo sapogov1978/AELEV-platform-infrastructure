@@ -202,8 +202,9 @@ def test_server_apply_scopes_foreign_shared_project_and_keeps_volume_names(
     assert model["volumes"]["state"] == {"name": LOGICAL + "_server", "external": True}
 
 
+@pytest.mark.parametrize("native_no", [False, True])
 def test_observation_commands_use_physical_coordinator(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native_no: bool
 ) -> None:
     value = object.__new__(Installer)
     value.project, value.root, value.image, value.image_id = (
@@ -213,6 +214,11 @@ def test_observation_commands_use_physical_coordinator(
         "fixed-id",
     )
     value.host_os, value.update = "Linux", False
+    value.native_restart_no = native_no
+    atomic(
+        tmp_path / "owner.json",
+        {"owner": "infrastructure-spire", "role": "installer", "project": LOGICAL},
+    )
     monkeypatch.setattr(value, "_compose_project", PHYSICAL, raising=False)
     atomic(
         tmp_path / "deployment.json",
@@ -231,7 +237,7 @@ def test_observation_commands_use_physical_coordinator(
     model: dict[str, Any] = {
         "name": LOGICAL,
         "services": {
-            role: {}
+            role: {"restart": "on-failure:3"}
             for role in (
                 "spire-observer",
                 "spire-status-publisher",
@@ -248,6 +254,8 @@ def test_observation_commands_use_physical_coordinator(
     commands: list[tuple[str, ...]] = []
 
     def docker(*args: str, payload: bytes | None = None) -> bytes:
+        if args[0] == "ps":
+            return b""
         if args[0] == "compose":
             commands.append(args)
             assert args[args.index("-p") + 1] == PHYSICAL
@@ -258,6 +266,10 @@ def test_observation_commands_use_physical_coordinator(
     assert len(commands) == 4
     current = read(tmp_path / "observation-compose.json")
     assert current["name"] == LOGICAL
+    assert all(
+        service["restart"] == ("no" if native_no else "on-failure:3")
+        for service in current["services"].values()
+    )
     assert all(
         s["labels"]["io.aelev.installation"] == LOGICAL
         for s in current["services"].values()

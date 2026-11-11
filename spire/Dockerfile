@@ -62,6 +62,7 @@ FROM runtime AS checks
 USER root
 COPY --from=check-dependencies /opt/aelev/.venv ./.venv
 COPY test ./test
+COPY install.sh install.ps1 export.sh export.ps1 ./
 COPY pyproject.toml build_artifacts.py build_sqlite.py ./
 COPY compose.yml compose.agent.yml compose.observation.yml ./
 USER 10001:10001

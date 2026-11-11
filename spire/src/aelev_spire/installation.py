@@ -16,11 +16,35 @@ import time
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path, PureWindowsPath
-from typing import Any
+from typing import Any, cast
 
 from .files import atomic, read, reserve
 from .operator import validate as validate_request
 from .settings import environment, node_ttl, verify_authority
+
+RUNTIME_SERVICES = frozenset(
+    {
+        "spire-server",
+        "spire-agent",
+        "spire-observer",
+        "spire-status-publisher",
+        "spire-telemetry-sender",
+    }
+)
+
+
+def restart_no_roles(value: object) -> list[str]:
+    if not isinstance(value, list):
+        raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_STATE_INVALID")
+    items = cast(list[object], value)
+    if not 1 <= len(items) <= len(RUNTIME_SERVICES) or any(
+        not isinstance(item, str) for item in items
+    ):
+        raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_STATE_INVALID")
+    selected = cast(list[str], value)
+    if selected != sorted(set(selected)) or set(selected) - RUNTIME_SERVICES:
+        raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_STATE_INVALID")
+    return list(selected)
 
 
 class Installer:
@@ -34,6 +58,7 @@ class Installer:
         update: bool = False,
         host_os: str = "Linux",
         compose_project: str | None = None,
+        native_restart_no: bool = False,
     ) -> None:
         if not re.fullmatch(r"[a-z][a-z0-9_-]{2,63}", project):
             raise ValueError("SPIRE_INSTALL_PROJECT_INVALID")
@@ -49,6 +74,7 @@ class Installer:
         self.project, self.root, self.image = project, root, image
         self.host_os = host_os
         self.update = update
+        self.native_restart_no = native_restart_no
         marker: dict[str, Any] = {
             "owner": "infrastructure-spire",
             "role": "installer",
@@ -63,6 +89,10 @@ class Installer:
                 and before.get(role + "_recovery_schema") == 1
             ):
                 marker[role + "_recovery_schema"] = 1
+        if "native_restart_no_roles" in before:
+            marker["native_restart_no_roles"] = restart_no_roles(
+                before["native_restart_no_roles"]
+            )
         reserve(root, marker)
         self.image_id = (
             self.docker("image", "inspect", image, "--format", "{{.Id}}")
@@ -108,6 +138,73 @@ class Installer:
         if actual != own.hexdigest():
             raise ValueError("SPIRE_INSTALL_IMAGE_RELEASE_MISMATCH")
         self.bind_compose_project(compose_project)
+
+    def preserve_restart_policies(self, model: dict[str, Any]) -> None:
+        """Persist tightened native policy; never allocate a second retry budget."""
+        path = self.root / "owner.json"
+        marker = read(path) if path.exists() else {}
+        selected = set(
+            restart_no_roles(marker["native_restart_no_roles"])
+            if "native_restart_no_roles" in marker
+            else []
+        )
+        if getattr(self, "native_restart_no", False):
+            selected.update(set(model["services"]) & RUNTIME_SERVICES)
+        ids = (
+            self.docker(
+                "ps",
+                "--all",
+                "--filter",
+                "label=com.docker.compose.project=" + self.compose_project,
+                "--filter",
+                "label=io.aelev.installation=" + self.project,
+                "--format",
+                "{{.ID}}",
+            )
+            .decode()
+            .splitlines()
+        )
+        if len(ids) > 32:
+            raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_AMBIGUOUS")
+        raw_records: object = json.loads(self.docker("inspect", *ids)) if ids else []
+        if not isinstance(raw_records, list):
+            raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_AMBIGUOUS")
+        records = cast(list[dict[str, Any]], raw_records)
+        if len(records) != len(ids):
+            raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_AMBIGUOUS")
+        observed: set[str] = set()
+        for record in records:
+            labels = record["Config"].get("Labels", {})
+            if (
+                labels.get("io.aelev.owner") != "infrastructure-spire"
+                or labels.get("io.aelev.installation") != self.project
+                or labels.get("com.docker.compose.project") != self.compose_project
+            ):
+                raise ValueError("SPIRE_INSTALL_FOREIGN_CONTAINER_REFUSED")
+            role = labels.get("com.docker.compose.service")
+            if role in RUNTIME_SERVICES:
+                if role in observed:
+                    raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_AMBIGUOUS")
+                observed.add(role)
+                policy = record.get("HostConfig", {}).get("RestartPolicy", {})
+                if policy.get("Name") == "no":
+                    selected.add(role)
+        if not selected:
+            return
+        if any(
+            marker.get(key) != value
+            for key, value in {
+                "owner": "infrastructure-spire",
+                "role": "installer",
+                "project": self.project,
+            }.items()
+        ):
+            raise ValueError("SPIRE_INSTALL_NATIVE_RESTART_STATE_REQUIRED")
+        updated = {**marker, "native_restart_no_roles": sorted(selected)}
+        if updated != marker:
+            atomic(path, updated)
+        for role in selected & set(model["services"]):
+            model["services"][role]["restart"] = "no"
 
     @property
     def compose_project(self) -> str:
@@ -696,29 +793,7 @@ class Installer:
                     "io.aelev.installation": self.project,
                 }
             )
-        ids = (
-            self.docker(
-                "ps",
-                "--all",
-                "--filter",
-                "label=com.docker.compose.project=" + self.compose_project,
-                "--filter",
-                "label=io.aelev.installation=" + self.project,
-                "--format",
-                "{{.ID}}",
-            )
-            .decode()
-            .splitlines()
-        )
-        for container in ids:
-            labels = json.loads(
-                self.docker("inspect", "--format", "{{json .Config.Labels}}", container)
-            )
-            if (
-                labels.get("io.aelev.installation") != self.project
-                or labels.get("io.aelev.owner") != "infrastructure-spire"
-            ):
-                raise ValueError("SPIRE_INSTALL_FOREIGN_CONTAINER_REFUSED")
+        self.preserve_restart_policies(model)
         atomic(path, expected)
         compose = self.root / "compose.json"
         atomic(compose, model)
@@ -853,6 +928,7 @@ def main() -> None:
     parser.add_argument("--svid-ttl", type=int, default=300)
     parser.add_argument("--agent-ttl", type=int)
     parser.add_argument("--update", action="store_true")
+    parser.add_argument("--native-restart-policy", choices=("no",))
     parser.add_argument("--root", type=Path, default=Path("/installation"))
     parser.add_argument("--sender-image")
     parser.add_argument("--central-url")
@@ -864,6 +940,12 @@ def main() -> None:
     parser.add_argument("--grafana-url")
     parser.add_argument("--datasource-uid")
     arguments = parser.parse_args()
+    if arguments.native_restart_policy and arguments.role not in {
+        "server",
+        "agent",
+        "observation",
+    }:
+        parser.error("native restart selection requires a runtime installation role")
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     try:
         installer = Installer(
@@ -874,6 +956,7 @@ def main() -> None:
             update=arguments.update,
             host_os=arguments.host_os,
             compose_project=arguments.compose_project,
+            native_restart_no=arguments.native_restart_policy == "no",
         )
         lock_path = arguments.root / "installation.lock"
         if lock_path.is_symlink():

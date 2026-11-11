@@ -1,5 +1,6 @@
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import cast
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
@@ -32,8 +33,8 @@ def authority(name: str) -> tuple[bytes, bytes]:
                 key_agreement=False,
                 key_cert_sign=True,
                 crl_sign=True,
-                encipher_only=None,
-                decipher_only=None,
+                encipher_only=False,
+                decipher_only=False,
             ),
             True,
         )
@@ -76,7 +77,8 @@ def test_explicit_rotation_stages_overlap_without_copying_keys(tmp_path: Path) -
     assert prepared["automatic_activation"] is False
     staged = stage_trust(source, candidate, observation)
     assert staged["code"] == "SPIRE_AUTHORITY_ROTATION_TRUST_STAGED"
-    assert len(staged["changed"]) == 6
+    assert isinstance(staged["changed"], list)
+    assert len(cast(list[object], staged["changed"])) == 6
     assert (
         len(
             x509.load_pem_x509_certificates(

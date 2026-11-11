@@ -61,6 +61,63 @@ jobs:
           python-version: "3.13"
       - run: python -m pip install poetry==2.2.1 poetry-plugin-export==1.9.0 pip-audit==2.9.0
       - run: python tools/run_ci_suite.py python "${{ matrix.suite.path }}"
+      - name: Enforce SPIRE lint, formatting and strict typing
+        if: matrix.suite.path == 'spire'
+        working-directory: spire
+        run: |
+          poetry run ruff check .
+          poetry run ruff format --check .
+          poetry run pyright
+      - name: Verify SPIRE restore ownership with real Linux role UIDs
+        if: matrix.suite.path == 'spire'
+        run: |
+          docker build --target checks --tag aelev/spire-restore-owners:ci spire
+          mkdir -p "$RUNNER_TEMP/spire-restore-owners"
+          docker run --rm --network none --read-only --user 0:0 \
+            --cap-drop ALL --cap-add CHOWN --cap-add DAC_OVERRIDE --cap-add SETUID --cap-add SETGID \
+            --security-opt no-new-privileges --pids-limit 64 --memory 512m \
+            --tmpfs /tmp:rw,noexec,nosuid,size=128m \
+            --mount "type=bind,source=$RUNNER_TEMP/spire-restore-owners,target=/evidence" \
+            aelev/spire-restore-owners:ci -p no:cacheprovider \
+            test/test_backup_ownership.py --junitxml=/evidence/junit.xml
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from xml.etree import ElementTree
+          root = ElementTree.parse(Path(os.environ['RUNNER_TEMP']) / 'spire-restore-owners/junit.xml').getroot()
+          totals = tuple(sum(int(s.attrib.get(k, 0)) for s in root.iter('testsuite')) for k in ('tests', 'failures', 'errors', 'skipped'))
+          assert totals == (1, 0, 0, 0), totals
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && matrix.suite.path == 'spire'
+        with:
+          name: spire-restore-owners-${{ github.sha }}
+          path: ${{ runner.temp }}/spire-restore-owners/junit.xml
+          if-no-files-found: error
+      - name: Verify SPIRE public installer preserves native no on Linux
+        if: matrix.suite.path == 'spire'
+        working-directory: spire
+        run: |
+          docker build --target runtime --tag aelev/spire-native-runtime:ci .
+          docker build --target operator-installer --tag aelev/spire-native-installer:ci .
+          AELEV_INFRASTRUCTURE_SPIRE_TEST_IMAGE="$(docker image inspect --format '{{.Id}}' aelev/spire-native-runtime:ci)" \
+          AELEV_INFRASTRUCTURE_SPIRE_INSTALLER_TEST_IMAGE="$(docker image inspect --format '{{.Id}}' aelev/spire-native-installer:ci)" \
+          poetry run pytest -q 'test/test_real_installation.py::test_shell_install_repeat_register_and_revoke[managed-native-no]' \
+            --junitxml="$RUNNER_TEMP/spire-installer-junit.xml"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from xml.etree import ElementTree
+          root = ElementTree.parse(Path(os.environ['RUNNER_TEMP']) / 'spire-installer-junit.xml').getroot()
+          totals = tuple(sum(int(s.attrib.get(k, 0)) for s in root.iter('testsuite')) for k in ('tests', 'failures', 'errors', 'skipped'))
+          assert totals == (1, 0, 0, 0), totals
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && matrix.suite.path == 'spire'
+        with:
+          name: spire-installer-native-no-${{ github.sha }}
+          path: ${{ runner.temp }}/spire-installer-junit.xml
+          if-no-files-found: error
       - if: matrix.suite.mode != 'lock-only'
         run: poetry --directory "${{ matrix.suite.path }}" export --without-hashes --format requirements.txt --output "$RUNNER_TEMP/requirements.txt"
       - if: matrix.suite.mode != 'lock-only'
