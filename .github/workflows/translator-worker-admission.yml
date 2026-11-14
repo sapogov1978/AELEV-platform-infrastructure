@@ -57,11 +57,15 @@ jobs:
           COPY --from=tools /opt/aelev/src /work/expected-source
           COPY --from=tools /opt/aelev/test/test_provider_transport.py /opt/aelev/test/provider_tls_fixtures.py /work/test/
           RUN python - <<'PY'
-          import hashlib, importlib.util, json, platform, shutil, sqlite3, ssl, sys
+          import ctypes, hashlib, importlib.util, json, platform, shutil, sqlite3, ssl, sys
           from pathlib import Path
+          import psycopg, psycopg.pq
+          from sqlalchemy import create_engine
           assert platform.python_version() == '3.13.7'
           assert sqlite3.sqlite_version == '3.53.4'
           assert shutil.which('openssl')
+          engine = create_engine('postgresql+psycopg://artifact_probe@localhost/never_connected')
+          engine.dispose()
           production = Path('/opt/aelev/.venv')
           def tree_digest():
               h = hashlib.sha256()
@@ -73,6 +77,13 @@ jobs:
           before = tree_digest()
           libraries = sorted({line.split()[-1] for line in Path('/proc/self/maps').read_text().splitlines() if '/' in line and '.so' in line} | {sys.executable})
           hashes = {p: hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in libraries}
+          openssl_versions = {}
+          for path in libraries:
+              if '/libssl' in path or '/libcrypto' in path:
+                  api = ctypes.CDLL(path).OpenSSL_version
+                  api.restype = ctypes.c_char_p
+                  api.argtypes = [ctypes.c_int]
+                  openssl_versions[path] = api(0).decode()
           tools = Path('/opt/artifact-test-dependencies/lib/python3.13/site-packages')
           target = Path('/opt/native-worker-test-tools')
           target.mkdir()
@@ -89,7 +100,7 @@ jobs:
               assert (expected / relative).read_bytes() == (installed / relative).read_bytes(), relative
           assert tree_digest() == before
           assert hashes == {p: hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in libraries}
-          Path('/opt/native-worker-layer-proof.json').write_text(json.dumps({'python': platform.python_version(), 'sqlite': sqlite3.sqlite_version, 'architecture': platform.machine(), 'production_dependencies_sha256': before, 'production_dependencies_preserved': True, 'runtime_library_sha256': hashes, 'runtime_libraries_preserved': True, 'exact_owner_source_files': len(source_files)}))
+          Path('/opt/native-worker-layer-proof.json').write_text(json.dumps({'python': platform.python_version(), 'sqlite': sqlite3.sqlite_version, 'architecture': platform.machine(), 'psycopg': psycopg.__version__, 'libpq': psycopg.pq.version(), 'postgresql_driver': psycopg.pq.__impl__, 'openssl_versions': openssl_versions, 'database_connection_opened': False, 'production_dependencies_sha256': before, 'production_dependencies_preserved': True, 'runtime_library_sha256': hashes, 'runtime_libraries_preserved': True, 'exact_owner_source_files': len(source_files)}))
           PY
           ENV PYTHONPATH=/opt/native-worker-test-tools:/opt/aelev/src:/work/test PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
           WORKDIR /work

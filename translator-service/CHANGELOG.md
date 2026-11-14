@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-14: в отдельном candidate branch подготовлен Psycopg 3.3.9 вместо 3.2.9 после выявления bundled OpenSSL 3.5.0/libpq 17.5 при ленивом импорте PostgreSQL driver. Меняется только driver dependency pair; очередь, source code, DB schema и working deployments сохраняются. Main adoption требует отдельного согласования линии после проверок.
+
 - 2026-11-14: exact signed worker прошёл GET-only native SPIRE identity/renewal/withdrawal/recovery proof. Отдельный amd64 admission workflow использует runtime source из опубликованного образа и проверяет сохранность production packages/libraries при добавлении изолированных тестовых инструментов; внешние model calls, worker loop и RESUME отсутствуют.
 
 - 2026-11-14: отчёт exact signed network worker main release фиксирует обе архитектуры/SBOM/provenance, Python 3.13.7, SDK 1.1.2 и offline загруженную SQLite 3.53.4. Raw security findings и непроверенные FTS5/session условия остаются видимыми; отчёт не выдаёт artifact admission, не запускает worker и не выполняет inference/RESUME.

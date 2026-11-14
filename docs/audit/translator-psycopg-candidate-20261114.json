@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "NATIVE_ARM64_COMPATIBILITY_PASS_MAIN_ADOPTION_NOT_AUTHORIZED",
+  "production_dependencies_adopted": false,
+  "working_runtime_switched": false,
+  "inference_requested": false,
+  "domain_resume_issued": false,
+  "proposal": {
+    "psycopg": "3.3.9",
+    "psycopg-binary": "3.3.9",
+    "previous": "3.2.9",
+    "python": "3.13.7",
+    "os_family": "Debian Bookworm",
+    "server_postgresql_profile": "17.6",
+    "bundled_client_libpq": "18.6",
+    "bundled_openssl": "3.5.9"
+  },
+  "lock_diff": {
+    "status": "ONLY_DRIVER_PAIR_CHANGED",
+    "changed_packages": [
+      "psycopg",
+      "psycopg-binary"
+    ],
+    "versions": {
+      "psycopg": {
+        "before": "3.2.9",
+        "after": "3.3.9"
+      },
+      "psycopg-binary": {
+        "before": "3.2.9",
+        "after": "3.3.9"
+      }
+    },
+    "all_other_package_records_identical": true,
+    "package_count": 57,
+    "poetry": "2.2.1"
+  },
+  "wheel_versions": [
+    {
+      "psycopg_binary": "3.2.13",
+      "architecture": "aarch64",
+      "wheel": "psycopg_binary-3.2.13-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "13e2f8894d410678529ff9f1211f96c5a93ff142f992b302682b42d924428b61",
+      "published": "2025-11-21T22:31:56.517457Z",
+      "openssl_strings": {
+        "psycopg_binary.libs/libcrypto-6a27ac49.so.3": [
+          "OpenSSL 3.5.4 30 Sep 2025"
+        ],
+        "psycopg_binary.libs/libssl-94fad26e.so.3": []
+      }
+    },
+    {
+      "psycopg_binary": "3.2.13",
+      "architecture": "x86_64",
+      "wheel": "psycopg_binary-3.2.13-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "ea2fdbcc9142933a47c66970e0df8b363e3bd1ea4c5ce376f2f3d94a9aeec847",
+      "published": "2025-11-21T22:32:08.883001Z",
+      "openssl_strings": {
+        "psycopg_binary.libs/libcrypto-15969dba.so.3": [
+          "OpenSSL 3.5.4 30 Sep 2025"
+        ],
+        "psycopg_binary.libs/libssl-4a840876.so.3": []
+      }
+    },
+    {
+      "psycopg_binary": "3.3.9",
+      "architecture": "aarch64",
+      "wheel": "psycopg_binary-3.3.9-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "366e2021a785afed9154f83f64793f662348a9ef244fef9779175c0906e8aacc",
+      "published": "2026-11-12T09:01:35.872528Z",
+      "openssl_strings": {
+        "psycopg_binary.libs/libcrypto-5e36fb0e.so.3": [
+          "OpenSSL 3.5.9 29 Sep 2026"
+        ],
+        "psycopg_binary.libs/libssl-8f8630a8.so.3": []
+      }
+    },
+    {
+      "psycopg_binary": "3.3.9",
+      "architecture": "x86_64",
+      "wheel": "psycopg_binary-3.3.9-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "180e4a99904d7a77f826fbb6dd16834bb3313675d8a6f055e39742fda00c33dc",
+      "published": "2026-11-12T09:01:28.020112Z",
+      "openssl_strings": {
+        "psycopg_binary.libs/libcrypto-3a0647ea.so.3": [
+          "OpenSSL 3.5.9 29 Sep 2026"
+        ],
+        "psycopg_binary.libs/libssl-6a9b88ec.so.3": []
+      }
+    }
+  ],
+  "native_arm64_sql_and_tls": {
+    "status": "PASS",
+    "candidate_image": "sha256:48ec2276858118b7e2c652179ac03fd22c522cc6c86eb8bb83ec1967cc04008f",
+    "postgres_image": "postgres@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "physical_nodes": 1,
+    "production_dependencies_adopted": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "domain_resume_issued": false,
+    "runtime": {
+      "psycopg": "3.3.9",
+      "libpq": 180006,
+      "bundled_openssl": {
+        "/opt/psycopg-candidate/psycopg_binary.libs/libcrypto-5e36fb0e.so.3": "OpenSSL 3.5.9 29 Sep 2026"
+      },
+      "tls": {
+        "enabled": true,
+        "version": "TLSv1.3",
+        "client_certificate_authenticated": true
+      },
+      "negative_tls_rejected": [
+        "missing_client_identity",
+        "wrong_hostname",
+        "wrong_server_ca"
+      ],
+      "alembic_head_applied": true,
+      "pytest_exit_code": 0,
+      "worker_loop_started": false,
+      "inference_requested": false
+    },
+    "totals": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "disposable_resources_removed": true
+  },
+  "original_worker_hidden_libraries": {
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:9f8a7751fe52a4646f48063194dd86e904b021b09970014c99f22236809841a4",
+    "psycopg": "3.2.9",
+    "libpq": "17.5",
+    "bundled_openssl": "3.5.0",
+    "system_openssl": "3.0.22",
+    "raw_package_scan_is_not_complete_bundled_library_admission": true
+  },
+  "preserved_failure": {
+    "attempt": 1,
+    "cause": "libpq correctly refused group-readable client key owned by host UID; own test volume with runtime UID and mode 0600 corrected the fixture",
+    "production_modified": false
+  },
+  "open_gates": [
+    "candidate source CI",
+    "signed candidate multiarch artifact and exact native amd64 inspection",
+    "bundled library and whole image scoped security review",
+    "explicit owner approval to replace pinned dependency line before main adoption",
+    "working rollout and complete product acceptance"
+  ],
+  "evidence_sha256": {
+    "candidate-lock-proof.json": "38d6cbb010e2dc4d21e07d061105fd5c8f93ccdbd9d3721a996964fcfb22204c",
+    "wheel-bundle-versions.json": "1df125043a48cb7ba18855173084c76f2343bce30c392c305197f01370379745",
+    "sql-native-candidate-1/proof.json": "4860b16d8fdf3afbe78b1fc7a469c788733e800b6fa66c7ed86e0a61743e6b45",
+    "sql-native-candidate-2/proof.json": "0302753d5b7b8cc53f0adac1f60529b3d49c9c586e2f470cffd30236ae6ec61c",
+    "sql-native-candidate-2/test.xml": "c175be42de7aad08e680eaf3268684b9086cd2712ac70751bee60325853edb40",
+    "sql-native-candidate-2/operator-script.py": "b29a420ae29719bc7edc6760095e7f47104c6e462290137e7c6defd963acec6a"
+  }
+}
