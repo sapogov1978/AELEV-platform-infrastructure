@@ -60,7 +60,11 @@ def main() -> None:
             directory = Path(temporary)
             extension = directory / "extensions"
             extension.write_text(
-                "basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=clientAuth\n"
+                "basicConstraints=critical,CA:FALSE\n"
+                "keyUsage=critical,digitalSignature,keyEncipherment\n"
+                "extendedKeyUsage=clientAuth\n"
+                "subjectKeyIdentifier=hash\n"
+                "authorityKeyIdentifier=keyid:always\n"
             )
             openssl(
                 "req",

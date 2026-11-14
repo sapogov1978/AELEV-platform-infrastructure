@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "component": "aelev-platform-ui-client",
+  "version": "1.1.2",
+  "status": "COMPONENT_VERIFIED_ROLLOUT_PENDING",
+  "verified_at": "2026-11-14T00:04:33Z",
+  "artifact": {
+    "path": "../public/presentation/client/1.1.2/aelev_platform_ui_client-1.1.2-py3-none-any.whl",
+    "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+    "reproducible_builds": 2,
+    "source_date_epoch": 1794528000,
+    "previous_version": "1.1.1",
+    "previous_sha256_unchanged": "6137c8f99afcbf317f9313b4ea739490564c8fe3a68892a811d323b0e29fb61b",
+    "changed_package_modules": ["aelev_platform_ui_client/prepare.py"],
+    "other_package_modules_byte_identical": true
+  },
+  "regression": {
+    "old_prepare_mac_system_signer": "EXPECTED_FAILURE_REPRODUCED",
+    "old_prepare_debian_signer": "PASS_WITH_IMPLICIT_EXTENSIONS_NOT_PORTABLE",
+    "failure": "strict X.509 client-auth validation error 85: Missing Authority Key Identifier",
+    "new_prepare": "PASS",
+    "existing_identity_overwrite": "DENIED_AND_PRESERVED",
+    "private_key_mode": "0640"
+  },
+  "checks": {
+    "operator_client_suite": {"platform": "macOS arm64", "python": "3.13.16", "passed": 45},
+    "native_prepare_regression": {"platform": "linux/arm64", "python": "3.13.7", "os": "Debian Bookworm", "passed": 1, "skipped": 1, "skip_reason": "additional macOS system LibreSSL case"},
+    "ruff": "PASS",
+    "mypy_changed_python_files": "PASS",
+    "poetry_lock": "PASS"
+  },
+  "published_port_probe": {
+    "transport": "HTTPS/mTLS with hostname and strict X.509 verification",
+    "method": "GET",
+    "path": "/health",
+    "physical_hosts": 1,
+    "operator_python": "3.13.16",
+    "old_installed_client": "TLS_CERTIFICATE_UNKNOWN",
+    "new_temporary_client": {"http_status": 200, "role": "replica", "state": "running"},
+    "postgresql_container_id_image_start_time_restart_count_unchanged": true,
+    "installed_identity_rotated": false,
+    "canonical_data_written": false
+  },
+  "inference_requested": false,
+  "remaining": [
+    "Each owner must admit and pin its selected new wheel in a new owner release.",
+    "Installed identities require their normal owner-controlled rotation procedure.",
+    "Physical distributed acceptance, whole-infrastructure release and production admission remain open."
+  ]
+}

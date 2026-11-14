@@ -1,5 +1,7 @@
 # Platform UI — нормативная спецификация
 
+Операторский prepare Python client SDK 1.1.2 явно задаёт SKI/AKI по RFC 5280, не полагаясь на неявное добавление расширений конкретной реализацией OpenSSL. Установленный leaf, issuer, private key, права и журналы не обновляются этим изменением. Новый wheel принимается владельцем отдельно; runtime API и transport совместимы с 1.1.1.
+
 Сборка Nginx UI устанавливает доступные security patches из принятой ветки Alpine 3.22, сохраняя прежний закреплённый базовый образ и приложение. Конечный пользователь — UID/GID 101; временный build-root не становится runtime user. Фактический image ID, состав пакетов и High/Critical gate подтверждаются [image evidence](../docs/security/supply-chain.md).
 
 Внешние ссылки и внедряемые разделы имеют строго ограниченное исключение HTTP для точных loopback hostname по [00-INFRA-20261106-0007-workload-and-operator-identity](../docs/adr/00-INFRA-20261106-0007-workload-and-operator-identity.md), [00-INFRA-20261106-0007-workload-and-operator-identity](../docs/adr/00-INFRA-20261106-0007-workload-and-operator-identity.md) и [каноническому контракту](../docs/api/platform-ui-injection.md#ссылки-на-собственные-интерфейсы). Это адрес станции браузера, не произвольный сетевой адрес; все ограничения sandbox и самостоятельная целевая авторизация сохраняются. Оболочка не определяет режим чужой установки, не подключается к её API и не передаёт свою сессию.

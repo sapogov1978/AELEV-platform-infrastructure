@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: исправлен operator prepare Python Platform UI client SDK новым кандидатом 1.1.2: SKI/AKI задаются явно для одинаковой strict X.509 client-auth проверки на OpenSSL/LibreSSL. Прежние wheels, credentials и runtime state сохраняются; выбранные владельцами зависимости обновляются отдельным handoff.
+
+- 2026-11-13: добавлена native-регрессия строгой X.509 client-auth цепочки для операторского prepare публичного Platform UI client SDK; проверка также требует сохранить прежнюю identity при повторной выдаче. Старый wheel остаётся неизменяемым, исправление требует нового артефакта.
+
 ## Unreleased
 
 - Документально зафиксирован опубликованный 1.1.3: source `610e7c0f6ceabff855fd20cfc2760ad866518d67`, CI 26/26, независимый clean-room 12/12 и 27 повторно скачанных assets. README/аудит сохраняют границу между допуском исходного выпуска и переключением рабочей площадки; release tag и runtime не меняются.

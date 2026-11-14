@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: кандидат Python client SDK 1.1.2 явно задаёт SKI/AKI для client-auth leaf. Регрессия воспроизвела error 85 с системным LibreSSL 3.3.6 при успешном неявном добавлении extensions на Bookworm/OpenSSL. Новый wheel сохраняет runtime API, состояние и прежние сертификаты; 1.1.1 не переупаковывается.
+
+- 2026-11-13: регрессионная проверка client SDK prepare воспроизводит strict X.509 path validation и отказ повторного выпуска поверх существующего удостоверения, без изменения рабочих PKI или immutable wheel.
+
 - 2026-11-07: корневая локальная композиция получила владельческий второй TLS bind Platform UI только на private IPv4 gateway стандартного Docker bridge. Самостоятельные status publishers достигают оболочки через `host.docker.internal`; основной listener и mTLS сохранены, wildcard/LAN пересечение закрыто отклоняется.
 
 - 2026-11-07: добавлен владельческий `compose.local-keycloak.yml` для безопасного совместного размещения на Linux: API и одноразовый provisioner используют только ingress-сеть Keycloak и внутренний TLS-port `8443`, сохраняя CA/SAN. Основной удалённый HTTPS-маршрут не изменён; Keycloak не открывается на LAN, его БД и backend-сеть не разделяются.

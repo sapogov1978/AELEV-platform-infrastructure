@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aelev-platform-ui-client"
-version = "1.1.1"
+version = "1.1.2"
 description = "Public, consumer-agnostic HTTPS presentation transport"
 authors = ["AELEV"]
 packages = [{include = "aelev_platform_ui_client", from = "src"}]
