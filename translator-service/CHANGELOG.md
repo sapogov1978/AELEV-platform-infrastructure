@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
+
 - 2026-11-14: test-target включает собственные prepare-local.py, Compose-рецепты, документацию и публичные station/templates. Полный native pytest больше не зависит от отсутствующих файлов хоста; production stages и секреты не копируются этим изменением.
 
 - 2026-11-14: OpenTelemetry API/SDK/OTLP HTTP exporter закреплены на совместимой patch-линии 1.45.2 для устранения GHSA-mf5v-w3w3-f6cg. Контракт телеметрии, Kafka и управление очередью сохраняются; смена lock не обновляет работающий образ.

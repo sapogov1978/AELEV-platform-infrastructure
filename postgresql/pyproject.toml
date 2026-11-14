@@ -7,7 +7,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.13,<3.14"
-aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"}
+aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl"}
 patroni = {version = "4.1.5", extras = ["etcd3", "jsonlogger"]}
 psycopg = {version = "3.2.10", extras = ["binary"]}
 dnspython = "2.9.2"

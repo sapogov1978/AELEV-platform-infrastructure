@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
+
 - 2026-11-07: корневая локальная композиция получила владельческий второй TLS bind только на private IPv4 gateway стандартного Docker bridge. Существующие `host-gateway` потребители достигают Keycloak без общей backend-сети; основной listener, CA/SAN и порт сохранены, wildcard/LAN пересечение закрыто отклоняется.
 
 - 2026-11-07: новый локальный TLS private key также получает `0640` в настроенной runtime-группе вместо недоступного контейнеру host-only `0600`. Публичные сертификаты остаются `0644`; существующий TLS-материал bootstrap не изменяет.

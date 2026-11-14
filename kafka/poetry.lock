@@ -2,18 +2,18 @@
 
 [[package]]
 name = "aelev-platform-ui-client"
-version = "1.1.1"
+version = "1.1.2"
 description = "Public, consumer-agnostic HTTPS presentation transport"
 optional = false
 python-versions = ">=3.13"
 groups = ["main"]
 files = [
-    {file = "aelev_platform_ui_client-1.1.1-py3-none-any.whl", hash = "sha256:6137c8f99afcbf317f9313b4ea739490564c8fe3a68892a811d323b0e29fb61b"},
+    {file = "aelev_platform_ui_client-1.1.2-py3-none-any.whl", hash = "sha256:d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86"},
 ]
 
 [package.source]
 type = "file"
-url = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"
+url = "vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl"
 
 [[package]]
 name = "black"
@@ -368,4 +368,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "68a690f18890cde446e68c8f10b39832b0221ea1c52a9c15437f2a7a01d9e12a"
+content-hash = "74c796efd195166898ff955a785e48e86a5fdc51b8ee3d6b87bb682ea59f4342"

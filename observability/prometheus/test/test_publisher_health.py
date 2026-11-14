@@ -7,9 +7,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_publisher_uses_pinned_standalone_probe() -> None:
-    wheel = ROOT / "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"
+    wheel = ROOT / "vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl"
     assert hashlib.sha256(wheel.read_bytes()).hexdigest() == (
-        "6137c8f99afcbf317f9313b4ea739490564c8fe3a68892a811d323b0e29fb61b"
+        "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86"
     )
     assert wheel.name in (ROOT / "pyproject.toml").read_text()
     dockerfile = (ROOT / "Dockerfile.status").read_text()

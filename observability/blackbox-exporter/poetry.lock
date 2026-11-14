@@ -26,18 +26,18 @@ url = "vendor/aelev_observability_tools-1.1.3-py3-none-any.whl"
 
 [[package]]
 name = "aelev-platform-ui-client"
-version = "1.1.1"
+version = "1.1.2"
 description = "Public, consumer-agnostic HTTPS presentation transport"
 optional = false
 python-versions = ">=3.13"
 groups = ["main"]
 files = [
-    {file = "aelev_platform_ui_client-1.1.1-py3-none-any.whl", hash = "sha256:6137c8f99afcbf317f9313b4ea739490564c8fe3a68892a811d323b0e29fb61b"},
+    {file = "aelev_platform_ui_client-1.1.2-py3-none-any.whl", hash = "sha256:d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86"},
 ]
 
 [package.source]
 type = "file"
-url = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"
+url = "vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl"
 
 [[package]]
 name = "annotated-doc"
@@ -769,4 +769,4 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "1164d8addf668cf8f185211b06dfa8a7aac59752d633c46ef57cf5c8f0e88fd7"
+content-hash = "e4c017d83e7fe908350f8b880460a29892ab7a5eb67fa5b23d09cfa05879046f"

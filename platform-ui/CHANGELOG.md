@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
+
 - 2026-11-14: кандидат Python client SDK 1.1.2 явно задаёт SKI/AKI для client-auth leaf. Регрессия воспроизвела error 85 с системным LibreSSL 3.3.6 при успешном неявном добавлении extensions на Bookworm/OpenSSL. Новый wheel сохраняет runtime API, состояние и прежние сертификаты; 1.1.1 не переупаковывается.
 
 - 2026-11-13: регрессионная проверка client SDK prepare воспроизводит strict X.509 path validation и отказ повторного выпуска поверх существующего удостоверения, без изменения рабочих PKI или immutable wheel.

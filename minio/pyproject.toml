@@ -6,7 +6,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.13,<3.14"
-aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"}
+aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "9.0.3"

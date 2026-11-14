@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "SDK_1_1_2_HANDOFF_SOURCE_VERIFIED_RELEASE_PENDING",
+  "sdk_sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+  "only_changed_python_module": "aelev_platform_ui_client/prepare.py",
+  "runtime_python_modules_identical_to_1_1_1": true,
+  "old_artifacts_preserved": true,
+  "owners": [
+    {
+      "owner": "infrastructure-kafka",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "c89cdd42274da8f6ec9071903124213b9f29d2eb9d8b1ba2a433645a298bfc8f"
+    },
+    {
+      "owner": "infrastructure-keycloak",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "c89cdd42274da8f6ec9071903124213b9f29d2eb9d8b1ba2a433645a298bfc8f"
+    },
+    {
+      "owner": "infrastructure-minio",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "c89cdd42274da8f6ec9071903124213b9f29d2eb9d8b1ba2a433645a298bfc8f"
+    },
+    {
+      "owner": "infrastructure-postgresql",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "6d3cf2eb2c8be3a5845a0ef36efc486052b7d7fcfe00f8afbc64e10afd196223"
+    },
+    {
+      "owner": "infrastructure-public-egress-gateway",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "c4fc48f10202a6e5c0c77bb8cee5dd1c12df484ce5614de126e6fcfa973eaf91"
+    },
+    {
+      "owner": "infrastructure-spire",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "0027660ac9a8133255ef06cbf43e016e1d089d2dc4eb85f6bf81ac2fb9d42bfc"
+    },
+    {
+      "owner": "infrastructure-translator-service",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "225d06c2d0c8ed9428b57fe4e68f687719698671a3adde7caacdc0833e41bb84"
+    },
+    {
+      "owner": "infrastructure-platform-ui",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "f786a53d3c450f608f4a98bba28cfc380f497cb7c34352f21ba66a464d56d7ae"
+    },
+    {
+      "owner": "infrastructure-observability-blackbox-exporter",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "6aa1fc148c49c07a72433048ff11f8e07d35128bc050511ad62838d1a920acdc"
+    },
+    {
+      "owner": "infrastructure-observability-delivery",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "edb11b4851b168c817574b9015092d1db4b2c99f522b12afd8041e7c95f604d4"
+    },
+    {
+      "owner": "infrastructure-observability-grafana",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "edb11b4851b168c817574b9015092d1db4b2c99f522b12afd8041e7c95f604d4"
+    },
+    {
+      "owner": "infrastructure-observability-loki",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "edb11b4851b168c817574b9015092d1db4b2c99f522b12afd8041e7c95f604d4"
+    },
+    {
+      "owner": "infrastructure-observability-otel-collector",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "edb11b4851b168c817574b9015092d1db4b2c99f522b12afd8041e7c95f604d4"
+    },
+    {
+      "owner": "infrastructure-observability-prometheus",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "6aa1fc148c49c07a72433048ff11f8e07d35128bc050511ad62838d1a920acdc"
+    },
+    {
+      "owner": "infrastructure-observability-tempo",
+      "version": "1.1.2",
+      "sha256": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86",
+      "other_packages_unchanged": true,
+      "old_artifact_preserved": true,
+      "lock_sha256": "edb11b4851b168c817574b9015092d1db4b2c99f522b12afd8041e7c95f604d4"
+    }
+  ],
+  "local_presentation_checks": {
+    "source_status": "dirty_workspace",
+    "python": "3.13.16",
+    "tests": 247,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "results": [
+      {
+        "owner": "infrastructure-kafka",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-keycloak",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 32,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-minio",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-postgresql",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 21,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-public-egress-gateway",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-spire",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 49,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-translator-service",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-platform-ui",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 46,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-blackbox-exporter",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-delivery",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-grafana",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-loki",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-otel-collector",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-prometheus",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      },
+      {
+        "owner": "infrastructure-observability-tempo",
+        "versions": {
+          "python": "3.13.16",
+          "sdk": "1.1.2"
+        },
+        "totals": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "status": "PASS"
+      }
+    ]
+  },
+  "working_runtime_switched": false,
+  "credentials_rotated": false,
+  "full_product_release_admitted": false,
+  "hosted_exact_commit_ci": "PENDING",
+  "open_gates": [
+    "exact committed source CI",
+    "signed product release and image builds",
+    "owner-controlled runtime rollout",
+    "full distributed and local acceptance"
+  ]
+}

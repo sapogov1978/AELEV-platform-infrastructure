@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "AELEV durable Kafka translation service"
 requires-python = ">=3.13"
 dependencies = [
-    "aelev-platform-ui-client==1.1.1",
+    "aelev-platform-ui-client==1.1.2",
     "alembic==1.16.5",
     "confluent-kafka==2.11.1",
     "fastapi==0.141.1",
@@ -28,7 +28,7 @@ dependencies = [
 package-mode = false
 
 [tool.poetry.dependencies]
-aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl"}
+aelev-platform-ui-client = {path = "vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl"}
 
 [tool.poetry.group.dev.dependencies]
 pyright = "1.1.414"

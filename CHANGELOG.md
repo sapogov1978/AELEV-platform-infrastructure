@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: 15 владельцев закрепляют один неизменяемый Platform UI client SDK 1.1.2 по SHA-256; source gate сверяет фактические bytes каждого активного wheel. Старые 1.1.1 artifacts сохраняются. Handoff меняет operator PKI prepare, не runtime protocol, рабочие credentials, журналы или recovery budgets; locks проверяются на отсутствие постороннего dependency drift.
+
 - 2026-11-14: exact-source audit коммита 5099ad6 завершён 26/26 SUCCESS; GitHub dependency graph показывает исправленные версии, открытых Dependabot alerts нет. Отчёт dependency remediation отделяет закрытие source findings от ещё открытых полного infrastructure release и рабочего rollout.
 
 - 2026-11-14: test-target Translator дополнен собственными operator scripts, Compose и публичными station templates после воспроизведённого collection failure на prepare-local.py. Production targets и runtime не меняются; полный native прогон проверяет состав test-target.

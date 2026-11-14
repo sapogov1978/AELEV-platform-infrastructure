@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 import sys
 import zipfile
@@ -12,6 +13,10 @@ from source_scope import source_files
 
 USE = re.compile(r"^\s*-\s+uses:\s+([^\s#]+)", re.MULTILINE)
 SHA = re.compile(r"^[^@]+@[0-9a-f]{40}$")
+PLATFORM_UI_CLIENT_WHEEL = "aelev_platform_ui_client-1.1.2-py3-none-any.whl"
+PLATFORM_UI_CLIENT_SHA256 = (
+    "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86"
+)
 OBSERVABILITY_TOOLS = {
     "observability/blackbox-exporter": "aelev_observability_tools-1.1.3-py3-none-any.whl",
     "observability/delivery": "aelev_observability_tools-1.0.1-py3-none-any.whl",
@@ -38,20 +43,30 @@ def main() -> int:
                 )
     active_wheels = set()
     for path in source_files(root, "pyproject.toml"):
-        active_wheels.update(
-            re.findall(
-                r"vendor/(aelev_platform_ui_client-[0-9.]+-py3-none-any\.whl)",
-                path.read_text(encoding="utf-8"),
-            )
+        configured_clients = re.findall(
+            r"vendor/(aelev_platform_ui_client-[0-9.]+-py3-none-any\.whl)",
+            path.read_text(encoding="utf-8"),
         )
-    if active_wheels != {"aelev_platform_ui_client-1.1.1-py3-none-any.whl"}:
+        active_wheels.update(configured_clients)
+        for name in configured_clients:
+            artifact = path.parent / "vendor" / name
+            if artifact.is_symlink() or not artifact.is_file():
+                errors.append(f"missing regular Platform UI client wheel: {artifact}")
+            elif (
+                hashlib.sha256(artifact.read_bytes()).hexdigest()
+                != PLATFORM_UI_CLIENT_SHA256
+            ):
+                errors.append(
+                    f"unexpected Platform UI client artifact digest: {artifact}"
+                )
+    if active_wheels != {PLATFORM_UI_CLIENT_WHEEL}:
         errors.append(
             f"unexpected active Platform UI client wheels: {sorted(active_wheels)}"
         )
     for owner, expected in OBSERVABILITY_TOOLS.items():
         pyproject = root / owner / "pyproject.toml"
         configured = re.findall(
-            r'vendor/(aelev_observability_tools-[0-9.]+-py3-none-any\.whl)',
+            r"vendor/(aelev_observability_tools-[0-9.]+-py3-none-any\.whl)",
             pyproject.read_text(encoding="utf-8"),
         )
         if configured != [expected]:
@@ -79,7 +94,7 @@ def main() -> int:
         return 1
     print(
         f"Supply-chain references passed: {references} pinned workflow uses; "
-        "active Platform UI client is exactly 1.1.1; "
+        "active Platform UI client is exactly 1.1.2 with verified SHA-256; "
         f"{len(OBSERVABILITY_TOOLS)} Observability wheels include SKI/AKI"
     )
     return 0

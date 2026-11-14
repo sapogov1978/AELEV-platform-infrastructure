@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
+
 - 2026-11-14: существующая зависимость Patroni dnspython явно закреплена на исправленной версии 2.9.2 (GHSA-vvf4-9x63-8xvv). Остальные PostgreSQL/Patroni версии, fencing, PKI, данные и работающий кластер сохраняются.
 
 - 2026-11-08: устранено последовательное ожидание недоступного первого DCS endpoint в fencing/return. Свежие linearizable reads выбирают доступный endpoint в прежнем retry budget, с одним in-flight сетевым запросом на endpoint и без кеша ответов. Возврат требует второй свежий ответ после первого от другого endpoint/member; неизменны cluster/revision/lease checks и три попытки возврата. Направленные hosted FAIL и локальный RED/GREEN связывают это исправление с повторявшимся pair-loss timeout, а не с перестройкой HA.
