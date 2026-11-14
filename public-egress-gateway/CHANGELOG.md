@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: OpenTelemetry API/SDK/OTLP HTTP exporter закреплены на 1.45.2 для устранения GHSA-mf5v-w3w3-f6cg. Grants, identity, ограничения egress и wire-контракт телеметрии сохраняются; работающий gateway не переключается.
+
 - 2026-11-08: clean-room isolated lifecycle больше не наследует рабочие telemetry bind/network/volume из `.env.example`: все они принадлежат временному проекту и проверяются до `up`. Это устраняет отказ создания gateway из-за отсутствующего bind source при сохранении runtime-модели; Compose stderr сводится только к фиксированному reason code.
 
 - 2026-11-07: шаблон собственного telemetry sender закреплён на подписанном owner-controlled multi-architecture GHCR digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` вместо недоступного Docker Hub sender 1.0.7. Egress grants, identity, policy, журналы и историческое rollout evidence не меняются.

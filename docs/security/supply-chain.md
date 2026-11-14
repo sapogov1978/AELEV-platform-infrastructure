@@ -18,5 +18,7 @@ Image evidence Platform UI является доказательством ко�
 
 ## Официальные основания
 
+Узкое исправление зависимостей от 2026-11-14 и его границы зафиксированы в [отчёте](../audit/dependency-remediation-20261114.json): Translator/Public Egress Gateway закрепляют согласованные OpenTelemetry API/SDK/OTLP HTTP exporter 1.45.2, PostgreSQL — dnspython 2.9.2 при прежнем Patroni 4.1.5. Обновлены только соответствующие dependency closures; статусы native regression, exact-source CI, полного выпуска и рабочего rollout учитываются раздельно. Исключение advisories из сканера не вводится.
+
 - [GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) — точные версии и assets.
 - [SLSA provenance v1.1](https://slsa.dev/spec/v1.1/provenance) — связь артефактов с исходниками и процессом сборки.

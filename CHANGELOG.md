@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: test-target Translator дополнен собственными operator scripts, Compose и публичными station templates после воспроизведённого collection failure на prepare-local.py. Production targets и runtime не меняются; полный native прогон проверяет состав test-target.
+
+- 2026-11-14: Translator и Public Egress Gateway закрепляют совместимый OpenTelemetry 1.45.2 вместо 1.45.1 (GHSA-mf5v-w3w3-f6cg); PostgreSQL закрепляет dnspython 2.9.2 (GHSA-vvf4-9x63-8xvv). Обновляются только соответствующие dependency closures и locks; рабочие образы, сертификаты и очереди этой подготовкой не переключаются.
+
 - 2026-11-14: исправлен operator prepare Python Platform UI client SDK новым кандидатом 1.1.2: SKI/AKI задаются явно для одинаковой strict X.509 client-auth проверки на OpenSSL/LibreSSL. Прежние wheels, credentials и runtime state сохраняются; выбранные владельцами зависимости обновляются отдельным handoff.
 
 - 2026-11-13: добавлена native-регрессия строгой X.509 client-auth цепочки для операторского prepare публичного Platform UI client SDK; проверка также требует сохранить прежнюю identity при повторной выдаче. Старый wheel остаётся неизменяемым, исправление требует нового артефакта.

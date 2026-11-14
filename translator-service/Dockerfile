@@ -59,6 +59,9 @@ COPY alembic.ini ./alembic.ini
 COPY alembic ./alembic
 COPY deployment ./deployment
 COPY Dockerfile ./Dockerfile
+COPY prepare-local.py compose*.yml .env.example *.md ./
+COPY compute-runtime/*.py compute-runtime/*.example compute-runtime/*.md ./compute-runtime/
+COPY compute-runtime/bootstrap.sh compute-runtime/bootstrap.ps1 ./compute-runtime/
 COPY --from=swagger-assets /assets ./swagger-assets
 CMD ["poetry", "run", "pytest", "-q"]
 

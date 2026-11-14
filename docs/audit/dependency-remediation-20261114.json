@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "NATIVE_REGRESSION_PASS_HOSTED_AUDIT_PENDING",
+  "date": "2026-11-14",
+  "previous_source_commit": "f1c82ca71424f87468b19d27e39bef79ec189464",
+  "previous_failed_workflow": 43532234413,
+  "remediations": [
+    {"advisory": "https://github.com/advisories/GHSA-mf5v-w3w3-f6cg", "package": "opentelemetry-api", "before": "1.45.1", "after": "1.45.2", "owners": ["translator-service", "public-egress-gateway"], "compatible_sdk_and_exporter_updated": true},
+    {"advisory": "https://github.com/advisories/GHSA-vvf4-9x63-8xvv", "package": "dnspython", "before": "2.9.0", "after": "2.9.2", "owners": ["postgresql"], "patroni_unchanged": "4.1.5"}
+  ],
+  "lock_scope": {
+    "opentelemetry_closure_packages": 8,
+    "postgresql_changed_packages": ["dnspython"],
+    "unrelated_package_records_and_artifact_hashes_unchanged": true,
+    "poetry_check_lock": "PASS"
+  },
+  "native_checks": {
+    "scope": "candidate working tree including pending network changes; exact committed-source hosted audit remains separate",
+    "platform": "linux/arm64",
+    "python": "3.13.7",
+    "cases": [
+      {"owner": "translator-service", "os": "Debian Bookworm", "passed": 235, "skipped": 37, "failures": 0, "errors": 0, "image": "sha256:6079e5f808c796c13bde1349e0edfc4037bba57b0096f0ed1cab37f416866f81"},
+      {"owner": "public-egress-gateway", "os": "Debian Bookworm", "passed": 103, "skipped": 2, "failures": 0, "errors": 0, "image": "sha256:631fdfe878197f01f84e99297b0096e607e2deb49feb95471545787d2d32dd41"},
+      {"owner": "postgresql", "os": "Alpine 3.22", "passed": 193, "skipped": 0, "failures": 0, "errors": 0, "image": "sha256:6a0407e7b84d10938cd2ab3e9943056b3019b59405b171694c77e212c43c7045"}
+    ],
+    "network": "none",
+    "inference_requested": false,
+    "failed_attempts_retained": ["missing prepare-local.py in test target", "missing station bootstrap scripts in test target"],
+    "test_target_public_assets_added": true,
+    "production_stages_unchanged_by_test_asset_fix": true
+  },
+  "host_compose_checks": [
+    {"owner": "translator-service", "passed": 20, "subtests": 3, "native_compose_skips_covered": 20},
+    {"owner": "public-egress-gateway", "passed": 3, "native_compose_skips_covered": 2, "one_case_also_passed_natively": true}
+  ],
+  "remaining_native_skips": "17 Translator tests requiring external PostgreSQL; no new database acceptance is claimed",
+  "working_runtime_switched": false,
+  "queue_resume_issued": false,
+  "whole_infrastructure_release_admitted": false
+}
