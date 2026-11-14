@@ -17,7 +17,7 @@ COMPONENTS = ("priority-consumer", "normal-consumer", "worker", "outbox", "provi
 
 
 def observe_provider() -> str:
-    """Only a worker can inspect its opaque provider socket."""
+    """Only a worker can inspect its configured opaque provider port."""
     from translator_service.provider_healthcheck import main
 
     try:

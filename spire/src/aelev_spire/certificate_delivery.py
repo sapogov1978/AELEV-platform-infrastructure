@@ -36,10 +36,21 @@ STATUS_QUERY_PROFILE = {
 STATUS_PUBLISHER_PROFILE = {
     "status-publisher": ("status-secrets", "publisher.crt", "publisher.key"),
 }
+PUBLIC_SOURCE_PROFILE = {
+    "public-source": ("public-source-secrets", "source.crt", "source.key"),
+}
+OBSERVER_PROFILE = {key: PROFILE[key] for key in ("metrics", "observer")}
+SENDER_PROFILE = {
+    key: PROFILE[key]
+    for key in ("central-write", "local-query", "local-write", "sender")
+}
 PROFILES = {
     "status.json": PROFILE,
     "status-query.json": STATUS_QUERY_PROFILE,
     "status-publisher.json": STATUS_PUBLISHER_PROFILE,
+    "public-source.json": PUBLIC_SOURCE_PROFILE,
+    "observer.json": OBSERVER_PROFILE,
+    "sender.json": SENDER_PROFILE,
 }
 TRUST = {
     "metrics": (("sender-secrets", "server-ca.crt"),),
@@ -57,11 +68,13 @@ TRUST = {
     ),
     "status-publisher": (),
     "status-query": (),
+    "public-source": (),
 }
 MARKERS = {
     "observer-secrets": "observation-observer",
     "sender-secrets": "observation-sender",
     "status-secrets": "observation-status",
+    "public-source-secrets": "public-source-secrets",
 }
 
 
@@ -192,9 +205,12 @@ def verify_candidate(path: Path, key_path: Path, raw: bytes, issuer_raw: bytes) 
     )
 
 
-def marker(role: str, root: Path) -> None:
+def marker(role: str, root: Path, installation: str) -> None:
     value = json.loads((root / role / "owner.json").read_bytes())
-    require(value == {"owner": OWNER, "role": MARKERS[role]})
+    expected = {"owner": OWNER, "role": MARKERS[role]}
+    if role == "public-source-secrets":
+        expected["project"] = installation
+    require(value == expected)
 
 
 def trust_bundle(path: Path, issuer_raw: bytes) -> bytes:
@@ -262,8 +278,9 @@ def run(value: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
         )
         selected[item["id"]] = item
     require(set(selected) == set(profile))
-    for role in {value[0] for value in profile.values()}:
-        marker(role, root)
+    owned_roles = {value[0] for value in profile.values()}
+    for role in owned_roles:
+        marker(role, root, value["installation_id"])
     status = root / "certificate-renewal-status"
     require(status.is_dir() and not status.is_symlink())
     # Independent renewal owners publish disjoint profiles on the same interval.
@@ -311,6 +328,8 @@ def run(value: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
         # remain for overlap and are never removed by the automatic leaf task.
         for name, _, issuer in prepared:
             for role, filename in TRUST[name]:
+                if role not in owned_roles:
+                    continue
                 path = root / role / filename
                 updated = trust_bundle(path, issuer)
                 if updated != path.read_bytes():

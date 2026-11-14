@@ -38,6 +38,7 @@ RUN install -d --owner=10001 --group=10001 /var/lib/spire /run/spire /run/svid /
     && rm -rf /usr/local/lib/python3.13/ensurepip/_bundled
 COPY --from=sqlite /out/libsqlite3.so.0 /usr/local/lib/libsqlite3.so.0
 RUN ldconfig && python -c "import sqlite3; assert sqlite3.sqlite_version_info == (3, 53, 4), sqlite3.sqlite_version"
+RUN install -d --owner=10001 --group=10001 --mode=0700 /run/certificate-renewal
 COPY artifacts.lock.json ./
 COPY licenses/SPIRE-LICENSE-1.15.4 /licenses/spire/LICENSE
 COPY src ./src
@@ -62,7 +63,7 @@ FROM runtime AS checks
 USER root
 COPY --from=check-dependencies /opt/aelev/.venv ./.venv
 COPY test ./test
-COPY install.sh install.ps1 export.sh export.ps1 ./
+COPY install.sh install.ps1 export.sh export.ps1 bootstrap.py local-inputs.py ./
 COPY pyproject.toml build_artifacts.py build_sqlite.py ./
 COPY compose.yml compose.agent.yml compose.observation.yml ./
 USER 10001:10001
@@ -80,4 +81,5 @@ USER root
 COPY --from=sqlite-musl /out/libsqlite3.so.0 /usr/local/lib/libsqlite3.so.0
 ENV LD_LIBRARY_PATH=/usr/local/lib
 RUN python -S -c "import sqlite3; assert sqlite3.sqlite_version_info == (3, 53, 4)"
+RUN python -S -c "import os; from pathlib import Path; p=Path('/run/certificate-renewal'); p.mkdir(parents=True, exist_ok=True, mode=0o700); p.chmod(0o700); os.chown(p,10001,10001)"
 USER 10001:10001

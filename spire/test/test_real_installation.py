@@ -310,6 +310,7 @@ def test_shell_install_repeat_register_and_revoke(
             "node_id": str(uuid.uuid4()),
             "spiffe_id": "spiffe://test.example/fixture-owner/component/install-test",
             "dns_names": ["localhost"],
+            "policy_mountpoints": ["identity.json", "network.json"],
             "actor": "isolated-test",
             "server_address": "spire-server",
             "server_port": 8081,
@@ -383,6 +384,34 @@ def test_shell_install_repeat_register_and_revoke(
                 == 0
             )
         assert install(projects[1], "agent") == 0
+        public_configuration = tmp_path / "network.json"
+        public_configuration.write_text('{"selected-by":"consumer"}')
+        public_configuration.chmod(0o644)
+        mounted = sandbox.docker(
+            "run",
+            "--rm",
+            "--network",
+            "none",
+            "--read-only",
+            "--cap-drop",
+            "ALL",
+            "--security-opt",
+            "no-new-privileges:true",
+            "--entrypoint",
+            "python",
+            "--mount",
+            "type=volume,source=" + projects[1] + "_svid,target=/run/svid,readonly",
+            "--mount",
+            "type=bind,source="
+            + str(public_configuration)
+            + ",target=/run/svid/network.json,readonly",
+            IMAGE,
+            "-S",
+            "-c",
+            "from pathlib import Path; "
+            "print(Path('/run/svid/network.json').read_text())",
+        )
+        assert mounted.decode().strip() == public_configuration.read_text()
         if managed_native:
             agent = (
                 sandbox.docker(

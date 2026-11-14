@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import logging
 import platform
@@ -85,7 +86,12 @@ def _local_engine(docker: str) -> tuple[dict[str, Any], str]:
     return cast(dict[str, Any], typed_info), endpoint
 
 
-def _compose(docker: str, endpoint: str, env_file: Path) -> list[str]:
+def _compose(
+    docker: str, endpoint: str, env_file: Path, role: str = "bundle"
+) -> list[str]:
+    if role not in {"bundle", "provider", "worker"}:
+        raise RuntimeError("TRANSLATOR_COMPUTE_ROLE_INVALID")
+    recipe = COMPOSE if role == "bundle" else ROOT / f"compose.compute-{role}.mtls.yml"
     if (
         not env_file.is_file()
         or env_file.is_symlink()
@@ -113,11 +119,11 @@ def _compose(docker: str, endpoint: str, env_file: Path) -> list[str]:
         "--env-file",
         str(env_file.resolve()),
         "-f",
-        str(COMPOSE),
+        str(recipe),
     ]
 
 
-def _configuration(command: list[str]) -> dict[str, Any]:
+def _configuration(command: list[str], role: str = "bundle") -> dict[str, Any]:
     raw = cast(
         object,
         json.loads(_execute(command + ["config", "--format", "json"], capture=True)),
@@ -129,6 +135,8 @@ def _configuration(command: list[str]) -> dict[str, Any]:
     if not isinstance(services, dict):
         raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
     typed_services = cast(dict[str, object], services)
+    if role != "bundle":
+        return _network_configuration(cast(dict[str, Any], configuration), role)
     if set(typed_services) != {
         "translation-provider",
         "translator-worker",
@@ -164,7 +172,7 @@ def _configuration(command: list[str]) -> dict[str, Any]:
         or "healthcheck" in provider
         or "ports" in provider
         or "expose" in provider
-        or len(typed_volumes) != len(provider_volumes)
+        or len(typed_volumes) != len(cast(list[object], provider_volumes))
         or len(secret_mounts) != 1
         or secret_mounts[0].get("type") != "bind"
         or secret_mounts[0].get("read_only") is not True
@@ -175,12 +183,182 @@ def _configuration(command: list[str]) -> dict[str, Any]:
     return cast(dict[str, Any], configuration)
 
 
-def run(action: str, env_file: Path, timeout: int) -> None:
+def _network_configuration(configuration: dict[str, Any], role: str) -> dict[str, Any]:
+    service_name = {
+        "provider": "translation-provider",
+        "worker": "translator-worker",
+    }.get(role)
+    if service_name is None or set(configuration["services"]) != {service_name}:
+        raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    service_value: object = configuration["services"][service_name]
+    if not isinstance(service_value, dict):
+        raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    service = cast(dict[str, Any], service_value)
+    if not PINNED_IMAGE.fullmatch(str(service.get("image", ""))):
+        raise RuntimeError("TRANSLATOR_COMPUTE_PINNED_IMAGE_REQUIRED")
+    if (
+        service.get("read_only") is not True
+        or service.get("cap_drop") != ["ALL"]
+        or "no-new-privileges:true" not in service.get("security_opt", [])
+        or service.get("restart") != "on-failure:3"
+        or any(
+            service.get(key)
+            for key in (
+                "privileged",
+                "cap_add",
+                "devices",
+                "pid",
+                "ipc",
+                "network_mode",
+                "container_name",
+                "user",
+                "depends_on",
+            )
+        )
+    ):
+        raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    expected = {
+        "/run/secrets/compute-provider",
+        "/run/secrets/compute-provider/identity.json",
+        *(
+            (
+                "/run/secrets/provider/credential.env",
+                "/run/secrets/compute-provider/transport.json",
+            )
+            if role == "provider"
+            else ("/run/secrets/database", "/run/secrets/telemetry/client")
+        ),
+    }
+    mounts = service.get("volumes", [])
+    if (
+        len(mounts) != len(expected)
+        or any(not isinstance(mount, dict) for mount in mounts)
+        or {mount.get("target") for mount in mounts} != expected
+        or any(mount.get("read_only") is not True for mount in mounts)
+    ):
+        raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    for mount in mounts:
+        if mount["target"] == "/run/secrets/compute-provider":
+            declared = configuration.get("volumes", {}).get(mount.get("source"), {})
+            if mount.get("type") != "volume" or declared.get("external") is not True:
+                raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+        elif (
+            mount.get("type") != "bind"
+            or mount.get("bind", {}).get("create_host_path") is not False
+            or not Path(str(mount.get("source", ""))).is_absolute()
+        ):
+            raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    if role == "provider":
+        if any(
+            service.get(key) is not None for key in ("command", "entrypoint")
+        ) or any(key in service for key in ("environment", "healthcheck", "expose")):
+            raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+        ports = service.get("ports", [])
+        try:
+            if (
+                len(ports) != 1
+                or ports[0]["target"] != 18487
+                or not 1 <= int(ports[0]["published"]) <= 65535
+            ):
+                raise ValueError
+            ipaddress.ip_address(ports[0]["host_ip"])
+        except (ValueError, KeyError, TypeError):
+            raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID") from None
+    else:
+        environment = service.get("environment", {})
+        if (
+            any(
+                key != "AELEV_ENVIRONMENT" and not key.startswith("AELEV_TRANSLATOR_")
+                for key in environment
+            )
+            or "ports" in service
+            or "expose" in service
+            or service.get("command")
+            != ["python", "-m", "translator_service.runtime", "worker"]
+            or environment.get("AELEV_TRANSLATOR_PROVIDER_TRANSPORT") != "mtls"
+            or environment.get("AELEV_TRANSLATOR_PROVIDER_TLS_ROOT")
+            != "/run/secrets/compute-provider"
+            or not str(environment.get("AELEV_TRANSLATOR_PROVIDER_URL", "")).startswith(
+                "https://"
+            )
+            or "AELEV_TRANSLATOR_SOCKET_PATH" in environment
+            or service.get("entrypoint") is not None
+        ):
+            raise RuntimeError("TRANSLATOR_COMPUTE_CONFIGURATION_INVALID")
+    return configuration
+
+
+def _network_owner(
+    docker: str,
+    endpoint: str,
+    command: list[str],
+    configuration: dict[str, Any],
+    action: str,
+) -> None:
+    identifiers = _execute(command + ["ps", "--all", "--quiet"], capture=True).split()
+    if not identifiers:
+        return
+    if len(identifiers) != 1 or any(
+        re.fullmatch(r"[a-f0-9]{12,64}", value) is None for value in identifiers
+    ):
+        raise RuntimeError("TRANSLATOR_COMPUTE_OWNER_HANDOFF_REQUIRED")
+    rows: object = json.loads(
+        _execute([docker, "--host", endpoint, "inspect", *identifiers], capture=True)
+    )
+    service_name = next(iter(configuration["services"]))
+    if not isinstance(rows, list):
+        raise RuntimeError("TRANSLATOR_COMPUTE_OWNER_HANDOFF_REQUIRED")
+    typed_rows = cast(list[object], rows)
+    if len(typed_rows) != 1 or not isinstance(typed_rows[0], dict):
+        raise RuntimeError("TRANSLATOR_COMPUTE_OWNER_HANDOFF_REQUIRED")
+    row = cast(dict[str, Any], typed_rows[0])
+    labels = row.get("Config", {}).get("Labels", {})
+    if (
+        labels.get("com.docker.compose.service") != service_name
+        or labels.get("com.docker.compose.project.working_dir") != str(ROOT.resolve())
+        or labels.get("com.docker.compose.project")
+        != command[command.index("--project-name") + 1]
+        or str(labels.get("com.docker.compose.oneoff", "false")).lower() != "false"
+    ):
+        raise RuntimeError("TRANSLATOR_COMPUTE_OWNER_HANDOFF_REQUIRED")
+    if action == "start":
+        image = configuration["services"][service_name]["image"]
+        hashes = _execute(
+            command + ["config", "--hash", service_name], capture=True
+        ).split()
+        image_id = _execute(
+            [
+                docker,
+                "--host",
+                endpoint,
+                "image",
+                "inspect",
+                "--format",
+                "{{.Id}}",
+                image,
+            ],
+            capture=True,
+        )
+        if (
+            len(hashes) != 2
+            or hashes[0] != service_name
+            or labels.get("com.docker.compose.config-hash") != hashes[1]
+            or row.get("Config", {}).get("Image") != image
+            or row.get("Image") != image_id
+            or row.get("State", {}).get("Running") is not True
+            or row.get("State", {}).get("Health", {}).get("Status") == "unhealthy"
+        ):
+            raise RuntimeError("TRANSLATOR_COMPUTE_OWNER_HANDOFF_REQUIRED")
+
+
+def run(action: str, env_file: Path, timeout: int, role: str = "bundle") -> None:
     docker = _docker()
     info, endpoint = _local_engine(docker)
-    command = _compose(docker, endpoint, env_file)
+    command = _compose(docker, endpoint, env_file, role)
     _execute(command + ["version"], capture=True)
-    configuration = _configuration(command)
+    configuration = _configuration(command, role)
+    if role != "bundle" and action in {"start", "stop"}:
+        _network_owner(docker, endpoint, command, configuration, action)
     if action == "prepare":
         _execute(command + ["pull"])
     elif action == "start":
@@ -199,6 +377,7 @@ def run(action: str, env_file: Path, timeout: int) -> None:
                 "architecture": info.get("Architecture"),
                 "services": sorted(configuration["services"]),
                 "started": action == "start",
+                "role": role,
             },
             sort_keys=True,
         )
@@ -212,12 +391,15 @@ def main() -> None:
     )
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=900)
+    parser.add_argument(
+        "--role", choices=("bundle", "provider", "worker"), default="bundle"
+    )
     args = parser.parse_args()
     if not 1 <= args.timeout <= 1800:
         raise SystemExit("TRANSLATOR_COMPUTE_TIMEOUT_INVALID")
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     try:
-        run(args.action, args.env_file, args.timeout)
+        run(args.action, args.env_file, args.timeout, args.role)
     except (
         json.JSONDecodeError,
         OSError,

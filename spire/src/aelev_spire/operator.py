@@ -15,7 +15,16 @@ from typing import Any, cast
 
 from .files import atomic, read, reserve, writer
 from .journal import append
-from .settings import AGENT, OWNER, SERVER, SERVER_SOCKET, domain, environment, identity
+from .settings import (
+    AGENT,
+    OWNER,
+    SERVER,
+    SERVER_SOCKET,
+    domain,
+    environment,
+    identity,
+    policy_mountpoints,
+)
 
 
 class EntryNotFound(ValueError):
@@ -62,6 +71,7 @@ def entries(entry_id: str) -> list[dict[str, Any]]:
 
 def validate(request: dict[str, Any]) -> tuple[str, str, int]:
     mode, trust, ttl = environment(request)
+    policy_mountpoints(request)
     owner = request.get("resource_owner")
     if (
         request.get("owner") != OWNER
@@ -111,6 +121,7 @@ def validate(request: dict[str, Any]) -> tuple[str, str, int]:
         "environment",
         "trust_domain",
         "svid_ttl_seconds",
+        "policy_mountpoints",
     }
     if set(request) - allowed:
         raise ValueError("SPIRE_OPERATOR_UNDECLARED_INPUT")
@@ -337,6 +348,7 @@ def locked(
                 "node_id",
                 "server_address",
                 "svid_ttl_seconds",
+                "policy_mountpoints",
             )
             if key in request
         }

@@ -24,6 +24,14 @@ from urllib.parse import urlsplit
 
 from .files import atomic, read, reserve, writer
 from .observation_diagnostics import Diagnostics
+from .public_state import (
+    PeerTLS,
+    RemoteSource,
+    heartbeat,
+    leaf_renewal,
+    origin,
+    renewal,
+)
 
 OWNER = "infrastructure-spire"
 PREFIX = "AELEV_INFRASTRUCTURE_SPIRE_"
@@ -41,72 +49,51 @@ TELEMETRY_IDENTITIES = {
 }
 STATUS_PUBLISHER_IDENTITIES = {"status-publisher"}
 STATUS_QUERY_IDENTITIES = {"status-query"}
+PUBLIC_SOURCE_IDENTITIES = {"public-source"}
 CAPACITY = 4096
+type Source = Path | RemoteSource
 
 
 def pending_files(root: Path) -> list[Path]:
     return sorted(p for p in root.glob("*.json") if p.name != "owner.json")
 
 
-def snapshot(path: Path = SOURCE) -> dict[str, Any]:
-    value = read(path)
-    age = (
-        datetime.now(UTC) - datetime.fromisoformat(value["updated_at"])
-    ).total_seconds()
-    if (
-        value.get("owner") != OWNER
-        or type(value.get("ready")) is not bool
-        or value.get("role") != "server"
-        or not 0 <= age < 15
-        or not re.fullmatch(r"SPIRE_[A-Z0-9_]{1,120}", value.get("reason", ""))
-    ):
+def remote_read(source: RemoteSource) -> dict[str, Any]:
+    try:
+        return source.read()
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        http.client.HTTPException,
+    ) as error:
+        raise ValueError("SPIRE_PUBLIC_SOURCE_UNAVAILABLE") from error
+
+
+def snapshot(path: Source = SOURCE) -> dict[str, Any]:
+    value = (
+        remote_read(path)["heartbeat"] if isinstance(path, RemoteSource) else read(path)
+    )
+    if not isinstance(value, dict):
         raise ValueError("SPIRE_OBSERVATION_STALE_OR_INVALID")
-    return value
+    return heartbeat(cast(dict[str, Any], value))
 
 
 def _renewal_receipt(path: Path, identities: set[str]) -> dict[str, Any]:
-    value = read(path)
-    now = time.time()
-    raw_certificates = value.get("certificates")
-    if not isinstance(raw_certificates, list):
-        raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
-    certificates = cast(list[object], raw_certificates)
-    if (
-        value.get("owner") != "telemetry-certificate-renewal"
-        or value.get("consumer_owner") != OWNER
-        or value.get("schema_version") != 1
-        or value.get("renewal_healthy") is not True
-        or value.get("ready") is not True
-        or type(value.get("checked_at")) not in (int, float)
-        or not 0 <= now - float(value["checked_at"]) <= 180
-        or type(value.get("last_success_at")) not in (int, float)
-        or len(certificates) != len(identities)
-    ):
-        raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
-    names: set[str] = set()
-    for raw_item in certificates:
-        if not isinstance(raw_item, dict):
-            raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
-        item = cast(dict[str, Any], raw_item)
-        if (
-            item.get("id") not in identities
-            or item["id"] in names
-            or item.get("healthy") is not True
-            or type(item.get("certificate_expires_at")) not in (int, float)
-            or type(item.get("ca_expires_at")) not in (int, float)
-            or min(float(item["certificate_expires_at"]), float(item["ca_expires_at"]))
-            - now
-            <= 30 * 86400
-        ):
-            raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
-        names.add(item["id"])
-    if names != identities:
-        raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
-    return value
+    return renewal(read(path), identities)
 
 
-def renewal_snapshot(path: Path = RENEWAL) -> dict[str, Any]:
+def renewal_snapshot(path: Source = RENEWAL) -> dict[str, Any]:
     """Require both telemetry and status-client receipts without issuer access."""
+    if isinstance(path, RemoteSource):
+        value = remote_read(path)["renewal"]
+        if not isinstance(value, dict):
+            raise ValueError("SPIRE_CERTIFICATE_RENEWAL_NOT_READY")
+        return renewal(
+            cast(dict[str, Any], value),
+            PUBLIC_SOURCE_IDENTITIES,
+        )
     telemetry = _renewal_receipt(path, TELEMETRY_IDENTITIES)
     status_query = _renewal_receipt(
         path.with_name(STATUS_QUERY_RENEWAL_FILE), STATUS_QUERY_IDENTITIES
@@ -114,23 +101,54 @@ def renewal_snapshot(path: Path = RENEWAL) -> dict[str, Any]:
     status_publisher = _renewal_receipt(
         path.with_name(STATUS_RENEWAL_FILE), STATUS_PUBLISHER_IDENTITIES
     )
+    receipts = [telemetry, status_query, status_publisher]
+    return merge_receipts(receipts)
+
+
+def merge_receipts(receipts: list[dict[str, Any]]) -> dict[str, Any]:
     return {
-        **telemetry,
-        "last_success_at": min(
-            float(telemetry["last_success_at"]),
-            float(status_query["last_success_at"]),
-            float(status_publisher["last_success_at"]),
-        ),
-        "certificates": (
-            telemetry["certificates"]
-            + status_query["certificates"]
-            + status_publisher["certificates"]
-        ),
+        **receipts[0],
+        "checked_at": min(float(item["checked_at"]) for item in receipts),
+        "last_success_at": min(float(item["last_success_at"]) for item in receipts),
+        "certificates": [
+            item for receipt in receipts for item in receipt["certificates"]
+        ],
     }
 
 
+def component_renewal(
+    source: Source, role: str, secrets: Path, path: Path = RENEWAL
+) -> dict[str, Any]:
+    if not isinstance(source, RemoteSource):
+        return renewal_snapshot(path)
+    profiles = {
+        "observer": {
+            "observer.json": {"metrics": "metrics.crt", "observer": "observer.crt"}
+        },
+        "publisher": {
+            "status-query.json": {"status-query": "query.crt"},
+            "status-publisher.json": {"status-publisher": "publisher.crt"},
+        },
+    }[role]
+    return merge_receipts(
+        [
+            renewal_snapshot(source),
+            *(
+                leaf_renewal(
+                    path.with_name(name),
+                    {key: secrets / filename for key, filename in leaves.items()},
+                )
+                for name, leaves in profiles.items()
+            ),
+        ]
+    )
+
+
 def metrics(
-    path: Path = SOURCE, queue: Path | None = None, renewal_path: Path = RENEWAL
+    path: Source = SOURCE,
+    queue: Path | None = None,
+    renewal_path: Path = RENEWAL,
+    secrets: Path = Path("/run/secrets/observation"),
 ) -> bytes:
     try:
         status = snapshot(path)
@@ -143,10 +161,10 @@ def metrics(
     values = {"source_fresh": fresh, "native_ready": ready, "source_age_seconds": age}
     certificates: list[dict[str, Any]]
     try:
-        renewal = renewal_snapshot(renewal_path)
+        receipt = component_renewal(path, "observer", secrets, renewal_path)
         renewal_ready = 1
-        renewal_age = time.time() - float(renewal["last_success_at"])
-        certificates = renewal["certificates"]
+        renewal_age = time.time() - float(receipt["last_success_at"])
+        certificates = receipt["certificates"]
     except (OSError, ValueError, KeyError, TypeError):
         renewal_ready, renewal_age, certificates = 0, 181.0, []
     values.update(
@@ -387,7 +405,7 @@ class Server(ThreadingHTTPServer):
     def __init__(
         self,
         address: tuple[str, int],
-        source: Path,
+        source: Source,
         secrets: Path,
         queue: Path | None = None,
         renewal: Path = RENEWAL,
@@ -450,7 +468,9 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == "/readyz":
             try:
                 ready = snapshot(server.source)["ready"]
-                renewal_snapshot(server.renewal)
+                component_renewal(
+                    server.source, "observer", server.secrets, server.renewal
+                )
                 if (
                     server.queue is not None
                     and len(pending_files(server.queue)) >= CAPACITY
@@ -462,7 +482,7 @@ class Handler(BaseHTTPRequestHandler):
             body = b'{"status":"ready"}' if ready else b'{"code":"SPIRE_NOT_READY"}'
         elif self.path == "/metrics":
             body, content_type = (
-                metrics(server.source, server.queue, server.renewal),
+                metrics(server.source, server.queue, server.renewal, server.secrets),
                 "text/plain; version=0.0.4",
             )
         else:
@@ -511,7 +531,7 @@ def supervise_worker(
     return confirmed is None  # A different failure needs its own observation.
 
 
-def serve(root: Path, source: Path, secrets: Path, endpoint: str) -> None:
+def serve(root: Path, source: Source, secrets: Path, endpoint: str) -> None:
     diagnostics = Diagnostics(root)
     progress = [time.monotonic()]
 
@@ -607,7 +627,7 @@ def serve(root: Path, source: Path, secrets: Path, endpoint: str) -> None:
             raise ValueError("SPIRE_OBSERVATION_WORKER_STOPPED")
 
 
-def publish(action: str, source: Path) -> None:
+def publish(action: str, source: Source) -> None:
     from aelev_platform_ui_client import Settings, aggregate, provision, run
     from aelev_platform_ui_client import observe as measure
 
@@ -662,7 +682,8 @@ def publish(action: str, source: Path) -> None:
             state, observed_at = "UNKNOWN", datetime.now(UTC).isoformat()
         components = [{"id": "server", "state": state, "observed_at": observed_at}]
 
-        def check(host: str, port: int) -> str:
+        def check(url: str) -> str:
+            host, port = origin(url)
             context = ssl.create_default_context(
                 cafile=str(cfg.secret_root / "query-ca.crt")
             )
@@ -685,11 +706,36 @@ def publish(action: str, source: Path) -> None:
                 client.close()
 
         components += [
-            measure("observer", lambda: check("spire-observer", 8083)),
-            measure("telemetry", lambda: check("spire-telemetry-sender", 13134)),
+            measure(
+                "observer",
+                lambda: check(
+                    os.environ.get(
+                        PREFIX + "OBSERVER_URL", "https://spire-observer:8083"
+                    )
+                ),
+            ),
+            measure(
+                "telemetry",
+                lambda: check(
+                    os.environ.get(
+                        PREFIX + "SENDER_HEALTH_URL",
+                        "https://spire-telemetry-sender:13134",
+                    )
+                ),
+            ),
             measure(
                 "certificate-renewal",
-                lambda: "ONLINE" if renewal_snapshot()["ready"] else "OFFLINE",
+                lambda: "ONLINE"
+                if component_renewal(source, "publisher", cfg.secret_root)["ready"]
+                and (
+                    not isinstance(source, RemoteSource)
+                    or all(
+                        item["state"] == "ONLINE"
+                        for item in components
+                        if item["id"] in {"observer", "telemetry"}
+                    )
+                )
+                else "OFFLINE",
             ),
         ]
         return aggregate(components), components
@@ -704,6 +750,27 @@ def publish(action: str, source: Path) -> None:
             sys.argv = previous
 
 
+def select_source(action: str, path: Path, secrets: Path) -> Source:
+    mode = os.environ.get(PREFIX + "SOURCE_MODE", "file")
+    url = os.environ.get(PREFIX + "SOURCE_URL")
+    if mode == "file" and not url:
+        return path
+    if mode != "https" or not url:
+        raise ValueError("SPIRE_PUBLIC_SOURCE_CONFIGURATION_INVALID")
+    observer = action == "serve"
+    own = "observer" if observer else "query"
+    identity = PeerTLS(
+        secrets,
+        own + ".crt",
+        own + ".key",
+        "sender-ca.crt" if observer else "query-ca.crt",
+        "cn:AELEV SPIRE " + ("observer" if observer else "status-query"),
+        (os.environ[PREFIX + "SOURCE_IDENTITY"],),
+        server=False,
+    )
+    return RemoteSource(url, identity)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("serve", "publish", "provision"))
@@ -713,6 +780,15 @@ def main() -> None:
         "--secrets", type=Path, default=Path("/run/secrets/observation")
     )
     args = parser.parse_args()
+    source = (
+        args.source
+        if args.action == "provision"
+        else select_source(
+            args.action,
+            args.source,
+            args.secrets if args.action == "serve" else Path("/run/secrets/status"),
+        )
+    )
     if args.action == "serve":
         instance = os.environ.get(PREFIX + "UI_MODULE_ID", "")
         if (
@@ -721,11 +797,9 @@ def main() -> None:
             or uuid.UUID(instance).int == 0
         ):
             raise ValueError("SPIRE_OBSERVATION_MODULE_ID_REQUIRED")
-        serve(
-            args.root, args.source, args.secrets, os.environ[PREFIX + "OTLP_ENDPOINT"]
-        )
+        serve(args.root, source, args.secrets, os.environ[PREFIX + "OTLP_ENDPOINT"])
     else:
-        publish(args.action, args.source)
+        publish(args.action, source)
 
 
 if __name__ == "__main__":

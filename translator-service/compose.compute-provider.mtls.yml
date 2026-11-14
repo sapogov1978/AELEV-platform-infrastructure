@@ -1,0 +1,47 @@
+# One provider placement; no worker, shared socket, or sibling host is required.
+services:
+  translation-provider:
+    image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE:?set exact admitted network provider image by digest}
+    ports:
+      - target: 18487
+        published: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_PORT:?set published provider port}
+        host_ip: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_BIND_ADDRESS:?set provider node bind address}
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: provider-svid
+        target: /run/secrets/compute-provider
+        read_only: true
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IDENTITY_POLICY:?set provider public identity policy}
+        target: /run/secrets/compute-provider/identity.json
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_TRANSPORT_FILE:?set generic provider listener configuration}
+        target: /run/secrets/compute-provider/transport.json
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE:?set provider credential file}
+        target: /run/secrets/provider/credential.env
+        read_only: true
+        bind: {create_host_path: false}
+    group_add:
+      - "${AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID:?set credential read group}"
+    restart: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY:-on-failure:3}
+    read_only: true
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT:?set provider memory limit}
+    cpus: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS:?set provider CPU limit}
+    networks: [provider-routed]
+
+volumes:
+  provider-svid:
+    name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SVID_VOLUME:?set this node provider SVID delivery volume}
+    external: true
+
+networks:
+  provider-routed:

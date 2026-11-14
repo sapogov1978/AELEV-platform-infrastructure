@@ -19,6 +19,43 @@ PLAN = {
 }
 
 
+def test_declared_public_configuration_mountpoints_preserve_consumer_bytes(
+    tmp_path: Path,
+) -> None:
+    plan = {**PLAN, "policy_mountpoints": ["identity.json", "network.json"]}
+    root = tmp_path / "svid"
+    Exporter(root, plan)
+    public = root / "network.json"
+    assert public.read_bytes() == b""
+    assert stat.S_IMODE(public.stat().st_mode) == 0o444
+    public.chmod(0o600)
+    public.write_bytes(b'{"owner-selected":"configuration"}')
+    before = public.stat().st_ino
+    Exporter(root, plan)
+    assert public.stat().st_ino == before
+    assert public.read_bytes() == b'{"owner-selected":"configuration"}'
+
+
+@pytest.mark.parametrize(
+    "names",
+    [
+        ["identity.json", "current.json"],
+        ["identity.json", "owner.json"],
+        ["identity.json", "../network.json"],
+        ["identity.json"] * 2,
+        ["network.json"],
+        ["identity.json", "private.key"],
+    ],
+)
+def test_policy_mountpoints_cannot_replace_delivery_or_escape_root(
+    tmp_path: Path, names: list[str]
+) -> None:
+    root = tmp_path / "svid"
+    with pytest.raises(ValueError, match="POLICY_MOUNTPOINT_INVALID"):
+        Exporter(root, {**PLAN, "policy_mountpoints": names})
+    assert not root.exists()
+
+
 def test_generation_is_atomic_and_repeated_material_does_not_rotate(
     tmp_path: Path, credential: tuple[bytes, bytes, bytes]
 ) -> None:

@@ -1,7 +1,41 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "GENERIC_RENEWAL_READINESS_SOURCE_VERIFIED_RELEASE_PENDING",
+  "status": "SIGNED_ARTIFACT_VERIFIED_SECURITY_ADMISSION_PENDING",
+  "source_commit": "ce92cafdfe65076c282c94be0ab96c6b9985501e",
+  "source_ci": {
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43566665995",
+    "conclusion": "success",
+    "successful_jobs": 26,
+    "total_jobs": 26
+  },
+  "signed_artifact": {
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:ac458a37be0ddc05c8227e96c193f671acd28102647ec6890c31faaa26925a0b",
+    "workflow": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43567082843",
+    "cosign_identity_verified": true,
+    "source_commit_verified": true,
+    "platforms": ["linux/amd64", "linux/arm64"],
+    "per_platform_sbom_and_provenance_verified": true,
+    "native_runtime": {
+      "platform": "linux/arm64",
+      "python": "3.13.7",
+      "sqlite": "3.53.4",
+      "platform_ui_sdk": "1.1.2",
+      "delivery_source_sha256_verified": true
+    },
+    "security": {
+      "scanner": "Trivy 0.76.1",
+      "database_updated_at": "2026-11-14T01:05:40.480840314Z",
+      "raw_counts_per_platform": {
+        "CRITICAL": 6,
+        "HIGH": 136,
+        "MEDIUM": 169,
+        "LOW": 66,
+        "UNKNOWN": 6
+      },
+      "admitted": false
+    }
+  },
   "source_sha256": {
     "delivery.py": "9a8b22b3fc19f09338c8144055adbff6dcca695983bf3531d48579ded80c55cc",
     "test/test_delivery_http.py": "c626150b39b0f151b6f48414b9bdd2da9a39325b7cf5848f2f3bc97a7afddc50"
@@ -40,10 +74,11 @@
     "runtime_dependencies_changed": false
   },
   "open_gates": [
-    "exact committed source CI",
-    "signed multi-architecture sender release",
-    "native runtime SQLite 3.53.4 verification",
+    "sender image security admission; signed artifact has unresolved raw findings",
     "owner-specific adoption and independently placed runtime E2E",
     "physical distributed acceptance"
-  ]
+  ],
+  "production_admitted": false,
+  "working_runtime_switched": false,
+  "inference_requested": false
 }

@@ -18,7 +18,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec, rsa
 
 from .files import atomic, read, reserve
-from .settings import AGENT, AGENT_SOCKET, environment, identity
+from .settings import AGENT, AGENT_SOCKET, environment, identity, policy_mountpoints
 
 
 def verify(
@@ -83,6 +83,7 @@ class Exporter:
         self.root = root
         self.environment, self.trust_domain, _ = environment(plan)
         self.spiffe_id = identity(plan.get("spiffe_id"), self.trust_domain)
+        mountpoints = policy_mountpoints(plan)
         reserve(
             root,
             {
@@ -92,23 +93,29 @@ class Exporter:
                 "environment": self.environment,
             },
         )
-        self.reserve_policy_mountpoint()
+        for name in mountpoints:
+            self.reserve_policy_mountpoint(name)
 
-    def reserve_policy_mountpoint(self) -> None:
+    def reserve_policy_mountpoint(self, name: str = "identity.json") -> None:
         """Reserve a nested read-only mount without owning consumer policy."""
+        policy_mountpoints(
+            {
+                "policy_mountpoints": ["identity.json"]
+                if name == "identity.json"
+                else ["identity.json", name]
+            }
+        )
         directory = os.open(self.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         try:
             try:
                 descriptor = os.open(
-                    "identity.json",
+                    name,
                     os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
                     0o444,
                     dir_fd=directory,
                 )
             except FileExistsError:
-                existing = os.stat(
-                    "identity.json", dir_fd=directory, follow_symlinks=False
-                )
+                existing = os.stat(name, dir_fd=directory, follow_symlinks=False)
                 if not stat.S_ISREG(existing.st_mode):
                     raise ValueError("SPIRE_SVID_POLICY_MOUNTPOINT_INVALID") from None
             else:

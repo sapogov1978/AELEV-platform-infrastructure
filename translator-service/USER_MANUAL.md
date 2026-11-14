@@ -1,5 +1,7 @@
 # Руководство translator-service
 
+Независимое размещение provider и worker определяется [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md) и [сетевым руководством](compute-runtime/README.md#независимое-сетевое-размещение). Worker использует явные `AELEV_TRANSLATOR_PROVIDER_TRANSPORT=mtls`, `AELEV_TRANSLATOR_PROVIDER_URL=https://...` и `AELEV_TRANSLATOR_PROVIDER_TLS_ROOT`; в client identity policy `environment` совпадает с `AELEV_ENVIRONMENT`, а production допускает только `spire-file-v1`. TLS/config/transport failures оставляют job в прежнем retry; настройка сети не запускает обработку, не меняет очередь и не даёт `RESUME`.
+
 ## Отдельный образ издателя
 
 `AELEV_INFRASTRUCTURE_TRANSLATOR_UI_IMAGE` выбирает собственную цель `status-runtime`: артефакты и runtime reference provider в неё не входят. Закреплённый `aelev-platform-ui-client==1.1.2` проверяет живость командой `python -S /opt/aelev/publisher-health.py AELEV_INFRASTRUCTURE_TRANSLATOR_`, читая только подтверждённый heartbeat собственного журнала без загрузки приложения и сетевых запросов. Обновляйте только `translator-service-status-publisher`, сохраняя его том; перед этим согласуйте env и отдельные файловые identities с текущим Compose, не копируйте секреты другого владельца и не ослабляйте TLS. Такая проверка не подтверждает доступность провайдера и не устанавливает автовосстановление по `unhealthy`.

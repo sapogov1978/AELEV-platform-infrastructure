@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import importlib.util
 import json
+from copy import deepcopy
 from pathlib import Path
 from types import ModuleType
+from typing import Any
 
 import pytest
 
@@ -172,3 +174,176 @@ def test_unix_and_windows_entries_expose_same_lifecycle() -> None:
         assert action in source
     assert "station.py" in unix
     assert "station.py" in windows
+
+
+def network_configuration(role: str) -> dict[str, Any]:
+    volume = role + "-svid"
+    targets = ["/run/secrets/compute-provider/identity.json"] + (
+        [
+            "/run/secrets/provider/credential.env",
+            "/run/secrets/compute-provider/transport.json",
+        ]
+        if role == "provider"
+        else ["/run/secrets/database", "/run/secrets/telemetry/client"]
+    )
+    service: dict[str, Any] = {
+        "image": "registry.example/" + role + "@sha256:" + "a" * 64,
+        "read_only": True,
+        "cap_drop": ["ALL"],
+        "security_opt": ["no-new-privileges:true"],
+        "restart": "on-failure:3",
+        "volumes": [
+            {
+                "type": "volume",
+                "source": volume,
+                "target": "/run/secrets/compute-provider",
+                "read_only": True,
+            },
+            *[
+                {
+                    "type": "bind",
+                    "source": "/operator" + target,
+                    "target": target,
+                    "read_only": True,
+                    "bind": {"create_host_path": False},
+                }
+                for target in targets
+            ],
+        ],
+    }
+    if role == "provider":
+        # Compose normalizes inherited image defaults to null. They are not
+        # implementation overrides and must remain distinct from a command.
+        service["command"] = None
+        service["entrypoint"] = None
+        service["ports"] = [
+            {"target": 18487, "published": "38487", "host_ip": "0.0.0.0"}
+        ]
+    else:
+        service["command"] = ["python", "-m", "translator_service.runtime", "worker"]
+        service["environment"] = {
+            "AELEV_TRANSLATOR_PROVIDER_TRANSPORT": "mtls",
+            "AELEV_TRANSLATOR_PROVIDER_TLS_ROOT": "/run/secrets/compute-provider",
+            "AELEV_TRANSLATOR_PROVIDER_URL": "https://provider.example:38487",
+        }
+    return {
+        "services": {
+            "translation-provider"
+            if role == "provider"
+            else "translator-worker": service
+        },
+        "volumes": {volume: {"external": True, "name": "this-node-" + volume}},
+    }
+
+
+@pytest.mark.parametrize("role", ["provider", "worker"])
+def test_network_placement_is_independent_and_preserves_security_boundary(
+    role: str,
+) -> None:
+    module = station()
+    original = network_configuration(role)
+    assert module._network_configuration(original, role) is original
+    service_name = next(iter(original["services"]))
+    for key, value in (
+        ("privileged", True),
+        ("read_only", False),
+        ("restart", "always"),
+        ("network_mode", "host"),
+        ("depends_on", {"other": {"condition": "service_healthy"}}),
+    ):
+        changed = deepcopy(original)
+        changed["services"][service_name][key] = value
+        with pytest.raises(RuntimeError, match="CONFIGURATION_INVALID"):
+            module._network_configuration(changed, role)
+    for mutation in ("credential", "socket", "write", "local-volume"):
+        changed = deepcopy(original)
+        service = changed["services"][service_name]
+        if mutation == "credential":
+            service.setdefault("environment", {})["OPENAI_API_KEY"] = (
+                "forbidden-not-a-real-key"
+            )
+        elif mutation == "socket":
+            service["volumes"].append(
+                {
+                    "type": "volume",
+                    "target": "/run/aelev-translator",
+                    "source": "forbidden",
+                }
+            )
+        elif mutation == "write":
+            service["volumes"][0]["read_only"] = False
+        else:
+            changed["volumes"][role + "-svid"]["external"] = False
+        with pytest.raises(RuntimeError, match="CONFIGURATION_INVALID"):
+            module._network_configuration(changed, role)
+
+
+@pytest.mark.parametrize("role", ["provider", "worker"])
+def test_network_recipe_can_be_selected_without_other_role_inputs(
+    tmp_path: Path, role: str
+) -> None:
+    module = station()
+    env = tmp_path / "placement.env"
+    env.write_text(
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_COMPUTE_COMPOSE_PROJECT=translator-"
+        + role
+        + "\n"
+    )
+    command = module._compose("/usr/bin/docker", "unix:///run/docker.sock", env, role)
+    assert command[-1] == str(ROOT / f"compose.compute-{role}.mtls.yml")
+
+
+@pytest.mark.parametrize(
+    "change", ["foreign-owner", "stopped", "image", "config", "replicas"]
+)
+def test_network_start_requires_owned_unchanged_running_incarnation(
+    monkeypatch: pytest.MonkeyPatch, change: str
+) -> None:
+    module = station()
+    configuration = network_configuration("provider")
+    service_name = "translation-provider"
+    command = [
+        "/usr/bin/docker",
+        "--host",
+        "unix:///run/docker.sock",
+        "compose",
+        "--project-name",
+        "test-provider",
+    ]
+    row: dict[str, Any] = {
+        "Config": {
+            "Image": configuration["services"][service_name]["image"],
+            "Labels": {
+                "com.docker.compose.service": service_name,
+                "com.docker.compose.project": "test-provider",
+                "com.docker.compose.project.working_dir": str(ROOT.resolve()),
+                "com.docker.compose.config-hash": "a" * 64,
+            },
+        },
+        "Image": "sha256:" + "b" * 64,
+        "State": {"Running": True, "Health": {"Status": "healthy"}},
+    }
+    if change == "foreign-owner":
+        row["Config"]["Labels"]["com.docker.compose.project.working_dir"] = "/foreign"
+    elif change == "stopped":
+        row["State"]["Running"] = False
+    elif change == "image":
+        row["Image"] = "sha256:" + "c" * 64
+    elif change == "config":
+        row["Config"]["Labels"]["com.docker.compose.config-hash"] = "d" * 64
+
+    def execute(arguments: list[str], *, capture: bool = False) -> str:
+        assert not any(
+            value in {"up", "stop", "start", "restart", "rm"} for value in arguments
+        )
+        if arguments[-3:] == ["ps", "--all", "--quiet"]:
+            return "a" * 64 + ("\n" + "b" * 64 if change == "replicas" else "")
+        if "--hash" in arguments:
+            return service_name + " " + "a" * 64
+        if "image" in arguments:
+            return "sha256:" + "b" * 64
+        return json.dumps([row])
+
+    monkeypatch.setattr(module, "_execute", execute)
+    with pytest.raises(RuntimeError, match="OWNER_HANDOFF_REQUIRED"):
+        module._network_owner(command[0], command[2], command, configuration, "start")

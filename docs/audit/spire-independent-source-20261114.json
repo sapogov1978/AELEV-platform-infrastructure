@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "status": "FOUR_ROLE_LOCAL_PROOF_PASS_SOURCE_RELEASE_AND_SECURITY_GATES_OPEN",
+  "date": "2026-11-14",
+  "owner": "infrastructure-spire",
+  "native_baseline": {
+    "owner": "infrastructure-spire",
+    "image": "sha256:a560f1fbd99f3d010245389f2f38d43f7a7b5551aa505c2fd779015b29e5d088",
+    "source_dirty": true,
+    "platform": "linux/arm64",
+    "started_at": "2026-11-14T03:42:26.170764+00:00",
+    "inference_requested": false,
+    "working_runtime_switched": false,
+    "cli_exit_code": 0,
+    "exit_code": 0,
+    "oom_killed": false,
+    "totals": {
+      "tests": 237,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 10
+    },
+    "versions": {
+      "python": "3.13.7",
+      "sqlite": "3.53.4",
+      "cryptography": "50.0.1"
+    },
+    "status": "PASS"
+  },
+  "network_proof": {
+    "started_at": "2026-11-14T03:54:10.844029+00:00",
+    "status": "PASS",
+    "platform": "linux/arm64",
+    "images": {
+      "runtime": "sha256:083688c4e6d128e4163cc342dcf3cb4ab9b5172d0c4f19203ebedcb66686433a",
+      "operator-installer": "sha256:39a68212b16e96431b78f94a8142d43a0b434b7b1344780e4cca56f9a7e824c7"
+    },
+    "projects": {
+      "server": "aelev_spire_network_20261114_a1_server",
+      "observer": "aelev_spire_network_20261114_a1_observer"
+    },
+    "physical_nodes": 1,
+    "inference_requested": false,
+    "working_runtime_switched": false,
+    "assertions": {
+      "native_server_projection": true,
+      "no_shared_state": true,
+      "separate_compose_projects": true,
+      "remote_metrics_fresh": true,
+      "missing_renewal_not_ready": true,
+      "source_loss_reflected": true,
+      "source_recovery_reflected": true,
+      "repeat_preserves_running_instance": true
+    },
+    "test_containers_removed": true,
+    "test_owned_volumes_preserved": true
+  },
+  "evidence_sha256": {
+    "proof.json": "d9b3366c6df328ec676beb2476c8d717ea20dd385cd59d2544c89add82c06b36",
+    "source-hashes.json": "163417cf1110a3b7028d73cd527edc7d14e8f99519a8e199d608136b677b41ac",
+    "server.install.log": "fd02ab3a9a66163809ac9d344c118bfece0ffabd4da0f0a48489c7d40b0b76fd",
+    "observer.install.log": "d238863ace728f1c72f8d43334585d0411f45991aee0c5085328234c6bad382f"
+  },
+  "open_gates": [
+    "committed exact-source SPIRE CI and signed infrastructure release",
+    "sender security admission and admitted base pin before complete network release",
+    "automatic renewal scheduling and protected public-receipt delivery on independently placed nodes",
+    "owner quality admission and signed final compute workers",
+    "complete role installer/config binding and replica fencing",
+    "two physical nodes and production site admission",
+    "clean checkout acceptance of complete five-repository product"
+  ],
+  "production_ready": false,
+  "infrastructure_release_admitted": false,
+  "working_runtime_switched": false,
+  "native_final_regression": {
+    "image": "sha256:83295c60c6ffa2d93b87a35ea71f3ec3475e24cbeae69de77d114df7c6b120e3",
+    "platform": "linux/arm64",
+    "python": "3.13.7",
+    "source_snapshot": "native-compute-identity-2",
+    "exit_code": 0,
+    "oom_killed": false,
+    "totals": {
+      "tests": 261,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 10
+    },
+    "inference_requested": false,
+    "status": "PASS"
+  },
+  "public_native_policy_mountpoint_regression": {
+    "tests": 1,
+    "passed": 1,
+    "skipped": 0,
+    "image_source": "native-compute-identity-1",
+    "junit_sha256": "4b1e4a3b262019397e91d2fcc8b0335b15fc2aae942018d1230b0036ab0c99db"
+  },
+  "four_role_native": {
+    "status": "PASS",
+    "module_id": "abec6c51-e37f-48c7-a61f-ce50086a24f6",
+    "projects": {
+      "server": "aelev_spire_four_66b9b4ad_server",
+      "observer": "aelev_spire_four_66b9b4ad_observer",
+      "telemetry-sender": "aelev_spire_four_66b9b4ad_telemetry_sender",
+      "status-publisher": "aelev_spire_four_66b9b4ad_status_publisher"
+    },
+    "images": {
+      "runtime": "sha256:677e0494868a3654495de286c7e9b41ff0ad63abae05684caeb8192879904000",
+      "operator-installer": "sha256:82ace74fdd779e715b5cf819cd62524a05a7f0908a6e5da00037f932d78f0970",
+      "telemetry-sender": "sha256:c428483ad6b3c81cfc1853899aba3f2637f0387956b2d5c663052b37c92b95a8",
+      "checks": "sha256:79e77107b48b10d7a25f76b4da0c21af83e690ae761f8e41f92f44bfac9f3fcc"
+    },
+    "physical_nodes": 1,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "signed_sender_base_security_admitted": false,
+    "ui_catalog_readback_verified": false,
+    "assertions": {
+      "no_shared_volumes_between_roles": true,
+      "observer_ready": true,
+      "sender_ready": true,
+      "real_central_durable_delivery": true,
+      "real_platform_ui_ack": true,
+      "all_repeats_preserve_instances": true
+    },
+    "sender_journal": {
+      "accepted_sequence": 16,
+      "remaining_records": 2
+    },
+    "central_ack_proof_method": "own sender accepted sequence advanced and journal drained; exact-source forward() removes only after matching central durable ACK",
+    "publisher_ack": {
+      "module": "abec6c51-e37f-48c7-a61f-ce50086a24f6",
+      "sequence": 3,
+      "pending": false
+    },
+    "test_containers_removed": true,
+    "test_owned_volumes_preserved": true,
+    "publication_online_observed": true,
+    "final_sender_status": {
+      "http_status": 200,
+      "body": {
+        "records": 0,
+        "pending": 0,
+        "bytes": 0,
+        "failed": 0,
+        "capacity": 1073741824,
+        "worker_alive": 1,
+        "admission_pressure": 0,
+        "blocking_errors": {},
+        "certificate_renewal_ready": 1
+      }
+    },
+    "final_own_journal_diagnostic": {
+      "exit_code": 0,
+      "stdout": "accepted_sequence [(26,)]\nremaining (0,)\n",
+      "stderr": ""
+    },
+    "maintenance": "operator; automatic distributed scheduling not proven",
+    "test_evidence_sha256": {
+      "proof.json": "00d8792f9202ea89ac1a32774e5f1678ad6cf521147bee605a9eee6392935af1",
+      "sender.public-status.json": "ad4bdfd9914f039603311e9841c63f3b74182771490c06bdc6b7e1c3db8c0436",
+      "telemetry-sender.transport-diagnostic.json": "0c5b64d04961ace330c845c50b32a9785982b72ac1712ce202392cf5a0543bc4",
+      "status-publisher.runtime.log": "7a1b1fea3d1768d1cb37c022e9648bd03ab78f4be579cc9cd28185af83f0acce"
+    },
+    "operator_script_sha256": "3d465c6feafea3c45c804e5b191eaff6bf4095bb2b54eb50346f47fce157382e"
+  },
+  "four_role_attempts": [
+    {
+      "attempt": 0,
+      "status": "FAIL",
+      "code": "FULL_RUNTIME_SPIRE_RENEWAL_TELEMETRY_RENEWAL_DELIVERY_TRANSPORT_FAILED",
+      "proof_sha256": "a9beb32ab8b95a6d8b82fe91e173859e210cb2ed0b502ddaab77cae7ee81278b",
+      "classification": "sender first receipt volume ownership failure; fixed with fresh-volume regression"
+    },
+    {
+      "attempt": 1,
+      "status": "FAIL",
+      "code": "PUBLIC_CONTRACT_DEADLINE",
+      "proof_sha256": "e628183b3e94467148ed00f96c17813b8c5e82f5a309a6113a2c1b16682b07f7",
+      "classification": "test endpoint hostname did not match existing central server certificate; corrected input"
+    },
+    {
+      "attempt": 2,
+      "status": "FAIL",
+      "code": "PUBLIC_CONTRACT_DEADLINE",
+      "proof_sha256": "fde8c3719833e1d9126dc7bf989e920653d95b6d2210bd99549d6c220e3ebf7f",
+      "classification": "test incorrectly required retained sender records after successful ACK; assertion corrected"
+    },
+    {
+      "attempt": 3,
+      "status": "FAIL",
+      "code": "PUBLIC_CONTRACT_DEADLINE",
+      "proof_sha256": "1b3d83f0bb7700838bef893972b7d191136c8b5d46ea5ca6eeaf7d410ff4884a",
+      "classification": "diagnostic repeat confirmed ingress TLS and successful journal drain; old assertion still failed"
+    },
+    {
+      "attempt": 4,
+      "status": "PASS",
+      "code": null,
+      "proof_sha256": "00d8792f9202ea89ac1a32774e5f1678ad6cf521147bee605a9eee6392935af1",
+      "classification": "all four roles, ONLINE publication, journal drain and repeat passed"
+    }
+  ],
+  "independent_profile_delivery": {
+    "helper_image": "sha256:a18c90275306dd93e6805eb83662a961244bef840bcea6fe490bb1c9f60d9385",
+    "operator_python": "Python 3.13.16",
+    "source_sha256": {
+      "spire/test/test_real_renewal.py": "188fd924c58bca97b39418e58c7738f859c8260d96a0ceac247b1a4da86b2ae6",
+      "tools/spire_renewal.py": "f296c7a8cc9d9aa5d7e784397a22094666bc786a01a23c128fa312702c52f3df",
+      "spire/local-inputs.py": "c99e51a2b195933f7338c4663a79444e2d42cefe8f740d7c875b7718c8ec3679"
+    },
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "totals": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "status": "PASS",
+    "exit_code": 0
+  },
+  "native_sender_first_mount": {
+    "status": "PASS",
+    "old_sender_image": "sha256:4d8b33a7622699f431df9a84410e2b3eb90b1fffc185b1aaf174d991d9a3e155",
+    "new_sender_image": "sha256:c428483ad6b3c81cfc1853899aba3f2637f0387956b2d5c663052b37c92b95a8",
+    "runtime_image": "sha256:677e0494868a3654495de286c7e9b41ff0ad63abae05684caeb8192879904000",
+    "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:ac458a37be0ddc05c8227e96c193f671acd28102647ec6890c31faaa26925a0b",
+    "totals": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "inference_requested": false,
+    "working_runtime_switched": false
+  },
+  "native_latest_source_snapshot": {
+    "status": "PASS",
+    "images": {
+      "runtime": "sha256:677e0494868a3654495de286c7e9b41ff0ad63abae05684caeb8192879904000",
+      "operator-installer": "sha256:82ace74fdd779e715b5cf819cd62524a05a7f0908a6e5da00037f932d78f0970",
+      "telemetry-sender": "sha256:4d8b33a7622699f431df9a84410e2b3eb90b1fffc185b1aaf174d991d9a3e155",
+      "checks": "sha256:79e77107b48b10d7a25f76b4da0c21af83e690ae761f8e41f92f44bfac9f3fcc"
+    },
+    "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:ac458a37be0ddc05c8227e96c193f671acd28102647ec6890c31faaa26925a0b",
+    "platform": "linux/arm64",
+    "python": "3.13.7",
+    "totals": {
+      "tests": 275,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 11
+    },
+    "exit_code": 0,
+    "working_runtime_switched": false,
+    "inference_requested": false
+  },
+  "host_latest_checks": {
+    "python": "3.13.16",
+    "totals": {
+      "tests": 276,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 11
+    },
+    "ruff": "PASS",
+    "pyright": "PASS",
+    "junit_sha256": "89b314b9dedd5fe7f11ac721352aa68e2a7fb2397313587c4567bbc829e1ad0a"
+  }
+}

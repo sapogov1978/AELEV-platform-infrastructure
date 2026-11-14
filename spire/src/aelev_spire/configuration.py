@@ -19,11 +19,16 @@ def seed(root: Path, request: dict[str, Any]) -> None:
         "server-configuration",
         "agent-bootstrap",
         "operator-request",
+        "public-source-secrets",
     }:
         raise ValueError("SPIRE_CONFIGURATION_OWNER_INVALID")
     reserve(root, marker)
     files: dict[str, str] = request["files"]
     allowed = {"plan.json", "bundle.crt", "join-token", "request.json"}
+    if marker["role"] == "public-source-secrets":
+        allowed = {"source.crt", "source.key", "source-client-ca.crt"}
+        if set(files) != allowed:
+            raise ValueError("SPIRE_CONFIGURATION_FILES_INVALID")
     if set(files) - allowed or not 1 <= len(files) <= 3:
         raise ValueError("SPIRE_CONFIGURATION_FILES_INVALID")
     for name, encoded in files.items():

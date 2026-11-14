@@ -457,6 +457,7 @@ class Installer:
                 "grafana-secrets",
                 "grafana-admin",
                 "certificate-renewal-status",
+                "public-source-secrets",
             }
             if (
                 (self.root / "deployment.json").exists()
@@ -469,8 +470,10 @@ class Installer:
                         "agent",
                         "operator",
                         "bootstrap-output",
+                        "public-source-secrets",
                     }
                     or (self.root / "observation-deployment.json").exists()
+                    or (self.root / "component-deployment.json").exists()
                 )
             ):
                 raise ValueError("SPIRE_INSTALL_STATE_RESTORE_REQUIRED")
@@ -649,6 +652,11 @@ class Installer:
             raise ValueError("SPIRE_INSTALL_CONTAINER_NAME_INVALID")
         bind_address = "127.0.0.1"
         if role == "server":
+            from .network import subnet
+            from .source_setup import specification
+
+            subnet(plan.get("access_subnet"))
+            specification(plan)
             node_ttl(plan)
             port = plan.get("public_port", 18081)
             if type(port) is not int or not 1 <= port <= 65535:
@@ -727,6 +735,12 @@ class Installer:
             }
             model = self.resolve("compose.yml", values)
             target = "spire-server"
+            from .source_setup import configure
+
+            configure(self, model, plan)
+            from .network import configure as configure_network
+
+            configure_network(model, "spire-access", plan.get("access_subnet"))
             if mode == "production":
                 model["services"][target]["command"] = [
                     "server",
@@ -905,6 +919,9 @@ def main() -> None:
             "revoke",
             "inspect",
             "observation",
+            "observer",
+            "status-publisher",
+            "telemetry-sender",
             "export-bootstrap",
         ),
     )
@@ -944,6 +961,9 @@ def main() -> None:
         "server",
         "agent",
         "observation",
+        "observer",
+        "status-publisher",
+        "telemetry-sender",
     }:
         parser.error("native restart selection requires a runtime installation role")
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -963,6 +983,20 @@ def main() -> None:
             raise ValueError("SPIRE_INSTALL_LOCK_INVALID")
         lock = lock_path.open("a+b")
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        if arguments.role in {"observer", "status-publisher", "telemetry-sender"}:
+            from .components import install as install_component
+
+            component_path = Path("/run/input/component.json")
+            if component_path.exists():
+                component_plan = read(component_path)
+            else:
+                component_plan = read(arguments.root / "component-deployment.json")[
+                    "plan"
+                ]
+            install_component(
+                installer, arguments.role, component_plan, Path("/run/input")
+            )
+            return
         if arguments.role == "observation":
             from .observation_setup import install
 

@@ -8,7 +8,7 @@ import signal
 import sys
 import threading
 import time
-from typing import Any
+from typing import Any, cast
 
 import httpx
 from confluent_kafka import Consumer, KafkaError, Producer
@@ -16,7 +16,7 @@ from jsonschema import ValidationError
 from opentelemetry.trace import SpanKind
 from sqlalchemy.exc import SQLAlchemyError
 
-from translator_service import health_heartbeat, observability
+from translator_service import health_heartbeat, observability, provider_transport
 from translator_service.contracts import RESULT_TOPIC, RESULT_TOPIC_V2, digest
 from translator_service.environment import database_sslmode, database_url
 from translator_service.repository import Repository
@@ -88,17 +88,23 @@ def compute(data: dict[str, Any]) -> dict[str, Any]:
         **{key: data[key] for key in ("source_language", "target_language")},
         "text": data["text"],
     }
-    with httpx.Client(
-        transport=httpx.HTTPTransport(uds=os.environ["AELEV_TRANSLATOR_SOCKET_PATH"]),
-        base_url="http://translation-provider",
-        trust_env=False,
-        timeout=240,
-    ) as client:
-        health_heartbeat.progress("worker", "provider")
-        try:
-            response = client.post("/v1/translate", json=payload)
-        finally:
-            health_heartbeat.progress("worker")
+    transport_mode = provider_transport.mode()
+    health_heartbeat.progress("worker", "provider")
+    try:
+        if transport_mode == "mtls":
+            response = provider_transport.request(payload)
+        else:
+            with httpx.Client(
+                transport=httpx.HTTPTransport(
+                    uds=os.environ["AELEV_TRANSLATOR_SOCKET_PATH"]
+                ),
+                base_url="http://translation-provider",
+                trust_env=False,
+                timeout=240,
+            ) as client:
+                response = client.post("/v1/translate", json=payload)
+    finally:
+        health_heartbeat.progress("worker")
     if response.status_code == 422:
         code = response.json().get("detail", "TRANSLATOR_REQUEST_INVALID")
         permitted = {
@@ -114,16 +120,24 @@ def compute(data: dict[str, Any]) -> dict[str, Any]:
             "error_code": code if code in permitted else "TRANSLATOR_REQUEST_INVALID",
         }
     response.raise_for_status()
-    result = response.json()
-    if result.get("schema_version") != payload["schema_version"]:
+    decoded: object = response.json()
+    if not isinstance(decoded, dict):
+        raise RuntimeError("TRANSLATOR_PRIVATE_RESPONSE_INVALID")
+    result = cast(dict[str, Any], decoded)
+    if (
+        set(result) - {"schema_version", "translated_text", "warnings"}
+        or result.get("schema_version") != payload["schema_version"]
+    ):
         raise RuntimeError("TRANSLATOR_PRIVATE_RESPONSE_INVALID")
     translated = result.get("translated_text")
-    warnings = result.get("warnings", [])
+    raw_warnings: object = result.get("warnings", [])
+    if not isinstance(raw_warnings, list):
+        raise RuntimeError("TRANSLATOR_PRIVATE_RESPONSE_INVALID")
+    warnings = cast(list[object], raw_warnings)
     if (
         not isinstance(translated, str)
         or not translated.strip()
         or len(translated) > 48000
-        or not isinstance(warnings, list)
         or len(warnings) > 32
         or any(
             not isinstance(warning, str) or len(warning) > 128 for warning in warnings

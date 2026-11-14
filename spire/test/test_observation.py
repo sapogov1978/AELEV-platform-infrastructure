@@ -20,6 +20,7 @@ from aelev_spire.files import atomic
 from aelev_spire.installation import Installer
 from aelev_spire.observation import Outgoing, Server, metrics, packet, snapshot
 from aelev_spire.observation_setup import (
+    bind_network,
     documents,
     gateway_aliases,
     gateway_routes,
@@ -169,6 +170,89 @@ def test_gateway_aliases_are_explicit_and_only_declared_endpoints() -> None:
         selected["host_gateway_aliases"] = invalid
         with pytest.raises(ValueError, match="GATEWAY_ALIASES_INVALID"):
             documents(selected)
+
+
+def test_network_plan_uses_public_addresses_without_shared_projection_mounts() -> None:
+    selected = plan()
+    selected["network"] = {
+        "source_url": "https://identity-node.example:18084",
+        "source_identity": "cn:AELEV SPIRE source",
+        "observer_url": "https://observer-node.example:18083",
+        "sender_otlp_url": "https://sender-node.example:14318",
+        "sender_health_url": "https://sender-node.example:13134",
+    }
+    public = documents(selected)
+    prom = json.loads(public["prometheus.json"])
+    assert prom["scrape_configs"][0]["static_configs"][0]["targets"] == [
+        "observer-node.example:18083"
+    ]
+    # These two addresses remain internal to the single sender implementation.
+    assert prom["remote_write"][0]["url"] == "https://localhost:4318/api/v1/write"
+    model: dict[str, Any] = {
+        "services": {
+            name: {
+                "environment": {},
+                "volumes": [
+                    {"target": "/run/observation"},
+                    {"target": "/run/certificate-renewal"},
+                    {"target": "/own-state"},
+                ],
+            }
+            for name in ("spire-observer", "spire-status-publisher")
+        },
+        "volumes": {
+            "spire-observation-public-source": {},
+            "spire-certificate-renewal-status": {},
+            "own-state": {},
+        },
+    }
+    bind_network(model, selected)
+    for service in model["services"].values():
+        assert service["environment"][observation.PREFIX + "SOURCE_MODE"] == "https"
+        assert (
+            service["environment"][observation.PREFIX + "SOURCE_URL"]
+            == selected["network"]["source_url"]
+        )
+        assert service["volumes"] == [
+            {"target": "/run/certificate-renewal"},
+            {"target": "/own-state"},
+        ]
+    assert (
+        model["services"]["spire-observer"]["environment"][
+            observation.PREFIX + "OTLP_ENDPOINT"
+        ]
+        == selected["network"]["sender_otlp_url"]
+    )
+    assert (
+        model["services"]["spire-status-publisher"]["environment"][
+            observation.PREFIX + "OBSERVER_URL"
+        ]
+        == selected["network"]["observer_url"]
+    )
+    assert set(model["volumes"]) == {"own-state", "spire-certificate-renewal-status"}
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://observer.example:8083",
+        "https://user:password@observer.example:8083",
+        "https://observer.example:8083/private",
+    ],
+)
+def test_network_plan_rejects_insecure_or_credential_bearing_endpoints(
+    url: str,
+) -> None:
+    selected = plan()
+    selected["network"] = {
+        "source_url": url,
+        "source_identity": "cn:AELEV SPIRE source",
+        "observer_url": "https://observer.example:8083",
+        "sender_otlp_url": "https://sender.example:4318",
+        "sender_health_url": "https://sender.example:13134",
+    }
+    with pytest.raises(ValueError, match="HTTPS_REQUIRED"):
+        documents(selected)
 
 
 def test_stale_projection_never_becomes_online(tmp_path: Path) -> None:

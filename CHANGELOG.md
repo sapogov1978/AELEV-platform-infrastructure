@@ -1,10 +1,30 @@
 # Changelog
 
-- 2026-11-14: Telemetry Delivery поддерживает необязательный контроль собственной квитанции продления в readiness и метриках с проверкой фактических leaf SHA-256/expiry; прежние конфигурация, liveness, durable ACK и очередь совместимы. Issuer/private keys не передаются runtime.
+- 2026-11-14: Linux native SPIRE gate требует все пять фактических CLI/mount/renewal cases без skips; прежний счётчик трёх cases актуализирован после добавления отдельных runtime targets.
+
+- 2026-11-14: native четырёхролевой SPIRE proof прошёл установку без общих volumes, readiness, ONLINE publication ACK, центральный durable ACK/опустошение собственного журнала и повтор всех четырёх ролей без замены контейнеров. Отчёт сохраняет предыдущие failures и открытые security/автоматическое renewal/физические gates; одна машина не считается распределённой приёмкой.
+
+- 2026-11-14: отчёт generic renewal readiness фиксирует успешные exact-source CI, подпись multiarch Sender и SQLite 3.53.4, отдельно сохраняя открытый security admission. SPIRE SPEC согласован с собственными квитанциями четырёх размещений; межролевой renewal volume не требуется.
+
+- 2026-11-14: native установка четырёх самостоятельных SPIRE-ролей воспроизвела отказ первой доставки в root-owned пустой renewal volume sender. Собственный sender layer заранее подготавливает `/run/certificate-renewal` для UID/GID 10001 и mode 0700; одна native regression проверяет оба runtime targets. Существующие непустые тома и рабочие deployments не переписываются.
 
 - 2026-11-14: SDK handoff aed701b подтверждён опубликованным exact-source audit 26/26 SUCCESS и обновлённым dependency graph; отчёт сохраняет открытые full release/rollout gates.
 
+- 2026-11-14: Telemetry Delivery поддерживает необязательный контроль собственной квитанции продления в readiness и метриках с проверкой фактических leaf SHA-256/expiry; прежние конфигурация, liveness, durable ACK и очередь совместимы. Issuer/private keys не передаются runtime.
+
+- 2026-11-14: сопровождение независимо размещаемых SPIRE-ролей разделяется на собственные observer/sender/source и publisher receipts вместо общего межролевого статуса. Source публикует только своё состояние; Telemetry Delivery получает необязательный generic readiness guard собственной квитанции без новых dependencies и без изменения прежних consumers.
+
+- 2026-11-14: сетевой SPIRE source получает отдельный профиль продления `public-source.json`; положительная собственная проекция требует свежую квитанцию именно установленного leaf. Local/test PKI включает явно объявленные публичные hostnames; прежние три файловых профиля совместимы. SDK handoff aed701b подтверждён опубликованным CI 26/26 SUCCESS.
+
 - 2026-11-14: 15 владельцев закрепляют один неизменяемый Platform UI client SDK 1.1.2 по SHA-256; source gate сверяет фактические bytes каждого активного wheel. Старые 1.1.1 artifacts сохраняются. Handoff меняет operator PKI prepare, не runtime protocol, рабочие credentials, журналы или recovery budgets; locks проверяются на отсутствие постороннего dependency drift.
+
+- 2026-11-14: native compute admission выявил отсутствие точки дополнительного публичного JSON bind внутри read-only SVID volume. Общий `policy_mountpoints` передаётся registration/bootstrap plan и создаёт только объявленные пустые mountpoints без доступа к содержимому потребителя; прежний `identity.json` совместим.
+
+- 2026-11-14: native server/observer SPIRE в двух самостоятельных новых Compose projects прошли HTTPS обмен через опубликованный порт без общих томов, потерю/возврат источника и повтор без замены инкарнации. Добавлены отдельные component installers и локальная явная IPAM; runtime receipt оставляет внешнюю готовность неподтверждённой. Самостоятельные publisher/sender, распределённое сопровождение credentials и физический E2E остаются открытыми.
+
+- 2026-11-14: SPIRE получил опциональный аутентифицированный HTTPS источник только собственного публичного состояния. Явный network plan связывает observer/publisher/sender публичными endpoints и удаляет межролевые heartbeat/renewal mounts; проверяются TLS identities, ротация доверия и отрицательное состояние при устаревании. Этот исходный контракт не подменяет ещё незавершённые независимые installers и физическую приёмку.
+
+- 2026-11-14: добавлены исходная опись всех ролей владельцев и стандартный Python validator полного inventory с явными nodes, image/source-build refs, credentials, локальным состоянием и сетевыми endpoints. Проверка сохраняет Kafka-only, запрещает повтор private identity/SQLite state, drift рецепта и opaque source-build; результат ещё требует владельческого preflight и не запускает runtime.
 
 - 2026-11-14: exact-source audit коммита 5099ad6 завершён 26/26 SUCCESS; GitHub dependency graph показывает исправленные версии, открытых Dependabot alerts нет. Отчёт dependency remediation отделяет закрытие source findings от ещё открытых полного infrastructure release и рабочего rollout.
 
@@ -12,9 +32,59 @@
 
 - 2026-11-14: Translator и Public Egress Gateway закрепляют совместимый OpenTelemetry 1.45.2 вместо 1.45.1 (GHSA-mf5v-w3w3-f6cg); PostgreSQL закрепляет dnspython 2.9.2 (GHSA-vvf4-9x63-8xvv). Обновляются только соответствующие dependency closures и locks; рабочие образы, сертификаты и очереди этой подготовкой не переключаются.
 
+- 2026-11-14: подтверждено уточнение 00-INFRA-0018: локальный SPIRE agent и доставка identity входят в автоматически подготавливаемую среду узла; остальные самостоятельные роли и реплики сохраняют независимые placements. Межузловые Workload API, shared SVID volumes и передача private keys не вводятся.
+
 - 2026-11-14: исправлен operator prepare Python Platform UI client SDK новым кандидатом 1.1.2: SKI/AKI задаются явно для одинаковой strict X.509 client-auth проверки на OpenSSL/LibreSSL. Прежние wheels, credentials и runtime state сохраняются; выбранные владельцами зависимости обновляются отдельным handoff.
 
 - 2026-11-13: добавлена native-регрессия строгой X.509 client-auth цепочки для операторского prepare публичного Platform UI client SDK; проверка также требует сохранить прежнюю identity при повторной выдаче. Старый wheel остаётся неизменяемым, исправление требует нового артефакта.
+
+- 2026-11-13: network provider bundle проверяет начальный Docker State без обязательного наличия Health до первого healthcheck; отсутствие health-сигнала остаётся starting, а остановленный процесс не допускается. Это исправление проверяющего инструмента, без изменения image или runtime endpoints.
+
+## 2026-11-13
+
+- Translator client привязывает отправку текста к тому же актуальному SSLContext, которым выполнил handshake. Обновление собственной identity/trust во время соединения отклоняет попытку до HTTP payload; задание остаётся для прежнего retry. Контрактная регрессия проверяет реальный TLS и отсутствие передачи текста.
+
+- Native network bundle получил отдельную проверку exact provider/worker images через опубликованный endpoint между двумя изолированными сетями, с раздельными ключами, same-CA foreign-client denial и обязательным cleanup. Воспроизведён root-owned первый TLS mount; worker runtime теперь заранее создаёт собственный mount point для UID/GID `10001:10001` с mode `0700`, не меняя существующие volumes. Test PKI и один хост не считаются физической распределённой приёмкой.
+
+- По 00-INFRA-0018 добавлены самостоятельные provider/worker mTLS recipes и node-local lifecycle `--role provider|worker`; прежний `bundle` совместим. Network preflight запрещает лишние mounts/implementation overrides и требует owner handoff перед заменой/повторным запуском остановленной, изменённой или чужой инкарнации. Шаблоны требуют новые admitted digests; существующий стенд и его очередь не переключаются автоматически.
+
+- По подтверждённому требованию независимого размещения Translator worker получает явный HTTPS/mTLS transport с проверкой hostname и точной provider workload identity до передачи текста. CA/SVID обновляются владельчески, ошибочная конфигурация не выбирает UDS, технические ошибки сохраняют bounded retry и прежние задания. Поддержка UDS остаётся совместимостью; новый network runtime требует отдельного допуска и не изменяет запущенные роли.
+
+- Реальный полный запуск выявил root-owned пустой том отчётов сопровождения SPIRE. Runtime теперь заранее создаёт mount point для UID/GID `10001:10001` с mode `0700`; регрессия на настоящем первом Docker mount проверяет запись без capabilities. Обязательный native CI учитывает третью проверку; готовые положительные отчёты не поставляются.
+
+## 2026-11-12
+
+- Fresh Platform UI PKI добавляет явные SKI/AKI в CA и leaf, устраняя воспроизведённый `Missing Authority Key Identifier` без ослабления проверки TLS. Реальный строгий mTLS-тест покрывает nginx/API и обоих клиентов, а повтор генерации сохраняет все ранее выданные файлы.
+
+- Full runtime делегирует SPIRE также его configuration/status provision задачи. Корневой цикл больше не запускает их до native установки и не создаёт принадлежащие SPIRE secret/status volumes в другом физическом project; остальные владельческие provision barriers сохраняются.
+
+- Полный fresh запуск на Docker Desktop использует loopback listener вместо несуществующего на хосте адреса VM bridge. Linux сохраняет свой частный bridge listener; явные операторские назначения сохраняются. Ошибки и неопределённые результаты полного CLI сохраняют stdout/stderr в отдельных закрытых `runtime/full-runtime-failure-*` каталогах, без вывода сырых диагностик и без автоматического повтора.
+
+- Fresh Compose SPIRE выводит defaults томов наблюдения из собственного `COMPOSE_PROJECT`, сохраняя все явные volume overrides. Изолированный полный профиль больше не ссылается на заводские тома другой установки при смене project; native export и работающие назначения не изменяются.
+
+- Реальный native перевыпуск обнаружил несовместимый порядок расширений первоначального SPIRE leaf. Генератор теперь пишет SKI/AKI после EKU/SAN, как штатный CSR renewal OpenSSL; строгий schema-1 scope и ключи сохраняются. Проверка действительно перевыпускает status-query, доставляет новый leaf и сверяет прежний ключ, не ограничиваясь положительной диагностикой.
+
+- Полный build включает отдельный SPIRE `certificate-delivery` target. Renewal manifest закрепляет exact helper image, обычный runtime закрыто отклоняется; обязательный Linux CI отдельно проверяет три настоящих CLI одобрения, доставку восьми identity в изолированные тома, сохранный повтор и отрицательный publisher revoke без изменения двух остальных квитанций.
+
+- `up --full-runtime --spire-renewal-input` принимает три раздельных local/test approval и вызывает публичный Telemetry Renewal CLI для настоящих enroll/bind/once/check. Доставка привязывается к логической native установке, exact image/daemon/volumes; ключи CA не копируются в runtime. Существующие LaunchAgent устанавливаются только явным `maintenance=launchd`; `operator` проверяет разовую доставку и не заявляет автоматическое сопровождение. Неизвестный результат требует сверки, область одобрений и история сохраняются.
+
+- `up --full-runtime --spire-local-input` подключает local/test подготовку SPIRE после готовности core. При отсутствии заранее выданных Grafana tokens используется её публичный OIDC-оператор; собственная PKI готовится owner CLI, временный автоматически созданный provisioner снимается после установки. Операторские намерения/credentials сохраняются закрыто, неоднозначная выдача не повторяется; внешние CA-ключи, queue RESUME и фиктивные renewal reports не создаются.
+
+- SPIRE получил собственную первоначальную local/test подготовку закрытого initial bundle: отдельные query/server/write CA, шесть локальных leaf и два client identity, выданных соответствующими операторами. Внешние CA-ключи не принимаются; настоящая strict PKI-проверка и сохранный повтор предшествуют native установке. Генерируются три запроса сопровождения без фиктивных approval/ready receipts; подключение автоматического orchestration/enrollment остаётся следующим этапом.
+
+- Python CI Grafana теперь включает настоящий изолированный Keycloak/PostgreSQL/Grafana сценарий локальной выдачи: OIDC/PKCE/TLS, отдельные токены, запреты чужой записи/администрирования и отзыв временных полномочий. Все профили проверяются на собственные имена ресурсов до старта/очистки; в CI artifact включается только публичный результат. Допуск точного CI commit и полный 57-role clean-room остаются обязательными.
+
+- Свежая изолированная OIDC-проверка обнаружила отсутствие Authority Key Identifier в первичном локальном TLS leaf Keycloak. Генератор bootstrap добавляет SKI/AKI в новую цепочку; строгая криптографическая регрессия проверяет CA/SAN и отсутствие перевыпуска при повторе. Существующие установки сохраняют свои TLS-файлы.
+
+- Grafana получила операторский `local-publisher.py` для первичной локальной выдачи через обычный OIDC: отдельный Viewer с Edit только новой папки и необязательная временная identity установки правил. Credentials сохраняются в новые закрытые файлы, намерение — до изменяющего API-запроса; потерянная выдача не повторяется автоматически. Отзыв временной identity проверяет точное имя/роль/ID. Это подготовка к свежему full-runtime, её настоящая изолированная проверка ещё требуется.
+
+- Свежий `up --full-runtime --spire-initial-input PATH` запускает core, затем публичный bootstrap SPIRE: штатные server → observation → export с immutable image IDs и native `no`. Проверенная публичная привязка атомарно добавляется в корневой env; остальные параметры и env владельца сохраняются. Неполный/общедоступный initial bundle и отсутствие per-process socket approval запрещают подготовку; повреждённая прежняя привязка не заменяется новой установкой. Перечень файлов наблюдения вынесен в единый публичный ресурс пакета SPIRE для native installer и host bootstrap. Полная native clean-room приёмка кандидата остаётся открыта.
+
+- Full-runtime учитывает четыре точные роли SPIRE в действующем физическом Compose-проекте, не переносит их и не включает в корневой `up`. Готовность повторно читает все 57 ролей из их координаторов; недоступная native-роль требует восстановления владельца до старта core. Явный полный `down` адресно останавливает обе части через канонические Compose без удаления ресурсов. Экспорт SPIRE получил необязательный отдельный output root в Shell/PowerShell, что сохраняет прежний ручной `.env` и позволяет установщику передать абсолютную публичную привязку.
+
+- Full-runtime до подготовки `up` требует полный публичный экспорт SPIRE с согласованной generation и квитанцией. Перед start/status/stop проверяются точные container/image IDs, число native-рестартов и координатор. Старая квитанция, перенесённый без receipt Compose или смешанные координаторы запрещают общий запуск без создания второго SPIRE и воздействия на его историю; native bootstrap и совместная полная приёмка остаются открытым release gate.
+
+- Публичный `bootstrap.py --full-runtime` использует полный канонический состав `full-local.json` для штатных init/build/up/status/down без запуска acceptance-сценариев или выбора тестового режима переводчика. Существующие конфигурации, точные images и число реплик проверяются до запуска; замена требует владельческого handoff. Старт использует `--no-recreate`, не меняет Process Control или recovery budgets, остановка сохраняет volumes. Старый capability CLI сохраняется.
 
 ## Unreleased
 

@@ -16,7 +16,10 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from aelev_spire.certificate_delivery import (
+    OBSERVER_PROFILE,
     PROFILE,
+    PUBLIC_SOURCE_PROFILE,
+    SENDER_PROFILE,
     STATUS_PUBLISHER_PROFILE,
     TRUST,
     encoded,
@@ -214,19 +217,72 @@ def test_complete_delivery_updates_leafs_and_retains_old_trust(tmp_path: Path) -
     assert len(x509.load_pem_x509_certificates(trust)) == 2
 
 
-def test_status_delivery_is_a_separate_exact_profile(tmp_path: Path) -> None:
-    secrets = tmp_path / "status-secrets"
+@pytest.mark.parametrize(
+    "scope,foreign",
+    [
+        ("status", False),
+        ("source", False),
+        ("source", True),
+        ("observer", False),
+        ("sender", False),
+    ],
+)
+def test_leaf_delivery_is_a_separate_exact_profile(
+    tmp_path: Path, scope: str, foreign: bool
+) -> None:
+    profile, secret_role, report_name, marker_role = {
+        "status": (
+            STATUS_PUBLISHER_PROFILE,
+            "status-secrets",
+            "status-publisher.json",
+            "observation-status",
+        ),
+        "source": (
+            PUBLIC_SOURCE_PROFILE,
+            "public-source-secrets",
+            "public-source.json",
+            "public-source-secrets",
+        ),
+        "observer": (
+            OBSERVER_PROFILE,
+            "observer-secrets",
+            "observer.json",
+            "observation-observer",
+        ),
+        "sender": (
+            SENDER_PROFILE,
+            "sender-secrets",
+            "sender.json",
+            "observation-sender",
+        ),
+    }[scope]
+    public_source = scope == "source"
+    secrets = tmp_path / secret_role
     receipts = tmp_path / "certificate-renewal-status"
     secrets.mkdir()
     receipts.mkdir()
     (secrets / "owner.json").write_text(
-        json.dumps({"owner": "infrastructure-spire", "role": "observation-status"})
+        json.dumps(
+            {
+                "owner": "infrastructure-spire",
+                "role": marker_role,
+                **(
+                    {"project": "foreign" if foreign else "fixture"}
+                    if public_source
+                    else {}
+                ),
+            }
+        )
     )
     issuer_key, issuer = authority("status-issuer", 365)
+    for name in profile:
+        for role, filename in TRUST[name]:
+            if role == secret_role:
+                (secrets / filename).write_bytes(pem(issuer))
     destinations: list[dict[str, object]] = []
     certificates: list[dict[str, object]] = []
     records: list[dict[str, object]] = []
-    for name, (role, filename, key_name) in STATUS_PUBLISHER_PROFILE.items():
+    for name, (role, filename, key_name) in profile.items():
         private = ec.generate_private_key(ec.SECP256R1())
         current = leaf(name, private, issuer_key, issuer, 1)
         candidate = leaf(name, private, issuer_key, issuer, 90)
@@ -278,13 +334,20 @@ def test_status_delivery_is_a_separate_exact_profile(tmp_path: Path) -> None:
         "report_destination": {
             "volume": "fixture_certificate-renewal-status",
             "role": "certificate-renewal-status",
-            "file": "status-publisher.json",
+            "file": report_name,
         },
         "report": report,
         "certificates": certificates,
     }
-    assert run(value, tmp_path)["code"] == "CERTIFICATE_DELIVERY_VERIFIED"
-    assert (receipts / "status-publisher.json").read_bytes() == encoded(report)
+    before = {path.name: path.read_bytes() for path in secrets.iterdir()}
+    if foreign:
+        with pytest.raises(ValueError, match="SCOPE_INVALID"):
+            run(value, tmp_path)
+        assert not (receipts / report_name).exists()
+        assert before == {path.name: path.read_bytes() for path in secrets.iterdir()}
+    else:
+        assert run(value, tmp_path)["code"] == "CERTIFICATE_DELIVERY_VERIFIED"
+        assert (receipts / report_name).read_bytes() == encoded(report)
 
 
 def test_unrelated_profile_lock_does_not_block_delivery(tmp_path: Path) -> None:

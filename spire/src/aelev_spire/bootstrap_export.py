@@ -104,6 +104,7 @@ def plan(request: dict[str, Any]) -> dict[str, Any]:
             "node_id",
             "server_address",
             "svid_ttl_seconds",
+            "policy_mountpoints",
         )
         if key in request
     } | {"server_port": request.get("server_port", 8081)}

@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-z][a-z0-9_-]{2,63}$')][string]$Project,
-    [Parameter(Mandatory=$true)][string]$ExportOperatorImage
+    [Parameter(Mandatory=$true)][string]$ExportOperatorImage,
+    [ValidateNotNullOrEmpty()][string]$OutputRoot = $PSScriptRoot
 )
 $ErrorActionPreference = 'Stop'
 if ($env:DRP_SPIRE_DOCKER_SOCKET_APPROVAL -ne 'operator-root-equivalent-v1') { throw 'SPIRE_EXPORT_DOCKER_SOCKET_APPROVAL_REQUIRED' }
@@ -16,7 +17,9 @@ if ($LASTEXITCODE -ne 0) { throw 'SPIRE_EXPORT_STATE_MISSING' }
 $spireInstallation = docker volume inspect --format '{{index .Labels "io.aelev.installation"}}' $spireVolume
 $spireRole = docker volume inspect --format '{{index .Labels "io.aelev.role"}}' $spireVolume
 if ($spireOwner -ne 'infrastructure-spire' -or $spireInstallation -ne $Project -or $spireRole -ne 'installer') { throw 'SPIRE_EXPORT_FOREIGN_STATE_REFUSED' }
-$spireEnv = Join-Path $PSScriptRoot '.env'
+$spireRoot = [IO.Path]::GetFullPath($OutputRoot)
+New-Item -ItemType Directory -Force -Path $spireRoot | Out-Null
+$spireEnv = Join-Path $spireRoot '.env'
 $spireBefore = $null
 if (Test-Path -LiteralPath $spireEnv) {
     if ((Get-Item -LiteralPath $spireEnv).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'SPIRE_EXPORT_EXISTING_ENV_PRESERVED' }
@@ -25,7 +28,7 @@ if (Test-Path -LiteralPath $spireEnv) {
         $spireLines[1] -notmatch '^AELEV_INFRASTRUCTURE_SPIRE_INSTALLED_COMPOSE=\./runtime/installed-composition/[a-f0-9]{64}/compose\.json$') { throw 'SPIRE_EXPORT_EXISTING_ENV_PRESERVED' }
     $spireBefore = [IO.File]::ReadAllBytes($spireEnv)
 }
-$spireOutput = Join-Path $PSScriptRoot 'runtime/installed-composition'
+$spireOutput = Join-Path $spireRoot 'runtime/installed-composition'
 New-Item -ItemType Directory -Force -Path $spireOutput | Out-Null
 $spireHelper = $Project + '-composition-' + [Guid]::NewGuid().ToString('N')
 docker run --rm --name $spireHelper --user 0:0 --read-only --network none --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true `

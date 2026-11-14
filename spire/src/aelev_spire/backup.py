@@ -35,6 +35,7 @@ ROLES = {
     "observation",
     "observation-configuration",
     "observer-secrets",
+    "public-source-secrets",
     "sender-secrets",
     "status-secrets",
     "status-admin",

@@ -11,6 +11,7 @@ import re
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -950,7 +951,12 @@ def prepare_owner_inputs(manifest: dict[str, Any], root: Path = ROOT) -> list[st
     return prepared
 
 
-def initialize_profile(root: Path = ROOT) -> dict[str, Any]:
+def initialize_profile(
+    root: Path = ROOT,
+    *,
+    provider_fixture: bool = True,
+    initialize_core: Callable[[], None] | None = None,
+) -> dict[str, Any]:
     initial_manifest = load_json(root / "full-local.json", root)
     preexisting = {
         relative
@@ -958,14 +964,24 @@ def initialize_profile(root: Path = ROOT) -> dict[str, Any]:
         if (root / relative).exists()
     }
     environment = dict(os.environ)
-    environment["AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE"] = (
-        "health-only-no-inference-v1"
-    )
-    command(
-        [sys.executable, str(root / "bootstrap.py"), "init"],
-        cwd=root,
-        environment=environment,
-    )
+    environment.pop("AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE", None)
+    if provider_fixture:
+        environment["AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE"] = (
+            "health-only-no-inference-v1"
+        )
+    if initialize_core is None:
+        command(
+            [sys.executable, str(root / "bootstrap.py"), "init"],
+            cwd=root,
+            environment=environment,
+        )
+    else:
+        if (
+            provider_fixture
+            or "AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE" in os.environ
+        ):
+            raise FullLocalError("NATIVE_CORE_INITIALIZATION_FIXTURE_REFUSED")
+        initialize_core()
     manifest, errors = validate_contract(root)
     if errors:
         raise FullLocalError(";".join(errors))
@@ -997,8 +1013,15 @@ def build_service_sets(model: dict[str, Any]) -> tuple[list[str], list[str]]:
     return source_builds, pinned_pulls
 
 
-def build_profile(root: Path = ROOT) -> dict[str, Any]:
-    initialized = initialize_profile(root)
+def build_profile(
+    root: Path = ROOT,
+    *,
+    provider_fixture: bool = True,
+    initialize_core: Callable[[], None] | None = None,
+) -> dict[str, Any]:
+    initialized = initialize_profile(
+        root, provider_fixture=provider_fixture, initialize_core=initialize_core
+    )
     manifest = load_json(root / "full-local.json", root)
     models = rendered_models(manifest, root)
     model = models["root"]

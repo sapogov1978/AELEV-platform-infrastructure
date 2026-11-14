@@ -43,6 +43,9 @@ jobs:
       - run: python tools/check_container_security.py .
       - run: python tools/check_secrets.py .
       - run: python tools/check_supply_chain.py .
+      - run: python -m pip install --requirement tools/requirements-catalog.txt
+      - name: Verify complete owner role catalogue
+        run: python tools/build_deployment_catalog.py --manifest full-local.json --product platform-infrastructure --node-role spire-agent --operation spire-operator --operation bucket-provisioner --operation database-provisioner --operation site-replication-applier --opaque-role translation-provider --output deployment-catalog.json --check
       - run: python -m unittest discover -s tools -p 'test_*.py'
       - run: sh -n .githooks/pre-commit tools/install_git_hooks.sh spire/install.sh spire/export.sh
       - run: PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache" python -m compileall -q -x '/(\.git|runtime|node_modules|graphify-out|obsolete)/' .
@@ -61,6 +64,34 @@ jobs:
           python-version: "3.13"
       - run: python -m pip install poetry==2.2.1 poetry-plugin-export==1.9.0 pip-audit==2.9.0
       - run: python tools/run_ci_suite.py python "${{ matrix.suite.path }}"
+      - name: Verify fresh Grafana OIDC deployment tokens and retirement
+        if: matrix.suite.path == 'observability/grafana'
+        run: |
+          docker build --tag aelev/keycloak:26.3.2-production keycloak
+          docker build --file observability/grafana/Dockerfile.status --target runtime \
+            --tag aelev/grafana-local-publisher:ci observability/grafana
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+
+          for path, key in (
+              ('keycloak/.env.example', 'AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE'),
+              ('observability/grafana/.env.example', 'AELEV_INFRASTRUCTURE_GRAFANA_IMAGE'),
+          ):
+              values = dict(line.split('=', 1) for line in Path(path).read_text().splitlines()
+                            if line and not line.lstrip().startswith('#'))
+              subprocess.run(['docker', 'pull', values[key]], check=True)
+          PY
+          poetry --directory observability/grafana run python \
+            "$GITHUB_WORKSPACE/observability/grafana/test/local_publisher_e2e.py" \
+            --status-image aelev/grafana-local-publisher:ci \
+            --output "$RUNNER_TEMP/grafana-local-publisher"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && matrix.suite.path == 'observability/grafana'
+        with:
+          name: grafana-local-publisher-${{ github.sha }}
+          path: ${{ runner.temp }}/grafana-local-publisher/result.json
+          if-no-files-found: ignore
       - name: Enforce SPIRE lint, formatting and strict typing
         if: matrix.suite.path == 'spire'
         working-directory: spire
@@ -94,15 +125,19 @@ jobs:
           name: spire-restore-owners-${{ github.sha }}
           path: ${{ runner.temp }}/spire-restore-owners/junit.xml
           if-no-files-found: error
-      - name: Verify SPIRE public installer preserves native no on Linux
+      - name: Verify SPIRE installer, first mounts and isolated renewal on Linux
         if: matrix.suite.path == 'spire'
         working-directory: spire
         run: |
           docker build --target runtime --tag aelev/spire-native-runtime:ci .
           docker build --target operator-installer --tag aelev/spire-native-installer:ci .
+          docker build --target certificate-delivery --tag aelev/spire-native-renewal:ci .
+          docker build --target telemetry-sender --tag aelev/spire-native-sender:ci .
           AELEV_INFRASTRUCTURE_SPIRE_TEST_IMAGE="$(docker image inspect --format '{{.Id}}' aelev/spire-native-runtime:ci)" \
+          AELEV_INFRASTRUCTURE_SPIRE_SENDER_TEST_IMAGE="$(docker image inspect --format '{{.Id}}' aelev/spire-native-sender:ci)" \
           AELEV_INFRASTRUCTURE_SPIRE_INSTALLER_TEST_IMAGE="$(docker image inspect --format '{{.Id}}' aelev/spire-native-installer:ci)" \
-          poetry run pytest -q 'test/test_real_installation.py::test_shell_install_repeat_register_and_revoke[managed-native-no]' \
+          AELEV_INFRASTRUCTURE_SPIRE_RENEWAL_TEST_IMAGE="$(docker image inspect --format '{{.Id}}' aelev/spire-native-renewal:ci)" \
+          poetry run pytest -q 'test/test_real_installation.py::test_shell_install_repeat_register_and_revoke[managed-native-no]' test/test_real_renewal.py \
             --junitxml="$RUNNER_TEMP/spire-installer-junit.xml"
           python - <<'PY'
           import os
@@ -110,7 +145,7 @@ jobs:
           from xml.etree import ElementTree
           root = ElementTree.parse(Path(os.environ['RUNNER_TEMP']) / 'spire-installer-junit.xml').getroot()
           totals = tuple(sum(int(s.attrib.get(k, 0)) for s in root.iter('testsuite')) for k in ('tests', 'failures', 'errors', 'skipped'))
-          assert totals == (1, 0, 0, 0), totals
+          assert totals == (5, 0, 0, 0), totals
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always() && matrix.suite.path == 'spire'

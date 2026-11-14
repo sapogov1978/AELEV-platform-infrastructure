@@ -20,6 +20,105 @@ SPEC.loader.exec_module(provider)
 
 
 class BootstrapTest(unittest.TestCase):
+    def test_desktop_listener_uses_host_loopback_without_inspecting_vm_bridge(
+        self,
+    ) -> None:
+        with mock.patch.object(
+            provider,
+            "run",
+            return_value=subprocess.CompletedProcess([], 0, "Docker Desktop\n", ""),
+        ) as run:
+            self.assertEqual(provider.docker_bridge_gateway(), "127.0.0.1")
+        run.assert_called_once()
+
+    def test_desktop_listener_deduplicates_loopback_and_preserves_custom_bind(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            keycloak, platform = root / "keycloak", root / "platform"
+            keycloak.mkdir()
+            platform.mkdir()
+            (keycloak / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND=127.0.0.1\n"
+                "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND=172.17.0.1\n"
+            )
+            (platform / ".env").write_text(
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_BIND=127.0.0.1\n"
+                "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND=172.30.0.1\n"
+            )
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(provider, "PLATFORM", platform),
+            ):
+                provider.initialize_local_bridge_routes("127.0.0.1")
+            self.assertEqual(
+                provider.read_env(keycloak / ".env")[
+                    "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND"
+                ],
+                "127.0.0.1",
+            )
+            self.assertEqual(
+                provider.read_env(platform / ".env")[
+                    "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND"
+                ],
+                "172.30.0.1",
+            )
+
+    def test_fresh_keycloak_tls_passes_strict_chain_and_hostname_verification(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            keycloak = Path(temporary).resolve()
+            (keycloak / ".env.example").write_text("")
+            with mock.patch.object(provider, "KEYCLOAK", keycloak):
+                provider.initialize_keycloak()
+            tls = keycloak / "secrets/https"
+            for hostname in ("localhost", "keycloak", "host.docker.internal"):
+                subprocess.run(
+                    [
+                        "openssl",
+                        "verify",
+                        "-x509_strict",
+                        "-purpose",
+                        "sslserver",
+                        "-verify_hostname",
+                        hostname,
+                        "-CAfile",
+                        str(tls / "ca.crt"),
+                        str(tls / "tls.crt"),
+                    ],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+            wrong = subprocess.run(
+                [
+                    "openssl",
+                    "verify",
+                    "-x509_strict",
+                    "-verify_hostname",
+                    "unrelated.invalid",
+                    "-CAfile",
+                    str(tls / "ca.crt"),
+                    str(tls / "tls.crt"),
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(wrong.returncode, 0)
+            before = {path.name: path.read_bytes() for path in tls.iterdir()}
+            with (
+                mock.patch.object(provider, "KEYCLOAK", keycloak),
+                mock.patch.object(provider, "openssl") as issue,
+            ):
+                provider.initialize_keycloak()
+            issue.assert_not_called()
+            self.assertEqual(
+                before, {path.name: path.read_bytes() for path in tls.iterdir()}
+            )
+
     def test_keycloak_creates_group_readable_tls_key(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             keycloak = Path(temporary).resolve()

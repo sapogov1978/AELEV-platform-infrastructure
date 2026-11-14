@@ -29,6 +29,6 @@ target-version = "py313"
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pyright]
-include = ["src", "test", "build_artifacts.py", "build_sqlite.py"]
+include = ["src", "test", "build_artifacts.py", "build_sqlite.py", "bootstrap.py", "local-inputs.py"]
 pythonVersion = "3.13"
 typeCheckingMode = "strict"

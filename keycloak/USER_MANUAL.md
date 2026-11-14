@@ -249,6 +249,8 @@ sudo dnf install openssl java-21-openjdk-devel
 
 ## Генерация TLS-ключа и сертификата
 
+Для первичного локального развёртывания корневой `bootstrap.py` создаёт новую CA/серверную цепочку с явными SKI/AKI. Она проверяется строгим OpenSSL/Python 3.13 без отключения CA или SAN: `openssl verify -x509_strict -purpose sslserver -verify_hostname localhost -CAfile secrets/https/ca.crt secrets/https/tls.crt`. Повтор bootstrap сохраняет прежние файлы; старую некорректную цепочку заменяют отдельной владельческой ротацией с проверкой доверия потребителей.
+
 Для production сначала создайте private key и CSR. В `KEYCLOAK_PUBLIC_HOST` укажите DNS-имя из `AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL`. Для сертификата публичного CA административный endpoint должен использовать то же публичное имя: внутреннее имя `keycloak` публичный CA не подпишет.
 
 ```sh

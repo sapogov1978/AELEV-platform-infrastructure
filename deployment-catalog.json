@@ -1,0 +1,2773 @@
+{
+  "schema_version": 1,
+  "product": "platform-infrastructure",
+  "sources": {
+    "full-local.json": "154e0a52671e60404e493450d059ac4661551861e034251d388a526fe78e9684",
+    "kafka/compose.yml": "8548022add6e9ffb9c59576152612025a5578a66da17330b242e01b7fd397d22",
+    "keycloak/compose.local-bridge.yml": "3f3c2cb97a0bbb0fcdfeb6f39ad245ef2db727eb149fd3004c112b10535f89dd",
+    "keycloak/compose.yml": "855e69900f650148a63dc479e87c263c90f5cf2ef11a1119296bd1e7f4dfcb05",
+    "minio/compose.yml": "0808ec3235dfa9e64aab6d18e787368c161217420cd2afa410dc0f52b6eea269",
+    "observability/blackbox-exporter/compose.yml": "06b2d4f3afc1ff3c59bb61370f7a7650b6b3d26ff4bcf94fe64d7884a42d81d3",
+    "observability/delivery/compose.yml": "8c2f1abb7e22828070e3a6a172ebe0cdad56ae603b01594921ec6dc35883291f",
+    "observability/grafana/compose.yml": "7bbb226c0741e3cbf2766cb171366eae1eb3e41751876864628437de523ca057",
+    "observability/loki/compose.yml": "4b539103fb60fafe43f658e9e566844517828ce1b71586068770ed6c3948fd30",
+    "observability/otel-collector/compose.yml": "38cbd3813f96c3ca96056cfaf5843ab9baedf18e78e1a68aa3bb4e8aa1584a6b",
+    "observability/prometheus/compose.yml": "a56034d5ca9c59a3feff3116e9c457ff87ee18939efccd02f45db7e07429db01",
+    "observability/tempo/compose.yml": "6d4b50f6d063138cd8c8259b45cac1d90c46e630da2ca31a918bee482ac92f93",
+    "platform-ui/compose.local-bridge.yml": "21e08f5283eb0bedc7dc11ddb470f5364e6a949b6cc05574e1676592d777efbc",
+    "platform-ui/compose.local-keycloak.yml": "04d17b74570696726e8a7e1b7855fcfbeb8392a363f7ad3534894272611531f6",
+    "platform-ui/compose.yml": "9c0604bb99403f486ab051b8a855319bac52e7c8b6b5ec4c1ba2e5359f7f0711",
+    "postgresql/compose.docker.yml": "43e9bbbcdcdd39b602d625709986151e3e25d36db78129cc9b9a96319b0fea90",
+    "postgresql/compose.kubernetes.yml": "bf60a6be265060f775a050e879e7c1481b92a406b964835846cca61c056b436d",
+    "postgresql/compose.runtime.yml": "156f12e7dfde7f6019d329451d12568866c0dedf2aef874f670e671ac3857614",
+    "postgresql/compose.watchdog.yml": "031b3ec799081c9cd242d526bf1f7748ec6e52718fe21a4ae1cedadad7d08e50",
+    "postgresql/compose.yml": "55786804ad47768474345fff39cd28d4be26c33f8cfa187b8d7cc0cbc04fa2cb",
+    "public-egress-gateway/compose.yml": "190744fc9e750edd858d2cb80190319248d07b1f2290702d648f7299f163b85e",
+    "spire/compose.agent.yml": "f67f798464e074de4461bfb295713bd96916598d8fd77acb22bbb0ae53f89b2a",
+    "spire/compose.default.yml": "4de915665db3af2563c196efcca463e925867ca3f40443fa219015074dc3eba5",
+    "spire/compose.group.yml": "ec178dbb9a283578992d90c419011c3807aef74101307d368c173f5ecd5b0611",
+    "spire/compose.observation.yml": "47b6606b8412e3c7dc3e186bfaf1e8f31df53e9876b88fa153f4e3e2982794d5",
+    "spire/compose.yml": "dd2933b2ad45d68d377c8b45fcc74008643511c0908559e3c1b0cf0a8ab502a5",
+    "translator-service/compose.compute-provider.mtls.yml": "0523764d87a2d145091bcfb4549a8d9fbff48bb287f394c0ca37c4f0dd125d0d",
+    "translator-service/compose.compute-worker.mtls.yml": "ddaf932617f899cc0ab8a7822f7d28319de2018a14d22b590a370e448ed1e8da",
+    "translator-service/compose.compute.yml": "0498391d73700184d4098afdb75aa63b1d92187799dc50e36533971ff0a21900",
+    "translator-service/compose.local.yml": "c88f19b9a710acdcc7ea6608338b0c1b7c73b8cc0c2d221fc5036e857ebdb5aa",
+    "translator-service/compose.remote.yml": "f6d0be4fa7a970ef0da73084328e039e55062d8b393a4c2d1b8de1672df5d06d",
+    "translator-service/compose.yml": "b5900f7d54dcb2ee6378cb933d212ffbab310143082f315b2cabd7e50aca2f27"
+  },
+  "roles": [
+    {
+      "id": "blackbox-exporter",
+      "owner": "observability/blackbox-exporter",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "observability/blackbox-exporter/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_BASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_BIND",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_PORT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "blackbox-exporter-operator",
+      "owner": "observability/blackbox-exporter",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "observability/blackbox-exporter/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TLS_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "blackbox-exporter-operator-provision",
+      "owner": "observability/blackbox-exporter",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/blackbox-exporter/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "blackbox-exporter-status-provision",
+      "owner": "observability/blackbox-exporter",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/blackbox-exporter/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REALM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REVISION",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "blackbox-exporter-status-publisher",
+      "owner": "observability/blackbox-exporter",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/blackbox-exporter/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REALM",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_REVISION",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "bucket-provisioner",
+      "owner": "minio",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_PROVISION_ACCESS_KEY",
+        "AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET",
+        "AELEV_INFRASTRUCTURE_MINIO_PROVISION_POLICY",
+        "AELEV_INFRASTRUCTURE_MINIO_PROVISION_SECRET_KEY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "database-provisioner",
+      "owner": "postgresql",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.runtime.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MAX_CONNECTIONS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SHARED_BUFFERS"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "delivery",
+      "owner": "observability/delivery",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/delivery/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_DELIVERY_BIND",
+        "AELEV_INFRASTRUCTURE_DELIVERY_HEALTH_PORT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_IMAGE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_PORT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_DELIVERY_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "delivery-configuration-init",
+      "owner": "observability/delivery",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "observability/delivery/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_DELIVERY_DATA_OWNER",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "delivery-status-provision",
+      "owner": "observability/delivery",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/delivery/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_REALM",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "delivery-status-publisher",
+      "owner": "observability/delivery",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/delivery/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_REALM",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_DELIVERY_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "etcd-1",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.runtime.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ETCD_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ETCD_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_PEER_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_PEER_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_PEER_PORT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "etcd-2",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.runtime.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ETCD_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ETCD_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_PEER_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_PEER_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_PEER_PORT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "etcd-3",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.runtime.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ETCD_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ETCD_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_PEER_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_PEER_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_PEER_PORT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "grafana",
+      "owner": "observability/grafana",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/grafana/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_GRAFANA_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_GRAFANA_BIND",
+        "AELEV_INFRASTRUCTURE_GRAFANA_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_BROWSER_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CA_FILE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_PORT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_GRAFANA_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SMTP_ENABLED",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SMTP_FROM",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SMTP_HOST",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SMTP_USER"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "grafana-configuration-init",
+      "owner": "observability/grafana",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "observability/grafana/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_GRAFANA_DATA_OWNER",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "grafana-oidc-provision",
+      "owner": "observability/grafana",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/grafana/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CA_FILE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_INTERNAL_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_REALM",
+        "AELEV_INFRASTRUCTURE_GRAFANA_OIDC_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_PORT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_GRAFANA_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "grafana-status-provision",
+      "owner": "observability/grafana",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/grafana/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_GRAFANA_PORT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_REALM",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "grafana-status-publisher",
+      "owner": "observability/grafana",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/grafana/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_GRAFANA_PORT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_REALM",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_GRAFANA_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "kafka",
+      "owner": "kafka",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "kafka/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS",
+        "AELEV_INFRASTRUCTURE_KAFKA_BIND",
+        "AELEV_INFRASTRUCTURE_KAFKA_HEAP_OPTS",
+        "AELEV_INFRASTRUCTURE_KAFKA_IMAGE",
+        "AELEV_INFRASTRUCTURE_KAFKA_MESSAGE_MAX_BYTES",
+        "AELEV_INFRASTRUCTURE_KAFKA_PORT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "kafka-status-provision",
+      "owner": "kafka",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "kafka/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_REALM",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "kafka-status-publisher",
+      "owner": "kafka",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "kafka/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_REALM",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_KAFKA_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "keycloak",
+      "owner": "keycloak",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "keycloak/compose.local-bridge.yml",
+        "keycloak/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_HTTPS_PORT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "keycloak-database",
+      "owner": "keycloak",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "keycloak/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER",
+        "POSTGRES_DB",
+        "POSTGRES_USER"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "keycloak-status-provision",
+      "owner": "keycloak",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "keycloak/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_REALM",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "keycloak-status-publisher",
+      "owner": "keycloak",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "keycloak/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_REALM",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_URL"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "loki",
+      "owner": "observability/loki",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/loki/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_LOKI_BASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_BIND",
+        "AELEV_INFRASTRUCTURE_LOKI_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_LOKI_PORT",
+        "AELEV_INFRASTRUCTURE_LOKI_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_LOKI_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_LOKI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_LOKI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "loki-configuration-init",
+      "owner": "observability/loki",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "observability/loki/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_LOKI_DATA_OWNER",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "loki-status-provision",
+      "owner": "observability/loki",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/loki/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_LOKI_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_REALM",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "loki-status-publisher",
+      "owner": "observability/loki",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/loki/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_LOKI_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_REALM",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_LOKI_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "minio-site-a-1",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_PORT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-a-2",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_PORT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-a-3",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_PORT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-a-4",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_PORT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-b-1",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_PORT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-b-2",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_PORT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-b-3",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_PORT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-site-b-4",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_BIND",
+        "AELEV_INFRASTRUCTURE_MINIO_PARITY",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_PORT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "minio-status-provision",
+      "owner": "minio",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_REALM",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "minio-status-publisher",
+      "owner": "minio",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_NODE_4_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_1_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_2_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_3_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_NODE_4_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_REALM",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_MINIO_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "otel-collector",
+      "owner": "observability/otel-collector",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/otel-collector/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_BASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_BIND",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_HEALTH_PORT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_METRICS_PORT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "otel-collector-configuration-init",
+      "owner": "observability/otel-collector",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "observability/otel-collector/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_DATA_OWNER",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "otel-collector-status-provision",
+      "owner": "observability/otel-collector",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/otel-collector/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_REALM",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "otel-collector-status-publisher",
+      "owner": "observability/otel-collector",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/otel-collector/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_REALM",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "platform-ui",
+      "owner": "platform-ui",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "platform-ui/compose.local-bridge.yml",
+        "platform-ui/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_BIND",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NGINX_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_PORT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "platform-ui-api",
+      "owner": "platform-ui",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "platform-ui/compose.local-keycloak.yml",
+        "platform-ui/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NGINX_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "platform-ui-configuration-init",
+      "owner": "platform-ui",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "platform-ui/compose.local-keycloak.yml",
+        "platform-ui/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NGINX_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "platform-ui-status-provision",
+      "owner": "platform-ui",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "platform-ui/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NGINX_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_REALM",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "platform-ui-status-publisher",
+      "owner": "platform-ui",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "platform-ui/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NGINX_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_STATUS_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_REALM",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "postgresql-1",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.docker.yml",
+        "postgresql/compose.kubernetes.yml",
+        "postgresql/compose.runtime.yml",
+        "postgresql/compose.watchdog.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MAX_CONNECTIONS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SHARED_BUFFERS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SQL_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_WATCHDOG_DEVICE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "postgresql-2",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.docker.yml",
+        "postgresql/compose.kubernetes.yml",
+        "postgresql/compose.runtime.yml",
+        "postgresql/compose.watchdog.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MAX_CONNECTIONS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SHARED_BUFFERS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SQL_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_WATCHDOG_DEVICE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "postgresql-3",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.docker.yml",
+        "postgresql/compose.kubernetes.yml",
+        "postgresql/compose.runtime.yml",
+        "postgresql/compose.watchdog.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MAX_CONNECTIONS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SHARED_BUFFERS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_SQL_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_WATCHDOG_DEVICE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "postgresql-fencer",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.docker.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_BIND",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_CPU_SHARES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_LOCAL_NODES",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_SOCKET",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MEMORY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_FENCING_URL"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "postgresql-status-provision",
+      "owner": "postgresql",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.runtime.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_DESCRIPTION_REVISION",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_REALM",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "postgresql-status-publisher",
+      "owner": "postgresql",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/compose.docker.yml",
+        "postgresql/compose.kubernetes.yml",
+        "postgresql/compose.runtime.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_FENCING_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_DESCRIPTION_REVISION",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_REALM",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "prometheus",
+      "owner": "observability/prometheus",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/prometheus/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_BIND",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_PORT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_RETENTION",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_RETENTION_SIZE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "prometheus-configuration-init",
+      "owner": "observability/prometheus",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "observability/prometheus/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_DATA_OWNER",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "prometheus-operator",
+      "owner": "observability/prometheus",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "observability/prometheus/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_TLS_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_SECRET_GID"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "prometheus-operator-provision",
+      "owner": "observability/prometheus",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/prometheus/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_SECRET_GID"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "prometheus-status-provision",
+      "owner": "observability/prometheus",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/prometheus/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_REALM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_REVISION",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "prometheus-status-publisher",
+      "owner": "observability/prometheus",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/prometheus/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BACKCHANNEL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_BIND",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_MODE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PORT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_REALM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_UPSTREAM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_REALM",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_REVISION",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PROMETHEUS_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "public-egress-gateway",
+      "owner": "public-egress-gateway",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "public-egress-gateway/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_BIND",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DENY_CIDRS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_BIND",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_PORT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_GRANTS_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_IMAGE",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_LOG_LEVEL",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MAX_CONCURRENCY",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MAX_RESPONSE_BYTES",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PER_HOST_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PORT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TRUST_DOMAIN"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "public-egress-gateway-status-provision",
+      "owner": "public-egress-gateway",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "public-egress-gateway/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_REALM",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "public-egress-gateway-status-publisher",
+      "owner": "public-egress-gateway",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "public-egress-gateway/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_DOCS_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_REALM",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "public-egress-gateway-telemetry-data-init",
+      "owner": "public-egress-gateway",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "public-egress-gateway/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SENDER_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision",
+        "telemetry"
+      ]
+    },
+    {
+      "id": "public-egress-gateway-telemetry-sender",
+      "owner": "public-egress-gateway",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "public-egress-gateway/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_SENDER_IMAGE"
+      ],
+      "compose_profiles": [
+        "telemetry"
+      ]
+    },
+    {
+      "id": "site-replication-applier",
+      "owner": "minio",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "minio/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_MINIO_SITE_B_ENDPOINT"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "spire-agent",
+      "owner": "spire",
+      "kind": "node",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.agent.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "spire-alert-provision",
+      "owner": "spire",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.observation.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE"
+      ],
+      "compose_profiles": [
+        "spire-observation-provision"
+      ]
+    },
+    {
+      "id": "spire-dashboard-provision",
+      "owner": "spire",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.observation.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE"
+      ],
+      "compose_profiles": [
+        "spire-observation-provision"
+      ]
+    },
+    {
+      "id": "spire-observer",
+      "owner": "spire",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.observation.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID"
+      ],
+      "compose_profiles": [
+        "spire-observation"
+      ]
+    },
+    {
+      "id": "spire-operator",
+      "owner": "spire",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE",
+        "AELEV_INFRASTRUCTURE_SPIRE_REQUEST_ROOT"
+      ],
+      "compose_profiles": [
+        "identity-provision"
+      ]
+    },
+    {
+      "id": "spire-server",
+      "owner": "spire",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "spire/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_BIND_ADDRESS",
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE",
+        "AELEV_INFRASTRUCTURE_SPIRE_PORT"
+      ],
+      "compose_profiles": [
+        "workload-identity"
+      ]
+    },
+    {
+      "id": "spire-status-provision",
+      "owner": "spire",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.observation.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_REALM",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_URL"
+      ],
+      "compose_profiles": [
+        "spire-observation-provision"
+      ]
+    },
+    {
+      "id": "spire-status-publisher",
+      "owner": "spire",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.observation.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_IMAGE",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_REALM",
+        "AELEV_INFRASTRUCTURE_SPIRE_UI_URL"
+      ],
+      "compose_profiles": [
+        "spire-observation"
+      ]
+    },
+    {
+      "id": "spire-telemetry-sender",
+      "owner": "spire",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "spire/compose.observation.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_SPIRE_SENDER_IMAGE"
+      ],
+      "compose_profiles": [
+        "spire-observation"
+      ]
+    },
+    {
+      "id": "tempo",
+      "owner": "observability/tempo",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/tempo/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TEMPO_BASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_BIND",
+        "AELEV_INFRASTRUCTURE_TEMPO_GO_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TEMPO_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TEMPO_OTLP_GRPC_PORT",
+        "AELEV_INFRASTRUCTURE_TEMPO_OTLP_HTTP_PORT",
+        "AELEV_INFRASTRUCTURE_TEMPO_PORT",
+        "AELEV_INFRASTRUCTURE_TEMPO_PUBLIC_HOST",
+        "AELEV_INFRASTRUCTURE_TEMPO_RUNTIME_ROOT",
+        "AELEV_INFRASTRUCTURE_TEMPO_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TEMPO_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "tempo-configuration-init",
+      "owner": "observability/tempo",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "observability/tempo/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TEMPO_DATA_OWNER",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "tempo-status-provision",
+      "owner": "observability/tempo",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/tempo/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_REALM",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "tempo-status-publisher",
+      "owner": "observability/tempo",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "observability/tempo/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_HEALTH_URL",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_PYTHON_IMAGE",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_REALM",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_TEMPO_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "translation-provider",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": true,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.compute-provider.mtls.yml",
+        "translator-service/compose.compute.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_BIND_ADDRESS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IDENTITY_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_SECRET_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_TRANSPORT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-api",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_BIND_ADDRESS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_CONTAINER_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_HTTPS_BIND_ADDRESS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_HTTPS_CONTAINER_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_HTTPS_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_BACKCHANNEL_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_ISSUER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_TLS_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_TRANSLATION_ENABLED",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_TRANSLATION_MAX_IN_FLIGHT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_TRANSLATION_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-api-provision",
+      "owner": "translator-service",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_BACKCHANNEL_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OIDC_ISSUER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_OPERATOR_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_TLS_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_SECRET_GID"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "translator-database",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.local.yml",
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
+        "POSTGRES_DB",
+        "POSTGRES_USER"
+      ],
+      "compose_profiles": [
+        "bundled-database"
+      ]
+    },
+    {
+      "id": "translator-migrator",
+      "owner": "translator-service",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.local.yml",
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-normal-consumer",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BACKGROUND_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_NORMAL_KAFKA_GROUP",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-outbox",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BACKGROUND_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-priority-consumer",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BACKGROUND_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRIORITY_KAFKA_GROUP",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-service-status-provision",
+      "owner": "translator-service",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_CONTAINER_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_ADMIN_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_PROVISION_UID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_REALM",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_URL"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
+    },
+    {
+      "id": "translator-service-status-publisher",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_CONTAINER_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_API_PUBLIC_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_AUDIENCE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_IDENTITY_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_MODULE_ID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_REALM",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_TIMEOUT_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_URL"
+      ],
+      "compose_profiles": [
+        "ui"
+      ]
+    },
+    {
+      "id": "translator-telemetry-data-init",
+      "owner": "translator-service",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": false,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SENDER_IMAGE"
+      ],
+      "compose_profiles": [
+        "provision",
+        "telemetry"
+      ]
+    },
+    {
+      "id": "translator-telemetry-sender",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SENDER_IMAGE"
+      ],
+      "compose_profiles": [
+        "telemetry"
+      ]
+    },
+    {
+      "id": "translator-topic-provisioner",
+      "owner": "translator-service",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.local.yml",
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_BUILD_CONTEXT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_ADMIN_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_BOOTSTRAP_SERVERS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_KAFKA_SECURITY_PROTOCOL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_MAX_MESSAGE_BYTES",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_MIN_INSYNC_REPLICAS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_PARTITIONS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_PROVISIONER_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_REPLICATION_FACTOR",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_RETENTION_BYTES",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TOPIC_RETENTION_MS"
+      ],
+      "compose_profiles": []
+    },
+    {
+      "id": "translator-worker",
+      "owner": "translator-service",
+      "kind": "runtime",
+      "opaque": false,
+      "local_state": false,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.compute-worker.mtls.yml",
+        "translator-service/compose.compute.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CLIENT_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_HOST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SSLMODE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ENVIRONMENT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_HIGH_PRIORITY_BURST",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_URL",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IDENTITY_POLICY",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_WORKER_IMAGE"
+      ],
+      "compose_profiles": []
+    }
+  ]
+}

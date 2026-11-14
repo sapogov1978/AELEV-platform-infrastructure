@@ -7,6 +7,7 @@ import json
 import re
 import signal
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -454,6 +455,14 @@ def execute_group_start(
         "never",
         *targets,
     ]
+    if stage == "initial" and not targets:
+        arguments = [
+            sys.executable,
+            str(ROOT / "bootstrap.py"),
+            "up",
+            "--full-runtime",
+            "--no-build",
+        ]
     try:
         result = subprocess.run(
             arguments, cwd=ROOT, capture_output=True, text=True, timeout=1200

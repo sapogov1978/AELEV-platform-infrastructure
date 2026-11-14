@@ -217,6 +217,24 @@ def test_export_reuses_exact_material_and_never_issues_another_right(
     assert (target / "join-token").read_text() not in json.dumps(first)
 
 
+def test_declared_policy_mountpoints_survive_registration_and_export(
+    setup: Setup,
+) -> None:
+    request, path, root, output, state = setup
+    request["policy_mountpoints"] = ["identity.json", "network.json"]
+    atomic(path, request)
+    operator.operate("authorize", path, root, output)
+    target = output.parent / "export"
+    first = operator.operate("export-bootstrap", path, root, output, export_path=target)
+    assert (
+        json.loads((target / "plan.json").read_bytes())["policy_mountpoints"]
+        == request["policy_mountpoints"]
+    )
+    assert state["create_calls"] == state["token_calls"] == 1
+    assert state.get("token") is None
+    assert (target / "join-token").read_text() not in json.dumps(first)
+
+
 @pytest.mark.parametrize(
     "failure", ["expired", "revoked", "removed", "scope", "intent"]
 )

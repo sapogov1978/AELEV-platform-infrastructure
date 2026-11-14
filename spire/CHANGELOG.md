@@ -1,6 +1,30 @@
 # История SPIRE
 
+- 2026-11-14: отдельные server/observer/sender/publisher прошли native local E2E с раздельными volumes, собственными renewal receipts, публичными endpoints, ONLINE publication ACK и центральной доставкой. Повтор сохранил все четыре контейнера; production/security и автоматическое межузловое сопровождение остаются открытыми. SPEC уточняет отсутствие общего renewal volume в network profile.
+
+- 2026-11-14: telemetry-sender target создаёт собственный закрытый renewal mountpoint для UID/GID 10001. Это устраняет воспроизведённый отказ отдельного sender при доставке первого receipt; native CI проверяет первичную запись и server runtime, и sender runtime, сохраняя существующие непустые volumes.
+
+- 2026-11-14: сетевое сопровождение сертификатов разделено по самостоятельным ролям: сервер читает только public-source receipt, observer — свой observer receipt, sender — свой sender receipt, publisher — собственные query/publisher receipts и публичную готовность соседних ролей. Прежний файловый профиль сохраняется; общий отчёт восьми/девяти сертификатов на сервере не является распределённым контрактом.
+
+- 2026-11-14: HTTPS source включён в отдельный профиль продления с проверкой project marker, фактического leaf SHA-256/expiry и свежести собственной receipt. Local/test prepare выдаёт source leaf и SAN для явных source/observer/sender endpoints. Прежние три профиля и файловый режим сохраняются.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
+
+- 2026-11-14: после реального отказа nested read-only bind добавлен необязательный `policy_mountpoints` в точный registration/bootstrap plan. Exporter создаёт только 1–4 явно объявленные пустые JSON mountpoints, включая совместимый `identity.json`, сохраняет consumer bytes/inode и запрещает подмену current/owner, пути и private-key filenames. Это общий контракт доставки; конкретные имена/содержимое задаёт потребитель.
+
+- 2026-11-14: добавлены отдельные Shell/PowerShell установки observer/status-publisher/telemetry-sender с собственными project/daemon/state, явными внешними endpoints и без обязательного локального server. Повтор закрыто отказывает для stopped/lost/foreign runtime и потерянных томов; квитанция runtime health не выдаёт положительную внешнюю готовность. Необязательная RFC1918 IPAM не меняет чужие сети; native server/observer проверены в двух новых Compose projects с потерей/возвратом источника и сохранением инкарнации при повторе.
+
+- 2026-11-14: добавлен явно выбираемый HTTPS/mTLS источник собственной публичной проекции SPIRE Server с allowlist client identity, перечитыванием TLS-материалов, ограниченными ответом/обработчиками/временем и исходным временем heartbeat. Observer и publisher поддерживают удалённый источник без fallback на файл; network plan задаёт публичные source/observer/sender endpoints и исключает общие проекционные mounts. Прежний file-профиль сохраняется; отдельные установки компонентов и полный распределённый запуск проходят дальнейшую реализацию и приёмку.
+
+- 2026-11-13: fresh runtime заранее создаёт закрытый `/run/certificate-renewal` для UID/GID `10001:10001`. Это устраняет воспроизведённый отказ первой native доставки из-за root-owned пустого тома; Docker-регрессия проверяет первичное подключение и реальную запись без capabilities, без подготовленных положительных reports. Linux CI требует все три native проверки без skips.
+
+- 2026-11-12: defaults томов `compose.observation.yml` следуют своему `COMPOSE_PROJECT`; отдельные overrides сохраняются. Это устраняет обращения fresh полного профиля к заводским томам соседней установки. Immutable native export не переписывается.
+
+- 2026-11-12: `local-inputs.py` готовит закрытый initial bundle только local/test: собственные query/server/write CA и шесть leaf, два отдельно выданных внешними операторами client identity без внешних issuer keys. Strict OpenSSL проверяет цепочку, EKU, ключи и срок; повтор сохраняет проверенные файлы. Три `renewal-requests` не подменяют approval, timer, доставку или готовность; native установка и общий clean-room продолжаются отдельно.
+
+- 2026-11-12: `bootstrap.py validate|up` проверяет закрытый initial bundle, затем делегирует штатным `install.sh/ps1 server`, `observation` и `export.sh/ps1`. Native PKI/plan validation остаётся у собственного установщика. Runtime/installer references один раз разрешаются в image IDs; сервер и наблюдение получают native `no`, `--update` не вызывается. Неизвестный результат не повторяется; диагностические файлы закрыты и сохраняются в отдельном каталоге операции. Оба входа используют общий `observation-inputs.json` с прежним перечнем файлов.
+
+- 2026-11-12: публичные Shell/PowerShell export entrypoints принимают необязательный отдельный output root. Полный комплект binding/immutable Compose/receipt создаётся там с прежней защитой ручного `.env` и обязательным per-process socket approval; runtime, registrations, credentials и recovery history не меняются. Полный установщик учитывает текущие точные контейнеры в сохранённом физическом координаторе без переноса в корневой проект.
 
 - 2026-11-11: общий Python observation installer Shell/PowerShell на Docker Desktop разрешает фиксированный host alias через непривилегированный helper без секретов и socket. Установщик с Docker socket сохраняет `network=none` и формирует `extra_hosts` по проверенному адресу; native Linux и отсутствие aliases не требуют resolver.
 - 2026-11-11: общая компиляция наблюдения применяет recovery-метки sender и observer после общих labels и configuration revision. Повторная установка после адресного восстановления сохраняет обе цепочки и `restart=no`; regression проверяет следующий допуск `require_running` и неизменные байты recovery-журналов.

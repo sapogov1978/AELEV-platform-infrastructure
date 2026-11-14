@@ -91,7 +91,8 @@ COPY --from=sqlite-builder /sqlite /opt/aelev/sqlite
 RUN python -S -c 'import sqlite3; assert sqlite3.sqlite_version == "3.53.4"'
 RUN groupadd --system --gid 10001 aelev \
     && useradd --system --uid 10001 --gid aelev --home-dir /nonexistent aelev \
-    && install -d --owner=10001 --group=10001 /run/aelev-translator /var/lib/aelev-status
+    && install -d --owner=10001 --group=10001 /run/aelev-translator /var/lib/aelev-status \
+    && install -d --owner=10001 --group=10001 --mode=0700 /run/secrets/compute-provider
 WORKDIR /opt/aelev
 COPY --from=dependencies /opt/aelev/.venv ./.venv
 RUN python -m pip uninstall --yes pip \
@@ -112,13 +113,13 @@ ARG AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE
 RUN python -c 'import os,re; assert re.fullmatch(r"aelev/translator-service:health-seed-sha256-[0-9a-f]{64}|.+@sha256:[0-9a-f]{64}", os.environ["AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE"]), "PINNED_HEALTH_SEED_REQUIRED"'
 COPY src/translator_service/api.py src/translator_service/api_server.py src/translator_service/local_health.py src/translator_service/health_heartbeat.py /opt/aelev/src/translator_service/
 
-# Maintenance changes only this owner's progress markers and SQLite ABI.
+# Owner background code and its opaque-port dependencies retain the seed stack.
 FROM ${AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE} AS translator-background-update
 ARG AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE
 RUN python -c 'import os,re; assert re.fullmatch(r"aelev/translator-service:health-seed-sha256-[0-9a-f]{64}|.+@sha256:[0-9a-f]{64}", os.environ["AELEV_INFRASTRUCTURE_TRANSLATOR_HEALTH_SEED_IMAGE"]), "PINNED_HEALTH_SEED_REQUIRED"'
 ENV LD_LIBRARY_PATH=/opt/aelev/sqlite
 COPY --from=sqlite-builder /sqlite /opt/aelev/sqlite
-COPY src/translator_service/runtime.py src/translator_service/local_health.py src/translator_service/health_heartbeat.py /opt/aelev/src/translator_service/
+COPY src/translator_service/runtime.py src/translator_service/local_health.py src/translator_service/health_heartbeat.py src/translator_service/provider_transport.py src/translator_service/provider_identity.py src/translator_service/provider_healthcheck.py src/translator_service/presence.py src/translator_service/retry.py /opt/aelev/src/translator_service/
 RUN python -S -c 'import sqlite3; assert sqlite3.sqlite_version == "3.53.4"'
 
 # Publisher migration does not replace its Python, SDK, OS or application code.

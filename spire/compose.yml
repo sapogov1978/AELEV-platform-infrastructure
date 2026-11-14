@@ -71,7 +71,7 @@ volumes:
   spire-bootstrap-output:
     name: ${AELEV_INFRASTRUCTURE_SPIRE_BOOTSTRAP_VOLUME:-aelev-infrastructure-spire_bootstrap-output}
   spire-observation-source:
-    name: ${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_VOLUME:-aelev-infrastructure-spire_observation-source}
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_observation-source}
     driver_opts:
       type: tmpfs
       device: tmpfs

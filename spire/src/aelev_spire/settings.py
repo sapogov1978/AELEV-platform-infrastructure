@@ -6,7 +6,7 @@ import json
 import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlsplit
 
 from cryptography import x509
@@ -20,6 +20,28 @@ SERVER = "/opt/spire/bin/spire-server"
 AGENT = "/opt/spire/bin/spire-agent"
 SERVER_SOCKET = "/run/spire/admin/api.sock"
 AGENT_SOCKET = "/run/spire/workload/api.sock"
+
+
+def policy_mountpoints(plan: dict[str, Any]) -> tuple[str, ...]:
+    value = plan.get("policy_mountpoints", ["identity.json"])
+    if not isinstance(value, list):
+        raise ValueError("SPIRE_SVID_POLICY_MOUNTPOINT_INVALID")
+    names = cast(list[object], value)
+    if (
+        not 1 <= len(names) <= 4
+        or "identity.json" not in names
+        or any(
+            not isinstance(name, str)
+            or not re.fullmatch(r"[a-z][a-z0-9-]{0,62}\.json", name)
+            or name in {"owner.json", "current.json"}
+            for name in names
+        )
+    ):
+        raise ValueError("SPIRE_SVID_POLICY_MOUNTPOINT_INVALID")
+    selected = cast(list[str], names)
+    if len(set(selected)) != len(selected):
+        raise ValueError("SPIRE_SVID_POLICY_MOUNTPOINT_INVALID")
+    return tuple(selected)
 
 
 def domain(value: object) -> str:

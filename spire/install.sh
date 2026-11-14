@@ -2,7 +2,7 @@
 # Operator entry point. No final .env edits or runtime Docker socket.
 set -eu
 if [ "$#" -lt 4 ]; then
-  echo 'Usage: install.sh server|agent|authorize|revoke|inspect|observation|export-bootstrap PROJECT RUNTIME_IMAGE INSTALLER_IMAGE [options]' >&2
+  echo 'Usage: install.sh server|agent|authorize|revoke|inspect|observation|observer|status-publisher|telemetry-sender|export-bootstrap PROJECT RUNTIME_IMAGE INSTALLER_IMAGE [options]' >&2
   exit 64
 fi
 spire_role=$1
@@ -14,7 +14,7 @@ if [ "${DRP_SPIRE_DOCKER_SOCKET_APPROVAL:-}" != 'operator-root-equivalent-v1' ];
   echo 'SPIRE_INSTALL_DOCKER_SOCKET_APPROVAL_REQUIRED' >&2
   exit 77
 fi
-case "$spire_role" in server|agent|authorize|revoke|inspect|observation|export-bootstrap) ;; *) exit 64 ;; esac
+case "$spire_role" in server|agent|authorize|revoke|inspect|observation|observer|status-publisher|telemetry-sender|export-bootstrap) ;; *) exit 64 ;; esac
 case "$spire_project" in ''|*[!a-z0-9_-]*) exit 64 ;; esac
 case $(uname -s) in Darwin) spire_host_os=Darwin ;; Linux) spire_host_os=Linux ;; *) echo 'USE_INSTALL_PS1' >&2; exit 78 ;; esac
 spire_endpoint=${DOCKER_HOST:-$(docker context inspect --format '{{.Endpoints.docker.Host}}')}

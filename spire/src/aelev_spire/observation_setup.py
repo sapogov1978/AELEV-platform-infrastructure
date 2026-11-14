@@ -18,6 +18,7 @@ from urllib.parse import urlsplit
 
 from . import desktop_host
 from .files import atomic, read, reserve
+from .public_state import principal
 
 if TYPE_CHECKING:
     from .installation import Installer
@@ -25,40 +26,11 @@ if TYPE_CHECKING:
 OWNER = "infrastructure-spire"
 PREFIX = "AELEV_INFRASTRUCTURE_SPIRE_"
 SECRET_FILES = {
-    "observer": {
-        "metrics.crt",
-        "metrics.key",
-        "query-ca.crt",
-        "observer.crt",
-        "observer.key",
-        "sender-ca.crt",
-    },
-    "sender": {
-        "sender.crt",
-        "sender.key",
-        "server-ca.crt",
-        "local-write-ca.crt",
-        "local-write.crt",
-        "local-write.key",
-        "central-ca.crt",
-        "central-write.crt",
-        "central-write.key",
-        "local-query-ca.crt",
-        "local-query.crt",
-        "local-query.key",
-    },
-    "status": {
-        "publisher.crt",
-        "publisher.key",
-        "shell-ca.crt",
-        "identity-ca.crt",
-        "query-ca.crt",
-        "query.crt",
-        "query.key",
-    },
-    "status-admin": {"admin-user", "admin-password"},
-    "grafana": {"grafana-ca.crt", "token"},
-    "grafana-admin": {"grafana-ca.crt", "token"},
+    role: set(paths)
+    for role, paths in cast(
+        dict[str, list[str]],
+        json.loads(Path(__file__).with_name("observation-inputs.json").read_text()),
+    ).items()
 }
 
 
@@ -85,7 +57,7 @@ def documents(plan: dict[str, Any]) -> dict[str, bytes]:
     if (
         plan.get("owner") != OWNER
         or plan.get("schema_version") != 1
-        or set(plan) - {"host_gateway_aliases"}
+        or set(plan) - {"host_gateway_aliases", "network"}
         != {
             "owner",
             "schema_version",
@@ -117,6 +89,7 @@ def documents(plan: dict[str, Any]) -> dict[str, bytes]:
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", presentation[field]):
             raise ValueError("SPIRE_OBSERVATION_PRESENTATION_INVALID")
     central = origin(plan["central_url"])
+    network = network_endpoints(plan)
     origin(plan["grafana_url"])
     gateway_aliases(plan)
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", plan["datasource_uid"]):
@@ -145,7 +118,9 @@ def documents(plan: dict[str, Any]) -> dict[str, bytes]:
             {
                 "job_name": "infrastructure-spire",
                 "scheme": "https",
-                "static_configs": [{"targets": ["spire-observer:8083"]}],
+                "static_configs": [
+                    {"targets": [urlsplit(network["observer_url"]).netloc]}
+                ],
                 "tls_config": query_tls,
             }
         ],
@@ -177,7 +152,7 @@ def documents(plan: dict[str, Any]) -> dict[str, bytes]:
             },
         }
     )
-    sender = {
+    sender: dict[str, Any] = {
         "mode": "sender",
         "listen_host": "0.0.0.0",
         "listen_port": 4318,
@@ -215,6 +190,20 @@ def documents(plan: dict[str, Any]) -> dict[str, bytes]:
             "--log.format=json",
         ],
     }
+    if "network" in plan:
+        sender["certificate_renewal"] = {
+            "consumer_owner": OWNER,
+            "report": "/run/certificate-renewal/sender.json",
+            "certificates": {
+                name: "/run/secrets/telemetry/" + filename
+                for name, filename in {
+                    "sender": "sender.crt",
+                    "local-write": "local-write.crt",
+                    "local-query": "local-query.crt",
+                    "central-write": "central-write.crt",
+                }.items()
+            },
+        }
     web = {
         "tls_server_config": {
             "cert_file": "/run/secrets/telemetry/sender.crt",
@@ -366,6 +355,76 @@ def documents(plan: dict[str, Any]) -> dict[str, bytes]:
     }
 
 
+def network_endpoints(plan: dict[str, Any]) -> dict[str, str]:
+    """Explicit public addresses; legacy defaults belong only to file mode."""
+    selected = plan.get("network")
+    if selected is None:
+        return {
+            "observer_url": "https://spire-observer:8083",
+            "sender_otlp_url": "https://spire-telemetry-sender:4318",
+            "sender_health_url": "https://spire-telemetry-sender:13134",
+        }
+    required = {
+        "source_url",
+        "source_identity",
+        "observer_url",
+        "sender_otlp_url",
+        "sender_health_url",
+    }
+    if not isinstance(selected, dict):
+        raise ValueError("SPIRE_OBSERVATION_NETWORK_INVALID")
+    selected = cast(dict[str, Any], selected)
+    if set(selected) != required:
+        raise ValueError("SPIRE_OBSERVATION_NETWORK_INVALID")
+    result: dict[str, str] = {}
+    for key in required - {"source_identity"}:
+        result[key] = origin(selected[key])
+    result["source_identity"] = principal(selected["source_identity"])
+    return result
+
+
+def bind_network(model: dict[str, Any], plan: dict[str, Any]) -> None:
+    """Remove cross-role source mounts when HTTPS is explicitly selected."""
+    if "network" not in plan:
+        return
+    selected = network_endpoints(plan)
+    services = model["services"]
+    services["spire-observer"]["environment"][PREFIX + "OTLP_ENDPOINT"] = selected[
+        "sender_otlp_url"
+    ]
+    publisher = services["spire-status-publisher"]["environment"]
+    publisher[PREFIX + "OBSERVER_URL"] = selected["observer_url"]
+    publisher[PREFIX + "SENDER_HEALTH_URL"] = selected["sender_health_url"]
+    for name in ("spire-observer", "spire-status-publisher"):
+        service = services[name]
+        service["environment"].update(
+            {
+                PREFIX + "SOURCE_MODE": "https",
+                PREFIX + "SOURCE_URL": selected["source_url"],
+                PREFIX + "SOURCE_IDENTITY": selected["source_identity"],
+            }
+        )
+        service["volumes"] = [
+            mount
+            for mount in service["volumes"]
+            if mount.get("target") != "/run/observation"
+        ]
+    sender = services.get("spire-telemetry-sender")
+    if sender is not None:
+        sender["volumes"].append(
+            {
+                "type": "volume",
+                "source": "spire-certificate-renewal-status",
+                "target": "/run/certificate-renewal",
+                "read_only": True,
+            }
+        )
+    # Prune only the now-unused public source/renewal projections. Secret and
+    # queue volumes remain local to their original owning roles.
+    for name in ("spire-observation-public-source",):
+        model["volumes"].pop(name, None)
+
+
 def gateway_aliases(plan: dict[str, Any]) -> dict[str, str]:
     """Resolve only explicitly selected local provider endpoint names."""
     aliases = plan.get("host_gateway_aliases", [])
@@ -378,6 +437,12 @@ def gateway_aliases(plan: dict[str, Any]) -> dict[str, str]:
             plan["presentation"]["identity_url"],
         )
     }
+    if "network" in plan:
+        endpoints.update(
+            urlsplit(value).hostname
+            for key, value in network_endpoints(plan).items()
+            if key != "source_identity"
+        )
     if not isinstance(aliases, list):
         raise ValueError("SPIRE_OBSERVATION_GATEWAY_ALIASES_INVALID")
     selected: list[str] = []
@@ -652,6 +717,7 @@ def install(installer: Installer, plan: dict[str, Any], source: Path) -> None:
             role,
         )
     model = installer.resolve("compose.observation.yml", values)
+    bind_network(model, plan)
     from .sender_recovery import apply_override
 
     for key, definition in model["volumes"].items():

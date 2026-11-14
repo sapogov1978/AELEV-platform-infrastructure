@@ -275,6 +275,8 @@ class TranslatorConfigurationTest(unittest.TestCase):
                 "compose.remote.yml",
                 "compose.local.yml",
                 "compose.compute.yml",
+                "compose.compute-provider.mtls.yml",
+                "compose.compute-worker.mtls.yml",
             },
         )
         for name in (
@@ -282,6 +284,8 @@ class TranslatorConfigurationTest(unittest.TestCase):
             "compose.remote.yml",
             "compose.local.yml",
             "compose.compute.yml",
+            "compose.compute-provider.mtls.yml",
+            "compose.compute-worker.mtls.yml",
             ".env.example",
             "README.md",
             "Dockerfile",

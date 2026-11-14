@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory=$true)][ValidateSet('server','agent','authorize','revoke','inspect','observation','export-bootstrap')][string]$Role,
+    [Parameter(Mandatory=$true)][ValidateSet('server','agent','authorize','revoke','inspect','observation','observer','status-publisher','telemetry-sender','export-bootstrap')][string]$Role,
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-z][a-z0-9_-]{2,63}$')][string]$Project,
     [Parameter(Mandatory=$true)][string]$RuntimeImage,
     [Parameter(Mandatory=$true)][string]$InstallerImage,

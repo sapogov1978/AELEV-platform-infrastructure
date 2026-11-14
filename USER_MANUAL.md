@@ -1,5 +1,7 @@
 # Руководство по оркестрации Platform Infrastructure
 
+Для подготовки размещения по отдельным nodes используйте [интерфейс описи v1](docs/api/placement.md). Он проверяет исходные hashes и bindings без Docker/start/RESUME. Существующие lifecycle-входы ниже сохраняются; успешный план не подменяет owner-specific install/admission.
+
 ## Проверка всех локальных сертификатов
 
 После установки, ротации CA или изменения доставки выполните `python3.13 certificate_lifecycle.py`. Код `CERTIFICATE_LIFECYCLE_READY` означает, что все обнаруженные owner-approval имеют ровно по одному активному таймеру, свежую квитанцию и точный действующий leaf. Отрицательный код с `subject` указывает относительный каталог владельца; не исправляйте его массовым restart и не удаляйте history. Сначала восстановите конкретный renewal/delivery, затем адресно активируйте потребителя. Команда ничего не выпускает, не продлевает Egress grant и не управляет контейнерами.
@@ -125,6 +127,10 @@ done
 Prometheus и Blackbox Exporter дополнительно требуют собственные OIDC-клиенты браузерного входа по их README. После доставки им CA IdP и административных файлов выполните адресно `docker compose --profile provision run --rm prometheus-operator-provision` и `docker compose --profile provision run --rm blackbox-exporter-operator-provision`, затем повторите render владельцев. Переводчик требует `translator-api-provision` при выбранном локальном HTTP/OIDC или включённом операторском POST; обычная HTTPS/mTLS-диагностика без POST его не требует. Эти задачи не заменяются status-provision и не выдаются машинным издателям.
 
 ## Запуск и остановка всего комплекса
+
+Штатный полный состав: `./infrastructure plan --full-runtime`, затем `./infrastructure up --full-runtime`. Для собранного выпуска добавьте `--no-build`. Проверка — `./infrastructure status --full-runtime`; остановка — `./infrastructure down --full-runtime` с сохранением данных. Подготовьте владельческие credentials, включая provider secret. Drift требует handoff; повторный запуск сохраняет инкарнации и recovery budgets. `RUNTIME_HEALTHY` подтверждает технический состав; реальный inference, приёмка функций и допуск площадки проверяются отдельно.
+
+Для новой local/test установки `up --full-runtime --spire-local-input PRIVATE_CONFIG` готовит собственную PKI SPIRE после core и, если `grafana_tokens` опущены, получает их штатным OIDC-входом оператора Grafana. Две выданные client identity и публичное доверие поступают от соответствующих операторов без внешних CA-ключей; [формат входов](spire/USER_MANUAL.md#подготовить-локальный-initial-bundle) и [API](docs/api/installation.md#полный-локальный-профиль) описывают сохранный повтор и отзыв автоматически созданного provisioner. Сопровождение сертификатов регистрируется отдельно и проверяется по настоящим квитанциям, не по факту подготовки файлов.
 
 После подготовки из этого каталога:
 

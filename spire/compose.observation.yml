@@ -113,15 +113,15 @@ networks:
 volumes:
   spire-observation-public-source:
     external: true
-    name: ${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_VOLUME:-aelev-infrastructure-spire_observation-source}
-  spire-observation-configuration: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_CONFIG_VOLUME:-aelev-infrastructure-spire_observation-configuration}"}
-  spire-observer-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVER_DATA_VOLUME:-aelev-infrastructure-spire_observation}"}
-  spire-status-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_DATA_VOLUME:-aelev-infrastructure-spire_status}"}
-  spire-telemetry-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_TELEMETRY_DATA_VOLUME:-aelev-infrastructure-spire_telemetry}"}
-  spire-observer-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVER_SECRETS_VOLUME:-aelev-infrastructure-spire_observer-secrets}"}
-  spire-status-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_SECRETS_VOLUME:-aelev-infrastructure-spire_status-secrets}"}
-  spire-sender-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_SENDER_SECRETS_VOLUME:-aelev-infrastructure-spire_sender-secrets}"}
-  spire-status-admin: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_ADMIN_VOLUME:-aelev-infrastructure-spire_status-admin}"}
-  spire-grafana-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_SECRETS_VOLUME:-aelev-infrastructure-spire_grafana-secrets}"}
-  spire-grafana-admin: {name: "${AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_ADMIN_VOLUME:-aelev-infrastructure-spire_grafana-admin}"}
-  spire-certificate-renewal-status: {name: "${AELEV_INFRASTRUCTURE_SPIRE_CERTIFICATE_RENEWAL_STATUS_VOLUME:-aelev-infrastructure-spire_certificate-renewal-status}"}
+    name: ${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_observation-source}
+  spire-observation-configuration: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVATION_CONFIG_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_observation-configuration}"}
+  spire-observer-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVER_DATA_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_observation}"}
+  spire-status-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_DATA_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_status}"}
+  spire-telemetry-data: {name: "${AELEV_INFRASTRUCTURE_SPIRE_TELEMETRY_DATA_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_telemetry}"}
+  spire-observer-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_OBSERVER_SECRETS_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_observer-secrets}"}
+  spire-status-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_SECRETS_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_status-secrets}"}
+  spire-sender-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_SENDER_SECRETS_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_sender-secrets}"}
+  spire-status-admin: {name: "${AELEV_INFRASTRUCTURE_SPIRE_STATUS_ADMIN_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_status-admin}"}
+  spire-grafana-secrets: {name: "${AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_SECRETS_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_grafana-secrets}"}
+  spire-grafana-admin: {name: "${AELEV_INFRASTRUCTURE_SPIRE_GRAFANA_ADMIN_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_grafana-admin}"}
+  spire-certificate-renewal-status: {name: "${AELEV_INFRASTRUCTURE_SPIRE_CERTIFICATE_RENEWAL_STATUS_VOLUME:-${AELEV_INFRASTRUCTURE_SPIRE_COMPOSE_PROJECT:-aelev-infrastructure-spire}_certificate-renewal-status}"}

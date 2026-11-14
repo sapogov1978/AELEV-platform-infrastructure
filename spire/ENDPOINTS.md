@@ -1,9 +1,12 @@
 # Технические интерфейсы SPIRE
 
+В сетевом `GET /v1/public-state` поле `renewal` содержит только собственную identity `public-source` либо `null`. HTTPS source требует свежий отдельный `public-source.json`, совпадение SHA-256/expiry с фактическим `source.crt` и собственную installation identity при доставке. Observer/sender/publisher проверяют свои локальные receipts отдельно; source не свидетельствует об их credentials. Старый файловый режим сохраняет восемь identities и три квитанции.
+
 `python -m aelev_spire.recovery_history --state DIRECTORY --role sender|observer` — читающий оператор полной собственной цепочки восстановления. Возвращает только `prior_attempts` и `evidence_sha256`; Docker socket, сетевой доступ и запись не нужны. Источник должен быть проверенным read-only состоянием владельца, не произвольной присланной квитанцией. Ошибки `SPIRE_RECOVERY_HISTORY_*` запрещают импорт неподтверждённого нуля или неполной истории; точные правила находятся в [SPEC](SPEC.md).
 
 | Интерфейс | Область и допуск |
 |---|---|
+| Явно опубликованный HTTPS `GET /v1/public-state` | Опциональная собственная read-only проекция server по mTLS и точной client identity; исходный heartbeat до 15 секунд и санитарная renewal summary. Отрицательный ответ не переключает reader на файл; [контракт](SPEC.md) |
 | SPIRE Server TCP 8081 | Штатный протокол аттестации/обновления SPIRE; первоначальное подтверждённое доверие и однократное право либо действующий agent SVID. Не браузерный и не предметный API |
 | `/run/spire/admin/api.sock` | Стандартный административный API только локальной отдельной операторской задачи; TCP-публикации и mount в runtime потребителя нет |
 | `/run/spire/workload/api.sock` | Стандартный SPIFFE Workload API внутри отдельного агентского контейнера; только его собственный аттестованный процесс доставки |
