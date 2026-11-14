@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-14: main digest 7729a8f независимо прошёл подпись/source/SBOM/provenance, проверку upstream ELF bytes обеих архитектур, свежий raw CVE scan и 131 native tests на каждой CPU с неизменёнными runtime libraries. Scoped admission переносится на exact main artifact после этой сверки; произвольные конфигурации и production-площадка им не допускаются.
+
 - 2026-11-14: Sender переходит на согласованный Prometheus LTS 3.13.5 и patched Alpine 3.22 после проверки signed amd64/arm64 artifact. Native 131/131 на обеих архитектурах и runtime library hashes подтверждены; raw HIGH/UNKNOWN сохраняются с точными причинами неприменимости в объявленных profiles. Публикация из main, owner rollout и площадочный допуск остаются отдельными.
 
 - 2026-11-14: отдельная проверка опубликованного amd64 Sender выполняется на native runner с неизменёнными runtime libraries и точным source SHA. Сохраняются JUnit и admission proof; тестовый слой не считается production image или разрешением RESUME.

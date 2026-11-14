@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "SIGNED_MAIN_ARTIFACT_VERIFIED_SECURITY_ADMISSION_PENDING",
+  "artifact_security_admitted": false,
+  "production_admitted": false,
+  "signed_artifact": {
+    "status": "SUPPLY_CHAIN_NATIVE_PAYLOAD_PASS_ADMISSION_PENDING",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:9f8a7751fe52a4646f48063194dd86e904b021b09970014c99f22236809841a4",
+    "source_commit": "1f6619c13f16860402c52fd5989b745c348d7786",
+    "workflow": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43584986770",
+    "certificate_identity": "https://github.com/sapogov1978/AELEV-platform-infrastructure/.github/workflows/translator-worker-release.yml@refs/heads/main",
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "attestations": [
+      {
+        "subject_digest": "sha256:eb0f71808acc9926e991444f9b19bcc3a16a4f5f2bf61e181d4fb6cd9bbc9cf3",
+        "predicates": [
+          "https://slsa.dev/provenance/v1",
+          "https://spdx.dev/Document"
+        ]
+      },
+      {
+        "subject_digest": "sha256:ff4df704c7abd415d2d8f9a33691d197c625cba42a554a7624a6481fbee628ec",
+        "predicates": [
+          "https://slsa.dev/provenance/v1",
+          "https://spdx.dev/Document"
+        ]
+      }
+    ],
+    "native_runtime": {
+      "python": "3.13.7",
+      "sqlite": "3.53.4",
+      "architecture": "aarch64",
+      "openssl": "OpenSSL 3.0.22 25 Aug 2026",
+      "ui_sdk": "1.1.2",
+      "opentelemetry_api": "1.45.2",
+      "source_sha256": {
+        "provider_transport.py": "04386fd96f84b2d29e15ac6b6ad94c04b8594c222bb571239502a0205d68bc2f",
+        "provider_identity.py": "19d4fd5bb1a00446bbbeb744edb212de1f69990f5a0ec37248e22d32858c87cf",
+        "runtime.py": "81e8f8bad17f43cc00e3de92e6b5be6c9cb2b13e298ef523611c32c751a7ced0",
+        "retry.py": "3a517e012900b4b30b5af2504f1b28f9701ced1a2b03aa213ce9fa4e5d9414cb",
+        "presence.py": "c022abddce1fad4a29fe020dd0bf1f4a2d437b8e8bd559afd42a3e6f6201d32d",
+        "provider_healthcheck.py": "ed65c87c856ebe1e581b181db34df659fa52600ed2a8f69c874e36503ba7e61e"
+      }
+    },
+    "worker_process_started": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "production_admitted": false
+  },
+  "raw_security": {
+    "scanner_version": "0.76.1",
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-15T07:01:20.721668241Z",
+      "UpdatedAt": "2026-11-14T07:01:20.721668732Z",
+      "DownloadedAt": "2026-11-14T10:48:10.273924Z"
+    },
+    "counts_per_platform": {
+      "arm64": {
+        "LOW": 93,
+        "HIGH": 40,
+        "MEDIUM": 120,
+        "UNKNOWN": 5,
+        "CRITICAL": 2
+      },
+      "amd64": {
+        "LOW": 93,
+        "HIGH": 40,
+        "MEDIUM": 120,
+        "UNKNOWN": 5,
+        "CRITICAL": 2
+      }
+    },
+    "raw_findings_suppressed": false
+  },
+  "offline_library_probe": {
+    "status": "OFFLINE_RUNTIME_LIBRARY_PROBE_PASS",
+    "image_architecture": "aarch64",
+    "python": "3.13.7",
+    "sqlite": "3.53.4",
+    "sqlite_loaded_paths": [
+      "/opt/aelev/sqlite/libsqlite3.so.0"
+    ],
+    "zlib": "1.2.13",
+    "zlib_path": "/usr/lib/aarch64-linux-gnu/libz.so.1.2.13",
+    "minizip_symbols": {
+      "unzOpen": false,
+      "unzOpen64": false,
+      "zipOpenNewFileInZip4": false,
+      "zipOpenNewFileInZip4_64": false
+    },
+    "uid": 10001,
+    "cap_eff": "0000000000000000",
+    "no_new_privileges": "1",
+    "fstab": "# UNCONFIGURED FSTAB FOR BASE SYSTEM\n",
+    "worker_loop_started": false,
+    "network": "none",
+    "inference_requested": false
+  },
+  "partial_findings_review": [
+    {
+      "id": "CVE-2025-7458",
+      "source": "https://security-tracker.debian.org/tracker/CVE-2025-7458",
+      "disposition": "AFFECTED_SYSTEM_LIBRARY_NOT_LOADED_IN_NATIVE_PROBE",
+      "basis": "Bookworm retains libsqlite3 3.40.1; the exact Python 3.13.7 worker imports its own /opt/aelev/sqlite/libsqlite3.so.0 version 3.53.4. This does not close all advisories affecting newer SQLite FTS5."
+    },
+    {
+      "id": "CVE-2023-45853",
+      "disposition": "AFFECTED_MINIZIP_FUNCTIONS_ABSENT_FROM_LOADED_LIBZ",
+      "basis": "Native symbol lookup found no zipOpenNewFileInZip4[_64] or unzOpen[64] in the loaded zlib 1.2.13. Whole artifact admission remains pending."
+    },
+    {
+      "ids": [
+        "CVE-2026-119373",
+        "CVE-2026-119374",
+        "CVE-2026-119379"
+      ],
+      "disposition": "SQLITE_FEATURE_AND_CALL_PATH_REVIEW_PENDING",
+      "basis": "Do not infer closure from SQLite 3.53.4 alone: advisories include newer FTS5/session extension defects. Verify the compiled features and actual service SQL/storage paths."
+    }
+  ],
+  "first_probe_failure_preserved": {
+    "cause": "The diagnostic script expected /opt/sqlite instead of actual owner path /opt/aelev/sqlite",
+    "runtime_modified": false
+  },
+  "evidence_sha256": {
+    "verification.json": "e164989809b4de11f0e7791d068d7edd74272aeb8d6244deb7788b9a9e02c304",
+    "security.json": "77604a03bb9953ee3d2aac70b0e12e269294ae5e85bf4e58fb9f609dd9dc0298",
+    "trivy-arm64.json": "9472c02b2d5313a35b29f93929aa91f6789450c112e384f0ba955169684f448c",
+    "trivy-amd64.json": "227f60e051fd1b7ad21f81a7d2bb7bc60e1b1f7a1c32135e89ddbf7e18ec8b01",
+    "offline-library-probe.json": "2fb4c5fe2e57dad67e900339eee5d033be48ba580f307b0612f70e1306dab62f",
+    "offline-library-probe-first-failure.stderr.log": "bb25ea7bf44d38d34c22d56e683883c6fa3fedcb95107d1c86958b8038e22dff"
+  },
+  "open_gates": [
+    "complete scoped assessment of both architecture raw findings and current linked libraries",
+    "native amd64 validation of exact worker artifact",
+    "exact signed worker network identity/provider and canonical queue integration",
+    "owner quality admission and rollout",
+    "complete local/distributed product acceptance"
+  ],
+  "worker_process_started": false,
+  "queue_resume_issued": false,
+  "working_runtime_switched": false,
+  "inference_requested": false
+}

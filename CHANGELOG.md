@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: SPIRE с admitted main Sender прошёл повторный native E2E четырёх самостоятельных ролей, раздельных volumes, ONLINE ACK, центральной durable delivery и восьми одинаковых scoped exports. Фактический процесс подтвердил private Prometheus/snappy/отключённый remote read; одна машина не считается физической распределённой приёмкой. Отдельный отчёт Translator worker сохраняет подписанный main release, raw CVEs и открытый security admission после offline проверки реально загруженных SQLite/zlib.
+
+- 2026-11-14: signed main Sender digest 7729a8f прошёл scoped security assessment, подпись/SBOM/provenance и повторные 131 native TLS/durability checks на каждой архитектуре. SPIRE runtime base и новые telemetry-конфигурации Translator/Egress закрепляют этот exact digest; raw findings и profile boundaries сохранены. Работающий контур не переключается, RESUME не выполняется.
+
 - 2026-11-14: согласованный Sender LTS 3.13.5 принят в исходники после scoped security admission signed multiarch-кандидата, 131 native TLS/durability tests на каждой архитектуре, TSDB/restart/restore и живого private-Prometheus профиля. Python 3.13.7, Alpine 3.22 и SQLite 3.53.4 сохранены. Raw findings и ограничение конкретными профилями не скрываются; новое main artifact и rollout проверяются отдельно.
 
 - 2026-11-14: добавлен отдельный native amd64 admission workflow для exact signed Sender digest и его source SHA. Он проверяет 131 TLS/durability case без skips, совпадение установленных модулей и сохранность runtime OpenSSL/Python/SQLite при добавлении тестовых инструментов; сеть приложения закрыта, model calls и рабочие процессы не запускаются.

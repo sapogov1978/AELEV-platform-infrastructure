@@ -1,5 +1,9 @@
 # История SPIRE
 
+- 2026-11-14: новый main Sender base проверен живыми server/observer/sender/publisher в четырёх проектах без общих volumes. Собственный журнал sender опустел после центрального ACK, издатель получил ONLINE ACK; повтор сохранил экземпляры и все четыре public exports. Отдельная native проверка подтвердила фактический loopback Prometheus и отказ public health проксировать его API.
+
+- 2026-11-14: telemetry-sender target закрепляет signed main Sender LTS digest 7729a8f после scoped artifact admission и 131 native checks на каждой архитектуре. Generic renewal guard теперь входит в runtime base; собственные SQLite 3.53.4, credentials и mountpoints сохраняются. Изменение исходников не переключает существующую установку.
+
 - 2026-11-14: composition export сверяет опубликованные ports/bind и `extra_hosts` с фактическим Docker HostConfig, отклоняя подменённый маршрут без его автоматической замены. Сохраняются явные адреса и непривилегированные runtime с read-only root.
 
 - 2026-11-14: читающий export отдельного server/observer/sender/publisher прошёл native публичный Shell CLI и побайтно одинаковый повтор каждой роли без файлов или runtime других ролей. Явный scope сохраняет image/container/recovery проверки и собственные external volumes; общий четырёхролевой export совместим. Сетевые публичные параметры проверяются по роли, private env по-прежнему запрещён; физическая распределённая приёмка остаётся отдельной.

@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: шаблон telemetry sender закрепляет signed main LTS digest 7729a8f после scoped security assessment и 131 native TLS/durability checks на каждой архитектуре. Grants, публичные endpoints и рабочие deployments сохраняются; установка остаётся отдельной владельческой операцией.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-14: OpenTelemetry API/SDK/OTLP HTTP exporter закреплены на 1.45.2 для устранения GHSA-mf5v-w3w3-f6cg. Grants, identity, ограничения egress и wire-контракт телеметрии сохраняются; работающий gateway не переключается.

@@ -434,5 +434,116 @@
     "exit_code": 0,
     "working_runtime_switched": false,
     "inference_requested": false
+  },
+  "main_sender_owner_native_handoff": {
+    "native_runtime": {
+      "status": "PASS",
+      "module_id": "dc33c244-03ca-4f9d-9243-45394ac1855d",
+      "projects": {
+        "server": "aelev_spire_four_578e7813_server",
+        "observer": "aelev_spire_four_578e7813_observer",
+        "telemetry-sender": "aelev_spire_four_578e7813_telemetry_sender",
+        "status-publisher": "aelev_spire_four_578e7813_status_publisher"
+      },
+      "images": {
+        "runtime": "sha256:980b1ef5274c732f2e081e950c54b86f8880c4521c15270d268ddde4de1fa3b0",
+        "operator-installer": "sha256:f04a04c49b02ad9a9481dbbb1e880808168a7a6f8184fca4de03e3d3fa600495",
+        "telemetry-sender": "sha256:6be54f7807b50e4b7888586cc4fd5724dd0d54d32fcc2d84a4503a1abb05982e",
+        "checks": "sha256:c9f41a9884ad40f3b2d423a8e87c92b55ce6653dd3132cee7c9e9ae2c1aefedc"
+      },
+      "physical_nodes": 1,
+      "working_runtime_switched": false,
+      "inference_requested": false,
+      "signed_sender_base_security_admitted": true,
+      "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+      "ui_catalog_readback_verified": false,
+      "assertions": {
+        "no_shared_volumes_between_roles": true,
+        "observer_ready": true,
+        "sender_ready": true,
+        "real_central_durable_delivery": true,
+        "real_platform_ui_ack": true,
+        "all_repeats_preserve_instances": true,
+        "scoped_public_exports": true,
+        "export_repeats_identical": true,
+        "readiness_after_exports": true
+      },
+      "sender_journal": {
+        "accepted_sequence": 14,
+        "remaining_records": 0
+      },
+      "central_ack_proof_method": "own sender accepted sequence advanced and journal drained; exact-source forward() removes only after matching central durable ACK",
+      "publisher_ack": {
+        "module": "dc33c244-03ca-4f9d-9243-45394ac1855d",
+        "sequence": 3,
+        "pending": false
+      },
+      "exports": {
+        "server": {
+          "generation": "7a582eab1d75fd1a5a46e496ed1c19043b3c10b3df376ad78278f1a9ac81ea59",
+          "roles": [
+            "spire-server"
+          ],
+          "repeat_identical": true
+        },
+        "observer": {
+          "generation": "06ab58e7c63f1dc828d70947a2e6bf3f16c6f6a685b9cb18ab396784560d5092",
+          "roles": [
+            "spire-observer"
+          ],
+          "repeat_identical": true
+        },
+        "telemetry-sender": {
+          "generation": "60a10910a96d5111bdffd32fbadf575642dafcfabf12590e536d54fd332fb963",
+          "roles": [
+            "spire-telemetry-sender"
+          ],
+          "repeat_identical": true
+        },
+        "status-publisher": {
+          "generation": "2a684e4f8b64fecd7de58c89b0db1b2576d81eb74a5a1246a03c6d3dc219d97e",
+          "roles": [
+            "spire-status-publisher"
+          ],
+          "repeat_identical": true
+        }
+      },
+      "test_containers_removed": true,
+      "test_owned_volumes_preserved": true
+    },
+    "actual_sender_profile": {
+      "prometheus_listen_address": "127.0.0.1:9090",
+      "wal_compression_type": "snappy",
+      "prometheus_listeners": [
+        "0100007F:2382"
+      ],
+      "remote_read_configured": false,
+      "remote_write_proto": "prometheus.WriteRequest",
+      "http_api_private": true,
+      "status": "PASS",
+      "sender_image": "sha256:6be54f7807b50e4b7888586cc4fd5724dd0d54d32fcc2d84a4503a1abb05982e",
+      "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+      "container_id": "e5a080843621fec10072fbaa4b817e5f01d73dadc989d71f5445029e06277f7c",
+      "published_ports": [
+        "13134/tcp",
+        "4318/tcp"
+      ],
+      "working_runtime_switched": false,
+      "inference_requested": false,
+      "public_health_cannot_proxy_prometheus": true
+    },
+    "build_checks": {
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    "evidence_sha256": {
+      "build-proof.json": "59bd0d765a620f7a6c2c477768fa41625e3b3db85de55eb6abf635296f2ee30c",
+      "source-hashes.json": "301985946aaa1935d01d5741218228d7a3da0ffcf7924204c0262bf3d00540f1",
+      "runtime-proof-1/proof.json": "79aaf46252c66806ce808b114bfb6cb94e532e6d4ee0dfbb752e4a91eae2dd2b",
+      "runtime-proof-1/operator-script.py": "d99898349ed77024ff0c9acdb2bef45173b9cf1e8d5734469b4cec0d1cefc6f7",
+      "runtime-profile-proof.json": "8e761fa8b13b4e1b32fadc43bd7cf4bcc51518f9957f566fa43023e6d3ff820c"
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "SIGNED_ARTIFACT_VERIFIED_SECURITY_ADMISSION_PENDING",
+  "status": "LTS_SUCCESSOR_SCOPED_SECURITY_PASS_OWNER_ROLLOUT_PENDING",
   "source_commit": "ce92cafdfe65076c282c94be0ab96c6b9985501e",
   "source_ci": {
     "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43566665995",
@@ -14,7 +14,10 @@
     "workflow": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43567082843",
     "cosign_identity_verified": true,
     "source_commit_verified": true,
-    "platforms": ["linux/amd64", "linux/arm64"],
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
     "per_platform_sbom_and_provenance_verified": true,
     "native_runtime": {
       "platform": "linux/arm64",
@@ -74,11 +77,16 @@
     "runtime_dependencies_changed": false
   },
   "open_gates": [
-    "sender image security admission; signed artifact has unresolved raw findings",
     "owner-specific adoption and independently placed runtime E2E",
     "physical distributed acceptance"
   ],
   "production_admitted": false,
   "working_runtime_switched": false,
-  "inference_requested": false
+  "inference_requested": false,
+  "historical_artifact_superseded_by": {
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+    "source_commit": "2f992d31742c8d88632c46ccfaf53b55fafe7d02",
+    "assessment": "sender-lts-candidate-20261114.json",
+    "security_admitted_scope": "unchanged declared owner sender profiles only; no blanket admission for arbitrary command/configuration or imported untrusted storage"
+  }
 }

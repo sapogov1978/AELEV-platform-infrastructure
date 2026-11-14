@@ -2,7 +2,7 @@
 
 Устойчивая доставка технической телеметрии от отправителя владельца к центральному приёмнику инфраструктуры.
 
-Согласованный Sender LTS 3.13.5 сохраняет Python 3.13.7, Alpine 3.22 и SQLite 3.53.4. [Отчёт допуска](../../docs/audit/sender-lts-candidate-20261114.json) содержит обе архитектуры, native TLS/durability, TSDB, сырые findings и точные границы проверенных конфигураций; новый main artifact и owner rollout учитываются отдельно.
+Согласованный Sender LTS 3.13.5 сохраняет Python 3.13.7, Alpine 3.22 и SQLite 3.53.4. [Отчёт допуска](../../docs/audit/sender-lts-candidate-20261114.json) закрепляет подписанный main digest, обе архитектуры, повторные 131 native TLS/durability checks на каждой CPU, TSDB, сырые findings и точные границы проверенных конфигураций. Owner rollout и площадочная приёмка остаются отдельными этапами.
 
 ## Основные возможности
 

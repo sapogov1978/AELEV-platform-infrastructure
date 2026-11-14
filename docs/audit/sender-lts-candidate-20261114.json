@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "SCOPED_CANDIDATE_SECURITY_PASS_MAIN_ARTIFACT_PENDING",
+  "status": "SCOPED_MAIN_ARTIFACT_SECURITY_PASS_OWNER_HANDOFF_PENDING",
   "production_admitted": false,
   "working_runtime_switched": false,
   "inference_requested": false,
@@ -222,8 +222,6 @@
     "sender-security-checks/runtime-check-attempt-1/proof.json": "42d2c24cc473969ec4686d9af8e697913417f8ea279b18d19b0ea517a3ef0456"
   },
   "open_gates": [
-    "exact-source main CI and signed main-ref artifact",
-    "compare final main platform payloads with the admitted candidate; revalidate if bytes change",
     "owner-controlled profile rollout and production site admission",
     "complete local/distributed product acceptance"
   ],
@@ -514,5 +512,456 @@
     "source_commit": "a57beafbec0a84235a250f570b5e264e14426564",
     "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43584589927",
     "conclusion": "success"
+  },
+  "main_release": {
+    "status": "SUPPLY_CHAIN_AND_NATIVE_RUNTIME_PASS_SECURITY_PENDING",
+    "source_commit": "2f992d31742c8d88632c46ccfaf53b55fafe7d02",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+    "workflow": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43589778805",
+    "cosign_version": "v3.1.4",
+    "cosign_sha256": "9f9b8cd557cf2e5b3df3373a00baa005a86b02391e3e06dd0ce37b3a1533d3a4",
+    "certificate_identity": "https://github.com/sapogov1978/AELEV-platform-infrastructure/.github/workflows/observability-sender-release.yml@refs/heads/main",
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "attestations": [
+      {
+        "digest": "sha256:0505672f76a792f4003d2a4f6bc18af9d5ba34be98a87bdf00a9275b2bf306f0",
+        "subject_digest": "sha256:9f355bcbfb781c57da324c31384be9e6892004059d4fd91c3bd3efa5d8094465",
+        "predicates": [
+          "https://slsa.dev/provenance/v1",
+          "https://spdx.dev/Document"
+        ]
+      },
+      {
+        "digest": "sha256:52c940ebd77a3fd0ac69ed210e63fc604ebd4cb4b80aedbac0b6706fa9bf25a5",
+        "subject_digest": "sha256:b6ac039da4898be353326e33da3480793b052d50303f961106bd67b1fc2b8ed5",
+        "predicates": [
+          "https://slsa.dev/provenance/v1",
+          "https://spdx.dev/Document"
+        ]
+      }
+    ],
+    "native_runtime": {
+      "python": "3.13.7",
+      "sqlite": "3.53.4",
+      "architecture": "aarch64",
+      "sdk": "1.1.2",
+      "delivery_sha256": "9a8b22b3fc19f09338c8144055adbff6dcca695983bf3531d48579ded80c55cc",
+      "renewal_guard_present": true,
+      "legacy_configuration_supported": true
+    },
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "production_admitted": false
+  },
+  "main_security_admission": {
+    "schema_version": 1,
+    "status": "SCOPED_ARTIFACT_SECURITY_PASS",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+    "source_commit": "2f992d31742c8d88632c46ccfaf53b55fafe7d02",
+    "scope": "unchanged declared owner sender profiles only; no blanket admission for arbitrary command/configuration or imported untrusted storage",
+    "assessments": [
+      {
+        "ids": [
+          "CVE-2026-78661",
+          "CVE-2026-97045",
+          "GO-2026-5932",
+          "GO-2022-0635",
+          "GO-2022-0646"
+        ],
+        "disposition": "NOT_AFFECTED_CODE_NOT_PRESENT",
+        "basis": "Affected HTML parse/render, OpenPGP and AWS s3crypto packages are absent from both binaries on both architectures; module presence alone retained in raw reports."
+      },
+      {
+        "ids": [
+          "CVE-2026-84445"
+        ],
+        "disposition": "NOT_AFFECTED_REQUIRED_XDS_HANDLER_ABSENT",
+        "basis": "grpc internal transport HandleStreams is linked, but internal/xds/server.RouteAndProcess is absent; the advisory requires an xDS routing interceptor."
+      },
+      {
+        "ids": [
+          "CVE-2026-97054"
+        ],
+        "disposition": "NOT_AFFECTED_IN_DECLARED_PROFILE",
+        "basis": "Affected Go HTTP server is confined to container loopback with mTLS. Only Python ingestion/health are published; the health interface returns 404 for Go API paths. No public Go HTTP request-body handler is admitted."
+      },
+      {
+        "ids": [
+          "CVE-2026-116591"
+        ],
+        "disposition": "NOT_AFFECTED_IN_DECLARED_PROFILE",
+        "basis": "Affected FSE/Huffman decode symbols are linked. Admitted WAL uses snappy, remote read is disabled, remote write uses prometheus.WriteRequest/snappy, scrape handles gzip rather than zstd, and the internal Go API is not published. Existing owner-local WAL is trusted state; arbitrary imported WAL and custom zstd profiles are excluded."
+      },
+      {
+        "ids": [
+          "CVE-2026-128085"
+        ],
+        "disposition": "NOT_AFFECTED_IN_DECLARED_PROFILE",
+        "basis": "Tracing, OTLP receiver and auto-instrumentation are not enabled in the admitted owner profile; no untrusted attributes enter the affected recording/truncation path. This is not an admission of tracing-enabled profiles."
+      },
+      {
+        "ids": [
+          "GO-2026-5264",
+          "GO-2026-5381",
+          "GO-2026-5662"
+        ],
+        "disposition": "FIXED_UPSTREAM_VERSION_MAPPING",
+        "basis": "Official release 3.13.5 maps to Go module 0.313.5 via the upstream get_module_version.sh. This exceeds the affected fixed-version boundaries; generated-build pseudo-version findings are retained."
+      },
+      {
+        "ids": [
+          "CVE-2025-8869",
+          "CVE-2026-13346",
+          "CVE-2026-3219",
+          "CVE-2026-6357",
+          "CVE-2026-8643",
+          "CVE-2026-1703"
+        ],
+        "disposition": "NOT_AFFECTED_IN_SERVICE_EXECUTION_PROFILE",
+        "basis": "pip remains installed and is reported verbatim. The admitted read-only, unprivileged service neither installs packages nor exposes package-manager execution; its only supervised executable is the pinned Prometheus. Operator-driven installation or modified commands require separate admission."
+      }
+    ],
+    "raw_counts": {
+      "arm64": {
+        "MEDIUM": 15,
+        "LOW": 2,
+        "UNKNOWN": 4,
+        "HIGH": 4
+      },
+      "amd64": {
+        "MEDIUM": 15,
+        "LOW": 2,
+        "UNKNOWN": 4,
+        "HIGH": 4
+      }
+    },
+    "raw_findings_suppressed": false,
+    "native_tests": {
+      "arm64": {
+        "status": "PASS",
+        "candidate_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+        "check_image": "sha256:fc65c89e48e26d31183c85b9ebf9f6b55f46ded1c4cc237beced3136b8927645",
+        "totals": {
+          "tests": 131,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "python": "3.13.7",
+        "sqlite": "3.53.4",
+        "runtime_library_hashes_preserved": true,
+        "exit_code": 0,
+        "working_runtime_switched": false,
+        "inference_requested": false
+      },
+      "amd64": {
+        "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+        "source_commit": "2f992d31742c8d88632c46ccfaf53b55fafe7d02",
+        "platform": "linux/amd64",
+        "native": true,
+        "totals": {
+          "tests": 131,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "runtime_library_hashes_preserved": true,
+        "working_runtime_switched": false,
+        "inference_requested": false
+      }
+    },
+    "runtime_profile": {
+      "prometheus_listen_address": "127.0.0.1:9090",
+      "wal_compression_type": "snappy",
+      "prometheus_listeners": [
+        "0100007F:2382"
+      ],
+      "remote_read_configured": false,
+      "remote_write_proto": "prometheus.WriteRequest",
+      "http_api_private": true,
+      "public_health_cannot_proxy_prometheus": true,
+      "published_ports": [
+        "4318/tcp",
+        "13134/tcp"
+      ]
+    },
+    "retained_profile": {
+      "prometheus_configuration_sha256": "c113e26ea5e65f7302be346b0dadaf45863f580f30a96071c08d58bf483e64bc",
+      "sender_configuration_sha256": "3caf2bc23ca314375487bc1b4aee321241fb6954d549be16716e696de2b5fda8",
+      "tracing_enabled": false,
+      "remote_read_enabled": false,
+      "otlp_receiver_flag_enabled": false,
+      "lifecycle_flag_enabled": false,
+      "owner_config_volume_verified": true
+    },
+    "evidence_sha256": {
+      "verification.json": "bc20aa3be65ba374846c6f016fcaf961a695adf19285b2be205e3699fd690ace",
+      "security.json": "05ce90509e9c553d92ebce64f468af2c60b2a02795ec6f09cd673f81d26ed331",
+      "binary-payload-proof.json": "2cd7a750233bb956f29b2b0278fcefa3279634adc05a72126ce1c6c0d599f124",
+      "trivy-arm64.json": "a266dd9647b3203b848fe671cfde37270968fe6c32a59f5a3cfea6c9c8f28188",
+      "trivy-amd64.json": "2eb20496acce68533d0c8392ba81478b8175f8b16595bb8d6ffa6e6fa2e9382a",
+      "retained-profile-config-proof.json": "149f8367ae818b82153087a60e775de34929b366b8d6f7383e6c274d10b50bc1",
+      "native-arm64-checks/proof.json": "04e8b28d15e528baf56b5679bb95ce98fbd1e460e02466104e5c37ed7f970202",
+      "native-amd64-checks/sender-native-proof.json": "5b8f7628d1ff20167668bea875092a0af44748bd71a7fb15ac1f246fcd9723c2"
+    },
+    "artifact_security_admitted": true,
+    "production_site_admitted": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "candidate_main_comparison": {
+      "candidate_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:4cb6a42ad100bd6cb32ae5df250ef037fe5a219e81d71a845367ed1922524e6c",
+      "main_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+      "platforms": {
+        "amd64": {
+          "candidate_manifest": "sha256:3104449d6fee1f03a54209097d2758bdff40bf663eac779ccce2cf918073d7c4",
+          "main_manifest": "sha256:9f355bcbfb781c57da324c31384be9e6892004059d4fd91c3bd3efa5d8094465",
+          "identical_layers": false,
+          "identical_configuration": false,
+          "candidate_config": "sha256:72b281a80e52011b5508e529a014ff962e11542e27f662ab0d3d30b034f69c5c",
+          "main_config": "sha256:aad1a39235e9645ed142ff3164468ce57ce6b6f1e018a91578161e9224a2891b",
+          "layer_count": 15
+        },
+        "arm64": {
+          "candidate_manifest": "sha256:8274588e6fcafb90dde8f97d78febb6692285304ffd173cc9270dc249a7b7498",
+          "main_manifest": "sha256:b6ac039da4898be353326e33da3480793b052d50303f961106bd67b1fc2b8ed5",
+          "identical_layers": false,
+          "identical_configuration": false,
+          "candidate_config": "sha256:76855c4510350cfc33a95f13ef592871f26001d4c75026701f7063bd9f1e2570",
+          "main_config": "sha256:795bac50fd86b47f470bd9ddb6370ea6c2c94e4d7a397c003f3ffcb873479410",
+          "layer_count": 15
+        }
+      }
+    },
+    "comparison_method": "Platform layers differ: independently verified main signature, source, SBOM/provenance, exact upstream ELF bytes, unchanged runtime modules, identical raw findings and package versions, and 131 native tests on each CPU. Runtime profile source hashes remain exact; its separate live proof is not relabelled as this image.",
+    "native_amd64_workflow": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43592544791",
+    "source_ci": {
+      "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43588348578",
+      "source_commit": "2f992d31742c8d88632c46ccfaf53b55fafe7d02",
+      "successful_jobs": 26,
+      "total_jobs": 26,
+      "conclusion": "success"
+    },
+    "main_evidence_sha256": {
+      "verification.json": "482674e72049ce45264cbd7636bf5dfb1b5fbf5efd3fade8bee342f7800f00bc",
+      "security.json": "a56b15b0925b628c5389cc995f1065f546087083afc9a914e46fc6c613d47a7c",
+      "binary-payload-proof.json": "ad9f57bae366154f6a666759a1f65c7779811bc16505d0e83909622c2fa0c753",
+      "candidate-comparison.json": "a5d36d60d6b38bc3b838b7dfe600a6569cbcfdf647ba9a097a820a2f7852ebfe",
+      "trivy-arm64.json": "6f8542daffe56edc58c5f01c309bae3cfb551c8bbc9eb22821b2e9c2e1139780",
+      "trivy-amd64.json": "9aa2b5db1caf504aad7508a3c6b161ac4dfe5de5add34aac20d70f200ac21433",
+      "native-arm64-checks/proof.json": "fc7568ec1f1f4fa94b4dfdc08bbf56e4aa9efa4aedd78dd2a8c130fef11d8120",
+      "native-amd64-checks/sender-native-proof.json": "6a5208e514500fb9f8e24f607ccced32526abce0a3ca91f9e8729f2f152c5a44",
+      "trivy-db-reuse.json": "09c269976981b19494b0691dcdfb214eb88f1878b87c969c1153bbbd29ede275"
+    }
+  },
+  "main_raw_security": {
+    "scanner_version": "0.76.1",
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-15T07:01:20.721668241Z",
+      "UpdatedAt": "2026-11-14T07:01:20.721668732Z",
+      "DownloadedAt": "2026-11-14T10:48:10.273924Z"
+    },
+    "platforms": {
+      "arm64": {
+        "severity_counts": {
+          "MEDIUM": 15,
+          "LOW": 2,
+          "UNKNOWN": 4,
+          "HIGH": 4
+        },
+        "findings": [
+          {
+            "id": "CVE-2026-78661",
+            "package": "golang.org/x/net",
+            "installed": "v0.60.0",
+            "fixed": "0.62.0",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-78661"
+          },
+          {
+            "id": "CVE-2026-84445",
+            "package": "google.golang.org/grpc",
+            "installed": "v1.83.1",
+            "fixed": "1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-84445"
+          },
+          {
+            "id": "CVE-2026-78661",
+            "package": "golang.org/x/net",
+            "installed": "v0.60.0",
+            "fixed": "0.62.0",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-78661"
+          },
+          {
+            "id": "CVE-2026-84445",
+            "package": "google.golang.org/grpc",
+            "installed": "v1.83.1",
+            "fixed": "1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-84445"
+          }
+        ],
+        "raw_report_sha256": "6f8542daffe56edc58c5f01c309bae3cfb551c8bbc9eb22821b2e9c2e1139780"
+      },
+      "amd64": {
+        "severity_counts": {
+          "MEDIUM": 15,
+          "LOW": 2,
+          "UNKNOWN": 4,
+          "HIGH": 4
+        },
+        "findings": [
+          {
+            "id": "CVE-2026-78661",
+            "package": "golang.org/x/net",
+            "installed": "v0.60.0",
+            "fixed": "0.62.0",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-78661"
+          },
+          {
+            "id": "CVE-2026-84445",
+            "package": "google.golang.org/grpc",
+            "installed": "v1.83.1",
+            "fixed": "1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-84445"
+          },
+          {
+            "id": "CVE-2026-78661",
+            "package": "golang.org/x/net",
+            "installed": "v0.60.0",
+            "fixed": "0.62.0",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-78661"
+          },
+          {
+            "id": "CVE-2026-84445",
+            "package": "google.golang.org/grpc",
+            "installed": "v1.83.1",
+            "fixed": "1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",
+            "severity": "HIGH",
+            "primary_url": "https://avd.aquasec.com/nvd/cve-2026-84445"
+          }
+        ],
+        "raw_report_sha256": "9aa2b5db1caf504aad7508a3c6b161ac4dfe5de5add34aac20d70f200ac21433"
+      }
+    }
+  },
+  "main_sender_owner_native_handoff": {
+    "native_runtime": {
+      "status": "PASS",
+      "module_id": "dc33c244-03ca-4f9d-9243-45394ac1855d",
+      "projects": {
+        "server": "aelev_spire_four_578e7813_server",
+        "observer": "aelev_spire_four_578e7813_observer",
+        "telemetry-sender": "aelev_spire_four_578e7813_telemetry_sender",
+        "status-publisher": "aelev_spire_four_578e7813_status_publisher"
+      },
+      "images": {
+        "runtime": "sha256:980b1ef5274c732f2e081e950c54b86f8880c4521c15270d268ddde4de1fa3b0",
+        "operator-installer": "sha256:f04a04c49b02ad9a9481dbbb1e880808168a7a6f8184fca4de03e3d3fa600495",
+        "telemetry-sender": "sha256:6be54f7807b50e4b7888586cc4fd5724dd0d54d32fcc2d84a4503a1abb05982e",
+        "checks": "sha256:c9f41a9884ad40f3b2d423a8e87c92b55ce6653dd3132cee7c9e9ae2c1aefedc"
+      },
+      "physical_nodes": 1,
+      "working_runtime_switched": false,
+      "inference_requested": false,
+      "signed_sender_base_security_admitted": true,
+      "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+      "ui_catalog_readback_verified": false,
+      "assertions": {
+        "no_shared_volumes_between_roles": true,
+        "observer_ready": true,
+        "sender_ready": true,
+        "real_central_durable_delivery": true,
+        "real_platform_ui_ack": true,
+        "all_repeats_preserve_instances": true,
+        "scoped_public_exports": true,
+        "export_repeats_identical": true,
+        "readiness_after_exports": true
+      },
+      "sender_journal": {
+        "accepted_sequence": 14,
+        "remaining_records": 0
+      },
+      "central_ack_proof_method": "own sender accepted sequence advanced and journal drained; exact-source forward() removes only after matching central durable ACK",
+      "publisher_ack": {
+        "module": "dc33c244-03ca-4f9d-9243-45394ac1855d",
+        "sequence": 3,
+        "pending": false
+      },
+      "exports": {
+        "server": {
+          "generation": "7a582eab1d75fd1a5a46e496ed1c19043b3c10b3df376ad78278f1a9ac81ea59",
+          "roles": [
+            "spire-server"
+          ],
+          "repeat_identical": true
+        },
+        "observer": {
+          "generation": "06ab58e7c63f1dc828d70947a2e6bf3f16c6f6a685b9cb18ab396784560d5092",
+          "roles": [
+            "spire-observer"
+          ],
+          "repeat_identical": true
+        },
+        "telemetry-sender": {
+          "generation": "60a10910a96d5111bdffd32fbadf575642dafcfabf12590e536d54fd332fb963",
+          "roles": [
+            "spire-telemetry-sender"
+          ],
+          "repeat_identical": true
+        },
+        "status-publisher": {
+          "generation": "2a684e4f8b64fecd7de58c89b0db1b2576d81eb74a5a1246a03c6d3dc219d97e",
+          "roles": [
+            "spire-status-publisher"
+          ],
+          "repeat_identical": true
+        }
+      },
+      "test_containers_removed": true,
+      "test_owned_volumes_preserved": true
+    },
+    "actual_sender_profile": {
+      "prometheus_listen_address": "127.0.0.1:9090",
+      "wal_compression_type": "snappy",
+      "prometheus_listeners": [
+        "0100007F:2382"
+      ],
+      "remote_read_configured": false,
+      "remote_write_proto": "prometheus.WriteRequest",
+      "http_api_private": true,
+      "status": "PASS",
+      "sender_image": "sha256:6be54f7807b50e4b7888586cc4fd5724dd0d54d32fcc2d84a4503a1abb05982e",
+      "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e567a3656004441f82",
+      "container_id": "e5a080843621fec10072fbaa4b817e5f01d73dadc989d71f5445029e06277f7c",
+      "published_ports": [
+        "13134/tcp",
+        "4318/tcp"
+      ],
+      "working_runtime_switched": false,
+      "inference_requested": false,
+      "public_health_cannot_proxy_prometheus": true
+    },
+    "build_checks": {
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    "evidence_sha256": {
+      "build-proof.json": "59bd0d765a620f7a6c2c477768fa41625e3b3db85de55eb6abf635296f2ee30c",
+      "source-hashes.json": "301985946aaa1935d01d5741218228d7a3da0ffcf7924204c0262bf3d00540f1",
+      "runtime-proof-1/proof.json": "79aaf46252c66806ce808b114bfb6cb94e532e6d4ee0dfbb752e4a91eae2dd2b",
+      "runtime-proof-1/operator-script.py": "d99898349ed77024ff0c9acdb2bef45173b9cf1e8d5734469b4cec0d1cefc6f7",
+      "runtime-profile-proof.json": "8e761fa8b13b4e1b32fadc43bd7cf4bcc51518f9957f566fa43023e6d3ff820c"
+    }
   }
 }

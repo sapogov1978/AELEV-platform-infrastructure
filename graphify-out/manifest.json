@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794653951.6122422,
-    "seen": 1794654125.247849,
-    "ast_hash": "9c509444d30a489fce1399cd337c3da0",
+    "mtime": 1794658034.4206593,
+    "seen": 1794658076.5461152,
+    "ast_hash": "8fadb69396f1fefca98b4e4cd49c9e86",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3444,15 +3444,15 @@
     "semantic_hash": ""
   },
   "observability/delivery/CHANGELOG.md": {
-    "mtime": 1794653951.6126022,
-    "seen": 1794654125.251431,
-    "ast_hash": "4d6ef1857b4b421d2875b2ec19483090",
+    "mtime": 1794657754.661608,
+    "seen": 1794657960.410182,
+    "ast_hash": "58ba5f7e3b4051976ad971477937e0b0",
     "semantic_hash": ""
   },
   "observability/delivery/README.md": {
-    "mtime": 1794654049.526727,
-    "seen": 1794654125.251446,
-    "ast_hash": "90d5762bd77e7fe91eca3fc9cd9c7fdc",
+    "mtime": 1794657769.0971353,
+    "seen": 1794657960.410197,
+    "ast_hash": "811021fbac078bb65cd7351edd86a82a",
     "semantic_hash": ""
   },
   "observability/delivery/SPEC.md": {
@@ -4248,9 +4248,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/CHANGELOG.md": {
-    "mtime": 1794632360.3488257,
-    "seen": 1794633701.06847,
-    "ast_hash": "ef73167650baf9ac3c344b617c6db188",
+    "mtime": 1794657754.661262,
+    "seen": 1794657960.412148,
+    "ast_hash": "cdb71a5db40252a788bec508563d5eb1",
     "semantic_hash": ""
   },
   "public-egress-gateway/ENDPOINTS.md": {
@@ -4338,9 +4338,9 @@
     "semantic_hash": ""
   },
   "spire/CHANGELOG.md": {
-    "mtime": 1794649327.9757662,
-    "seen": 1794649654.216607,
-    "ast_hash": "9616b5256d1982ed46e641716c2ad711",
+    "mtime": 1794658034.421869,
+    "seen": 1794658076.551641,
+    "ast_hash": "35e3a9eb44edce6c35e3c6aef5e20642",
     "semantic_hash": ""
   },
   "spire/ENDPOINTS.md": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794632360.5990403,
-    "seen": 1794633701.0691452,
-    "ast_hash": "1d8bc52ed4f32821d91adc938c5d36a3",
+    "mtime": 1794658034.4224534,
+    "seen": 1794658076.5524008,
+    "ast_hash": "1d5228ec9fc9a47a03c1eb7b7dbd3bdd",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -6582,9 +6582,9 @@
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
-    "mtime": 1794654049.497568,
-    "seen": 1794654125.240733,
-    "ast_hash": "0da7f42d0023e22641093f3edff0beec",
+    "mtime": 1794658034.3804648,
+    "seen": 1794658076.538561,
+    "ast_hash": "ac133f3b286192aca064032579ba5aa3",
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/components.py": {
@@ -6660,9 +6660,9 @@
     "semantic_hash": ""
   },
   "docs/audit/telemetry-renewal-readiness-20261114.json": {
-    "mtime": 1794645901.47711,
-    "seen": 1794646822.7232482,
-    "ast_hash": "74fdf12dff0c71f87b4b38ab6ea3cacb",
+    "mtime": 1794657721.0966954,
+    "seen": 1794657960.3941472,
+    "ast_hash": "db95da21718623725233ca2d79a671e0",
     "semantic_hash": ""
   },
   ".github/workflows/observability-sender-admission.yml": {
@@ -6672,9 +6672,15 @@
     "semantic_hash": ""
   },
   "docs/audit/sender-lts-candidate-20261114.json": {
-    "mtime": 1794654049.4968338,
-    "seen": 1794654125.240732,
-    "ast_hash": "6c7f6788749f42cec43531e03e006498",
+    "mtime": 1794658034.3795893,
+    "seen": 1794658076.53856,
+    "ast_hash": "c41be09e36c2842fb4b393b68bcbd459",
+    "semantic_hash": ""
+  },
+  "docs/audit/translator-worker-release-20261114.json": {
+    "mtime": 1794658034.384696,
+    "seen": 1794658076.5385869,
+    "ast_hash": "d9db4e2221dc6fe8c674e8961293a634",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
