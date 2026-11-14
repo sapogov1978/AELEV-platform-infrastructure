@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: по явному разрешению владельца готовится кандидат Telemetry Sender с Prometheus LTS 3.13.5 и обновлениями той же Alpine 3.22. Python 3.13.7 и SQLite 3.53.4 сохраняются; переход в main требует завершённого security admission точных amd64/arm64 artifacts. Рабочий runtime и Process Control не переключаются.
+
 - 2026-11-14: отдельный export всех четырёх SPIRE-ролей прошёл реальный native Shell CLI и побайтно одинаковый повтор; readiness, ONLINE ACK и центральная доставка сохранились. Source contract tests — 49, native — 48 passed / 1 Compose-CLI skip; фактические exports проверены отдельно через operator image. Это один физический компьютер, не production admission.
 
 - 2026-11-14: full-startup/independent-role foundation d4ea54a прошла exact-source audit 26/26, включая Grafana fresh OIDC и пять native SPIRE CLI/mount/renewal cases без skips. Прежний failure 151132f сохранён; последующий component export, security admission и полный release проверяются отдельно.

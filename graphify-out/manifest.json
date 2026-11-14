@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794649707.0550077,
-    "seen": 1794649764.216193,
-    "ast_hash": "77224500c3a4c76ef2eb37ecd9062ea8",
+    "mtime": 1794651319.052826,
+    "seen": 1794651450.8154109,
+    "ast_hash": "0184f0959e69194216948a725620e5a2",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3444,9 +3444,9 @@
     "semantic_hash": ""
   },
   "observability/delivery/CHANGELOG.md": {
-    "mtime": 1794637602.368892,
-    "seen": 1794637611.6063209,
-    "ast_hash": "9f106d350092a7658dfaea0136110ad9",
+    "mtime": 1794651381.1942627,
+    "seen": 1794651450.820789,
+    "ast_hash": "4b741a013735df0a68f95e70c70e3ffa",
     "semantic_hash": ""
   },
   "observability/delivery/README.md": {
@@ -6174,9 +6174,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/observability-sender-release.yml": {
-    "mtime": 1794633522.82309,
-    "seen": 1794633820.504825,
-    "ast_hash": "01330faa89b6e5bf728a3a9cf7821427",
+    "mtime": 1794651319.0509353,
+    "seen": 1794651450.80414,
+    "ast_hash": "11a2b98d8981ea74b729f68731f6ef47",
     "semantic_hash": ""
   },
   ".github/workflows/observability-delivery-release.yml": {
@@ -6615,6 +6615,12 @@
     "mtime": 1794646736.2458644,
     "seen": 1794646973.989642,
     "ast_hash": "d20e5228b122c5d5ab4f5b61ebb42be4",
+    "semantic_hash": ""
+  },
+  "docs/audit/sender-lts-candidate-20261114.json": {
+    "mtime": 1794651381.3319528,
+    "seen": 1794651450.804405,
+    "ast_hash": "6c38c06f4d5d050a9335e856f7ba9725",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

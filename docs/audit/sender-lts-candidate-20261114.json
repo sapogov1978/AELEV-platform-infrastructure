@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "LTS_CANDIDATE_COMPATIBILITY_PASS_MULTIARCH_ARTIFACT_SECURITY_PENDING",
+  "production_admitted": false,
+  "working_runtime_switched": false,
+  "inference_requested": false,
+  "owner_authorization": {
+    "prometheus_line": "3.13.x LTS",
+    "condition": "close security gates before adopting in main",
+    "runtime_switch_authorized": false,
+    "resume_authorized": false
+  },
+  "candidate": {
+    "prometheus": "3.13.5",
+    "vendor_image": "prom/prometheus:v3.13.5@sha256:aafa9d694e6a883c02db516d9f6e5b84e14195f49a2a6456a4cca815edda72b9",
+    "native_prototype_image": "sha256:87497c03f8c4c0d9af1f338f707d084379df70d4352b34ac02073fe973ee9877",
+    "python": "3.13.7",
+    "alpine_family": "3.22",
+    "sqlite": "3.53.4",
+    "signed_multiarch_candidate": null
+  },
+  "compatibility": {
+    "native_tls_durability_tests": 131,
+    "failures": 0,
+    "skipped": 0,
+    "old_tsdb_new_read_restart_original_backup_restore": "PASS",
+    "tsdb_fixture_samples": 10,
+    "backup_sha256": "906e0b521cd88aa03dc1891d70d4960f8312b8a19214480b4a042b9a679eb55b"
+  },
+  "native_scope_proof": {
+    "status": "PASS",
+    "module_id": "d285c4b2-646b-4434-ac8b-6e48b7495148",
+    "projects": {
+      "server": "aelev_spire_four_c8314327_server",
+      "observer": "aelev_spire_four_c8314327_observer",
+      "telemetry-sender": "aelev_spire_four_c8314327_telemetry_sender",
+      "status-publisher": "aelev_spire_four_c8314327_status_publisher"
+    },
+    "images": {
+      "runtime": "sha256:ed1f36fc627970ba8dae905fc93b8228fe54aa2fba956d18febad1e8f86a6ecb",
+      "operator-installer": "sha256:293276ffba5518df42799536437e3f48c55edaaae8ea5a86d46c4c15f5f23207",
+      "telemetry-sender": "sha256:e99164da6ff0cd22a08ace5632cb39462c03c0354d0b8d554bfa8ec54419d1af",
+      "checks": "sha256:9ed8c465ccbcc3840ad1dfd6f9c4a43db9717a7e3e63098e3c190ce65c1ebfb9"
+    },
+    "physical_nodes": 1,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "signed_sender_base_security_admitted": false,
+    "ui_catalog_readback_verified": false,
+    "assertions": {
+      "no_shared_volumes_between_roles": true,
+      "observer_ready": true,
+      "sender_ready": true,
+      "real_central_durable_delivery": true,
+      "real_platform_ui_ack": true,
+      "all_repeats_preserve_instances": true,
+      "scoped_public_exports": true,
+      "export_repeats_identical": true,
+      "readiness_after_exports": true
+    },
+    "sender_journal": {
+      "accepted_sequence": 16,
+      "remaining_records": 0
+    },
+    "central_ack_proof_method": "own sender accepted sequence advanced and journal drained; exact-source forward() removes only after matching central durable ACK",
+    "publisher_ack": {
+      "module": "d285c4b2-646b-4434-ac8b-6e48b7495148",
+      "sequence": 3,
+      "pending": false
+    },
+    "sender_security_profile": {
+      "prometheus_listen_address": "127.0.0.1:9090",
+      "wal_compression_type": "snappy",
+      "prometheus_listeners": [
+        "0100007F:2382"
+      ],
+      "remote_read_configured": false,
+      "remote_write_proto": "prometheus.WriteRequest",
+      "http_api_private": true,
+      "public_health_cannot_proxy_prometheus": true,
+      "published_ports": [
+        "4318/tcp",
+        "13134/tcp"
+      ]
+    },
+    "exports": {
+      "server": {
+        "generation": "07a643e4b6c211a5e9bc4238b4f6349c2b2122df50a4a095b23eeb9509925750",
+        "roles": [
+          "spire-server"
+        ],
+        "repeat_identical": true
+      },
+      "observer": {
+        "generation": "96d3510358007ac85e8a4c9f8a096f44091afe6bcb9edcd0c8b035c0023188c5",
+        "roles": [
+          "spire-observer"
+        ],
+        "repeat_identical": true
+      },
+      "telemetry-sender": {
+        "generation": "3c8a921aecf8d95bfffe4575aab375aee3c9b707f9fbe1a87a626c3863eddeb6",
+        "roles": [
+          "spire-telemetry-sender"
+        ],
+        "repeat_identical": true
+      },
+      "status-publisher": {
+        "generation": "46fe1839fe89f6b54e8a4e1b35e60121612b326247cd795579b5e1735cd0e8ae",
+        "roles": [
+          "spire-status-publisher"
+        ],
+        "repeat_identical": true
+      }
+    },
+    "test_containers_removed": true,
+    "test_owned_volumes_preserved": true
+  },
+  "scope": {
+    "production_profile_sources": {
+      "spire/src/aelev_spire/observation_setup.py": "0dbedb79f342f8f5743a153336c8b87ddc77441d8460f6e5d177d88df4eac566",
+      "public-egress-gateway/observability/sender.local.json": "8aaa6a63b75a5ac0fdd7e8259f749cc09f231617624ea79dbeb787372b701f34",
+      "public-egress-gateway/observability/prometheus.yml": "a0d8cac4607a5319b9805251f99295aba3a29f6b78d0ca545323d3c1633a1a43",
+      "translator-service/observability/sender.local.json": "8aaa6a63b75a5ac0fdd7e8259f749cc09f231617624ea79dbeb787372b701f34",
+      "translator-service/observability/prometheus.yml": "972223a243cc0fddd2ad71a1e1ff91c90066008e47837370fba52dfd05b64911"
+    },
+    "required": {
+      "prometheus_listener": "127.0.0.1:9090",
+      "wal_codec": "snappy",
+      "remote_read": false,
+      "remote_write_proto": "prometheus.WriteRequest",
+      "prometheus_http_api_published": false
+    },
+    "example_profiles_admitted": false,
+    "changed_profiles_require_new_admission": true
+  },
+  "analysis": {
+    "binary_architectures": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "binaries": [
+      "prometheus",
+      "promtool"
+    ],
+    "govulncheck": "1.9.0",
+    "json_exit_zero_is_not_a_clean_result": true,
+    "html_affected_packages_present": false,
+    "grpc_transport_symbol_present": true,
+    "grpc_xds_route_and_process_present": false,
+    "http_and_zstd_affected_symbols_present": true,
+    "http_zstd_runtime_preconditions_verified_by_native_profile": true,
+    "prometheus_main_pseudoversion_requires_upstream_module_mapping": {
+      "release": "3.13.5",
+      "module_version": "0.313.5",
+      "script": "https://github.com/prometheus/prometheus/blob/v3.13.5/scripts/get_module_version.sh",
+      "assessed_fixed_reports": [
+        "GO-2026-5264",
+        "GO-2026-5381",
+        "GO-2026-5662"
+      ]
+    },
+    "raw_critical_high_findings_suppressed": false
+  },
+  "sources": {
+    "http": "https://pkg.go.dev/vuln/GO-2026-6859",
+    "zstd": "https://github.com/klauspost/compress/security/advisories/GHSA-fpmh-frq8-7rj8",
+    "grpc": "https://pkg.go.dev/vuln/GO-2026-6443",
+    "html_parse": "https://pkg.go.dev/vuln/GO-2026-6860",
+    "wal_default": "https://github.com/prometheus/prometheus/blob/v3.13.5/cmd/prometheus/main.go#L519",
+    "scrape_decoder": "https://github.com/prometheus/prometheus/blob/v3.13.5/scrape/scrape.go#L770"
+  },
+  "evidence_sha256": {
+    "sender-security-checks/all-binary-findings-both-architectures.json": "e43d3b4d8945b908c2fa39f47e1db804c049750156c04f03241a47278472a8db",
+    "spire-sender-lts-profile-native-2/runtime-proof-2/proof.json": "e922153aa0817d48e895afa2ede88fe9e01131a7b6596edd5e98445096978bf9",
+    "spire-sender-lts-profile-native-2/runtime-proof-2/operator-script.py": "faf979f4941ed0d5690e2de8146f55bc3474a41c686bf39a3cc7b28ccd342712",
+    "sender-security-checks/tsdb-compatibility-3/proof.json": "3da8c943672613e824c05566abd58d125fff5ed8edcd491d62804db890c14812",
+    "sender-security-checks/runtime-check-attempt-1/proof.json": "42d2c24cc473969ec4686d9af8e697913417f8ea279b18d19b0ea517a3ef0456"
+  },
+  "open_gates": [
+    "exact-source candidate CI",
+    "signed multiarch candidate image and provenance",
+    "fresh raw scan and runtime/package verification of both platform artifacts",
+    "scoped final artifact admission; no claim for arbitrary configurations",
+    "main adoption only after these gates"
+  ]
+}
