@@ -258,6 +258,15 @@ class NodeExecutionTest(unittest.TestCase):
                 node.target(self.request, "execute")
         self.assertFalse(self.counter.exists())
 
+    def test_durability_failure_before_intent_never_starts_owner(self) -> None:
+        with mock.patch.object(
+            node.os, "fsync", side_effect=OSError("synthetic disk sync failure")
+        ):
+            with self.assertRaises(OSError):
+                node.target(self.request, "execute")
+        self.assertFalse(self.counter.exists())
+        self.assertFalse(list((self.root / "state").rglob("receipt.json")))
+
     def test_controller_does_not_probe_target_paths_on_its_own_filesystem(self) -> None:
         remote = self.root / "remote-only-prefix"
         remote.symlink_to(self.source, target_is_directory=True)

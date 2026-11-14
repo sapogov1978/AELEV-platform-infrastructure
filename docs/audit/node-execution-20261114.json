@@ -4,12 +4,12 @@
   "status": "UNIT_AND_NATIVE_SSH_PRIMITIVE_PASS_FULL_WORKFLOW_OPEN",
   "base_commit": "1a95b0b3be39d61105294b45426fd6a0830e9d95",
   "source_sha256": {
-    "tools/node_execution.py": "8136a9e617af71d9f0556b34cf63a83718dabf1589e6c26f81f86bcdc0edb73f",
-    "tools/test_node_execution.py": "d3fb6d4c35e539f9a6d6dedd9aadeaaa42894534ec4ad1e479e6a4532618e10d"
+    "tools/node_execution.py": "878158c1f5cf2d10c17e809a3eb4fd8f1fb1c3b6b7e13ba14e6c07ef2cffd093",
+    "tools/test_node_execution.py": "abf6781d4f23b4b17da3c1bf1da7ed35d71c6ad6ccd3c04338de3086f12cbc5f"
   },
   "tests": {
-    "node_execution": 16,
-    "all_tools": 152,
+    "node_execution": 17,
+    "all_tools": 153,
     "failures": 0,
     "errors": 0,
     "skipped": 0
@@ -29,8 +29,8 @@
     "command_receipt": {
       "schema_version": 1,
       "status": "COMMAND_SUCCEEDED",
-      "operation": "ecc9735f-24dc-45c7-ae34-8012b938b211",
-      "request_sha256": "46f0f1cfdbf27311cdc33a1a090249a0c551420cd636516d26849a9daa634475",
+      "operation": "8347f35b-ff3a-4fe1-bc81-116de8c49762",
+      "request_sha256": "274fc1c1e2bd9fa4aa2844df5cbf7abab167e4cbc63161023876c4dab88d5262",
       "owner_readiness_verified": false,
       "physical_distribution_verified": false,
       "queue_resume_issued": false,
@@ -43,8 +43,8 @@
     "wrong_host_key_rejected": true,
     "reconciliation_before_retry": {
       "status": "NOT_OBSERVED",
-      "operation": "7b2cdefd-5899-4da9-9696-6eec14ee7ba6",
-      "request_sha256": "bf878f453d650a0b6e2a413eb4b1df25ff7e1b8acf5fa87122e9b576b22d21d8",
+      "operation": "d5569aab-1916-4d60-b71b-1485e38ddbac",
+      "request_sha256": "0307f5c1c1f2da7b11a08593f050cd4f5a3ac3551eaec6480ebe4242e795d0da",
       "owner_readiness_verified": false
     },
     "host_key_source": "Private fixture creation channel; no ssh-keyscan or TOFU",
@@ -53,9 +53,11 @@
   },
   "evidence_sha256": {
     "ssh-native-5/proof.json": "ca0b12652d9a5cca24e8c34e079898052924d6b3cc3f314c6c5efc749220e492",
-    "ssh-native-5/operator-script.py": "97cdec729649565506d3d8237e72232e85df49eee9fb190036e3f214f7bbf2aa"
+    "ssh-native-5/operator-script.py": "97cdec729649565506d3d8237e72232e85df49eee9fb190036e3f214f7bbf2aa",
+    "ssh-native-6/proof.json": "43b7a3d0769b942d1eee78389da757ae4db521ddb687584f6e35f4aace653ad5",
+    "ssh-native-6/operator-script.py": "97cdec729649565506d3d8237e72232e85df49eee9fb190036e3f214f7bbf2aa"
   },
-  "test_tools_image": "sha256:349743fed59ee0f39af7cb1192747517e73c822eff7f611bbdbd4b88502e59a2",
+  "test_tools_image": "sha256:4e7f1fafc649d4cb3413d83ba7a0314d97d297cd42c9fb9482e964d5653ef68a",
   "test_tools_only_packages": [
     "openssh-server"
   ],
@@ -80,6 +82,11 @@
       "attempt": 4,
       "result": "PASS_BEFORE_FINAL_GUARDS",
       "cause": "Precedes common owner scope lock and retained controller SSH diagnostics; exact final code rechecked by attempt 5."
+    },
+    {
+      "attempt": 5,
+      "result": "PASS_BEFORE_DIRECTORY_DURABILITY_GUARD",
+      "cause": "Initial SSH diagnostics and scope-lock proof; new state directory durability and stdout/stderr fsync checked by exact final code in attempt 6."
     }
   ],
   "remaining_gates": [
@@ -93,5 +100,12 @@
   "physical_distribution_verified": false,
   "working_runtime_switched": false,
   "inference_requested": false,
-  "queue_resume_issued": false
+  "queue_resume_issued": false,
+  "initial_source_ci": {
+    "source_commit": "bfa99808e5d39c9416d7f8a4e8ccc349537fb7d6",
+    "successful_jobs": 26,
+    "total_jobs": 26,
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43609689145",
+    "final_durability_source_ci_verified": false
+  }
 }

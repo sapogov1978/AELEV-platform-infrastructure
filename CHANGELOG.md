@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: node executor синхронизирует новые state/operation directory entries до owner effects и private stdout/stderr до итоговой квитанции. Ошибка durability до INTENT не запускает владельца; новый native SSH proof и 153 tools tests подтверждают итоговый код.
+
 - 2026-11-14: подготовлен scoped node executor для публичных самостоятельных SPIRE/Translator процедур через local/SSH. Закрепляются source/input hashes, literal arguments и host keys; собственный durable receipt и scope lock предотвращают слепой повтор. Raw owner/SSH diagnostics сохраняются приватно. Полный inventory workflow, physical multihost и runtime rollout не объявлены выполненными.
 
 - 2026-11-14: signed main worker 03191fa из e7db87c прошёл signature/source/SBOM/provenance, повторные native TLS 23/23 на каждой CPU, SQL 64/64 и свежий SPIRE identity/renewal/withdrawal/recovery. Сетевые шаблоны закрепляют exact worker и provider v0.2.1; scoped security review сохраняет raw findings и ограничения профиля. Действующие env, контейнеры, очереди и RESUME не менялись.

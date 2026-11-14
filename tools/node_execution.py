@@ -121,6 +121,14 @@ def save(path: Path, value: dict[str, Any]) -> None:
         Path(pending).unlink(missing_ok=True)
 
 
+def sync_directory(path: Path) -> None:
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
 def validate(
     request: dict[str, Any], *, target_filesystem: bool = True
 ) -> tuple[Path, Path, list[str]]:
@@ -317,10 +325,15 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
         result = read(receipt_path)
         require(result["request_sha256"] == request_hash, "NODE_OPERATION_CONFLICT")
         return result
+    created = [path for path in [state, *state.parents] if not path.exists()]
     state.mkdir(mode=0o700, parents=True, exist_ok=True)
     private(state, directory=True)
+    for path in created:
+        sync_directory(path)
+        sync_directory(path.parent)
     directory.mkdir(mode=0o700, exist_ok=True)
     private(directory, directory=True)
+    sync_directory(state)
     lock_path = state / "scope.lock"
     require(
         not lock_path.is_symlink() and not receipt_path.is_symlink(),
@@ -400,6 +413,8 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
         for name in ("stdout", "stderr"):
             path = directory / name
             if path.is_file():
+                with path.open("rb") as stream:
+                    os.fsync(stream.fileno())
                 result[name + "_sha256"] = checksum(path.read_bytes())
         save(receipt_path, result)
         return result
