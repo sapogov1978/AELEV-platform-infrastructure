@@ -36,7 +36,8 @@ ENVIRONMENT = {
 BOOTSTRAP = """import base64,hashlib,json,sys
 v=json.loads(sys.stdin.buffer.read(8388609))
 c=base64.b64decode(v['code'],validate=True)
-assert hashlib.sha256(c).hexdigest()==v['code_sha256']
+if hashlib.sha256(c).hexdigest()!=v['code_sha256']:
+ raise ValueError('NODE_CARRIER_SOURCE_MISMATCH')
 n={'__name__':'node_carrier','__file__':'node-carrier.py','__node_code_sha256__':hashlib.sha256(c).hexdigest()}
 exec(compile(c,'node-carrier.py','exec'),n)
 try:
@@ -420,7 +421,7 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
         return result
 
 
-def ssh_command(binding: dict[str, Any]) -> list[str]:
+def ssh_command(binding: dict[str, Any], *, program: str = BOOTSTRAP) -> list[str]:
     require(
         set(binding)
         == {
@@ -481,7 +482,7 @@ def ssh_command(binding: dict[str, Any]) -> list[str]:
         str(binding["port"]),
         "--",
         binding["user"] + "@" + binding["host"],
-        shlex.join(["python3.13", "-c", BOOTSTRAP]),
+        shlex.join(["python3.13", "-c", program]),
     ]
 
 

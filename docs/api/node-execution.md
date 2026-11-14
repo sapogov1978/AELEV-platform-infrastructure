@@ -1,6 +1,6 @@
 # Выполнение владельческой процедуры на узле, версия 1
 
-`tools/node_execution.py execute|status --binding PRIVATE_JSON --request PRIVATE_JSON` вызывает закреплённую публичную процедуру владельца локально либо по SSH. Основание — [00-INFRA-0018](../adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md). Файлы controller binding/request принадлежат оператору и имеют mode `0600`. Unix-узлы требуют Python 3.13, собственный Docker Linux Engine для соответствующих владельческих процедур и заранее материализованный проверенный выпуск. Установка ОС/Python, перенос release archive, выдача PKI approvals и полная orchestration всех ролей остаются входами следующего уровня.
+`tools/node_execution.py execute|status --binding PRIVATE_JSON --request PRIVATE_JSON` вызывает закреплённую публичную процедуру владельца локально либо по SSH. Основание — [00-INFRA-0018](../adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md). Файлы controller binding/request принадлежат оператору и имеют mode `0600`. Unix-узлы требуют Python 3.13, собственный Docker Linux Engine для соответствующих владельческих процедур и материализованный проверенный выпуск через [node artifact delivery](node-artifact.md). Установка ОС/Python, admission release, выдача PKI approvals и полная orchestration всех ролей остаются входами следующего уровня.
 
 ## Область интерфейса
 

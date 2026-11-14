@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "UNIT_PASS_FINAL_EXACT_SOURCE_SSH_PENDING",
+  "source_base": "3cdc11ff31661a599629958a7e9e66810d8be056",
+  "source_sha256": {
+    "tools/node_artifact.py": "a54190a68c07c3ad6584f2b0d26f9511ceac0e083378f64c5372ce450a36f21b",
+    "tools/node_execution.py": "a3cbc6fb3c12921631b253b0a11fac3c442d6435ff09a9b8e94bae52709882a9",
+    "tools/test_node_artifact.py": "4aaaccb4c65987bd5571542a64eb9d104a32652dbfb110d1662d8178c7c832a7",
+    "tools/test_node_execution.py": "fefa6d82a4e9e3191b0a99010d64f28dbbdbcdd3702a558cc6ae7f53b2d8bc8a"
+  },
+  "tests": {
+    "node_artifact": 25,
+    "node_execution": 18,
+    "all_tools": 179,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "prior_native_source_delivery": {
+    "status": "PASS",
+    "physical_nodes": 1,
+    "platform": "linux/arm64",
+    "source_commit": "3cdc11ff31661a599629958a7e9e66810d8be056",
+    "source_archive_sha256": "cd811f9205e4487f873053863a704ea3001d238b0ad68ab79f8eddbc33f72010",
+    "source_file_count": 1353,
+    "closed_input_scope": "spire-layout-proof",
+    "closed_input_files": 33,
+    "public_procedure": "spire/bootstrap.py validate",
+    "owner_readiness_verified": false,
+    "full_inventory_workflow_proven": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "queue_resume_issued": false,
+    "receiver_source_sha256": "a44616af9b0d607c9269d963ca17a37c44261b611b0f4fbada9d6d6dd3da38bc",
+    "transport_source_sha256": "6fe60f7fa6326bf188c67c1e0586e5a464f9e0e68eb0405b066f3993c676bc80",
+    "materialized_source": {
+      "schema_version": 1,
+      "status": "ARTIFACT_MATERIALIZED",
+      "kind": "source",
+      "scope": "infrastructure-source",
+      "request_sha256": "4577d24e61210148a48b3e09438b9ec68842e7ff531c02d1cd2ba03f2c3ae17f",
+      "manifest_sha256": "5b8fe7a7b1f58f44c7d317731644e58c5c551eb177c2d98a11d7f04e46ff7be0",
+      "archive_sha256": "cd811f9205e4487f873053863a704ea3001d238b0ad68ab79f8eddbc33f72010",
+      "files": 1353,
+      "path": "/var/lib/node-operator/delivered/infrastructure-source-5b8fe7a7b1f58f44c7d317731644e58c5c551eb177c2d98a11d7f04e46ff7be0/payload",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false
+    },
+    "materialized_inputs": {
+      "schema_version": 1,
+      "status": "ARTIFACT_MATERIALIZED",
+      "kind": "owner-input",
+      "scope": "spire-layout-proof",
+      "request_sha256": "90edbec0d8185c6a90f1e6f0ccb17f5ca1b07464cf78fa07e39e67bc1396707c",
+      "manifest_sha256": "d9714d9959f3a0fcf46c3deadcf5d60189c5dde856185db3cc70a3d2c407ae6d",
+      "archive_sha256": "d8e5b2e8ba9b0ae40eded7b25e6cbc9799325974005947ea6bd99bdf71ee342a",
+      "files": 33,
+      "path": "/var/lib/node-operator/delivered/spire-layout-proof-d9714d9959f3a0fcf46c3deadcf5d60189c5dde856185db3cc70a3d2c407ae6d/payload",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false
+    },
+    "executed_from_materialized_source": {
+      "schema_version": 1,
+      "status": "COMMAND_SUCCEEDED",
+      "operation": "d40e1cfd-8813-445d-b9a2-a75f309fc9f3",
+      "request_sha256": "41e741d8a913fe3e01af2a7c0e15af3e7d793e28442f7ded669f80b85503f9ab",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false,
+      "exit_code": 0,
+      "owner_output_retained_privately": true,
+      "stdout_sha256": "9d723c005761ef6b0c86e5dde13fb55703a7533e6e7dd8580404906a9578fd83",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "all_source_files_bound_to_execution": 1353,
+    "repeat_source_inputs_and_execution_preserved": true,
+    "wrong_host_key_rejected": true,
+    "wire_corruption_rejected": {
+      "status": "BLOCKED",
+      "code": "ARTIFACT_ARCHIVE_MISMATCH",
+      "request_sha256": "3b385df6cb5b0cce2275e6b27787b6cfb135ff3b52ba631d557bff828a6f156e"
+    },
+    "operator_drift_rejected_without_overwrite": {
+      "status": "BLOCKED",
+      "code": "ARTIFACT_TREE_DRIFT",
+      "request_sha256": "4577d24e61210148a48b3e09438b9ec68842e7ff531c02d1cd2ba03f2c3ae17f"
+    },
+    "source_and_inputs_are_separate_generations": true,
+    "private_inputs_are_synthetic_layout_fixtures": true,
+    "opaque_provider_or_model_started": false,
+    "owned_test_container_removed": true
+  },
+  "prior_native_proof_covers_final_receiver_hash": false,
+  "final_exact_candidate_ssh_pending": true,
+  "failure_history_preserved": [
+    {
+      "attempt": 1,
+      "result": "BUILD_FAILED_BEFORE_SSH",
+      "cause": "Docker treated raw local sha256 image ID in FROM as a Docker Hub repository. Fixture now uses a task-owned hash-named seed tag with exact ID checks."
+    }
+  ],
+  "qualified_software_product_or_site": false,
+  "full_inventory_workflow_proven": false,
+  "working_runtime_switched": false,
+  "inference_requested": false,
+  "queue_resume_issued": false,
+  "remaining_gates": [
+    "Exact final source archive delivery and execution over real SSH",
+    "Final source audit and main adoption",
+    "Inventory bindings and actual per-role setup/readiness",
+    "Full local/distributed product and different physical-node acceptance"
+  ]
+}

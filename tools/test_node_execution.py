@@ -1,6 +1,7 @@
 """Actual owner-process effects and fail-closed node execution boundaries."""
 
 import copy
+import base64
 import json
 import os
 from pathlib import Path
@@ -290,6 +291,27 @@ class NodeExecutionTest(unittest.TestCase):
         diagnostics = next((self.root / "transport-evidence").iterdir())
         self.assertEqual((diagnostics / "stderr").read_bytes(), b"connection failed")
         self.assertEqual((diagnostics / "stderr").stat().st_mode & 0o777, 0o600)
+
+    def test_carrier_hash_check_survives_python_optimization(self) -> None:
+        marker = self.root / "unexpected-effect"
+        code = (
+            "from pathlib import Path;Path(" + repr(str(marker)) + ").touch()"
+        ).encode()
+        payload = node.encode(
+            {
+                "code": base64.b64encode(code).decode(),
+                "code_sha256": "a" * 64,
+                "request": self.request,
+                "action": "execute",
+            }
+        )
+        result = subprocess.run(
+            [sys.executable, "-O", "-c", node.BOOTSTRAP],
+            input=payload,
+            capture_output=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(marker.exists())
 
 
 if __name__ == "__main__":

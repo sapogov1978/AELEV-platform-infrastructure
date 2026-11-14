@@ -1,5 +1,7 @@
 # Инфраструктурная оркестрация — спецификация
 
+По [node artifact delivery v1](docs/api/node-artifact.md) source package и явно выбранный private input package доставляются на назначенный local/SSH узел с проверкой SHA, полного набора regular files, permissions и собственного scope. Content generation публикуется атомарно отдельно от работающего владельца; повтор сохраняет прежние bytes/receipt и не заменяет обнаруженное operator изменение. Это подготовка к публичной owner procedure, не implicit install, release/image admission, выдача identity, готовность полного inventory или RESUME.
+
 Контракт [полной описи размещения v1](docs/api/placement.md) отделяет catalogue/runtime/node/operator roles, закрепляет исходные recipes и требует явных bindings каждого экземпляра. `VALIDATED_INVENTORY` не означает готовый runtime: owner preflight, native identity, image/release admission, recovery и фактические узлы проверяются отдельно. Межузловые loopback, shared local state/private identities и opaque source-build закрыто отклоняются.
 
 Исходники принадлежат `sapogov1978/AELEV-platform-infrastructure` и размещены прямо в корне по [00-INFRA-20261106-0002-infrastructure-repository-layout](docs/adr/00-INFRA-20261106-0002-infrastructure-repository-layout.md). Это размещение исходников не определяет путь существующей установки потребителя: рабочие secrets/env/runtime и Docker resources сохраняют прежнее владение и расположение. Пакет формата 2 поставляет ту же плоскую структуру, а потребитель материализует её в выбранный каталог установки.
