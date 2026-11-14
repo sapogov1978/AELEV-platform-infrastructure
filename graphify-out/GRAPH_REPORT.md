@@ -1,7 +1,7 @@
 # Graph Report - dependency-release-checkout  (2026-11-14)
 
 ## Corpus Check
-- 1032 files · ~656,795 words
+- 1032 files · ~656,859 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 188 file(s) not represented in the graph (top: .whl 49, (none) 46, .example 21)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f1c82ca7`
+- Built from commit: `5099ad6a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -2819,7 +2819,7 @@ Nodes (3): ports, services, platform-ui
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `replace` to `recovery_host.py`, `Store`, `commit`, `Blackbox Exporter — руководство пользователя`, `keycloak/USER_MANUAL.md`, `test_automatic_recovery.py`, `test_delivery_http.py`, `gateway.py`, `Техническая инъекция разделов и состояния`, `json`, `platform-ui/test/test_api.py`, `Loki — руководство пользователя`, `OpenTelemetry Collector — руководство пользователя`, `Prometheus — руководство пользователя`, `keycloak/test/test_status_publisher.py`, `test/test_documentation.py`, `re`, `typing`, `test_authorization.py`, `test_infrastructure/test_recovery.py`, `test_restart_intent.py`, `recovery.py`, `Path`, `Руководство: метрики и панели нового владельца`, `Создание и подключение UI нового сервиса`, `Kafka — руководство пользователя`, `Delivery — руководство пользователя`, `Keycloak — руководство пользователя`, `Tempo — руководство пользователя`, `MinIO — руководство пользователя`?**
-  _High betweenness centrality (0.101) - this node is a cross-community bridge._
+  _High betweenness centrality (0.102) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `recovery_host.py` be split into smaller, more focused modules?**

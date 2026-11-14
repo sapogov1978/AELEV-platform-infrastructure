@@ -1,9 +1,23 @@
 {
   "schema_version": 1,
-  "status": "NATIVE_REGRESSION_PASS_HOSTED_AUDIT_PENDING",
+  "status": "SOURCE_DEPENDENCY_REMEDIATION_VERIFIED",
   "date": "2026-11-14",
   "previous_source_commit": "f1c82ca71424f87468b19d27e39bef79ec189464",
   "previous_failed_workflow": 43532234413,
+  "hosted_audit": {
+    "source_commit": "5099ad6a0e164530b998a54e6aacf3ee2014d602",
+    "run_id": 43541164042,
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43541164042",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs_passed": 26,
+    "jobs_total": 26
+  },
+  "github_dependency_graph": {
+    "open_dependabot_alerts": 0,
+    "verified_at": "2026-11-14T01:44:01Z",
+    "sbom_versions": {"dnspython": "2.9.2", "opentelemetry-api": "1.45.2"}
+  },
   "remediations": [
     {"advisory": "https://github.com/advisories/GHSA-mf5v-w3w3-f6cg", "package": "opentelemetry-api", "before": "1.45.1", "after": "1.45.2", "owners": ["translator-service", "public-egress-gateway"], "compatible_sdk_and_exporter_updated": true},
     {"advisory": "https://github.com/advisories/GHSA-vvf4-9x63-8xvv", "package": "dnspython", "before": "2.9.0", "after": "2.9.2", "owners": ["postgresql"], "patroni_unchanged": "4.1.5"}

@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794619868.428418,
-    "seen": 1794619877.753271,
-    "ast_hash": "babdda67e9295887a45f97a5a5c1fe0a",
+    "mtime": 1794621586.0635335,
+    "seen": 1794621595.957522,
+    "ast_hash": "f872c92b2f43973c7c9bc010861f0fb0",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6366,9 +6366,9 @@
     "semantic_hash": ""
   },
   "docs/audit/dependency-remediation-20261114.json": {
-    "mtime": 1794619844.996397,
-    "seen": 1794619877.752918,
-    "ast_hash": "c9fc58ce691d904813dba17a79c42d56",
+    "mtime": 1794621436.9514546,
+    "seen": 1794621595.94624,
+    "ast_hash": "8d95cb9242775f5b39cf9eb258a3cd9b",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

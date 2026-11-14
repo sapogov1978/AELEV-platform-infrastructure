@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: exact-source audit коммита 5099ad6 завершён 26/26 SUCCESS; GitHub dependency graph показывает исправленные версии, открытых Dependabot alerts нет. Отчёт dependency remediation отделяет закрытие source findings от ещё открытых полного infrastructure release и рабочего rollout.
+
 - 2026-11-14: test-target Translator дополнен собственными operator scripts, Compose и публичными station templates после воспроизведённого collection failure на prepare-local.py. Production targets и runtime не меняются; полный native прогон проверяет состав test-target.
 
 - 2026-11-14: Translator и Public Egress Gateway закрепляют совместимый OpenTelemetry 1.45.2 вместо 1.45.1 (GHSA-mf5v-w3w3-f6cg); PostgreSQL закрепляет dnspython 2.9.2 (GHSA-vvf4-9x63-8xvv). Обновляются только соответствующие dependency closures и locks; рабочие образы, сертификаты и очереди этой подготовкой не переключаются.
