@@ -4,6 +4,8 @@
 
 ## Интерфейс и граница доказательства
 
+Для подготовленного owner step доступен отдельный [узловой исполнитель v1](node-execution.md): local/SSH, pinned public procedure, собственные receipts и запрет автоматического повторного воздействия при неизвестном результате. Связывание полного inventory с owner workflows и все перечисленные ниже проверки остаются отдельным этапом.
+
 `python3 tools/placement.py validate --inventory PRIVATE_FILE --catalog deployment-catalog.json` проверяет опись без Docker и сетевых вызовов. `plan` возвращает тот же состав и перечень последующих проверок. `--catalog` повторяется для каталогов независимых продуктов; идентификаторы потребителя остаются в его каталоге и не входят в исходники инфраструктуры.
 
 Успех — `VALIDATED_INVENTORY` с `ready_to_start=false`. Это пока проверка плана, не исполняющий полный install workflow интерфейс. Требуются exact release/image admission, владельческий preflight реальных конфигураций и endpoints, подготовка/renewal node identities, проверка recovery handoff и настоящего размещения. Два объявленных узла не доказывают два физических компьютера. Ошибка возвращает exit 2 и `BLOCKED` с code/path без содержимого секрета. Команд `RESUME` здесь нет.

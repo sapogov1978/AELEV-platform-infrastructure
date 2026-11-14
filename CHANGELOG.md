@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: подготовлен scoped node executor для публичных самостоятельных SPIRE/Translator процедур через local/SSH. Закрепляются source/input hashes, literal arguments и host keys; собственный durable receipt и scope lock предотвращают слепой повтор. Raw owner/SSH diagnostics сохраняются приватно. Полный inventory workflow, physical multihost и runtime rollout не объявлены выполненными.
+
 - 2026-11-14: signed main worker 03191fa из e7db87c прошёл signature/source/SBOM/provenance, повторные native TLS 23/23 на каждой CPU, SQL 64/64 и свежий SPIRE identity/renewal/withdrawal/recovery. Сетевые шаблоны закрепляют exact worker и provider v0.2.1; scoped security review сохраняет raw findings и ограничения профиля. Действующие env, контейнеры, очереди и RESUME не менялись.
 
 - 2026-11-14: проверенная линия Translator Psycopg 3.3.9 принята после подтверждения продолжения владельцем. Candidate source/lock, signed multiarch artifact и scoped security evidence сохранены; отдельный main-ref worker release и его exact artifact verification обязательны до обновления runtime pins. Рабочее переключение и RESUME не выполняются.

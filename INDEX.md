@@ -7,6 +7,7 @@
 | Что искать | Где находится |
 |---|---|
 | Полная опись runtime/node/operator roles и проверка nodes/replicas | [deployment-catalog.json](deployment-catalog.json), [контракт](docs/api/placement.md), [placement.py](tools/placement.py) |
+| Выполнение подготовленного public owner step на local/SSH узле | [контракт](docs/api/node-execution.md), [node_execution.py](tools/node_execution.py); полный inventory workflow проверяется отдельно |
 | Состав и быстрый запуск инфраструктуры | [README.md](README.md) |
 | Полный штатный runtime и защита инкарнаций | [API установки](docs/api/installation.md#полный-локальный-профиль), [full_runtime.py](tools/full_runtime.py) |
 | Первоначальные локальные входы SPIRE и оператор Grafana | [spire_local.py](tools/spire_local.py), [подготовка владельца](spire/USER_MANUAL.md#подготовить-локальный-initial-bundle) |

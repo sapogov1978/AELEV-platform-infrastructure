@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "UNIT_AND_NATIVE_SSH_PRIMITIVE_PASS_FULL_WORKFLOW_OPEN",
+  "base_commit": "1a95b0b3be39d61105294b45426fd6a0830e9d95",
+  "source_sha256": {
+    "tools/node_execution.py": "8136a9e617af71d9f0556b34cf63a83718dabf1589e6c26f81f86bcdc0edb73f",
+    "tools/test_node_execution.py": "d3fb6d4c35e539f9a6d6dedd9aadeaaa42894534ec4ad1e479e6a4532618e10d"
+  },
+  "tests": {
+    "node_execution": 16,
+    "all_tools": 152,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "native_ssh": {
+    "status": "PASS",
+    "physical_nodes": 1,
+    "native_platform": "linux/arm64",
+    "sshd_test_tools_only": true,
+    "production_images_modified": false,
+    "public_procedure": "spire/bootstrap.py validate",
+    "owner_readiness_verified": false,
+    "spire_runtime_started": false,
+    "inference_requested": false,
+    "working_runtime_switched": false,
+    "queue_resume_issued": false,
+    "command_receipt": {
+      "schema_version": 1,
+      "status": "COMMAND_SUCCEEDED",
+      "operation": "ecc9735f-24dc-45c7-ae34-8012b938b211",
+      "request_sha256": "46f0f1cfdbf27311cdc33a1a090249a0c551420cd636516d26849a9daa634475",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false,
+      "exit_code": 0,
+      "owner_output_retained_privately": true,
+      "stdout_sha256": "9d723c005761ef6b0c86e5dde13fb55703a7533e6e7dd8580404906a9578fd83",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "repeat_identical": true,
+    "wrong_host_key_rejected": true,
+    "reconciliation_before_retry": {
+      "status": "NOT_OBSERVED",
+      "operation": "7b2cdefd-5899-4da9-9696-6eec14ee7ba6",
+      "request_sha256": "bf878f453d650a0b6e2a413eb4b1df25ff7e1b8acf5fa87122e9b576b22d21d8",
+      "owner_readiness_verified": false
+    },
+    "host_key_source": "Private fixture creation channel; no ssh-keyscan or TOFU",
+    "binding_overrides_or_password_fallback": false,
+    "owned_test_container_removed": true
+  },
+  "evidence_sha256": {
+    "ssh-native-5/proof.json": "ca0b12652d9a5cca24e8c34e079898052924d6b3cc3f314c6c5efc749220e492",
+    "ssh-native-5/operator-script.py": "97cdec729649565506d3d8237e72232e85df49eee9fb190036e3f214f7bbf2aa"
+  },
+  "test_tools_image": "sha256:349743fed59ee0f39af7cb1192747517e73c822eff7f611bbdbd4b88502e59a2",
+  "test_tools_only_packages": [
+    "openssh-server"
+  ],
+  "production_dependency_changes": false,
+  "previous_failed_attempts_preserved": [
+    {
+      "attempt": 1,
+      "result": "FAIL",
+      "cause": "Controller incorrectly inspected target Linux paths against macOS filesystem; fixed by target-only filesystem checks."
+    },
+    {
+      "attempt": 2,
+      "result": "FAIL",
+      "cause": "SSH public key accepted; fixture public source directories were private to image root. Corrected public source directory permissions; no credential permissions weakened. Early transport stderr was not retained; this limitation is preserved."
+    },
+    {
+      "attempt": 3,
+      "result": "FAIL",
+      "cause": "Public owner validator rejected fixture input root mode after Docker COPY. Fixture root corrected to 0700; production owner checks unchanged."
+    },
+    {
+      "attempt": 4,
+      "result": "PASS_BEFORE_FINAL_GUARDS",
+      "cause": "Precedes common owner scope lock and retained controller SSH diagnostics; exact final code rechecked by attempt 5."
+    }
+  ],
+  "remaining_gates": [
+    "Complete inventory-to-owner workflow binding and dependency order",
+    "Verified source archive materialization and approved identity handoff to target nodes",
+    "Real per-role installation and readiness through the executor",
+    "Full local/distributed system acceptance with separated replicas",
+    "Different physical nodes and production site admission"
+  ],
+  "full_installer_ready": false,
+  "physical_distribution_verified": false,
+  "working_runtime_switched": false,
+  "inference_requested": false,
+  "queue_resume_issued": false
+}
