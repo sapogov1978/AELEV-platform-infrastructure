@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: добавлен отдельный native amd64 admission workflow для exact signed Sender digest и его source SHA. Он проверяет 131 TLS/durability case без skips, совпадение установленных модулей и сохранность runtime OpenSSL/Python/SQLite при добавлении тестовых инструментов; сеть приложения закрыта, model calls и рабочие процессы не запускаются.
+
 - 2026-11-14: отдельный export всех четырёх SPIRE-ролей прошёл реальный native Shell CLI и побайтно одинаковый повтор; readiness, ONLINE ACK и центральная доставка сохранились. Source contract tests — 49, native — 48 passed / 1 Compose-CLI skip; фактические exports проверены отдельно через operator image. Это один физический компьютер, не production admission.
 
 - 2026-11-14: full-startup/independent-role foundation d4ea54a прошла exact-source audit 26/26, включая Grafana fresh OIDC и пять native SPIRE CLI/mount/renewal cases без skips. Прежний failure 151132f сохранён; последующий component export, security admission и полный release проверяются отдельно.
