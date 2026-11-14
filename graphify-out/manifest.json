@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794661036.5037067,
-    "seen": 1794661049.5459719,
-    "ast_hash": "216c14d8629b61e800456f1469587e52",
+    "mtime": 1794664302.94023,
+    "seen": 1794664312.12326,
+    "ast_hash": "fd526b5d4ba4b4cf42a394c18cf7be0f",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794660502.8067646,
-    "seen": 1794661049.546282,
-    "ast_hash": "a8a94963d9c5f2eb145cf9096265590c",
+    "mtime": 1794664302.9408033,
+    "seen": 1794664312.13214,
+    "ast_hash": "cad91c8ac93734490ab238a0ef978dd8",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -4638,9 +4638,9 @@
     "semantic_hash": ""
   },
   "translator-service/README.md": {
-    "mtime": 1794660479.3003783,
-    "seen": 1794661049.546284,
-    "ast_hash": "ec863801a6e67aac7d3400fa4211b25d",
+    "mtime": 1794664302.941111,
+    "seen": 1794664312.1321769,
+    "ast_hash": "1423017a5e35544622c4701a1764e90c",
     "semantic_hash": ""
   },
   "translator-service/SPEC.md": {
@@ -6642,9 +6642,9 @@
     "semantic_hash": ""
   },
   "docs/audit/translator-psycopg-candidate-20261114.json": {
-    "mtime": 1794661036.6561494,
-    "seen": 1794661049.54561,
-    "ast_hash": "1b53f2b425748b8a5eaa171a9a68c704",
+    "mtime": 1794664901.08938,
+    "seen": 1794664909.716369,
+    "ast_hash": "df8db2f73183badc81e5d6a196ca9714",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-14: кандидат worker 040b65b квалифицирован на точном signed digest обеих архитектур с actual bundled OpenSSL 3.5.9/libpq 18.6. Native SQL, mTLS и SVID proofs отделены от ещё открытых main-line approval, owner queue/quality, rollout и площадочного допуска. Сырые findings и failures тестовой оснастки сохраняются в отчёте.
+
 - 2026-11-14: в отдельном candidate branch подготовлен Psycopg 3.3.9 вместо 3.2.9 после выявления bundled OpenSSL 3.5.0/libpq 17.5 при ленивом импорте PostgreSQL driver. Меняется только driver dependency pair; очередь, source code, DB schema и working deployments сохраняются. Main adoption требует отдельного согласования линии после проверок.
 
 - 2026-11-14: exact signed worker прошёл GET-only native SPIRE identity/renewal/withdrawal/recovery proof. Отдельный amd64 admission workflow использует runtime source из опубликованного образа и проверяет сохранность production packages/libraries при добавлении изолированных тестовых инструментов; внешние model calls, worker loop и RESUME отсутствуют.

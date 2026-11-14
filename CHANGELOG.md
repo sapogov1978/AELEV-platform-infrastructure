@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: exact signed Psycopg candidate 040b65b из 20b924e подтвердил source/signature/SBOM/provenance, native TLS 23/23 на каждой CPU, 64 SQL/TLS/runtime tests и свежие native SVID GET/renewal/withdrawal/recovery. Scoped HIGH/CRITICAL review сохраняет raw counts и исключает произвольные roles/GSS/commands; новая dependency line ожидает отдельного согласования, main и рабочий контур не переключаются.
+
 - 2026-11-14: candidate admission inventory активирует только ленивый импорт PostgreSQL driver через SQLAlchemy engine без соединения с БД и сохраняет actual libpq/OpenSSL versions и hashes обеих криптобиблиотек. Это устраняет слепую зону системного package scan; production dependency pair и main adoption проверяются отдельно.
 
 - 2026-11-14: изолированный кандидат Translator Psycopg 3.3.9 заменяет bundled PostgreSQL TLS-библиотеки Psycopg 3.2.9; Python 3.13.7, Bookworm, PostgreSQL server profile и владелец данных сохраняются. Main adoption ожидает проверки, точного lock diff и отдельного согласования закреплённой линии 3.3.

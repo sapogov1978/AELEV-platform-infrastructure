@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "NATIVE_ARM64_COMPATIBILITY_PASS_MAIN_ADOPTION_NOT_AUTHORIZED",
+  "status": "EXACT_SIGNED_CANDIDATE_QUALIFIED_OWNER_LINE_APPROVAL_PENDING",
   "production_dependencies_adopted": false,
   "working_runtime_switched": false,
   "inference_requested": false,
@@ -142,11 +142,10 @@
     "production_modified": false
   },
   "open_gates": [
-    "candidate source CI",
-    "signed candidate multiarch artifact and exact native amd64 inspection",
-    "bundled library and whole image scoped security review",
     "explicit owner approval to replace pinned dependency line before main adoption",
-    "working rollout and complete product acceptance"
+    "signed main-ref publication and exact artifact verification after approval",
+    "worker owner quality/canonical queue integration and controlled rollout",
+    "complete local/distributed product acceptance and production site admission"
   ],
   "evidence_sha256": {
     "candidate-lock-proof.json": "38d6cbb010e2dc4d21e07d061105fd5c8f93ccdbd9d3721a996964fcfb22204c",
@@ -154,6 +153,1476 @@
     "sql-native-candidate-1/proof.json": "4860b16d8fdf3afbe78b1fc7a469c788733e800b6fa66c7ed86e0a61743e6b45",
     "sql-native-candidate-2/proof.json": "0302753d5b7b8cc53f0adac1f60529b3d49c9c586e2f470cffd30236ae6ec61c",
     "sql-native-candidate-2/test.xml": "c175be42de7aad08e680eaf3268684b9086cd2712ac70751bee60325853edb40",
-    "sql-native-candidate-2/operator-script.py": "b29a420ae29719bc7edc6760095e7f47104c6e462290137e7c6defd963acec6a"
+    "sql-native-candidate-2/operator-script.py": "b29a420ae29719bc7edc6760095e7f47104c6e462290137e7c6defd963acec6a",
+    "exact-artifact/verification.json": "c48aee938723a4d098ae017f72f7b5b9d993bf0ef60051ca8bbf6f32624145c1",
+    "exact-artifact/security.json": "86abaf9406cf13991ad84b2358201a9955468a8d0bdd7bee2a6e322b8fa3b26b",
+    "exact-artifact/scoped-security-admission.json": "df81c03b95d3f670c3c0fbd619aec6b02f9061b02b00c138f9d6c31cb52df279",
+    "exact-artifact/profile-preconditions.json": "89f7a9932dc5f60a09c8426008dc970f6586871e8bcf69865a1791546f545e9e",
+    "exact-artifact/elf-reference-probe-with-db-driver.json": "9dab0c02c85574e5dd7c4bc993ab06fe4c1986568b34d3e1382f263dedefca52",
+    "exact-artifact/native-arm64-checks/proof.json": "3292269d78ad5804f64083b764fdb1fb984885606229d42206575187a08e086e",
+    "exact-artifact/native-arm64-checks-2/proof.json": "11c987703f0baf0dbbdbf3f7d2997984ae734d07d2cd79528f474d8b5daa7e01",
+    "exact-artifact/native-amd64-checks/worker-native-proof.json": "51555839d35539671252528276ed76342334523dfc2c6a1531c7ebc555d545a5",
+    "exact-artifact/sql-native-candidate-1/proof.json": "cacb60c2a16a4e754d36168007330c7bca5b7cfc6ec4760612ddb1f5e0b76478",
+    "exact-artifact/sql-native-candidate-1/test.xml": "48342cddd7b667d41871ee7b654781db12673240398063c229c8dc2ca7565362",
+    "native-compute-identity-4/proof.json": "264cb679b560410cb61856b84d43d89ebf8b071d40c3412bc26cfed364942752",
+    "native-compute-identity-4/operator-script.py": "d21db523c5cc4a0b0707e85ea380c3b62dd4bea013aef3eff5aecbf1aebedf7b",
+    "exact-artifact/libpq-compiled-defaults-both-architectures.json": "33f039420a7c4c851e9a57ee7ceea6bb01a57f8543dde7067e511677f377b483"
+  },
+  "source_ci": {
+    "source_commit": "20b924ecc21cb109e6fc1ffbf82171b0486254b4",
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43597611365",
+    "conclusion": "success",
+    "successful_jobs": 26,
+    "total_jobs": 26
+  },
+  "signed_candidate": {
+    "status": "SUPPLY_CHAIN_NATIVE_PAYLOAD_PASS_ADMISSION_PENDING",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+    "source_commit": "20b924ecc21cb109e6fc1ffbf82171b0486254b4",
+    "workflow": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43598267918",
+    "certificate_identity": "https://github.com/sapogov1978/AELEV-platform-infrastructure/.github/workflows/translator-worker-release.yml@refs/heads/candidate/translator-psycopg-339-20261114",
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "attestations": [
+      {
+        "subject_digest": "sha256:9b4e04e1b9743927bc5956e8d7c4f09835d192b38453d79e7fe6ea3acd818594",
+        "predicates": [
+          "https://slsa.dev/provenance/v1",
+          "https://spdx.dev/Document"
+        ]
+      },
+      {
+        "subject_digest": "sha256:a2a9a0f0e275c947624dc4b75aec226bb0ba23bef676c0a09be11e7d34a77f64",
+        "predicates": [
+          "https://slsa.dev/provenance/v1",
+          "https://spdx.dev/Document"
+        ]
+      }
+    ],
+    "native_runtime": {
+      "python": "3.13.7",
+      "sqlite": "3.53.4",
+      "architecture": "aarch64",
+      "openssl": "OpenSSL 3.0.22 25 Aug 2026",
+      "ui_sdk": "1.1.2",
+      "opentelemetry_api": "1.45.2",
+      "source_sha256": {
+        "provider_transport.py": "04386fd96f84b2d29e15ac6b6ad94c04b8594c222bb571239502a0205d68bc2f",
+        "provider_identity.py": "19d4fd5bb1a00446bbbeb744edb212de1f69990f5a0ec37248e22d32858c87cf",
+        "runtime.py": "81e8f8bad17f43cc00e3de92e6b5be6c9cb2b13e298ef523611c32c751a7ced0",
+        "retry.py": "3a517e012900b4b30b5af2504f1b28f9701ced1a2b03aa213ce9fa4e5d9414cb",
+        "presence.py": "c022abddce1fad4a29fe020dd0bf1f4a2d437b8e8bd559afd42a3e6f6201d32d",
+        "provider_healthcheck.py": "ed65c87c856ebe1e581b181db34df659fa52600ed2a8f69c874e36503ba7e61e"
+      },
+      "postgresql": {
+        "psycopg": "3.3.9",
+        "libpq": 180006,
+        "driver": "binary",
+        "openssl_versions": {
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypto-5e36fb0e.so.3": "OpenSSL 3.5.9 29 Sep 2026",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libssl-8f8630a8.so.3": "OpenSSL 3.5.9 29 Sep 2026",
+          "/usr/lib/aarch64-linux-gnu/libcrypto.so.3": "OpenSSL 3.0.22 25 Aug 2026",
+          "/usr/lib/aarch64-linux-gnu/libssl.so.3": "OpenSSL 3.0.22 25 Aug 2026"
+        },
+        "database_connection_opened": false
+      }
+    },
+    "worker_process_started": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "production_admitted": false
+  },
+  "exact_artifact_native_tls": {
+    "arm64": {
+      "status": "PASS",
+      "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+      "source_commit": "20b924ecc21cb109e6fc1ffbf82171b0486254b4",
+      "platform": "linux/arm64",
+      "native": true,
+      "worker_loop_started": false,
+      "queue_resume_issued": false,
+      "working_runtime_switched": false,
+      "inference_requested": false,
+      "exit_code": 0,
+      "totals": {
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "layer": {
+        "python": "3.13.7",
+        "sqlite": "3.53.4",
+        "architecture": "aarch64",
+        "psycopg": "3.3.9",
+        "libpq": 180006,
+        "postgresql_driver": "binary",
+        "openssl_versions": {
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypto-5e36fb0e.so.3": "OpenSSL 3.5.9 29 Sep 2026",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libssl-8f8630a8.so.3": "OpenSSL 3.5.9 29 Sep 2026",
+          "/usr/lib/aarch64-linux-gnu/libcrypto.so.3": "OpenSSL 3.0.22 25 Aug 2026",
+          "/usr/lib/aarch64-linux-gnu/libssl.so.3": "OpenSSL 3.0.22 25 Aug 2026"
+        },
+        "database_connection_opened": false,
+        "production_dependencies_sha256": "5d84020d482f22ae6052079812e3f8bf8dce69ece6b7b7f61d6b1ef050a2507c",
+        "production_dependencies_preserved": true,
+        "runtime_library_sha256": {
+          "/opt/aelev/.venv/bin/python": "cb4548d280f38c2b1df4cba45f12c90a034729e08fce5bf1a223c58add0e21e3",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/greenlet/_greenlet.cpython-313-aarch64-linux-gnu.so": "d8e3575eda1f2f71847f5a3d2bc4063c9856e4b65dc9925b8b5ecbf65a9e8925",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcom_err-6d8d18aa.so.2.1": "b335a27b7304dfd71b7539777c47d5600930ab63f7c5f47cbb5a12257d60aaae",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcom_err-ade663e2.so.3.0": "04ee759572b2a05a6200a480c15dd122a7aca9c6463263ade7e641b415ef79ba",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypt-258f54d5.so.1.1.0": "980d4781ae9ad8d1b2f60be52cfbbf176d32cc62ecf888920f347e9957636ee2",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypto-5e36fb0e.so.3": "07c01e7f3ac614267f752806ed5b02a5ba46c0c5442e921888b4ab33f7681046",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libgssapi_krb5-2d78fad2.so.2.2": "bebf29bbc91252d85fcfc63d8fed11cb63d0c19fee396cc4648fcb83ad9a91b6",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libk5crypto-08068307.so.3.1": "95663ee5a44bdcf6605c5d34f99b9df29dba817a1b42926ecd0423cf841ae777",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libkeyutils-fe6e95a9.so.1.6": "0d2a628040cf8f759447db3556701af6aa4b5b3e36a7a55d07a944c52ce33d22",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libkrb5-138a6e7a.so.3.3": "699a5d77386702975951fb4d719ecc7f2a8a99e3bf07c04901bb4e508fc6b163",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libkrb5support-bba7dd31.so.0.1": "dcd22fcb775157912400d3fc70d38cb722c81539b340f00596a556807e87c61c",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/liblber-39a5c986.so.2.0.200": "ba34d65e9311738220963ada65eb8af1c21fc1aa21a59b67f9d90257dfeb9b6d",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libldap-ed13728f.so.2.0.200": "14bdab9186c092030749f6441771dee20eef27be68bfcbd349829602b4ec4d79",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libpq-53e4e5f8.so.5.18": "005cf0155d5c6712950445d67c6773c322481f4a35d825e7e802b7118f419360",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libsasl2-076b3c1f.so.3.0.0": "101ed25950445ee037d948864059f53ce76b6d057e35f51b2a4f1b97e146108a",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libssl-8f8630a8.so.3": "f43ad55c18136e899edbb199863032d0d32b02bfc4c97ce5183f7cb35d7a1800",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary/_psycopg.cpython-313-aarch64-linux-gnu.so": "52efbf9c69d375f7f5a5c46d228337084612902a89e5710e8f0df914340939f9",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary/pq.cpython-313-aarch64-linux-gnu.so": "8f833212db0b93a1a3da6f8f8c3480b5da8cf09db0096c2d2c5b0730e08fc8dc",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/collections.cpython-313-aarch64-linux-gnu.so": "4e7430689205faf535b146484f7dbcd7bcb827f2573141ff6b6ed5e6f4bb0eec",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/immutabledict.cpython-313-aarch64-linux-gnu.so": "5b3c05ff5cb91fe7994e564b23106f0e8063950822a99a20fee2f1d27349124b",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/processors.cpython-313-aarch64-linux-gnu.so": "43cdde95d74a1d1f12a07549361cfcb21f3bb152e45f621b7fc26e8f5f76f708",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/resultproxy.cpython-313-aarch64-linux-gnu.so": "894a3e1e558bd6a5e742386cade770024a1709e2dc49fd3f99139d434361cce6",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/util.cpython-313-aarch64-linux-gnu.so": "d0bf7ad0d6da94bd66dd85aebf62935fefb81fc6090bac0f69e64e680ce8f975",
+          "/opt/aelev/sqlite/libsqlite3.so.0": "eba62f555f8e5e7272d7a3f25d0f01c06e93375dcfae6d80390c163e7d0e9c90",
+          "/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1": "17538b8f9889a470c061f69a8fea8124da89627311cd16546c133a89f09056df",
+          "/usr/lib/aarch64-linux-gnu/libbz2.so.1.0.4": "636189620fb8ac7497a8dfba3c77c001f0c27814b16ad822bcf4b8e11f1ffbf7",
+          "/usr/lib/aarch64-linux-gnu/libc.so.6": "e4ac8ae1d81e4865e3aadedb962879cf9415903b3f2ba81ec75e9962b86ab8b0",
+          "/usr/lib/aarch64-linux-gnu/libcrypto.so.3": "322b1a55dbc35b68c19a72fea768c97a1b38e6afa72b84627327a443ee74912e",
+          "/usr/lib/aarch64-linux-gnu/libdl.so.2": "e5e9474a683596d59cc9e13246bc83878433e53c3befbabd73e3da9ccb5fe174",
+          "/usr/lib/aarch64-linux-gnu/libffi.so.8.1.2": "cbae420bdec2903fa5943664504b3540091651ac0af76403741a8c14d5b018da",
+          "/usr/lib/aarch64-linux-gnu/libgcc_s.so.1": "046856f95f4636f1fc7c3a12bf4f3cd5634c2fc5145c3fdf7395d4f349fa69c7",
+          "/usr/lib/aarch64-linux-gnu/liblzma.so.5.4.1": "924ccb8732eb12d1c09f992b1a42a1f2023b666ba54c2ba47af78b2277fe9376",
+          "/usr/lib/aarch64-linux-gnu/libm.so.6": "3c4cb3be0b974edf05f023f85ab15107fb5afc2687163593d0d4cf8e80c17b39",
+          "/usr/lib/aarch64-linux-gnu/libpthread.so.0": "434dcd27f22fc8bf236c0c00541a1e503d302aa796c333729a2cd15a4cfe4814",
+          "/usr/lib/aarch64-linux-gnu/libresolv.so.2": "5f3769c75e5eca6ff14f2c7a22bcc8cfeeef31da9545434a281a5fdd1f66d6f0",
+          "/usr/lib/aarch64-linux-gnu/libssl.so.3": "7b23bf339ecd38c0ad436243ab78ce0e748a3026c8d91fb45b72700546dbb9fe",
+          "/usr/lib/aarch64-linux-gnu/libstdc++.so.6.0.30": "532f3a12d7b8fef6cc7a064ea106b6c4ab2365674b73e743e4a385d4ffb6c8ab",
+          "/usr/lib/aarch64-linux-gnu/libuuid.so.1.3.0": "d007db0f16412cec5034aa5cf56b44e9847d3186c375dd3d23a744589d2471ce",
+          "/usr/lib/aarch64-linux-gnu/libz.so.1.2.13": "ffb1ab496e6eced03ab679075f9f2c415c7728a145cc7f63d614497102d73822",
+          "/usr/local/lib/libpython3.13.so.1.0": "62c5479375c04460973e119f4c06526048c8383ca434264f225117612c02ce52",
+          "/usr/local/lib/python3.13/lib-dynload/_asyncio.cpython-313-aarch64-linux-gnu.so": "c96b30e4a930f1819d4507058a720f33c2aa324a77a2e3952ebb890c4c9c1985",
+          "/usr/local/lib/python3.13/lib-dynload/_bisect.cpython-313-aarch64-linux-gnu.so": "d7849eacc864af719a08a1315610de77d1043996c06ac89cefc3de5e1902fb19",
+          "/usr/local/lib/python3.13/lib-dynload/_blake2.cpython-313-aarch64-linux-gnu.so": "33fc212af020997b836344e1de9b972eb82e0c824ae5b4fc012909138e8c7226",
+          "/usr/local/lib/python3.13/lib-dynload/_bz2.cpython-313-aarch64-linux-gnu.so": "df7e2e42939e45d5ecd9d21e9a6b08fcb7556c86d4846c2f295837da477b4ce1",
+          "/usr/local/lib/python3.13/lib-dynload/_contextvars.cpython-313-aarch64-linux-gnu.so": "bd6ebe40500ad1e036a0e99520fdccbd603993899a0bfae69ed4e6c0928ee17c",
+          "/usr/local/lib/python3.13/lib-dynload/_ctypes.cpython-313-aarch64-linux-gnu.so": "fade64b18457e91f7e8c746fd0ab8a2530a92d7035d06e05573255ad97a8b149",
+          "/usr/local/lib/python3.13/lib-dynload/_datetime.cpython-313-aarch64-linux-gnu.so": "b1c5fe601a8ace82892cd9d8d3b32cc1eb0fd03cff35f724f98fe6d6d5ae9a0a",
+          "/usr/local/lib/python3.13/lib-dynload/_decimal.cpython-313-aarch64-linux-gnu.so": "2b57fec5df3e3c2b01b425d113599b76466bd3ac5e8433cf37d375122be86d1c",
+          "/usr/local/lib/python3.13/lib-dynload/_hashlib.cpython-313-aarch64-linux-gnu.so": "40ffd512f9d0ebb895f97fac7a59af707b3600e90d203a7e021404dd8cd3326a",
+          "/usr/local/lib/python3.13/lib-dynload/_heapq.cpython-313-aarch64-linux-gnu.so": "6b57bea0a58d7b7919c80eeeb5f1babdee7f38b2ae0867c2434cc0a2924886d3",
+          "/usr/local/lib/python3.13/lib-dynload/_json.cpython-313-aarch64-linux-gnu.so": "67b18328057cb66503097c4ef194c9205a2e5fdf073436f99864dd7f389fe354",
+          "/usr/local/lib/python3.13/lib-dynload/_lzma.cpython-313-aarch64-linux-gnu.so": "81de4667209ccee6a83159da87af09424794496934c0a125fc9f04fd5cefd251",
+          "/usr/local/lib/python3.13/lib-dynload/_opcode.cpython-313-aarch64-linux-gnu.so": "7284adedc91679deca063f7de179d781e64bfdc0ceacb8a78d9b2abfbec0aba7",
+          "/usr/local/lib/python3.13/lib-dynload/_pickle.cpython-313-aarch64-linux-gnu.so": "e9b38bb477b6ce67ebec804651522484499996bf2c296ef857e74c863af94a95",
+          "/usr/local/lib/python3.13/lib-dynload/_posixsubprocess.cpython-313-aarch64-linux-gnu.so": "fb07b152592477006304a647154df1a5782baf28ad012a8f89948f593bf1104e",
+          "/usr/local/lib/python3.13/lib-dynload/_queue.cpython-313-aarch64-linux-gnu.so": "a5ab3832899cc3b3ac2bd66a7c970cca837ec8ad79622e88b51354376b6c7c8d",
+          "/usr/local/lib/python3.13/lib-dynload/_random.cpython-313-aarch64-linux-gnu.so": "4836f2314c0be6bf8370161b152e7cf7de4c35d4aad9f4dd83767a96e4206877",
+          "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-aarch64-linux-gnu.so": "9587b7dd21b779504a2fb69e1bdda15d17630982a690163389b547c85bc4c7a1",
+          "/usr/local/lib/python3.13/lib-dynload/_sqlite3.cpython-313-aarch64-linux-gnu.so": "8ba5fc66cc4320edca62d9e207cbeb877b0aceb56f109b13e3cfe3c7c90dcdc6",
+          "/usr/local/lib/python3.13/lib-dynload/_ssl.cpython-313-aarch64-linux-gnu.so": "ef6751b2e0d071e69f0b786021cad5f656306898823491ab3afc3d30aaf03001",
+          "/usr/local/lib/python3.13/lib-dynload/_struct.cpython-313-aarch64-linux-gnu.so": "3b5e8d8a6f4813cd9925dc80702df1038e3f05892c612223288c17826fb2c454",
+          "/usr/local/lib/python3.13/lib-dynload/_uuid.cpython-313-aarch64-linux-gnu.so": "123465db23cf091cb042341a5896815f899f1a9d396b33cd2a252665d779162f",
+          "/usr/local/lib/python3.13/lib-dynload/_zoneinfo.cpython-313-aarch64-linux-gnu.so": "d09d04d561c118123c4afecdc6b1a49f4a1bfa305ce352607898dd783975a757",
+          "/usr/local/lib/python3.13/lib-dynload/array.cpython-313-aarch64-linux-gnu.so": "c56c8e1f3b1adf7459cc8a57fba91d53d9eb113982f3094cb45076de29c8c3fc",
+          "/usr/local/lib/python3.13/lib-dynload/binascii.cpython-313-aarch64-linux-gnu.so": "e9652e8e5327a2cb01ee23cd299caf78fd5d73e503155e13254d1fc377e9200c",
+          "/usr/local/lib/python3.13/lib-dynload/fcntl.cpython-313-aarch64-linux-gnu.so": "342e14b1d32c3527e72996953e43a98f2f019149b51b4fc28675055bc76e1870",
+          "/usr/local/lib/python3.13/lib-dynload/grp.cpython-313-aarch64-linux-gnu.so": "6b45eaecd3a5a0c501c4d2a3c6a85909010e1212a1ee10d9c7795da6bf98a9ae",
+          "/usr/local/lib/python3.13/lib-dynload/math.cpython-313-aarch64-linux-gnu.so": "dd0d57180b117451b77db201d01a54da5fb87cf0ffbf5376997ba92ff6e41a94",
+          "/usr/local/lib/python3.13/lib-dynload/select.cpython-313-aarch64-linux-gnu.so": "e611398b5c8ad0743c8629a32e71f622c4bbf1b79b9d28b179b1bc78ad39f248",
+          "/usr/local/lib/python3.13/lib-dynload/zlib.cpython-313-aarch64-linux-gnu.so": "e207db067c6d7045b6d129272780d392d4dcc2c912d961de8e423b14bdf77a4a"
+        },
+        "runtime_libraries_preserved": true,
+        "exact_owner_source_files": 24
+      }
+    },
+    "amd64": {
+      "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+      "source_commit": "20b924ecc21cb109e6fc1ffbf82171b0486254b4",
+      "platform": "linux/amd64",
+      "native": true,
+      "totals": {
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "layer": {
+        "python": "3.13.7",
+        "sqlite": "3.53.4",
+        "architecture": "x86_64",
+        "psycopg": "3.3.9",
+        "libpq": 180006,
+        "postgresql_driver": "binary",
+        "openssl_versions": {
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypto-3a0647ea.so.3": "OpenSSL 3.5.9 29 Sep 2026",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libssl-6a9b88ec.so.3": "OpenSSL 3.5.9 29 Sep 2026",
+          "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "OpenSSL 3.0.22 25 Aug 2026",
+          "/usr/lib/x86_64-linux-gnu/libssl.so.3": "OpenSSL 3.0.22 25 Aug 2026"
+        },
+        "database_connection_opened": false,
+        "production_dependencies_sha256": "7aa68498d69453eb12cd8205d6d6897c4df535c58e14c3505ade7d4a4e96af79",
+        "production_dependencies_preserved": true,
+        "runtime_library_sha256": {
+          "/opt/aelev/.venv/bin/python": "73b68fc2dac176af16098180a2c98a03ee9f1f1b02db25d42d44d782e79e2330",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/greenlet/_greenlet.cpython-313-x86_64-linux-gnu.so": "8ff8068805bf2060d0f813448e06d033a0b171c10606578206cea51c3899e0b9",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcom_err-2abe824b.so.2.1": "5426dcb54dd01c9eedda05e2179f0e47114e8b48a534ffe9e94916e79471b257",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcom_err-55c5739a.so.3.0": "c4455194ec84307401ae1dc0049e53703d383c1f1094e613e4a54b19f90094e3",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypt-bc2db45e.so.1": "e2a6f6ff300e287a60dfc0c6fdb76ee01e333068df7c60b4e87453d942ccda65",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypto-3a0647ea.so.3": "e1a48391f48cb5f8392140b43ef9f2fa52f58321f8eadd8a83dc20f7fe398b9e",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libgssapi_krb5-923083ce.so.2.2": "7355c441d02abe41d34959c6f51caa5fac17014799935673ad3cb987b03226e4",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libk5crypto-459efceb.so.3.1": "f4901987c99506969fb156c455d3774fad5aad7bff950fd572dfab8a59a901a6",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libkeyutils-dfe70bd6.so.1.5": "c29e41b03cf4b2dffbfb4960946e2b42f82c0ca5d53d231d3f0fc597ba274488",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libkrb5-f18b4d11.so.3.3": "066e6f8c94967fa3f91f0c723834bde429a18a387e8ec791d34ac56c05bf975b",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libkrb5support-93fbab13.so.0.1": "3404c3db9216ffbbe10f13e5b65b122e1ac6744082c639891f69f0ef28711a2f",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/liblber-7b3e3cc5.so.2.0.200": "42e1b323980f325b3fc45b888d026a8fd8cb669997b54885f863f50e48f8f6ef",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libldap-fb847fea.so.2.0.200": "841d1b8a667ab165835b08203fb10cf18904e161d5c3a8b1e4b2c623b04ad505",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libpq-e9b5c9ac.so.5.18": "ee8ad7e6497816c693acc1a9691528e3600db2dc0f5f97634653ec5c025ac565",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libsasl2-84219a89.so.3.0.0": "a01821d4716316892f28751616ad586f679ec66bc18a775205e1a0fab579f00b",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libssl-6a9b88ec.so.3": "5b9d9f1923a0ffd4fd2666819846d61c5bad31f1bf3a16c65bf1fccf5aa37d17",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary/_psycopg.cpython-313-x86_64-linux-gnu.so": "1425f9cdc10398738c42ae424d67635a69584135ef2d2648a54fed91b35997de",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary/pq.cpython-313-x86_64-linux-gnu.so": "571093052c62400b8706bb836f7c9552a91a50ace2d21c3d589bc836bcfec369",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/collections.cpython-313-x86_64-linux-gnu.so": "f469052421e5350b7c7096224be1858dce8a60d815ed1950756b7662cd353a51",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/immutabledict.cpython-313-x86_64-linux-gnu.so": "1d74057a470a40d2d2cbb685f3e097352ff8a4898a91887b40f0b17a89dee2d9",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/processors.cpython-313-x86_64-linux-gnu.so": "44ddeb4a8bf7132c1d9d07a4caa289c28937c6681dc12016c66e872469d7826d",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/resultproxy.cpython-313-x86_64-linux-gnu.so": "2635872654b8f2d921bab9b960098b8e1349510ab32cd028815785badade76e1",
+          "/opt/aelev/.venv/lib/python3.13/site-packages/sqlalchemy/cyextension/util.cpython-313-x86_64-linux-gnu.so": "830361b29e760393a51c6c67d35eec5a79314692457a08d6c07af7c66674c125",
+          "/opt/aelev/sqlite/libsqlite3.so.0": "10300ab1ee357d5efe6fa72dd4161fee889376d04f4c0d27d4d0a7de642e6928",
+          "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": "02bcda52c1a5dfc236f94d9e5255b4a0e26347d8a372a5223b650e31f291ce3c",
+          "/usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4": "e4f501c8bd22390e42422691093d8af4e744a3e854809b809948055e8b08bda5",
+          "/usr/lib/x86_64-linux-gnu/libc.so.6": "6b4a45352fd0c540a9c7c718f35ce8c8e46a4e482f9d3885a910c32d1a0e1421",
+          "/usr/lib/x86_64-linux-gnu/libcrypto.so.3": "aa01e614af634bc7c8b678c9250b5c4f613c61989bacf0a5d6aed6570e7dcabd",
+          "/usr/lib/x86_64-linux-gnu/libdl.so.2": "95d521b2c39fd0333271b6fdcdddff878ae82001a304313a837b8e728ebe3cb1",
+          "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.2": "983e72b7e964f3db43fe8a3dc8b338e731fade6ca38df6867aebb58186aaeb68",
+          "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": "2bd1552c47799ef67e701e81d4383061fd76059868e446e63560f0dd0d5ec14e",
+          "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.1": "5de60ec1bf90cd3d699188eb9ebb333c22b531394e0b030b55048edbd729ed17",
+          "/usr/lib/x86_64-linux-gnu/libm.so.6": "7f2ca87f652f56b094462474b076749e90e689d0ecb9cb63c7679820b271b4e7",
+          "/usr/lib/x86_64-linux-gnu/libpthread.so.0": "b93a680da8a05b939b235c1533572e7a2f6d3d8808bf70209997edc64ea5fedc",
+          "/usr/lib/x86_64-linux-gnu/libresolv.so.2": "ac3924c6cdb26cdfff10fec2ab2748705c83931b39c7f6e638a2b31ae34d420b",
+          "/usr/lib/x86_64-linux-gnu/libssl.so.3": "cab3f5b0a1febd4a80db5319f3bca4a9378c797dc6e5dc8bce36a575eaa77e78",
+          "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30": "e7848e32af4932840ba775169041759a2a8dd5a008af360e5c55bce506eebcf4",
+          "/usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0": "94176513740e4b8d24a68e6c37a43986b488f2910c9eaa34f69bd7ba8c49307d",
+          "/usr/lib/x86_64-linux-gnu/libz.so.1.2.13": "7e2a72b4c4b38c61e6962de6e3f4a5e9ae692e732c68deead10a7ce2135a7f68",
+          "/usr/local/lib/libpython3.13.so.1.0": "27e91436972340b794fddbd25091fd13957fde60546b4f7270bbf1c243aebf75",
+          "/usr/local/lib/python3.13/lib-dynload/_asyncio.cpython-313-x86_64-linux-gnu.so": "2e6506de6d2272e524909aa06d8903532e266bb713bf5886b08683dd4a66caed",
+          "/usr/local/lib/python3.13/lib-dynload/_bisect.cpython-313-x86_64-linux-gnu.so": "5744333008ef55869f512b72164464b0a71a77b242b0b1167ac55b1ed657fc24",
+          "/usr/local/lib/python3.13/lib-dynload/_blake2.cpython-313-x86_64-linux-gnu.so": "c6e5cffe5c51f94349f372afba720ea96a9712ac2034130eae1a820517c5b5e3",
+          "/usr/local/lib/python3.13/lib-dynload/_bz2.cpython-313-x86_64-linux-gnu.so": "88e742c27946659463f34404915b3df4e7a28996954b152b3829cbf352a98cb0",
+          "/usr/local/lib/python3.13/lib-dynload/_contextvars.cpython-313-x86_64-linux-gnu.so": "638e774cd0893664f7fc6fed8b249b771c0cf3f450b213f28a604210008d66bc",
+          "/usr/local/lib/python3.13/lib-dynload/_ctypes.cpython-313-x86_64-linux-gnu.so": "e3021ab2c9916028cdf6e17c0b972a8c6738126fc1ca39fc18a3c315ccb8108d",
+          "/usr/local/lib/python3.13/lib-dynload/_datetime.cpython-313-x86_64-linux-gnu.so": "3898e7232abf5c1837b876027479a619dd494fe5628e42b1e6f40134cc049a9c",
+          "/usr/local/lib/python3.13/lib-dynload/_decimal.cpython-313-x86_64-linux-gnu.so": "607515840b7a879ad0eb25aa989d0d0ade806a9b9c5054c497ff84403c474a26",
+          "/usr/local/lib/python3.13/lib-dynload/_hashlib.cpython-313-x86_64-linux-gnu.so": "402e3f319001efd04727ffe44e80dc53af0e7ee5f3dee0608b792f9ff61999c2",
+          "/usr/local/lib/python3.13/lib-dynload/_heapq.cpython-313-x86_64-linux-gnu.so": "2de6453ec70a19af4aeb4234bd2d9eb933d8386379f6a2216a97b402345dd91d",
+          "/usr/local/lib/python3.13/lib-dynload/_json.cpython-313-x86_64-linux-gnu.so": "e7c7e738a62ff07aafacaf0c45f57e324bb69173e5221fec284c22d6bf60d3d8",
+          "/usr/local/lib/python3.13/lib-dynload/_lzma.cpython-313-x86_64-linux-gnu.so": "1023a57303a9834e238d97a751c16be51956f2ec595f39421e340094ed10e8b5",
+          "/usr/local/lib/python3.13/lib-dynload/_opcode.cpython-313-x86_64-linux-gnu.so": "37dcd0044b59e1750fef9b48d34a60c1eefbfb3c23eb99e2623da1ad25e2a642",
+          "/usr/local/lib/python3.13/lib-dynload/_pickle.cpython-313-x86_64-linux-gnu.so": "9d1284d740dbbce7dd3f046d5f9530f4e38540707297ac7652abef7ae8356d6d",
+          "/usr/local/lib/python3.13/lib-dynload/_posixsubprocess.cpython-313-x86_64-linux-gnu.so": "8e33f09760536a61cfc8bf08b8e3eaa78dd62a17f3e94470db46276d734048c2",
+          "/usr/local/lib/python3.13/lib-dynload/_queue.cpython-313-x86_64-linux-gnu.so": "5abf8573d579ab660a38148bb09977697b625a540e7b9ec15ad19b3f5d95df2e",
+          "/usr/local/lib/python3.13/lib-dynload/_random.cpython-313-x86_64-linux-gnu.so": "963e47e8779d6aa7409e3598481fb0816a30d9256e705c9599a18ffadc12a33c",
+          "/usr/local/lib/python3.13/lib-dynload/_socket.cpython-313-x86_64-linux-gnu.so": "c9aafd312669027eeeaff88acd368bfc3344654e50e046a9c03b1f05677ac5e8",
+          "/usr/local/lib/python3.13/lib-dynload/_sqlite3.cpython-313-x86_64-linux-gnu.so": "0f829be0cf0467b6c3472e804b4c8de575f150e30f6a4f6c3b56acbe8f819f9f",
+          "/usr/local/lib/python3.13/lib-dynload/_ssl.cpython-313-x86_64-linux-gnu.so": "0c8ea9147faaaf94f655a72c300e80b8d1550c05e4c84bf2eb886d68167bb5b4",
+          "/usr/local/lib/python3.13/lib-dynload/_struct.cpython-313-x86_64-linux-gnu.so": "2d85c560604a46bbf435c30a242fc79194625b6859fe8e9e5f6647a33c2a6451",
+          "/usr/local/lib/python3.13/lib-dynload/_uuid.cpython-313-x86_64-linux-gnu.so": "18ac34dfe02a0f64e7a1176d75c5b3643d5adbf0b8f9ee859c9a01ae6772a711",
+          "/usr/local/lib/python3.13/lib-dynload/_zoneinfo.cpython-313-x86_64-linux-gnu.so": "2bff702947e7b43067ef81e2aa1ba17c9c258e4498c628fa84e8fc0df1c58bdb",
+          "/usr/local/lib/python3.13/lib-dynload/array.cpython-313-x86_64-linux-gnu.so": "9dfbe26dc0e51f6b100a043ea69d488561fec128c8e107dac4e36226278039f2",
+          "/usr/local/lib/python3.13/lib-dynload/binascii.cpython-313-x86_64-linux-gnu.so": "13af2615f9f25a6d0324960145b167d3075e32f390b265a8111bbd90a72959fd",
+          "/usr/local/lib/python3.13/lib-dynload/fcntl.cpython-313-x86_64-linux-gnu.so": "36940b4cc75d160e8802d41f9759c6684e06c471824818f9585a85fb8cb5bcdb",
+          "/usr/local/lib/python3.13/lib-dynload/grp.cpython-313-x86_64-linux-gnu.so": "a7400ea11a0e8dc9c890b8df6c002d8d3b1d2df702334c60b52146721b4eeef9",
+          "/usr/local/lib/python3.13/lib-dynload/math.cpython-313-x86_64-linux-gnu.so": "a9261244e8188feb41facc0ea1563baad47528a4df47cc47726f268ab5fd1b88",
+          "/usr/local/lib/python3.13/lib-dynload/select.cpython-313-x86_64-linux-gnu.so": "2c7a52f03a4770877a2d502493a5d6e239c0c7e83be3d07d14060f057577a2b4",
+          "/usr/local/lib/python3.13/lib-dynload/zlib.cpython-313-x86_64-linux-gnu.so": "8a274faecddfd55ad360d2c238e8a92aebcc0b07629681b4c08bfab73ec20102"
+        },
+        "runtime_libraries_preserved": true,
+        "exact_owner_source_files": 24
+      },
+      "worker_loop_started": false,
+      "queue_resume_issued": false,
+      "working_runtime_switched": false,
+      "inference_requested": false
+    }
+  },
+  "exact_artifact_native_sql": {
+    "status": "PASS",
+    "candidate_image": "sha256:37bc52cc3d60b8506e8bba1e31ef3564104b53187afe5e5eb93e91e4629bc799",
+    "signed_worker_subject": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+    "postgres_image": "postgres@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "physical_nodes": 1,
+    "production_dependencies_adopted": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "domain_resume_issued": false,
+    "runtime": {
+      "psycopg": "3.3.9",
+      "libpq": 180006,
+      "bundled_openssl": {
+        "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libcrypto-5e36fb0e.so.3": "OpenSSL 3.5.9 29 Sep 2026"
+      },
+      "tls": {
+        "enabled": true,
+        "version": "TLSv1.3",
+        "client_certificate_authenticated": true
+      },
+      "negative_tls_rejected": [
+        "missing_client_identity",
+        "wrong_hostname",
+        "wrong_server_ca"
+      ],
+      "alembic_head_applied": true,
+      "pytest_exit_code": 0,
+      "worker_loop_started": false,
+      "inference_requested": false
+    },
+    "totals": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "disposable_resources_removed": true
+  },
+  "exact_artifact_native_svid": {
+    "schema_version": 1,
+    "status": "PASS",
+    "started_at": "2026-11-14T13:44:38.628858+00:00",
+    "platform": "linux/arm64",
+    "physical_nodes": 1,
+    "native_spire": true,
+    "environment": "test",
+    "delivery": "spire-file-v1",
+    "inference_requested": false,
+    "working_runtime_switched": false,
+    "queue_resume_issued": false,
+    "runtime_image": "sha256:bd666bf7c00c701efa886e23f72cdd387f690b12d330c7d6a3ee69558cdba69a",
+    "installer_image": "sha256:05735bbd4adb10bfd24b12e14073f697352dfd50658c5c89b93fd52f391b7f50",
+    "results": [
+      {
+        "owner": "translator-service",
+        "provider_image": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:9d1929bbf30c510f902b3ff2a80a905025ffe42ec915102d316385c02a9bcd9a",
+        "provider_source": "846381021f53421d6046d8622c2b12e61277ffd7",
+        "client_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+        "client_signed_release": true,
+        "owner_status": {
+          "state": "READY",
+          "http_status": 200
+        },
+        "native_svid_environment": "test",
+        "delivery": "spire-file-v1",
+        "native_registration_and_export": true,
+        "separate_agents_and_networks": true,
+        "provider_worker_shared_volume": false,
+        "anonymous_rejected": true,
+        "same_ca_foreign_identity_rejected": true,
+        "native_renewal_pass": true,
+        "before_serial": "154420764319904280709973279383846648935",
+        "after_serial": "340241469230809956075758289520458431696",
+        "delivery_withdrawal_rejected": true,
+        "delivery_recovery_pass": true,
+        "provider_container_preserved": true,
+        "inference_requested": false,
+        "queue_resume_issued": false,
+        "permanent_production_identity_admitted": false,
+        "physical_multihost_proven": false,
+        "status": "PASS"
+      }
+    ],
+    "test_containers_removed": true,
+    "test_owned_volumes_preserved": true
+  },
+  "scoped_security_admission": {
+    "schema_version": 1,
+    "status": "SCOPED_ARTIFACT_SECURITY_PASS",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+    "source_commit": "20b924ecc21cb109e6fc1ffbf82171b0486254b4",
+    "profile": "translator-network-worker-postgresql-mtls-no-gss-v1",
+    "scope": {
+      "command": [
+        "python",
+        "-m",
+        "translator_service.runtime",
+        "worker"
+      ],
+      "environment": "production",
+      "provider_transport": "mtls",
+      "database_transport": "verify-full TLS with client identity and password/certificate auth; no GSS/Kerberos",
+      "runtime": "UID 10001, read-only root, cap_drop ALL, no-new-privileges",
+      "other_commands_roles_custom_configuration_admitted": false,
+      "operator_package_installation_admitted": false,
+      "network_profile_source": {
+        "translator-service/compose.compute-worker.mtls.yml": "ddaf932617f899cc0ab8a7822f7d28319de2018a14d22b590a370e448ed1e8da"
+      }
+    },
+    "platforms": {
+      "arm64": {
+        "status": "SCOPED_SECURITY_PASS",
+        "raw_severity_counts": {
+          "LOW": 93,
+          "HIGH": 40,
+          "MEDIUM": 120,
+          "UNKNOWN": 5,
+          "CRITICAL": 2
+        },
+        "unresolved_high_critical_package_findings": 0,
+        "findings": [
+          {
+            "id": "CVE-2026-53613",
+            "package": "bsdutils",
+            "installed_version": "1:2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "bsdutils",
+            "installed_version": "1:2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "bsdutils",
+            "installed_version": "1:2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-91094",
+            "package": "dpkg",
+            "installed_version": "1.21.23",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The issue requires dpkg-source quilt extraction; dpkg-source is absent and the read-only worker neither installs packages nor unpacks source packages.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-91094"
+          },
+          {
+            "id": "CVE-2026-41992",
+            "package": "gzip",
+            "installed_version": "1.12-1",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The affected GNU gzip multi-file LZW/LZH command is not invoked. The worker has no application child-process command interface; HTTP compression uses Python codecs, not GNU gzip LZH state.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-41992"
+          },
+          {
+            "id": "CVE-2026-54369",
+            "package": "libacl1",
+            "installed_version": "2.3.1-3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "No loaded libacl or pathname ACL API exists in the admitted worker path; the process is unprivileged with zero capabilities and cannot perform the required privileged ACL rewrite.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-54369"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libblkid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libblkid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libblkid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-100290",
+            "package": "libc-bin",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "regcomp/regexec references remain in librdkafka and libkrb5 and are not claimed absent. The admitted command is runtime worker: Consumer/Producer creation is limited to separate consumer/outbox roles. The admitted database uses certificate-validated TLS and certificate/password authentication, with compiled GSS encryption disabled and no GSS/Kerberos credentials, configuration or authentication profile. GSS-enabled database use, Kafka roles and arbitrary commands require new admission.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-100290"
+          },
+          {
+            "id": "CVE-2026-115819",
+            "package": "libc-bin",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "Affected wide scanf functions have no undefined references in any of the 75 loaded worker/database-driver ELF files; the application uses Python JSON/text parsing and exposes no arbitrary native-call interface.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-115819"
+          },
+          {
+            "id": "CVE-2026-100290",
+            "package": "libc6",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "regcomp/regexec references remain in librdkafka and libkrb5 and are not claimed absent. The admitted command is runtime worker: Consumer/Producer creation is limited to separate consumer/outbox roles. The admitted database uses certificate-validated TLS and certificate/password authentication, with compiled GSS encryption disabled and no GSS/Kerberos credentials, configuration or authentication profile. GSS-enabled database use, Kafka roles and arbitrary commands require new admission.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-100290"
+          },
+          {
+            "id": "CVE-2026-115819",
+            "package": "libc6",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "Affected wide scanf functions have no undefined references in any of the 75 loaded worker/database-driver ELF files; the application uses Python JSON/text parsing and exposes no arbitrary native-call interface.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-115819"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libmount1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libmount1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libmount1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "libncursesw6",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libsmartcols1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libsmartcols1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libsmartcols1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2025-7458",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "CRITICAL",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-7458"
+          },
+          {
+            "id": "CVE-2026-11822",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-11822"
+          },
+          {
+            "id": "CVE-2026-11824",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-11824"
+          },
+          {
+            "id": "CVE-2026-119373",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-119373"
+          },
+          {
+            "id": "CVE-2026-119374",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-119374"
+          },
+          {
+            "id": "CVE-2026-119379",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-119379"
+          },
+          {
+            "id": "CVE-2026-16742",
+            "package": "libsystemd0",
+            "installed_version": "252.39-1~deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The affected systemd-homed executable is absent and no systemd/homed login or system group management runs in the worker container.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-16742"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "libtinfo6",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2026-16742",
+            "package": "libudev1",
+            "installed_version": "252.39-1~deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The affected systemd-homed executable is absent and no systemd/homed login or system group management runs in the worker container.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-16742"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libuuid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libuuid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libuuid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "mount",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "mount",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "mount",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "ncurses-base",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "ncurses-bin",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2026-9538",
+            "package": "perl-base",
+            "installed_version": "5.36.0-7+deb12u4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "Archive::Tar is absent from the checked standard Perl module paths, and no Perl/archive command or tar processing is part of the fixed Python worker role.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-9538"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "util-linux",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "util-linux",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "util-linux",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "util-linux-extra",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "util-linux-extra",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "util-linux-extra",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2023-45853",
+            "package": "zlib1g",
+            "installed_version": "1:1.2.13.dfsg-1",
+            "severity": "CRITICAL",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The vulnerable minizip library and zipOpenNewFileInZip4[_64]/unzOpen[64] functions are absent; the loaded zlib is not minizip.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2023-45853"
+          },
+          {
+            "id": "CVE-2026-76844",
+            "package": "zlib1g",
+            "installed_version": "1:1.2.13.dfsg-1",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The upstream fixing change concerns the C gz* file-writing path. No loaded worker/DB native ELF imports gzopen/gzdopen/gzwrite/gzprintf/gzvprintf/gzputs/gzputc/gzclearerr. The admitted role does not write gzip streams through C gz* APIs, invoke gzip CLI or accept arbitrary native calls; Python zlib buffered codecs are a different API.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-76844"
+          },
+          {
+            "id": "CVE-2026-85091",
+            "package": "zlib1g",
+            "installed_version": "1:1.2.13.dfsg-1",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The upstream fixing change concerns the C gz* file-writing path. No loaded worker/DB native ELF imports gzopen/gzdopen/gzwrite/gzprintf/gzvprintf/gzputs/gzputc/gzclearerr. The admitted role does not write gzip streams through C gz* APIs, invoke gzip CLI or accept arbitrary native calls; Python zlib buffered codecs are a different API.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+          }
+        ],
+        "raw_report_sha256": "6f839549c55784328530e0c397fdf85f3f9e42f8720ec3995d0e9789c31b2d21"
+      },
+      "amd64": {
+        "status": "SCOPED_SECURITY_PASS",
+        "raw_severity_counts": {
+          "LOW": 93,
+          "HIGH": 40,
+          "MEDIUM": 120,
+          "UNKNOWN": 5,
+          "CRITICAL": 2
+        },
+        "unresolved_high_critical_package_findings": 0,
+        "findings": [
+          {
+            "id": "CVE-2026-53613",
+            "package": "bsdutils",
+            "installed_version": "1:2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "bsdutils",
+            "installed_version": "1:2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "bsdutils",
+            "installed_version": "1:2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-91094",
+            "package": "dpkg",
+            "installed_version": "1.21.23",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The issue requires dpkg-source quilt extraction; dpkg-source is absent and the read-only worker neither installs packages nor unpacks source packages.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-91094"
+          },
+          {
+            "id": "CVE-2026-41992",
+            "package": "gzip",
+            "installed_version": "1.12-1",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The affected GNU gzip multi-file LZW/LZH command is not invoked. The worker has no application child-process command interface; HTTP compression uses Python codecs, not GNU gzip LZH state.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-41992"
+          },
+          {
+            "id": "CVE-2026-54369",
+            "package": "libacl1",
+            "installed_version": "2.3.1-3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "No loaded libacl or pathname ACL API exists in the admitted worker path; the process is unprivileged with zero capabilities and cannot perform the required privileged ACL rewrite.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-54369"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libblkid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libblkid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libblkid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-100290",
+            "package": "libc-bin",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "regcomp/regexec references remain in librdkafka and libkrb5 and are not claimed absent. The admitted command is runtime worker: Consumer/Producer creation is limited to separate consumer/outbox roles. The admitted database uses certificate-validated TLS and certificate/password authentication, with compiled GSS encryption disabled and no GSS/Kerberos credentials, configuration or authentication profile. GSS-enabled database use, Kafka roles and arbitrary commands require new admission.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-100290"
+          },
+          {
+            "id": "CVE-2026-115819",
+            "package": "libc-bin",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "Affected wide scanf functions have no undefined references in any of the 75 loaded worker/database-driver ELF files; the application uses Python JSON/text parsing and exposes no arbitrary native-call interface.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-115819"
+          },
+          {
+            "id": "CVE-2026-100290",
+            "package": "libc6",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "regcomp/regexec references remain in librdkafka and libkrb5 and are not claimed absent. The admitted command is runtime worker: Consumer/Producer creation is limited to separate consumer/outbox roles. The admitted database uses certificate-validated TLS and certificate/password authentication, with compiled GSS encryption disabled and no GSS/Kerberos credentials, configuration or authentication profile. GSS-enabled database use, Kafka roles and arbitrary commands require new admission.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-100290"
+          },
+          {
+            "id": "CVE-2026-115819",
+            "package": "libc6",
+            "installed_version": "2.36-9+deb12u14",
+            "severity": "UNKNOWN",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "Affected wide scanf functions have no undefined references in any of the 75 loaded worker/database-driver ELF files; the application uses Python JSON/text parsing and exposes no arbitrary native-call interface.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-115819"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libmount1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libmount1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libmount1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "libncursesw6",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libsmartcols1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libsmartcols1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libsmartcols1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2025-7458",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "CRITICAL",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-7458"
+          },
+          {
+            "id": "CVE-2026-11822",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-11822"
+          },
+          {
+            "id": "CVE-2026-11824",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-11824"
+          },
+          {
+            "id": "CVE-2026-119373",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-119373"
+          },
+          {
+            "id": "CVE-2026-119374",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-119374"
+          },
+          {
+            "id": "CVE-2026-119379",
+            "package": "libsqlite3-0",
+            "installed_version": "3.40.1-2+deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The admitted worker uses its own PostgreSQL Repository and does not load SQLite on runtime/database-driver import. The forced diagnostic binds SQLite 3.53.4 from /opt/aelev/sqlite; session symbols are absent. FTS5 remains compiled but no FTS5/database-file import is in this worker execution profile. Other runtime roles and arbitrary SQL/SQLite commands are excluded.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-119379"
+          },
+          {
+            "id": "CVE-2026-16742",
+            "package": "libsystemd0",
+            "installed_version": "252.39-1~deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The affected systemd-homed executable is absent and no systemd/homed login or system group management runs in the worker container.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-16742"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "libtinfo6",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2026-16742",
+            "package": "libudev1",
+            "installed_version": "252.39-1~deb12u2",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The affected systemd-homed executable is absent and no systemd/homed login or system group management runs in the worker container.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-16742"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "libuuid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "libuuid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "libuuid1",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "mount",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "mount",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "mount",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "ncurses-base",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2025-69720",
+            "package": "ncurses-bin",
+            "installed_version": "6.4-4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The defect is in the infocmp command; the worker neither runs that program nor loads ncurses/tinfo for terminal processing.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2025-69720"
+          },
+          {
+            "id": "CVE-2026-9538",
+            "package": "perl-base",
+            "installed_version": "5.36.0-7+deb12u4",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "Archive::Tar is absent from the checked standard Perl module paths, and no Perl/archive command or tar processing is part of the fixed Python worker role.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-9538"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "util-linux",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "util-linux",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "util-linux",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2026-53613",
+            "package": "util-linux-extra",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53613"
+          },
+          {
+            "id": "CVE-2026-53615",
+            "package": "util-linux-extra",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The worker processes translation jobs through PostgreSQL and HTTPS, not disk partition metadata; libblkid is not a loaded runtime library and no block-device probe or arbitrary command is admitted.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-53615"
+          },
+          {
+            "id": "CVE-2026-78410",
+            "package": "util-linux-extra",
+            "installed_version": "2.38.1-5+deb12u3",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "protected_by_mitigating_control",
+            "reason": "UID 10001, zero effective capabilities, no-new-privileges, read-only root and no worker subprocess/mount interface prevent the required privileged mount/fstab path.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-78410"
+          },
+          {
+            "id": "CVE-2023-45853",
+            "package": "zlib1g",
+            "installed_version": "1:1.2.13.dfsg-1",
+            "severity": "CRITICAL",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_present",
+            "reason": "The vulnerable minizip library and zipOpenNewFileInZip4[_64]/unzOpen[64] functions are absent; the loaded zlib is not minizip.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2023-45853"
+          },
+          {
+            "id": "CVE-2026-76844",
+            "package": "zlib1g",
+            "installed_version": "1:1.2.13.dfsg-1",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The upstream fixing change concerns the C gz* file-writing path. No loaded worker/DB native ELF imports gzopen/gzdopen/gzwrite/gzprintf/gzvprintf/gzputs/gzputc/gzclearerr. The admitted role does not write gzip streams through C gz* APIs, invoke gzip CLI or accept arbitrary native calls; Python zlib buffered codecs are a different API.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-76844"
+          },
+          {
+            "id": "CVE-2026-85091",
+            "package": "zlib1g",
+            "installed_version": "1:1.2.13.dfsg-1",
+            "severity": "HIGH",
+            "status": "NOT_AFFECTED_IN_PROFILE",
+            "justification": "vulnerable_code_not_in_execute_path",
+            "reason": "The upstream fixing change concerns the C gz* file-writing path. No loaded worker/DB native ELF imports gzopen/gzdopen/gzwrite/gzprintf/gzvprintf/gzputs/gzputc/gzclearerr. The admitted role does not write gzip streams through C gz* APIs, invoke gzip CLI or accept arbitrary native calls; Python zlib buffered codecs are a different API.",
+            "primary_source": "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+          }
+        ],
+        "raw_report_sha256": "8ca5d2d25b5167ad4045fe5c1fcba73b297b1e3b3de41b6f97ea21377055c9d2"
+      }
+    },
+    "raw_findings_suppressed": false,
+    "criteria": "Same explicit high/critical execution-profile review used for prior opaque Bookworm providers; scanner raw counts are preserved. This does not change tools/image_evidence.py or bypass its generic CI threshold. Medium/low reports remain visible; site, quality and rollout admission are separate.",
+    "native_tests": {
+      "arm64": {
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "amd64": {
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "native_arm64_sql_tests": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "evidence_sha256": {
+      "verification.json": "c48aee938723a4d098ae017f72f7b5b9d993bf0ef60051ca8bbf6f32624145c1",
+      "security.json": "86abaf9406cf13991ad84b2358201a9955468a8d0bdd7bee2a6e322b8fa3b26b",
+      "profile-preconditions.json": "89f7a9932dc5f60a09c8426008dc970f6586871e8bcf69865a1791546f545e9e",
+      "elf-reference-probe-with-db-driver.json": "9dab0c02c85574e5dd7c4bc993ab06fe4c1986568b34d3e1382f263dedefca52",
+      "gssencmode-default.json": "0bcf871dd59506942dc0f1147f88f888492022eec806ac5d9843afebc49128ee",
+      "libpq-compiled-defaults-both-architectures.json": "33f039420a7c4c851e9a57ee7ceea6bb01a57f8543dde7067e511677f377b483",
+      "native-arm64-checks-2/proof.json": "11c987703f0baf0dbbdbf3f7d2997984ae734d07d2cd79528f474d8b5daa7e01",
+      "native-amd64-checks/worker-native-proof.json": "51555839d35539671252528276ed76342334523dfc2c6a1531c7ebc555d545a5",
+      "sql-native-candidate-1/proof.json": "cacb60c2a16a4e754d36168007330c7bca5b7cfc6ec4760612ddb1f5e0b76478",
+      "sql-native-candidate-1/test.xml": "48342cddd7b667d41871ee7b654781db12673240398063c229c8dc2ca7565362"
+    },
+    "artifact_security_admitted": true,
+    "main_dependency_line_authorized": false,
+    "production_site_admitted": false,
+    "working_runtime_switched": false,
+    "queue_resume_issued": false,
+    "inference_requested": false
+  },
+  "raw_findings_suppressed": false,
+  "main_dependency_line_authorized": false,
+  "platform_production_admitted": false,
+  "test_harness_failures_preserved": [
+    {
+      "phase": "native first worker",
+      "cause": "pytest py.py shim not copied; no tests started"
+    },
+    {
+      "phase": "native first worker JUnit",
+      "cause": "23 passed but JUnit in tmpfs not collected after exit; run not counted as qualified"
+    },
+    {
+      "phase": "exact candidate local harness",
+      "cause": "relative test path after changing harness working directory; zero tests, exit 4; corrected to absolute test path"
+    }
+  ],
+  "compiled_libpq_defaults": {
+    "status": "COMPILED_DEFAULTS_MATCH_NATIVE_PAYLOAD_PASS",
+    "platforms": [
+      {
+        "architecture": "arm64",
+        "wheel": "psycopg_binary-3.3.9-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+        "loaded_native_library": "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libpq-53e4e5f8.so.5.18",
+        "sha256": "005cf0155d5c6712950445d67c6773c322481f4a35d825e7e802b7118f419360",
+        "defaults": [
+          {
+            "keyword": "gssencmode",
+            "environment": "PGGSSENCMODE",
+            "compiled": "disable"
+          }
+        ],
+        "execution_or_emulation_used": false
+      },
+      {
+        "architecture": "amd64",
+        "wheel": "psycopg_binary-3.3.9-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+        "loaded_native_library": "/opt/aelev/.venv/lib/python3.13/site-packages/psycopg_binary.libs/libpq-e9b5c9ac.so.5.18",
+        "sha256": "ee8ad7e6497816c693acc1a9691528e3600db2dc0f5f97634653ec5c025ac565",
+        "defaults": [
+          {
+            "keyword": "gssencmode",
+            "environment": "PGGSSENCMODE",
+            "compiled": "disable"
+          }
+        ],
+        "execution_or_emulation_used": false
+      }
+    ],
+    "arm64_native_api_default_also_verified": "disable",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd"
   }
 }
