@@ -13,7 +13,7 @@
 
 ## Запуск
 
-Отдельный [кандидат Psycopg 3.3.9](../docs/audit/translator-psycopg-candidate-20261114.json) содержит точный signed worker digest, обе архитектуры, native SQL/TLS/SVID и scoped security evidence. Его проверенный профиль — команда `runtime worker`, HTTPS/mTLS provider, PostgreSQL `verify-full` с client identity/password/certificate auth, без GSS/Kerberos и произвольных process/native commands. Это не допуск других ролей, конфигураций или production-площадки; принятие новой dependency line в main ожидает отдельного согласования.
+Проверенная линия Psycopg 3.3.9 [принята в main](../docs/audit/translator-psycopg-main-20261114.json) после [квалификации кандидата](../docs/audit/translator-psycopg-candidate-20261114.json). Проверенный профиль — команда `runtime worker`, HTTPS/mTLS provider, PostgreSQL `verify-full` с client identity/password/certificate auth, без GSS/Kerberos и произвольных process/native commands. Новый main-ref artifact требует отдельной exact artifact verification до обновления runtime pins. Другие роли, конфигурации и production-площадка этим не допускаются; рабочее переключение и RESUME не выполняются.
 
 Для независимо размещаемых worker/provider добавлен [сетевой mTLS-профиль](compute-runtime/README.md#независимое-сетевое-размещение) по [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md). Описанный ниже совместный UDS recipe сохраняется для существующих установок; его успех не доказывает независимый сетевой запуск.
 

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "REVIEWED_DEPENDENCY_LINE_ADOPTED_MAIN_ARTIFACT_PENDING",
+  "owner_confirmation": {
+    "text": "продрлжай идти к цели",
+    "context": "Continuation after the completed candidate report and explicit pending Psycopg main-adoption step; action and its boundaries announced before adoption.",
+    "dependency_line_authorized": true,
+    "working_rollout_authorized": false,
+    "queue_resume_authorized": false
+  },
+  "candidate": {
+    "source_commit": "20b924ecc21cb109e6fc1ffbf82171b0486254b4",
+    "qualification_commit": "42acb38e1fec44e6863eb788aa36395ae9a4f2ec",
+    "report": "translator-psycopg-candidate-20261114.json",
+    "image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:040b65be73987ad703165a670a3548d31fac63d6bee956eff3696483311fd4fd",
+    "source_ci": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43597611365",
+    "qualification_ci": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43602789062",
+    "source_ci_successful_jobs": 26,
+    "qualification_ci_successful_jobs": 26,
+    "scoped_artifact_security": "PASS",
+    "raw_findings_suppressed": false
+  },
+  "dependency_change": {
+    "psycopg": ["3.2.9", "3.3.9"],
+    "psycopg-binary": ["3.2.9", "3.3.9"],
+    "other_package_records_unchanged": 55,
+    "python": "3.13.7",
+    "operating_system_family": "Debian Bookworm",
+    "postgresql_server_changed": false,
+    "application_source_changed": false
+  },
+  "main_ref_image_admitted": false,
+  "runtime_pins_updated": false,
+  "working_runtime_switched": false,
+  "inference_requested": false,
+  "queue_resume_issued": false,
+  "production_site_admitted": false,
+  "remaining_gates": [
+    "Publish signed main-ref multiarch worker and verify exact artifact against qualified candidate",
+    "Update owner runtime pins after artifact admission",
+    "Canonical queue/quality integration, controlled rollout and full product acceptance",
+    "Physical distributed and production site admission"
+  ]
+}
