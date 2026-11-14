@@ -107,5 +107,8 @@
     "total_jobs": 26,
     "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43609689145",
     "final_durability_source_ci_verified": false
-  }
+  },
+  "historical_qualification_source_commit": "3cdc11ff31661a599629958a7e9e66810d8be056",
+  "current_transport_qualification": "node-artifact-20261114.json",
+  "historical_source_hashes_are_not_current_checkout_claims": true
 }

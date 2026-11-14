@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "UNIT_PASS_FINAL_EXACT_SOURCE_SSH_PENDING",
+  "status": "EXACT_SOURCE_NATIVE_SSH_DELIVERY_PASS_FULL_WORKFLOW_OPEN",
   "source_base": "3cdc11ff31661a599629958a7e9e66810d8be056",
   "source_sha256": {
     "tools/node_artifact.py": "a54190a68c07c3ad6584f2b0d26f9511ceac0e083378f64c5372ce450a36f21b",
@@ -94,7 +94,7 @@
     "owned_test_container_removed": true
   },
   "prior_native_proof_covers_final_receiver_hash": false,
-  "final_exact_candidate_ssh_pending": true,
+  "final_exact_candidate_ssh_pending": false,
   "failure_history_preserved": [
     {
       "attempt": 1,
@@ -108,9 +108,98 @@
   "inference_requested": false,
   "queue_resume_issued": false,
   "remaining_gates": [
-    "Exact final source archive delivery and execution over real SSH",
-    "Final source audit and main adoption",
-    "Inventory bindings and actual per-role setup/readiness",
+    "Full inventory bindings, node identity preparation and actual per-role setup/readiness",
+    "Full product release and controlled rollout",
     "Full local/distributed product and different physical-node acceptance"
-  ]
+  ],
+  "final_native_source_delivery": {
+    "status": "PASS",
+    "physical_nodes": 1,
+    "platform": "linux/arm64",
+    "source_commit": "6eb047fff4198e60acd804eda70008a5d41f7864",
+    "source_archive_sha256": "3a48ad574dc307b2c7d8761fb8a007e42721e7288c2c102ae0aa191dc8289b4d",
+    "source_file_count": 1357,
+    "closed_input_scope": "spire-layout-proof",
+    "closed_input_files": 33,
+    "public_procedure": "spire/bootstrap.py validate",
+    "owner_readiness_verified": false,
+    "full_inventory_workflow_proven": false,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "queue_resume_issued": false,
+    "receiver_source_sha256": "a54190a68c07c3ad6584f2b0d26f9511ceac0e083378f64c5372ce450a36f21b",
+    "transport_source_sha256": "a3cbc6fb3c12921631b253b0a11fac3c442d6435ff09a9b8e94bae52709882a9",
+    "materialized_source": {
+      "schema_version": 1,
+      "status": "ARTIFACT_MATERIALIZED",
+      "kind": "source",
+      "scope": "infrastructure-source",
+      "request_sha256": "b180c5aa8e39ac46beb4a349bb1cce332ec849f6f3fa1a5f2288462488b9b5bb",
+      "manifest_sha256": "8f7f5f0d45616e2e3ed0d8035548994c6cc303c0e16a8559677fbd0be0215f9c",
+      "archive_sha256": "3a48ad574dc307b2c7d8761fb8a007e42721e7288c2c102ae0aa191dc8289b4d",
+      "files": 1357,
+      "path": "/var/lib/node-operator/delivered/infrastructure-source-8f7f5f0d45616e2e3ed0d8035548994c6cc303c0e16a8559677fbd0be0215f9c/payload",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false
+    },
+    "materialized_inputs": {
+      "schema_version": 1,
+      "status": "ARTIFACT_MATERIALIZED",
+      "kind": "owner-input",
+      "scope": "spire-layout-proof",
+      "request_sha256": "2b31cb1bce8e524720182d669b99ab8ba4271f8f0221b6f54e59957eef3aecd3",
+      "manifest_sha256": "d9714d9959f3a0fcf46c3deadcf5d60189c5dde856185db3cc70a3d2c407ae6d",
+      "archive_sha256": "d8e5b2e8ba9b0ae40eded7b25e6cbc9799325974005947ea6bd99bdf71ee342a",
+      "files": 33,
+      "path": "/var/lib/node-operator/delivered/spire-layout-proof-d9714d9959f3a0fcf46c3deadcf5d60189c5dde856185db3cc70a3d2c407ae6d/payload",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false
+    },
+    "executed_from_materialized_source": {
+      "schema_version": 1,
+      "status": "COMMAND_SUCCEEDED",
+      "operation": "c6d82947-981f-4a63-adbe-47f5125900e3",
+      "request_sha256": "cf41064ff0f0262668f876e12a84e54c7fd7aed4bae48a37dc43f46f92f0ea9a",
+      "owner_readiness_verified": false,
+      "physical_distribution_verified": false,
+      "queue_resume_issued": false,
+      "exit_code": 0,
+      "owner_output_retained_privately": true,
+      "stdout_sha256": "9d723c005761ef6b0c86e5dde13fb55703a7533e6e7dd8580404906a9578fd83",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "all_source_files_bound_to_execution": 1357,
+    "repeat_source_inputs_and_execution_preserved": true,
+    "wrong_host_key_rejected": true,
+    "wire_corruption_rejected": {
+      "status": "BLOCKED",
+      "code": "ARTIFACT_ARCHIVE_MISMATCH",
+      "request_sha256": "2f1f1f7d2cb71dd7bdfa99baeacb062b381f52cb47a2a68e0d17ff93ec99f4fd"
+    },
+    "operator_drift_rejected_without_overwrite": {
+      "status": "BLOCKED",
+      "code": "ARTIFACT_TREE_DRIFT",
+      "request_sha256": "b180c5aa8e39ac46beb4a349bb1cce332ec849f6f3fa1a5f2288462488b9b5bb"
+    },
+    "source_and_inputs_are_separate_generations": true,
+    "private_inputs_are_synthetic_layout_fixtures": true,
+    "opaque_provider_or_model_started": false,
+    "owned_test_container_removed": true
+  },
+  "exact_candidate_source_commit": "6eb047fff4198e60acd804eda70008a5d41f7864",
+  "source_archive_is_published_release": false,
+  "scope": "Transfer integrity and public CLI execution; synthetic layout inputs, one physical node, no runtime PKI or whole product admission.",
+  "evidence_sha256": {
+    "ssh-4/proof.json": "6996132ed32d6b589eaafffc3f96db8f7ac47c1f7ad7d86edbd324ea1cc1dd3a",
+    "ssh-4/operator-script.py": "8d89ebaf742d53576ba5c5c4f12b335a7fab88a04c9fd68605b693412a73713f"
+  },
+  "source_ci": {
+    "source_commit": "6eb047fff4198e60acd804eda70008a5d41f7864",
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43634830716",
+    "conclusion": "success",
+    "successful_jobs": 26,
+    "total_jobs": 26
+  }
 }
