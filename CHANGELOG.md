@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: native AMD64 run 43653529360 source b17f01c остановился до SQL restore: после зависания Patroni не подтвердились все SQL-роли с единственным healthy primary. Причина ещё неизвестна; в safe proof добавлены process/health/code counts и whitelist summaries fencing phases/budgets. Следующий workflow ограничен тремя независимыми диагностическими trials. Raw logs, credentials и канонические payloads не публикуются; timeouts/admission сохраняются.
+
+- 2026-11-14: подготовлен ручной multiarch release workflow PostgreSQL fencing с exact-source audit/HA precondition, SBOM/provenance и подписью digest по принятой инфраструктурной схеме. Шесть offline regression cases исполняют настоящий preflight с успешным, чужим, отсутствующим, более новым failed/pending и повторным результатом. Push/tag не публикует образ автоматически; stack approval, запуск выпуска и допуск registry image сохраняются отдельными действиями.
+
 - 2026-11-14: SSH HA acceptance дополнен нативным `pg_basebackup`, проверкой SHA256 manifest и восстановлением отдельного SQL-процесса на loopback. Сравниваются все 1000 строк и их SHA после failover/crash/replay; независимое backup-хранилище и PITR остаются отдельными требованиями. Рабочие данные и volumes в сценарий не подключаются.
 
 - 2026-11-14: проверка владельческой конфигурации отдельно закрепляет ровно три initial-PKI inputs peer client IPs и запрещает их передачу в runtime Compose; остальные поля по-прежнему обязаны использоваться recipe. Первичный full-suite failure сохранён до повторной проверки.

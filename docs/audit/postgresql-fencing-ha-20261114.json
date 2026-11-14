@@ -1,7 +1,18 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "NATIVE_ARM_AND_AMD64_HA_PASS_STACK_APPROVAL_PENDING",
+  "status": "LATER_AMD64_HA_FAILURE_DIAGNOSIS_PENDING",
+  "diagnostic_extension_checks": {
+    "postgresql_tests": 262,
+    "failures": 0,
+    "skips": 0,
+    "redaction_regressions": 6,
+    "tools_tests": 185,
+    "release_gate_regressions": 6,
+    "ruff_black_strict_mypy": "PASS",
+    "planned_native_amd64_diagnostic_trials": 3,
+    "runtime_guards_or_timeouts_changed": false
+  },
   "source_base": "cae11fde90b6f9fa951d796864e8711b09464cb4",
   "public_entrypoint": "postgresql/test/fencing-ssh-lifecycle.py",
   "source_checks": {
@@ -173,6 +184,7 @@
     }
   ],
   "open_gates": [
+    "establish cause of AMD64 run 43653529360 before claiming reliable HA; diagnostic evidence added without changing runtime or timeout",
     "native AMD64 physical SQL restore added after its completed HA/crash/replay proof",
     "explicit stack approval for OpenSSH addition and zlib 1.4",
     "signed immutable image publication",
@@ -250,5 +262,37 @@
     "real_ha_failover": true,
     "baseline_containers_preserved": true,
     "owned_resources_removed": true
+  },
+  "later_amd64_sql_restore_attempt": {
+    "source_commit": "b17f01c97632231020c98f26aea3d76f7948037e",
+    "workflow_run": 43653529360,
+    "artifact_id": 14137825509,
+    "artifact_sha256": "d465ea49510486151ac6ee2b06726434229e690b3b619e9034bca61ea4e02cb2",
+    "proof_sha256": "c68474986d03c0002e40f42fc5554b4c8184792a873ef6ce9be2e37e80c374b6",
+    "status": "FAIL",
+    "failure_type": "TimeoutError",
+    "failure_stage": "Patroni suspended while old SQL writer remains alive",
+    "root_cause": "NOT_ESTABLISHED",
+    "sql_restore_reached": false,
+    "baseline_containers_preserved": true,
+    "owned_resources_removed": true
+  },
+  "release_automation": {
+    "status": "PREPARED_NOT_RUN",
+    "workflow": ".github/workflows/postgresql-fencing-release.yml",
+    "trigger": "manual only",
+    "requires_exact_source_workflows": [
+      "audit",
+      "postgresql-fencing-ssh-native"
+    ],
+    "offline_gate_regressions": 6,
+    "publishes_native_cpu_manifest": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "sbom": true,
+    "provenance": "mode=max",
+    "signature": "Cosign exact digest",
+    "production_admission": false
   }
 }

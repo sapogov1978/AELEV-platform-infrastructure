@@ -18,6 +18,8 @@ Dockerfile содержит targets `fencing-node` и `fencing-ssh` на зак�
 
 ## Узловая операция
 
+Ручной workflow `release-postgresql-fencing-image` подготавливает GHCR image `aelev-platform-infrastructure-postgresql-fencing` из target `fencing-ssh` для AMD64/ARM64, SBOM, provenance и Cosign signature точного digest. Он не запускается от push/tag и требует завершённых успешных `audit` и `postgresql-fencing-ssh-native` той же исходной версии; более поздний failed/pending run не заменяется старым успешным. Публикация выполняется после согласования состава, а допуск exact registry image обеих CPU, его native повтор и переключение установки остаются отдельными шагами. Один такой образ может использоваться controller и одноразовым helper; `fencing-node` является его минимальной build-основой, а не заявлением об отдельно опубликованном артефакте.
+
 На каждом Linux-узле нужны Docker CLI `/usr/bin/docker`, Python 3.13 и административный SSH. Root-owned launcher устанавливается в `/opt/aelev/postgresql/fencing-node.py` со сверкой source SHA. Root-only `/etc/aelev-postgresql-fencing/node.json` имеет mode 0600; каталог secrets — 0700. Структура с placeholders:
 
 ```json
@@ -66,6 +68,8 @@ Secrets содержат только собственные `etcd-ca.crt`, `etc
 SSH host keys поступают через доверенный канал подготовки; TOFU и `ssh-keyscan` не используются как источник доверия. `/health` возвращает 503 до свежего подтверждения допущенных узлов, при их потере или остановке return loop. Положительный ответ подтверждает работоспособность executor transport; SQL primary, synchronous COMMIT, backup и site admission проверяются отдельно.
 
 ## Проверки и ограничения
+
+Поздний AMD64 run `43653529360` source `b17f01c` остановился до SQL restore: healthy кластер с единственным writer не подтвердился после Patroni fault. Его причина не установлена; прежний успешный HA run `43652728730` source `09892fb` хранится отдельно и не закрывает поздний отказ. Следующая диагностика выполняет три независимых ограниченных trials и добавляет в safe proof только process/health state, фиксированные reason-code counts и разрешённые фазы/бюджеты журналов. Raw logs, ключи, Docker configuration и canonical journal payloads в CI artifact не включаются; timeout и runtime guards сохраняются.
 
 После HA/crash/replay сценарий снимает нативный `pg_basebackup` по published primary с прежним `verify-full` mTLS, проверяет manifest через `pg_verifybackup` и запускает отдельный восстановленный SQL-процесс на непубликуемом `127.0.0.1:16432`. Требуются те же 1000 строк и SHA256, отсутствие recovery mode и сохранность прежнего primary/quorum. Это проверка механизма physical restore на синтетическом кластере; независимое backup-хранилище, расписание, WAL/PITR и полный аварийный запуск площадки ею не подтверждаются.
 

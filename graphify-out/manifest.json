@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794698517.6882517,
-    "seen": 1794698987.2749581,
-    "ast_hash": "b57ae813e73441510f9fe6d11b3cdb01",
+    "mtime": 1794699819.0473676,
+    "seen": 1794699866.308438,
+    "ast_hash": "fe5c681a03545cebaa7a76c23bce5846",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794698517.6887488,
-    "seen": 1794698987.2880719,
-    "ast_hash": "e9240f6b31405e1815dc67d051a6293f",
+    "mtime": 1794699614.8532186,
+    "seen": 1794699866.321965,
+    "ast_hash": "1e4a22286519fe468d2b5d1333f8793e",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -6078,9 +6078,9 @@
     "semantic_hash": ""
   },
   "postgresql/INDEX.md": {
-    "mtime": 1794697987.7634175,
-    "seen": 1794698402.151119,
-    "ast_hash": "b666d98fa3e60dd3b58461743da0313b",
+    "mtime": 1794699051.160707,
+    "seen": 1794699866.322004,
+    "ast_hash": "d9936dd762ed36668522854e75fea2b7",
     "semantic_hash": ""
   },
   "public-egress-gateway/INDEX.md": {
@@ -6750,9 +6750,9 @@
     "semantic_hash": ""
   },
   "postgresql/FENCING_SSH.md": {
-    "mtime": 1794698517.6895113,
-    "seen": 1794698987.288123,
-    "ast_hash": "48c46ab952fd53aa4b8dc45be700e22e",
+    "mtime": 1794699845.4748402,
+    "seen": 1794699866.322001,
+    "ast_hash": "e5f20fddf865209298d4d6cedf0fcf90",
     "semantic_hash": ""
   },
   "docs/audit/postgresql-fencing-ssh-20261114.json": {
@@ -6762,21 +6762,39 @@
     "semantic_hash": ""
   },
   ".github/workflows/postgresql-fencing-ssh.yml": {
-    "mtime": 1794697987.762634,
-    "seen": 1794698402.133745,
-    "ast_hash": "d4d93b492e6dfe5f0fb00ceaf85a4e33",
+    "mtime": 1794699819.046663,
+    "seen": 1794699866.285781,
+    "ast_hash": "10e53a2638dde5ca59f48f4ecac16846",
     "semantic_hash": ""
   },
   "docs/audit/postgresql-fencing-ha-20261114.json": {
-    "mtime": 1794698964.856019,
-    "seen": 1794698987.254355,
-    "ast_hash": "fb7074551d4095649fa0d5588162762b",
+    "mtime": 1794699845.4738512,
+    "seen": 1794699866.286307,
+    "ast_hash": "45a35069308c12fb19489e39839aec09",
     "semantic_hash": ""
   },
   "postgresql/test/fencing-ssh-lifecycle.py": {
-    "mtime": 1794698546.6397154,
-    "seen": 1794698987.264328,
-    "ast_hash": "0f6405e288e104226d75fdfa71887ff4",
+    "mtime": 1794699772.5616236,
+    "seen": 1794699866.296475,
+    "ast_hash": "e6550dc23b424212150b7f749f5252dd",
+    "semantic_hash": ""
+  },
+  ".github/workflows/postgresql-fencing-release.yml": {
+    "mtime": 1794699051.1596692,
+    "seen": 1794699866.2857769,
+    "ast_hash": "e27789457d635af5345d11c4ce0223ef",
+    "semantic_hash": ""
+  },
+  "postgresql/test/test_fencing_diagnostics.py": {
+    "mtime": 1794699638.8220599,
+    "seen": 1794699866.296723,
+    "ast_hash": "a0f0b7e6d8c99c3096a6ac0a66396e9c",
+    "semantic_hash": ""
+  },
+  "tools/test_fencing_release.py": {
+    "mtime": 1794699347.6377258,
+    "seen": 1794699866.304835,
+    "ast_hash": "6e92e457ed434ff74f60f4def5f95cf6",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

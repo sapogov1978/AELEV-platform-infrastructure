@@ -1,5 +1,9 @@
 # История PostgreSQL
 
+- 2026-11-14: первый AMD64 повтор расширенного HA/restore сценария source b17f01c не дошёл до restore из-за неготового кластера после Patroni fault; ARM прошёл полностью, прежний AMD64 HA source 09892fb сохранён отдельно. Для локализации proof получил безопасные runtime/intent/audit summaries с проверками redaction; причина не объявлена исправленной.
+
+- 2026-11-14: отдельный ручной workflow готовит подписанный multiarch fencing image после успешных audit/native HA для точного source SHA. Он не запускает SQL, не переключает runtime и не выдаёт RESUME; после публикации всё ещё требуется проверка exact registry digest.
+
 - 2026-11-14: публичный SSH HA-тест выполняет physical basebackup по прежнему `verify-full` mTLS, проверяет manifest штатным `pg_verifybackup`, запускает восстановленную копию на непубликуемом loopback и сверяет 1000 строк/SHA. Сохранение исходного primary/quorum проверяется повторно; архив WAL и независимое backup-хранилище не объявлены настроенными.
 
 - 2026-11-14: ownership test различает три exact initial-PKI inputs и runtime-конфигурацию: peer source SANs потребляет только генератор сертификатов, Compose их не получает. Общая проверка использования остальных переменных сохраняется.

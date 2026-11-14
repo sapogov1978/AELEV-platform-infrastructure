@@ -26,6 +26,146 @@ import textwrap
 import time
 import uuid
 
+NODES = frozenset(f"postgresql-{n}" for n in range(1, 4))
+CODES = frozenset(
+    (
+        "FENCING_UNCONFIRMED",
+        "DCS_UNAVAILABLE",
+        "DCS_RESPONSE_INVALID",
+        "DCS_QUORUM_UNCONFIRMED",
+        "NO_LEADER_LEASE",
+        "INVALID_LEADER_LEASE",
+        "LEASE_CHANGED",
+        "TARGET_IDENTITY_CHANGED",
+        "PROCESS_INCARNATION_CHANGED",
+        "TERMINATION_UNCONFIRMED",
+        "RETURN_ATTEMPTS_EXHAUSTED",
+        "RETURN_TARGET_IS_CLAIMANT",
+        "RETURN_UNCONFIRMED",
+        "SSH_OPERATION_UNCONFIRMED",
+        "SSH_RETURN_UNCONFIRMED",
+        "SSH_RECEIPT_INVALID",
+        "SSH_NODE_NOT_CONFIGURED",
+        "NODE_OPERATION_UNCONFIRMED",
+        "NODE_STATE_NOT_ADMITTED",
+        "NODE_DAEMON_CHANGED",
+    )
+)
+
+
+def safe_intent(value: dict[str, Any]) -> dict[str, Any] | None:
+    """Retain bounded phases/budgets without identities or arbitrary payloads."""
+    if (
+        not isinstance(value.get("node"), str)
+        or value["node"] not in NODES
+        or "phase" not in value
+    ):
+        return None
+    phase = value["phase"]
+    attempts = value.get("start_attempts")
+    code = value.get("last_return_code")
+    claim = value.get("claim")
+    candidate = claim.get("candidate") if isinstance(claim, dict) else None
+    return {
+        "node": value["node"],
+        "phase": (
+            phase
+            if isinstance(phase, str)
+            and phase
+            in {
+                "STOP_REQUESTED",
+                "STOP_CONFIRMED",
+                "START_REQUESTED",
+                "COMPLETED",
+                "CANCELLED",
+            }
+            else "UNKNOWN"
+        ),
+        "start_attempts": (
+            attempts if type(attempts) is int and 0 <= attempts <= 3 else None
+        ),
+        "last_return_code": (
+            code
+            if isinstance(code, str) and code in CODES
+            else "UNRECOGNIZED" if code is not None else None
+        ),
+        "candidate": (
+            candidate if isinstance(candidate, str) and candidate in NODES else None
+        ),
+        "restart_required": value.get("restart_required") is True,
+    }
+
+
+def safe_audit_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    """Keep only known event names and reason codes from technical journals."""
+    counts: dict[str, int] = {}
+    phases = {
+        "intent",
+        "terminated",
+        "confirmed",
+        "failed",
+        "return_intent",
+        "return_confirmed",
+        "return_requested",
+        "returned",
+        "return_reconciled",
+        "return_blocked",
+        "return_cancelled",
+        "remote_confirmed",
+    }
+    for row in rows:
+        phase = row.get("phase")
+        phase = phase if isinstance(phase, str) and phase in phases else "UNKNOWN"
+        code = row.get("reason_code")
+        code = (
+            code
+            if isinstance(code, str) and code in CODES
+            else "UNRECOGNIZED" if code is not None else "NONE"
+        )
+        key = phase + ":" + code
+        counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
+def safe_runtime_state(value: dict[str, Any], logs: str) -> dict[str, Any]:
+    """Publish bounded process health and known signals, never raw logs/config."""
+    state = value.get("State", {})
+    health = state.get("Health", {}).get("Status")
+    tokens = re.findall(r"\b[A-Z][A-Z0-9_]*\b", logs)
+    return {
+        "running": state.get("Running") is True,
+        "paused": state.get("Paused") is True,
+        "oom_killed": state.get("OOMKilled") is True,
+        "exit_code": (
+            state.get("ExitCode") if type(state.get("ExitCode")) is int else None
+        ),
+        "restart_count": (
+            value.get("RestartCount")
+            if type(value.get("RestartCount")) is int
+            else None
+        ),
+        "health": (
+            health
+            if isinstance(health, str)
+            and health in {"healthy", "unhealthy", "starting"}
+            else "UNKNOWN"
+        ),
+        "reason_code_counts": {
+            code: tokens.count(code) for code in sorted(CODES) if code in tokens
+        },
+        "transport_signal_counts": {
+            name: logs.count(marker)
+            for name, marker in {
+                "peer_connection_rejected": "rejected connection on peer endpoint",
+                "peer_san_mismatch": "does not match any DNSNames",
+                "tls_bad_certificate": "tls: bad certificate",
+                "host_key_rejected": "Host key verification failed",
+                "connection_refused": "Connection refused",
+            }.items()
+            if marker in logs
+        },
+    }
+
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
     os.umask(0o077)
@@ -392,6 +532,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         assert (
             sum(value is False for value in found.values()) <= 1
         ), "MULTIPLE_SQL_WRITERS"
+        proof["last_sql_roles"] = {
+            str(n): (
+                "REPLICA"
+                if found.get(n) is True
+                else "PRIMARY" if found.get(n) is False else "UNKNOWN"
+            )
+            for n in range(1, 4)
+        }
         return found
 
     def writer(*, exclude: int | None = None, seconds: int = 180) -> int:
@@ -524,6 +672,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             name for name in volumes if name.endswith("-audit")
         ]
         retained = []
+        summaries: list[dict[str, Any]] = []
         confirmed_nodes: set[str] = set()
         for name in targets:
             row = process(["docker", "volume", "inspect", name], check=False)
@@ -579,13 +728,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     raise RuntimeError("TECHNICAL_JOURNAL_SNAPSHOT_UNAVAILABLE")
                 time.sleep(0.1)
             files = json.loads(result.stdout)
+            intents = []
+            events = []
             for filename, value in files.items():
                 data = base64.b64decode(value, validate=True)
                 if filename.endswith(".json"):
-                    json.loads(data)
+                    intent = safe_intent(json.loads(data))
+                    if intent is not None:
+                        intents.append(intent)
                 elif filename.endswith(".jsonl"):
                     for line in data.splitlines():
                         record = json.loads(line)
+                        events.append(record)
                         if (
                             filename == "node-audit.jsonl"
                             and record.get("phase") == "confirmed"
@@ -607,7 +761,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "files": len(files),
                 }
             )
+            summaries.append(
+                {
+                    "journal_number": len(summaries) + 1,
+                    "kind": "node" if name in ledgers.values() else "controller",
+                    "intents": intents,
+                    "audit_counts": safe_audit_counts(events),
+                }
+            )
         proof["technical_journal_archives"] = retained
+        proof["technical_journal_summaries"] = summaries
         if proof["status"] == "PASS":
             expected_nodes = {
                 "postgresql-" + str(n)
@@ -946,6 +1109,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         for n in range(1, 4):
             start(f"postgresql-{n}")
         first = writer(seconds=240)
+        proof["initial_writer"] = first
         phase("three native SQL participants and one primary over published endpoints")
         table = "ssh_fencing_audit_" + uuid.uuid4().hex
         sql(
@@ -1136,6 +1300,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 json.dumps(state, indent=2)
             )
             logs = process(["docker", "logs", identity], check=False)
+            proof.setdefault("native_role_states", {})[role] = safe_runtime_state(
+                state, logs.stdout + logs.stderr
+            )
             (OUT / (role + ".log.private")).write_text(logs.stdout + logs.stderr)
         for role in reversed(list(recipes)):
             compose(role, "down", "--remove-orphans", check=False)
