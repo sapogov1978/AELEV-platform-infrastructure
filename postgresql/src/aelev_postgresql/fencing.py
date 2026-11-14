@@ -28,7 +28,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from aelev_postgresql.__main__ import SECRETS, safety_config, setting, tls_context
+from aelev_postgresql.configuration import SECRETS, safety_config, setting, tls_context
 from aelev_postgresql.fencing_intent import IntentStore
 
 NODES = {f"postgresql-{number}" for number in range(1, 4)}
@@ -502,7 +502,23 @@ def serve() -> None:
     mechanism = mode()
     if mechanism == "watchdog":
         raise FencingError("Watchdog has no runtime-control executor")
-    backend = Docker() if mechanism == "docker" else Kubernetes()
+    backend: Any
+    remote = False
+    if mechanism == "docker":
+        transport = os.environ.get(
+            "AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_TRANSPORT", "local"
+        )
+        if transport == "ssh":
+            from aelev_postgresql.fencing_ssh import SSHDocker
+
+            backend = SSHDocker()
+            remote = True
+        elif transport == "local":
+            backend = Docker()
+        else:
+            raise FencingError("Unsupported Docker transport")
+    else:
+        backend = Kubernetes()
     locks = {node: threading.Lock() for node in NODES}
     journal = Path("/var/lib/aelev-fencing/audit.jsonl")
     journal_lock = threading.Lock()
@@ -535,9 +551,13 @@ def serve() -> None:
     # the same native Claim and Docker adapter, not a second election protocol.
     from aelev_postgresql.fencing_return import Returns
 
-    returns = (
-        Returns(backend, locks, return_record) if isinstance(backend, Docker) else None
-    )
+    returns: Any = None
+    if remote:
+        from aelev_postgresql.fencing_ssh import SSHReturns
+
+        returns = SSHReturns(backend)
+    elif isinstance(backend, Docker):
+        returns = Returns(backend, locks, return_record)
     return_thread = (
         threading.Thread(target=returns.run, name="fencing-return", daemon=True)
         if returns is not None
@@ -593,6 +613,11 @@ def serve() -> None:
                 return
             if return_thread is not None and not return_thread.is_alive():
                 self.respond(503, {"error": "return_loop_stopped"})
+                return
+            if remote and not returns.healthy():
+                self.respond(
+                    503, {"error": "remote_nodes_unconfirmed", "mechanism": mechanism}
+                )
                 return
             self.respond(200, {"mechanism": mechanism})
 

@@ -8,6 +8,7 @@
 | Подготовка, эксплуатация и восстановление | [USER_MANUAL.md](USER_MANUAL.md) |
 | Нормативные гарантии | [SPEC.md](SPEC.md) |
 | Выбор и проверка ограждения | [FENCING.md](FENCING.md) |
+| Кандидат независимого SSH fencer и одноразовой узловой операции | [FENCING_SSH.md](FENCING_SSH.md), `compose.fencing-ssh.yml`, `fencing-node.py` |
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
 | Настройки и запуск | `.env.example`, `compose.yml` |

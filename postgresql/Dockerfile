@@ -18,7 +18,7 @@ COPY kubernetes ./kubernetes
 COPY compose*.yml .env.example .dockerignore Dockerfile pyproject.toml poetry.lock README.md SPEC.md TASKS.md USER_MANUAL.md FENCING.md CHANGELOG.md ./
 COPY --from=tests . ./test
 
-FROM postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94 AS runtime
+FROM postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94 AS runtime-base
 RUN apk add --no-cache libffi libbz2 libexpat libuuid xz-libs ncurses-libs readline sqlite-libs openssl su-exec \
     && mkdir -p /opt/aelev /run/aelev && chown postgres:postgres /run/aelev
 COPY --from=python-runtime /usr/local/ /usr/local/
@@ -33,3 +33,28 @@ COPY entrypoint.sh /usr/local/bin/aelev-postgresql-entrypoint
 ENV PATH=/opt/venv/bin:$PATH PYTHONPATH=/opt/aelev PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 ENTRYPOINT ["/bin/sh", "/usr/local/bin/aelev-postgresql-entrypoint"]
 CMD ["start"]
+
+# One-shot node operation and remote executor use only the standard library.
+FROM python-runtime AS fencing-node
+RUN apk add --no-cache musl=1.2.5-r13 musl-utils=1.2.5-r13 libuuid=2.41.6-r1 zlib=1.4-r0 \
+        busybox=1.37.0-r20 busybox-binsh=1.37.0-r20 ssl_client=1.37.0-r20 \
+        xz-libs=5.8.4-r0 openssl=3.5.9-r0 \
+    && rm -rf /usr/local/lib/python3.13/site-packages/pip \
+        /usr/local/lib/python3.13/site-packages/pip-*.dist-info \
+        /usr/local/lib/python3.13/ensurepip \
+        /usr/local/bin/pip /usr/local/bin/pip3 /usr/local/bin/pip3.13 \
+    && mkdir -m 700 /var/lib/aelev-fencing
+COPY src/aelev_postgresql/__init__.py src/aelev_postgresql/configuration.py \
+    src/aelev_postgresql/fencing.py src/aelev_postgresql/fencing_intent.py \
+    src/aelev_postgresql/fencing_return.py src/aelev_postgresql/fencing_node.py \
+    src/aelev_postgresql/fencing_executor.py src/aelev_postgresql/fencing_probe.py /opt/aelev/aelev_postgresql/
+ENV PYTHONPATH=/opt/aelev PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+ENTRYPOINT ["python", "-m", "aelev_postgresql.fencing_executor"]
+CMD ["serve"]
+
+# Candidate opt-in transport, separate from the default SQL/local-fencer image.
+FROM fencing-node AS fencing-ssh
+RUN apk add --no-cache openssh-client=10.0_p1-r11
+COPY src/aelev_postgresql/fencing_ssh.py /opt/aelev/aelev_postgresql/
+
+FROM runtime-base AS runtime

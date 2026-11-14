@@ -18,6 +18,7 @@
     "platform-ui/compose.local-keycloak.yml": "04d17b74570696726e8a7e1b7855fcfbeb8392a363f7ad3534894272611531f6",
     "platform-ui/compose.yml": "9c0604bb99403f486ab051b8a855319bac52e7c8b6b5ec4c1ba2e5359f7f0711",
     "postgresql/compose.docker.yml": "43e9bbbcdcdd39b602d625709986151e3e25d36db78129cc9b9a96319b0fea90",
+    "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
     "postgresql/compose.kubernetes.yml": "bf60a6be265060f775a050e879e7c1481b92a406b964835846cca61c056b436d",
     "postgresql/compose.runtime.yml": "156f12e7dfde7f6019d329451d12568866c0dedf2aef874f670e671ac3857614",
     "postgresql/compose.watchdog.yml": "031b3ec799081c9cd242d526bf1f7748ec6e52718fe21a4ae1cedadad7d08e50",
@@ -1520,7 +1521,8 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
-        "postgresql/compose.docker.yml"
+        "postgresql/compose.docker.yml",
+        "postgresql/compose.fencing-ssh.yml"
       ],
       "configuration_variables": [
         "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",

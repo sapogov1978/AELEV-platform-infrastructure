@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-14: подготовлен [кандидат SSH-размещения fencer](FENCING_SSH.md): forced node operation с привязкой Engine/cluster/node, общим узловым журналом копий контроллера и прежними lease/termination/return guards. Отдельные минимальные targets не импортируют SQL/Patroni. Добавление OpenSSH требует согласования стека и дальнейшего полного admission; рабочие установки не переключались.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-14: существующая зависимость Patroni dnspython явно закреплена на исправленной версии 2.9.2 (GHSA-vvf4-9x63-8xvv). Остальные PostgreSQL/Patroni версии, fencing, PKI, данные и работающий кластер сохраняются.
