@@ -66,6 +66,8 @@ postgresql/
 
 Полный перечень PEM/паролей находится в [secrets/README.md](secrets/README.md); здесь — порядок происхождения и доставки, не только реакция на отсутствие файла.
 
+При peer-соединениях через NAT первоначальная локальная PKI дополнительно принимает явные `NODE_N_ETCD_PEER_CLIENT_IPS`: до 16 точных IP через запятую для каждого etcd, включая исходящие адреса, которые видят остальные peers. Они добавляются в SAN собственного peer certificate вместе с прежним `NODE_N_ETCD_HOST`, localhost и loopback; published/advertised endpoints остаются прежними. Неверные, неопределённые, multicast, scoped и CIDR значения отклоняются до создания PKI. Пустое значение сохраняет прежнюю генерацию. У существующей установки сертификаты автоматически не заменяются: scope/rotation остаются отдельной операторской процедурой. Эта настройка соответствует [штатной проверке peer SAN etcd](https://etcd.io/docs/v3.6/op-guide/security/) и не отключает проверку CA/hostname/client address.
+
 | Каталог | Источник и кому разрешена доставка |
 |---|---|
 | `secrets/node-N` | PKI PostgreSQL выдаёт серверную пару, admin/replication clientAuth и доверие; внешнее хранилище выдаёт admin/replication пароли. Только соответствующему PostgreSQL/Patroni. |

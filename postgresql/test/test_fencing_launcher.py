@@ -126,3 +126,50 @@ def test_launcher_uses_only_preexisting_native_owner_resources(
     assert args[-3:] == ["-m", "aelev_postgresql.fencing_node", "execute"]
     assert all(arguments[0] in {"info", "volume", "image"} for arguments in calls)
     assert "--privileged" not in args
+
+
+@pytest.mark.parametrize("name", ["--privileged", "owned-node-2"])
+def test_credentials_volume_must_be_distinct_and_named(config: Any, name: str) -> None:
+    path, data = config
+    data.pop("secrets_root")
+    data["secrets_volume"] = name
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError):
+        launcher.configuration(path)
+
+
+@pytest.mark.parametrize("foreign", [False, True])
+def test_credentials_volume_has_explicit_owner_and_purpose(
+    config: Any, monkeypatch: Any, foreign: bool
+) -> None:
+    path, data = config
+    data.pop("secrets_root")
+    data["secrets_volume"] = "owned-node-2-credentials"
+    path.write_text(json.dumps(data))
+    validated = launcher.configuration(path)
+
+    def inspect(arguments: list[str]) -> Any:
+        if arguments[0] == "info":
+            return {"ID": "owned-daemon-id", "Architecture": "aarch64"}
+        if arguments[0] == "image":
+            return [{"Os": "linux", "Architecture": "arm64"}]
+        labels = {
+            launcher.LABEL + "cluster": "owned",
+            launcher.LABEL + "node": "postgresql-2",
+        }
+        if arguments[-1] == "owned-node-2-credentials":
+            labels[launcher.LABEL + "fencing-resource"] = (
+                "state" if foreign else "credentials"
+            )
+        return [{"Labels": labels}]
+
+    monkeypatch.setattr(launcher, "inspect", inspect)
+    if foreign:
+        with pytest.raises(ValueError, match="SECRETS_NOT_OWNED"):
+            launcher.command(validated, initialize=False)
+    else:
+        command = launcher.command(validated, initialize=False)
+        assert (
+            "type=volume,source=owned-node-2-credentials,target=/run/aelev/secrets,readonly"
+            in command
+        )

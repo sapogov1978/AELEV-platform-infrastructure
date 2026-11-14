@@ -16,6 +16,7 @@
   "postgresql_unit_tests": 241,
   "test_failures": 0,
   "test_skips": 0,
+  "later_real_ha_qualification": "postgresql-fencing-ha-20261114.json",
   "ruff": "PASS",
   "black": "PASS",
   "strict_mypy": "PASS",
@@ -56,7 +57,7 @@
     "explicit stack approval including OpenSSH addition and zlib 1.4",
     "exact signed image publication and native amd64 qualification",
     "full public owner node installation workflow",
-    "real PostgreSQL Patroni etcd failover and crash replay over SSH",
+    "native AMD64 real PostgreSQL Patroni etcd failover and crash replay over SSH; native ARM completed separately",
     "prior local fencing history migration with preserved budgets",
     "backup restore and resource soak",
     "multiple physical nodes and distributed replicas"

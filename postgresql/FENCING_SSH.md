@@ -40,6 +40,8 @@ Dockerfile содержит targets `fencing-node` и `fencing-ssh` на зак�
 
 Secrets содержат только собственные `etcd-ca.crt`, `etcd-client.crt`, `etcd-client.key`. CA private key, PGDATA и чужие credentials не доставляются. Образ предварительно загружается по точному digest для native CPU. Launcher проверяет Engine ID, существующий именованный volume и метки `io.aelev.postgresql.cluster` / `io.aelev.postgresql.node`; отсутствующий том не создаётся неявно.
 
+Вместо `secrets_root` разрешён явный `secrets_volume` с именем собственного предварительно подготовленного тома. Эти поля взаимоисключающие. Том credentials отличается от журнала и несёт те же cluster/node labels плюс `io.aelev.postgresql.fencing-resource=credentials`; launcher сверяет их до запуска и монтирует credentials только read-only. Он не создаёт отсутствующий том и не переключается между file/volume при ошибке. Владелец подготавливает внутри тома каталог mode 0700 и файлы mode 0600 для UID runtime, чтобы helper читал ключи с обычным `cap_drop=ALL`.
+
 Для новой установки владелец отдельно создаёт помеченный volume и выполняет `python3.13 /opt/aelev/postgresql/fencing-node.py --initialize`. Допускается пустая история или повтор прежнего binding. Существующие локальные намерения требуют отдельного handoff с сохранением журнала и бюджета; автоматическое обнуление/миграция не реализованы. Обычный SSH-запрос не может инициализировать новую историю.
 
 Выделенная SSH identity получает только forced command, например `restrict,command="/usr/bin/sudo -n -- /usr/bin/python3.13 /opt/aelev/postgresql/fencing-node.py"` в `authorized_keys`. Отдельное sudo-правило разрешает ровно эту команду без дополнительных arguments; launcher/configuration недоступны для изменения SSH-пользователю. Password/interactive authentication, forwarding, tunnels, PTY и user rc отключаются. Docker socket предоставляет административные полномочия; обычный shell или произвольный Docker API этой identity не выдаются. Каждая копия контроллера имеет собственный закрытый ключ, допущенный владельцем узла.
@@ -65,6 +67,25 @@ SSH host keys поступают через доверенный канал по
 
 ## Проверки и ограничения
 
-`test/test_fencing_node.py`, `test/test_fencing_ssh.py`, `test/test_fencing_launcher.py` покрывают подмену цели, произвольные команды, потерянные ответы, ручную остановку, конкуренцию, сохранение трёх попыток и transport bounds. Реальный SSH/Docker тест выполняется только на новых помеченных ресурсах и явно указывает, использован ли настоящий DCS. Несколько SSH-процессов одной Docker VM считаются одним физическим узлом. Для выпуска нужны signed digests обеих CPU, security admission, настоящие PostgreSQL/Patroni/etcd failover/replay, backup/restore и распределённая приёмка.
+Публичный `test/fencing-ssh-lifecycle.py` проверяет настоящие PostgreSQL/Patroni, три etcd и две копии fencer. Одиннадцать долгоживущих тестовых ролей, включая три административных SSH host fixtures, получают отдельные Compose projects/networks; обмен идёт через published node endpoints. SQL/etcd/fencer используют канонические owner recipes, из которых диагностический exporter выбирает одну роль и её собственные ресурсы. Это диагностический адаптер, не полный production installer. Клиентские ключи контроллеров, узловых операций и SQL-реплик отдельные; helper/coordinator работают с обычным `cap_drop=ALL`, private inputs предварительно материализуются в своих томах.
+
+Тест подтверждает 1000 строк, замораживает Patroni при ещё живом SQL primary, проверяет настоящее ограждение прежнего процесса и нового ведущего с тем же хешем данных. Затем теряет ответ одного RPC, останавливает первый coordinator, возвращает точный узел через второй и пересоздаёт первый с сохранением бюджета. До cleanup сохраняются пять собственных technical journal archives; проверяется наличие обеих peer termination receipts. Ключи и private native logs остаются только в закрытом output, не публикуются CI. Работающий контур защищён уникальными namespaces, проверкой ownership и сверкой прежних non-ephemeral containers.
+
+Для повтора сначала соберите три native image targets из того же checkout и загрузите закреплённый etcd image из `compose.runtime.yml`. `checks` используется только как база административного SSH host fixture; SQL и fencing работают в своих runtime targets. Output обязан находиться вне checkout:
+
+```sh
+docker build --target runtime --build-context tests=./test --iidfile /var/tmp/pg-ssh-sql.image-id .
+docker build --target checks --build-context tests=./test --iidfile /var/tmp/pg-ssh-checks.image-id .
+docker build --target fencing-ssh --build-context tests=./test --iidfile /var/tmp/pg-ssh-fencer.image-id .
+python3.13 test/fencing-ssh-lifecycle.py \
+  --output /var/tmp/pg-ssh-acceptance-new \
+  --sql-image "$(cat /var/tmp/pg-ssh-sql.image-id)" \
+  --fencing-image "$(cat /var/tmp/pg-ssh-fencer.image-id)" \
+  --ssh-host-base-image "$(cat /var/tmp/pg-ssh-checks.image-id)"
+```
+
+Проверяющий процесс должен работать на узле выбранного Docker Engine с доступом к тем же filesystem inputs; для Docker Desktop используются его явные host endpoints, для native Linux — опубликованный адрес локального bridge interface. Это два локальных окружения с теми же TLS/SSH/SQL контрактами, а не проверка разных физических машин. Native AMD64 workflow собирает images и выполняет тот же сценарий без QEMU; он сохраняет только безопасный `proof.json` и image evidence и не публикует runtime images.
+
+`test/test_fencing_node.py`, `test/test_fencing_ssh.py`, `test/test_fencing_launcher.py` покрывают подмену цели, произвольные команды, потерянные ответы, ручную остановку, конкуренцию, сохранение трёх попыток и transport bounds. Native ARM публичный сценарий с настоящим DCS прошёл; [отчёт HA](../docs/audit/postgresql-fencing-ha-20261114.json) сохраняет точные inputs, hashes и ограничения отдельно от раннего опыта с имитацией DCS. Результаты других CPU учитываются только после завершённого workflow. Несколько SSH-процессов одной Docker VM считаются одним физическим узлом. Для выпуска ещё нужны signed digests обеих CPU, security admission, полный node installer/history handoff, SQL backup/restore и распределённая приёмка.
 
 Официальные основания: [Docker socket](https://docs.docker.com/engine/security/protect-access/), [OpenSSH forced command/restrict](https://man.openbsd.org/sshd.8), [Patroni pre_promote](https://patroni.readthedocs.io/en/latest/yaml_configuration.html).

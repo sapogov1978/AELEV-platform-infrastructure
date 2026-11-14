@@ -28,21 +28,20 @@ def configuration(path: Path) -> dict[str, Any]:
         raise ValueError("NODE_LAUNCHER_CONFIG_INVALID")
     raw = path.read_bytes()
     value = json.loads(raw)
+    common = {
+        "schema",
+        "cluster",
+        "node",
+        "daemon_id",
+        "image",
+        "state_volume",
+        "etcd",
+        "timeout_seconds",
+    }
     if (
         len(raw) > 8192
         or not isinstance(value, dict)
-        or set(value)
-        != {
-            "schema",
-            "cluster",
-            "node",
-            "daemon_id",
-            "image",
-            "state_volume",
-            "secrets_root",
-            "etcd",
-            "timeout_seconds",
-        }
+        or set(value) not in (common | {"secrets_root"}, common | {"secrets_volume"})
         or type(value["schema"]) is not int
         or value["schema"] != 1
         or not isinstance(value["cluster"], str)
@@ -60,16 +59,22 @@ def configuration(path: Path) -> dict[str, Any]:
         or not 5 <= value["timeout_seconds"] <= 60
         or not isinstance(value["etcd"], list)
         or len(value["etcd"]) != 3
-        or not isinstance(value["secrets_root"], str)
+        or not isinstance(value.get("secrets_root", value.get("secrets_volume")), str)
     ):
         raise ValueError("NODE_LAUNCHER_CONFIG_INVALID")
-    secrets = Path(value["secrets_root"])
-    if (
-        not secrets.is_absolute()
-        or secrets.is_symlink()
-        or not secrets.is_dir()
-        or secrets.stat().st_mode & 0o077
-        or "," in str(secrets)
+    if "secrets_root" in value:
+        secrets = Path(value["secrets_root"])
+        if (
+            not secrets.is_absolute()
+            or secrets.is_symlink()
+            or not secrets.is_dir()
+            or secrets.stat().st_mode & 0o077
+            or "," in str(secrets)
+        ):
+            raise ValueError("NODE_LAUNCHER_SECRETS_INVALID")
+    elif (
+        not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", value["secrets_volume"])
+        or value["secrets_volume"] == value["state_volume"]
     ):
         raise ValueError("NODE_LAUNCHER_SECRETS_INVALID")
     for endpoint in value["etcd"]:
@@ -111,6 +116,26 @@ def command(config: dict[str, Any], *, initialize: bool) -> list[str]:
         or labels.get(LABEL + "node") != config["node"]
     ):
         raise ValueError("NODE_LAUNCHER_VOLUME_NOT_OWNED")
+    if "secrets_volume" in config:
+        credentials = inspect(["volume", "inspect", config["secrets_volume"]])[0]
+        labels = credentials.get("Labels") or {}
+        if (
+            labels.get(LABEL + "cluster") != config["cluster"]
+            or labels.get(LABEL + "node") != config["node"]
+            or labels.get(LABEL + "fencing-resource") != "credentials"
+        ):
+            raise ValueError("NODE_LAUNCHER_SECRETS_NOT_OWNED")
+        secrets_mount = (
+            "type=volume,source="
+            + config["secrets_volume"]
+            + ",target=/run/aelev/secrets,readonly"
+        )
+    else:
+        secrets_mount = (
+            "type=bind,source="
+            + config["secrets_root"]
+            + ",target=/run/aelev/secrets,readonly"
+        )
     image = inspect(["image", "inspect", config["image"]])[0]
     if image.get("Os") != "linux" or image.get("Architecture") != info.get(
         "Architecture"
@@ -165,9 +190,7 @@ def command(config: dict[str, Any], *, initialize: bool) -> list[str]:
         + config["state_volume"]
         + ",target=/var/lib/aelev-fencing",
         "--mount",
-        "type=bind,source="
-        + config["secrets_root"]
-        + ",target=/run/aelev/secrets,readonly",
+        secrets_mount,
         "--env",
         "SSH_ORIGINAL_COMMAND=aelev-postgresql-fencing-node-v1",
     ]
@@ -216,6 +239,7 @@ def main() -> None:
         allowed = {
             "NODE_LAUNCHER_CONFIG_INVALID",
             "NODE_LAUNCHER_SECRETS_INVALID",
+            "NODE_LAUNCHER_SECRETS_NOT_OWNED",
             "NODE_LAUNCHER_DCS_INVALID",
             "NODE_LAUNCHER_DOCKER_UNCONFIRMED",
             "NODE_LAUNCHER_DAEMON_CHANGED",

@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "NATIVE_ARM_HA_PASS_AMD64_PENDING",
+  "source_base": "cae11fde90b6f9fa951d796864e8711b09464cb4",
+  "public_entrypoint": "postgresql/test/fencing-ssh-lifecycle.py",
+  "source_checks": {
+    "postgresql_unit_tests": 256,
+    "failures": 0,
+    "skips": 0,
+    "changed_python_ruff": "PASS",
+    "changed_python_black": "PASS",
+    "strict_mypy_public_entrypoints": "PASS",
+    "boundary_and_documentation_checks": "PASS",
+    "secrets_and_supply_chain_checks": "PASS",
+    "deployment_catalog_roles": 94,
+    "first_full_suite_result": "255 passed, one ownership test failed because initial-PKI-only inputs were required in Compose; corrected to require their absence from runtime"
+  },
+  "native_arm64": {
+    "status": "PASS",
+    "physical_nodes": 1,
+    "platform": "linux/arm64",
+    "native_dcs_simulated": false,
+    "postgresql": "17.6",
+    "patroni": "4.1.5",
+    "etcd": "3.6.10",
+    "source_worktree_sha256": {
+      "postgresql/prepare-tls.py": "a59f48cf88255759084d6720898e176a06204a8f2c2a69c71deb73eb4f5f2fa4",
+      "postgresql/fencing-node.py": "5e331894ced22891b82168eb09ac1cc46b5d8753976d3b6cf99a94ce1ee8d7f9",
+      "postgresql/compose.runtime.yml": "156f12e7dfde7f6019d329451d12568866c0dedf2aef874f670e671ac3857614",
+      "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
+      "postgresql/test/fencing-ssh-lifecycle.py": "53c85af16cb0e3604ea633724b792b1dd5f5fb97d42d23a56fc7840d3be9b8bd"
+    },
+    "fencing_image": "sha256:e12eb6be82258bc187a48573502d05ddd29c651f01c85e193f452440cfa0a454",
+    "sql_image": "sha256:540a522d5318f0961e4683408fddfcaef442eecd5a256a967a318455f9365127",
+    "diagnostic_role_export_adapter": true,
+    "physical_distribution_verified": false,
+    "complete_public_installer_proven": false,
+    "working_runtime_switched": false,
+    "queue_resume_issued": false,
+    "inference_requested": false,
+    "published_node_address": "host.docker.internal",
+    "published_bind": "127.0.0.1",
+    "verified_runtime_source": [
+      {
+        "image": "sha256:e12eb6be82258bc187a48573502d05ddd29c651f01c85e193f452440cfa0a454",
+        "python": "3.13.7",
+        "files": {
+          "fencing_probe.py": "4339c94dc57dd887e5086602f4ef1593b1cc1ed73721fd6707436341ac40884f",
+          "fencing_intent.py": "0ae4bdbfd2d7a0d3b49cb3085a16f8df666e0d860995abb402ac3662e47de5de",
+          "fencing_node.py": "9fa136d5b4ec9de9eb08ee3c1792d9cc7748f9d3e5b5286ea048e1a9137ba940",
+          "fencing_executor.py": "6fe2f767d129b6501a9a2fe5c71d58b02111908f16cc8093fef40a4d6fea2f74",
+          "fencing_return.py": "fa8f5df65968861958897eb866aa9c4f367cbd572b535a3f3ea86f9b90c3be5f",
+          "configuration.py": "c0fa8c5cfe2429a4dc251b5dead61ab50cf24a21755e151ef3023a00959e33c9",
+          "fencing.py": "25bf25b7c47295246adefccd2b58c4a935a32bd738f4be4cd1d4284c43c0c150",
+          "__init__.py": "ff87ff109d5c6ed7b1c484a3a8b69245e64efb08b1c1f80fae1b68fff2535aee",
+          "fencing_ssh.py": "5f9f7180960fc78e382e1f5370368aae94f02ac1f67bcc39d525b8bcb07c5b5f"
+        }
+      },
+      {
+        "image": "sha256:540a522d5318f0961e4683408fddfcaef442eecd5a256a967a318455f9365127",
+        "python": "3.13.7",
+        "files": {
+          "fencing_probe.py": "4339c94dc57dd887e5086602f4ef1593b1cc1ed73721fd6707436341ac40884f",
+          "health.py": "1d1079931d4de1ff9e1d7c75f718020814935362d636dc1adc1e6b0c495b4c9d",
+          "__main__.py": "0bf611ab8863baad452c944e207e95a7428185f5d3445e987f16549b810c3092",
+          "fencing_intent.py": "0ae4bdbfd2d7a0d3b49cb3085a16f8df666e0d860995abb402ac3662e47de5de",
+          "probe.py": "e4f63a4c1fc7577cda05e9972f54fd8acb72e532a4cd256726169a9d04a6aad6",
+          "fencing_node.py": "9fa136d5b4ec9de9eb08ee3c1792d9cc7748f9d3e5b5286ea048e1a9137ba940",
+          "fencing_executor.py": "6fe2f767d129b6501a9a2fe5c71d58b02111908f16cc8093fef40a4d6fea2f74",
+          "fencing_return.py": "fa8f5df65968861958897eb866aa9c4f367cbd572b535a3f3ea86f9b90c3be5f",
+          "configuration.py": "c0fa8c5cfe2429a4dc251b5dead61ab50cf24a21755e151ef3023a00959e33c9",
+          "fencing.py": "25bf25b7c47295246adefccd2b58c4a935a32bd738f4be4cd1d4284c43c0c150",
+          "fencing_ssh.py": "5f9f7180960fc78e382e1f5370368aae94f02ac1f67bcc39d525b8bcb07c5b5f",
+          "__init__.py": "ff87ff109d5c6ed7b1c484a3a8b69245e64efb08b1c1f80fae1b68fff2535aee"
+        }
+      }
+    ],
+    "initial_writer": 1,
+    "replacement_writer": 3,
+    "committed_rows": 1000,
+    "committed_rows_sha256": "46fd7857e4c7b8f59b44e801950583585cf5e8a646c001099e834855a3cd8279",
+    "real_ha_failover": true,
+    "unknown_rpc_request_id": "478c52a9-eb9a-4e71-b975-fd780047c528",
+    "lost_rpc_ack_reconciled": true,
+    "coordinator_replica_recovery": true,
+    "independent_controller_credentials": true,
+    "coordinator_replacement_preserved_budget": true,
+    "persisted_start_attempts": 1,
+    "dedicated_role_networks": 11,
+    "inter_role_routes": "published node endpoints: host.docker.internal",
+    "three_etcd_members": true,
+    "sql_writers_observed_at_most_one": true,
+    "technical_journal_archives": [
+      {
+        "name": "ssh-ha-627259c52703-node-1-ledger",
+        "sha256": "15e0ae2e380e3dfcb63c653502c5e16a0571d733a308adbfdaa18551848b8b3a",
+        "files": 5
+      },
+      {
+        "name": "ssh-ha-627259c52703-node-2-ledger",
+        "sha256": "e98535c2b2e94efe4c377f415b70435a8e76abbb6592f69bb5364d4ca8a7914e",
+        "files": 5
+      },
+      {
+        "name": "ssh-ha-627259c52703-node-3-ledger",
+        "sha256": "3f8386eee92abe6fa489ce7d45d74d8e0f89d0e31ae011732b4524520aaafd6a",
+        "files": 3
+      },
+      {
+        "name": "ssh-ha-627259c52703-controller-1-audit",
+        "sha256": "2690af6cb9355311940c95bddd541993fae813447b1a31703fc867ad21ece762",
+        "files": 1
+      },
+      {
+        "name": "ssh-ha-627259c52703-controller-2-audit",
+        "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "files": 0
+      }
+    ],
+    "both_native_peer_termination_audits_retained": true,
+    "baseline_containers_preserved": true,
+    "owned_resources_removed": true,
+    "stages": [
+      {
+        "stage": "fresh public TLS preparation and published endpoint plan",
+        "at": 1794696964.798655
+      },
+      {
+        "stage": "distinct role keys, private credential volumes and eleven isolated role recipes",
+        "at": 1794696973.717102
+      },
+      {
+        "stage": "real three-member etcd quorum over published mTLS endpoints",
+        "at": 1794696993.802609
+      },
+      {
+        "stage": "two independent native fencers ready with ordinary cap_drop ALL",
+        "at": 1794697008.12381
+      },
+      {
+        "stage": "three native SQL participants and one primary over published endpoints",
+        "at": 1794697026.135413
+      },
+      {
+        "stage": "1000 rows synchronously committed before failure",
+        "at": 1794697029.847779
+      },
+      {
+        "stage": "Patroni suspended while old SQL writer remains alive",
+        "at": 1794697034.7811892
+      },
+      {
+        "stage": "native failover fenced the old process, returned peers and preserved all committed rows",
+        "at": 1794697095.8513548
+      },
+      {
+        "stage": "second coordinator recovered unknown RPC result using the target ledger and one persisted start",
+        "at": 1794697145.820211
+      },
+      {
+        "stage": "coordinator replacement preserved identities, target history, budget and SQL primary",
+        "at": 1794697168.095457
+      }
+    ]
+  },
+  "earlier_attempts": [
+    {
+      "attempt": "real-ha-2",
+      "status": "FAIL",
+      "cause": "etcd rejected the explicit peer NAT source address absent from its SAN",
+      "resolution": "Initial PKI accepts bounded operator-declared peer client IP SANs; native TLS verification retained."
+    }
+  ],
+  "open_gates": [
+    "completed native AMD64 workflow and independent image evidence",
+    "explicit stack approval for OpenSSH addition and zlib 1.4",
+    "signed immutable image publication",
+    "complete public per-role installer",
+    "migration of prior local fencing history without budget reset",
+    "PostgreSQL data backup and restore; technical ledger restoration is distinct",
+    "resource soak and physical multi-host acceptance"
+  ],
+  "production_admitted": false,
+  "full_platform_ready": false
+}

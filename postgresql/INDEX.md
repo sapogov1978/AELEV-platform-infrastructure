@@ -9,6 +9,7 @@
 | Нормативные гарантии | [SPEC.md](SPEC.md) |
 | Выбор и проверка ограждения | [FENCING.md](FENCING.md) |
 | Кандидат независимого SSH fencer и одноразовой узловой операции | [FENCING_SSH.md](FENCING_SSH.md), `compose.fencing-ssh.yml`, `fencing-node.py` |
+| Настоящий PostgreSQL/Patroni/etcd через published endpoints и SSH, crash/replay двух controllers | `test/fencing-ssh-lifecycle.py`, `.github/workflows/postgresql-fencing-ssh.yml` |
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
 | Настройки и запуск | `.env.example`, `compose.yml` |

@@ -1,5 +1,13 @@
 # Changelog
 
+- 2026-11-14: проверка владельческой конфигурации отдельно закрепляет ровно три initial-PKI inputs peer client IPs и запрещает их передачу в runtime Compose; остальные поля по-прежнему обязаны использоваться recipe. Первичный full-suite failure сохранён до повторной проверки.
+
+- 2026-11-14: кандидат PostgreSQL SSH fencing получил публичный native HA/crash/replay CLI и отдельный AMD64 workflow. ARM-проверка по каноническим recipes сохранила 1000 подтверждённых строк при зависшем старом writer, восстановила узел второй копией fencer и сохранила budget после replacement; пять journals и оба peer receipts удержаны отдельно от cleanup. Проверки одного Engine не объявляются физической распределённой приёмкой или готовым installer.
+
+- 2026-11-14: native etcd HA-проверка по опубликованным адресам выявила peer source SAN mismatch при NAT. PostgreSQL initial PKI получила явный проверяемый список peer client IPs без смены endpoints или отключения проверок; при невалидном input частичная PKI не создаётся.
+
+- 2026-11-14: PostgreSQL node launcher получил явный owner-labelled credentials volume input, отдельный от канонического fencing-журнала. Новый вариант сохраняет filesystem input, exact Engine/image checks, read-only credentials и отсутствие fallback; предназначен для проверки штатного helper с настоящим DCS и раздельными ролями.
+
 - 2026-11-14: audit run 43642909661 кандидата 66b4716 завершился 25/26 из-за Grafana readiness в isolated OIDC E2E. Тест теперь сохраняет безопасный process/OOM/probe snapshot до удаления собственных ресурсов; workflow публикует только разрешённый JSON. Отказ, deadline, runtime и security gates сохраняются; причина ещё требует подтверждения.
 
 - 2026-11-14: подготовлен [кандидат независимого PostgreSQL fencer](postgresql/FENCING_SSH.md) с одноразовой узловой операцией и единым persistent return budget для копий контроллера. Добавлены fail-closed input/identity/lease/receipt checks, отдельный рецепт без Docker socket и минимальные fencing targets. Default SQL/local runtime и рабочий стенд сохраняются; OpenSSH addition требует согласования стека и последующего security/HA admission.
