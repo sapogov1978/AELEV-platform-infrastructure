@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: audit run 43642909661 кандидата 66b4716 завершился 25/26 из-за Grafana readiness в isolated OIDC E2E. Тест теперь сохраняет безопасный process/OOM/probe snapshot до удаления собственных ресурсов; workflow публикует только разрешённый JSON. Отказ, deadline, runtime и security gates сохраняются; причина ещё требует подтверждения.
+
 - 2026-11-14: подготовлен [кандидат независимого PostgreSQL fencer](postgresql/FENCING_SSH.md) с одноразовой узловой операцией и единым persistent return budget для копий контроллера. Добавлены fail-closed input/identity/lease/receipt checks, отдельный рецепт без Docker socket и минимальные fencing targets. Default SQL/local runtime и рабочий стенд сохраняются; OpenSSH addition требует согласования стека и последующего security/HA admission.
 
 - 2026-11-14: exact source 6eb047f прошёл audit 26/26 и native SSH цепочку для 1357 source files и 33 synthetic initial-input files с CLI из материализованного source. Зафиксированы 179 tools tests, wrong-host-key/wire-corruption/drift refusals и раздельные source/input generations. Старый executor proof помечен историческим; полный inventory/runtime/site admission открыт.

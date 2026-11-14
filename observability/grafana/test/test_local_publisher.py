@@ -56,6 +56,46 @@ def test_isolated_cleanup_rejects_a_neighbor_volume_even_without_its_process() -
         e2e.validate_scope(model, "isolated", "isolated-identity")
 
 
+def test_readiness_diagnostic_does_not_export_native_secrets() -> None:
+    spec = importlib.util.spec_from_file_location(
+        "grafana_isolated_diagnostic",
+        Path(__file__).with_name("local_publisher_e2e.py"),
+    )
+    assert spec and spec.loader
+    e2e: Any = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(e2e)
+    result = e2e.readiness_diagnostic(
+        "grafana",
+        [
+            {
+                "Config": {
+                    "Env": ["TOKEN=private-test-token"],
+                    "Labels": {"com.docker.compose.service": "grafana"},
+                },
+                "State": {
+                    "Status": "exited",
+                    "ExitCode": 137,
+                    "OOMKilled": True,
+                    "Health": {
+                        "Status": "unhealthy",
+                        "Log": [
+                            {"ExitCode": 77, "Output": "curl: (77) private-test-token"}
+                        ],
+                    },
+                },
+                "RestartCount": 0,
+            }
+        ],
+    )
+    assert "private-test-token" not in json.dumps(result)
+    state = result["containers"][0]
+    assert state["oom_killed"] is True
+    assert state["exit_code"] == 137
+    assert state["probes"] == [
+        {"exit_code": 77, "reason_codes": ["TLS_INPUT_UNREADABLE"]}
+    ]
+
+
 def test_redirect_cannot_forward_operator_request_to_another_origin() -> None:
     redirect = operator.Redirects(
         {"https://localhost:13000", "https://localhost:18443"}

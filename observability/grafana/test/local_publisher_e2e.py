@@ -63,6 +63,106 @@ def validate_scope(model: dict[str, Any], prefix: str, expected: str) -> None:
         raise RuntimeError("ISOLATED_RESOURCE_SCOPE_INVALID")
 
 
+def readiness_diagnostic(
+    owner: str, containers: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """Export fixed state and reason codes, never native output or credentials."""
+    patterns = {
+        "PERMISSION_DENIED": ("permission denied", "operation not permitted"),
+        "TLS_VERIFY_FAILED": (
+            "certificate verify failed",
+            "unknown authority",
+            "curl: (60)",
+        ),
+        "TLS_INPUT_UNREADABLE": (
+            "curl: (58)",
+            "curl: (77)",
+            "failed to read certificate",
+        ),
+        "PROBE_BINARY_MISSING": ("executable file not found", "not found in $path"),
+        "CONNECTION_REFUSED": ("connection refused", "curl: (7)"),
+        "ADDRESS_IN_USE": ("address already in use",),
+        "SQLITE_LOCKED": ("database is locked",),
+        "HTTP_PROBE_REJECTED": ("curl: (22)",),
+    }
+    result = []
+    for container in containers:
+        state = container.get("State", {})
+        health = state.get("Health", {})
+        probes = []
+        for check in health.get("Log", [])[-5:]:
+            text = str(check.get("Output", "")).lower()
+            probes.append(
+                {
+                    "exit_code": (
+                        check.get("ExitCode")
+                        if type(check.get("ExitCode")) is int
+                        else None
+                    ),
+                    "reason_codes": sorted(
+                        code
+                        for code, values in patterns.items()
+                        if any(value in text for value in values)
+                    ),
+                }
+            )
+        service = (
+            container.get("Config", {})
+            .get("Labels", {})
+            .get("com.docker.compose.service")
+        )
+        result.append(
+            {
+                "service": (
+                    service
+                    if service in {"grafana", "keycloak", "keycloak-database"}
+                    else "unexpected-role"
+                ),
+                "state": (
+                    state.get("Status")
+                    if state.get("Status")
+                    in {
+                        "created",
+                        "running",
+                        "paused",
+                        "restarting",
+                        "removing",
+                        "exited",
+                        "dead",
+                    }
+                    else "unknown"
+                ),
+                "exit_code": (
+                    state.get("ExitCode")
+                    if type(state.get("ExitCode")) is int
+                    else None
+                ),
+                "oom_killed": (
+                    state.get("OOMKilled")
+                    if type(state.get("OOMKilled")) is bool
+                    else None
+                ),
+                "restart_count": (
+                    container.get("RestartCount")
+                    if type(container.get("RestartCount")) is int
+                    else None
+                ),
+                "health": (
+                    health.get("Status")
+                    if health.get("Status") in {"starting", "healthy", "unhealthy"}
+                    else None
+                ),
+                "probes": probes,
+            }
+        )
+    return {
+        "schema_version": 1,
+        "status": "ISOLATED_OWNER_READINESS_FAILED",
+        "owner": owner if owner in {"grafana", "keycloak"} else "unknown",
+        "containers": result,
+    }
+
+
 def spire_local_phase(
     output: Path, grafana: Path, identity_url: str, grafana_url: str, admin: Any
 ) -> dict[str, Any]:
@@ -452,6 +552,29 @@ def run(
             ):
                 return
             time.sleep(2)
+        # Preserve only explicit public diagnostics before the owned cleanup.
+        # Raw native output remains in native.private.log and is never uploaded.
+        try:
+            rows = [
+                json.loads(line)
+                for line in compose(
+                    owner, "ps", "--all", "--format", "json"
+                ).splitlines()
+            ]
+            identifiers = [row["ID"] for row in rows]
+            details = (
+                json.loads(native("docker", "inspect", *identifiers))
+                if identifiers
+                else []
+            )
+            diagnostic = readiness_diagnostic(owner.name, details)
+            publisher.save(
+                output / "readiness.failure.json",
+                (json.dumps(diagnostic, indent=2) + "\n").encode(),
+            )
+            print(json.dumps(diagnostic), flush=True)
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+            print("ISOLATED_READINESS_DIAGNOSTIC_UNAVAILABLE", flush=True)
         raise RuntimeError("ISOLATED_OWNER_READINESS_FAILED")
 
     credentials = [

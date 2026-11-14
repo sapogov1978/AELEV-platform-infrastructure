@@ -6,9 +6,9 @@
     "semantic_hash": "c88dd2c7ee4e1ffe888ed1cfc4d89b24"
   },
   ".github/workflows/audit.yml": {
-    "mtime": 1794688402.685019,
-    "seen": 1794690674.469109,
-    "ast_hash": "db3d75872464655027019dc5eaef2cbe",
+    "mtime": 1794692372.1620169,
+    "seen": 1794692569.3201962,
+    "ast_hash": "a3fabd7a2df19502e5ae296aff460825",
     "semantic_hash": ""
   },
   ".semgrep.yml": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794690326.477797,
-    "seen": 1794690674.469553,
-    "ast_hash": "bec52061b5f9921d6db86504e22861ac",
+    "mtime": 1794692372.1635005,
+    "seen": 1794692569.330566,
+    "ast_hash": "4a25ab5bbd3b83afa89a09010604954f",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3540,9 +3540,9 @@
     "semantic_hash": ""
   },
   "observability/grafana/CHANGELOG.md": {
-    "mtime": 1794688403.1011677,
-    "seen": 1794690674.4697611,
-    "ast_hash": "a1a1d5c11fe1549e19f642679b0c03fb",
+    "mtime": 1794692372.162484,
+    "seen": 1794692569.335435,
+    "ast_hash": "28e9c94c33b90c4f1336ebad926a390f",
     "semantic_hash": ""
   },
   "observability/grafana/PROVIDER_OPERATIONS.md": {
@@ -6384,15 +6384,15 @@
     "semantic_hash": ""
   },
   "observability/grafana/test/local_publisher_e2e.py": {
-    "mtime": 1794688403.1185873,
-    "seen": 1794690674.469218,
-    "ast_hash": "a98cd69127db1d2247b9da64b420ccfe",
+    "mtime": 1794692402.706549,
+    "seen": 1794692569.3226528,
+    "ast_hash": "70bd07af20ffe60f7c4a7211d25e6566",
     "semantic_hash": ""
   },
   "observability/grafana/test/test_local_publisher.py": {
-    "mtime": 1794688403.1335428,
-    "seen": 1794690674.469223,
-    "ast_hash": "a02c5835c9117cd16caca81c1888f393",
+    "mtime": 1794692402.2497962,
+    "seen": 1794692569.322748,
+    "ast_hash": "2ba629ef02aa54bb67775e9314a73a52",
     "semantic_hash": ""
   },
   "spire/bootstrap.py": {
