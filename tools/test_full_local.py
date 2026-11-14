@@ -83,6 +83,17 @@ class FullLocalContractTests(unittest.TestCase):
                     "admitted_reference": (
                         "ghcr.io/sapogov1978/"
                         "aelev-platform-infrastructure-observability-sender"
+                        "@sha256:7729a8f72ad4f536cdaf38eba599c6ebe5f1d3ba293777e5"
+                        "67a3656004441f82"
+                    ),
+                },
+                {
+                    "id": "observability-sender-build-base",
+                    "kind": "container-image-digest",
+                    "owner": "observability/delivery",
+                    "admitted_reference": (
+                        "ghcr.io/sapogov1978/"
+                        "aelev-platform-infrastructure-observability-sender"
                         "@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864f"
                         "cba0ce1f80dd941e"
                     ),

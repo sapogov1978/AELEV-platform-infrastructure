@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794658034.4206593,
-    "seen": 1794658076.5461152,
-    "ast_hash": "8fadb69396f1fefca98b4e4cd49c9e86",
+    "mtime": 1794658909.9929638,
+    "seen": 1794659464.5626292,
+    "ast_hash": "103852c0f6644285687c5de5d273086a",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794658034.4224534,
-    "seen": 1794658076.5524008,
-    "ast_hash": "1d5228ec9fc9a47a03c1eb7b7dbd3bdd",
+    "mtime": 1794658909.9938226,
+    "seen": 1794659464.568034,
+    "ast_hash": "fa477e1ef35163f7868c322935a10e9b",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "full-local.json": {
-    "mtime": 1794503205.7167428,
-    "seen": 1794503753.345788,
-    "ast_hash": "3e9e837c5c039c796c4d0ce6b7c100f9",
+    "mtime": 1794658640.9044912,
+    "seen": 1794659464.556545,
+    "ast_hash": "75343622f3acb43e7110f8664a431890",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room.py": {
@@ -6156,9 +6156,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794356555.3426452,
-    "seen": 1794356596.623317,
-    "ast_hash": "14fd6ebe25a6a7ce51bf1131e341ef11",
+    "mtime": 1794658640.904944,
+    "seen": 1794659464.5615098,
+    "ast_hash": "52087ce283450de1332007eaa6a91117",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6576,9 +6576,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1794623767.6285565,
-    "seen": 1794628732.2890198,
-    "ast_hash": "85fced8cc691ad711745d58db67ad5f1",
+    "mtime": 1794658641.505636,
+    "seen": 1794659464.556396,
+    "ast_hash": "44ce98cdb312b0d0df3e16904acb6f64",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
@@ -6672,15 +6672,21 @@
     "semantic_hash": ""
   },
   "docs/audit/sender-lts-candidate-20261114.json": {
-    "mtime": 1794658034.3795893,
-    "seen": 1794658076.53856,
-    "ast_hash": "c41be09e36c2842fb4b393b68bcbd459",
+    "mtime": 1794659455.814813,
+    "seen": 1794659464.556496,
+    "ast_hash": "a5607c261e032169cba6fe835c9eefe1",
     "semantic_hash": ""
   },
   "docs/audit/translator-worker-release-20261114.json": {
-    "mtime": 1794658034.384696,
-    "seen": 1794658076.5385869,
-    "ast_hash": "d9db4e2221dc6fe8c674e8961293a634",
+    "mtime": 1794659455.8139777,
+    "seen": 1794659464.556531,
+    "ast_hash": "76d0bbda58c93d6a3c970615c6a6d846",
+    "semantic_hash": ""
+  },
+  ".github/workflows/translator-worker-admission.yml": {
+    "mtime": 1794659263.2673392,
+    "seen": 1794659464.556332,
+    "ast_hash": "fd23891283d253df9b07f0c133ffa905",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

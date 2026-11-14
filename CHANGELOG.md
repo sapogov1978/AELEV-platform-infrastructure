@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: добавлен native amd64 admission опубликованного Translator worker: exact source/image, неизменённые production dependencies/loaded libraries и owner mTLS transport tests в network-none/read-only runtime. Проверка не запускает worker loop, очередь или upstream API; supply-chain/security/quality admission остаются отдельными доказательствами.
+
+- 2026-11-14: exact-source CI handoff 64e889b выявил пропущенный full-local build-input admission для трёх обновлённых Sender consumers. Manifest теперь отдельно закрепляет admitted LTS runtime и прежнюю build-only SQLite/SDK основу; старый digest не разрешается как runtime, проверки точных ссылок не ослаблены. Обновлённый source plan по-прежнему ничего не запускает.
+
 - 2026-11-14: SPIRE с admitted main Sender прошёл повторный native E2E четырёх самостоятельных ролей, раздельных volumes, ONLINE ACK, центральной durable delivery и восьми одинаковых scoped exports. Фактический процесс подтвердил private Prometheus/snappy/отключённый remote read; одна машина не считается физической распределённой приёмкой. Отдельный отчёт Translator worker сохраняет подписанный main release, raw CVEs и открытый security admission после offline проверки реально загруженных SQLite/zlib.
 
 - 2026-11-14: signed main Sender digest 7729a8f прошёл scoped security assessment, подпись/SBOM/provenance и повторные 131 native TLS/durability checks на каждой архитектуре. SPIRE runtime base и новые telemetry-конфигурации Translator/Egress закрепляют этот exact digest; raw findings и profile boundaries сохранены. Работающий контур не переключается, RESUME не выполняется.

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "product": "platform-infrastructure",
   "sources": {
-    "full-local.json": "154e0a52671e60404e493450d059ac4661551861e034251d388a526fe78e9684",
+    "full-local.json": "b12d390390204814bf3dc39252888e5653906abc73089fb22e60a01bb41fbf71",
     "kafka/compose.yml": "8548022add6e9ffb9c59576152612025a5578a66da17330b242e01b7fd397d22",
     "keycloak/compose.local-bridge.yml": "3f3c2cb97a0bbb0fcdfeb6f39ad245ef2db727eb149fd3004c112b10535f89dd",
     "keycloak/compose.yml": "855e69900f650148a63dc479e87c263c90f5cf2ef11a1119296bd1e7f4dfcb05",

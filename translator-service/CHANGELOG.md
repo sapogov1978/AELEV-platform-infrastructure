@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-14: exact signed worker прошёл GET-only native SPIRE identity/renewal/withdrawal/recovery proof. Отдельный amd64 admission workflow использует runtime source из опубликованного образа и проверяет сохранность production packages/libraries при добавлении изолированных тестовых инструментов; внешние model calls, worker loop и RESUME отсутствуют.
+
 - 2026-11-14: отчёт exact signed network worker main release фиксирует обе архитектуры/SBOM/provenance, Python 3.13.7, SDK 1.1.2 и offline загруженную SQLite 3.53.4. Raw security findings и непроверенные FTS5/session условия остаются видимыми; отчёт не выдаёт artifact admission, не запускает worker и не выполняет inference/RESUME.
 
 - 2026-11-14: шаблон собственного telemetry sender закрепляет signed main LTS digest 7729a8f после scoped security assessment и native TLS/durability admission обеих архитектур. Worker/provider, внешние endpoints, очередь и рабочие deployments этим не переключаются.

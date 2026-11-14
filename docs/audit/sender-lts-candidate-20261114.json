@@ -963,5 +963,19 @@
       "runtime-proof-1/operator-script.py": "d99898349ed77024ff0c9acdb2bef45173b9cf1e8d5734469b4cec0d1cefc6f7",
       "runtime-profile-proof.json": "8e761fa8b13b4e1b32fadc43bd7cf4bcc51518f9957f566fa43023e6d3ff820c"
     }
+  },
+  "owner_handoff_source_ci_first_attempt": {
+    "source_commit": "64e889b30b6e085c93bc682c9ee8db96dfdd4aa6",
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43593389982",
+    "conclusion": "failure",
+    "successful_jobs": 24,
+    "total_jobs": 26,
+    "failed_jobs": [
+      "quickstart-contract",
+      "boundary"
+    ],
+    "cause": "Full-local build-input admission still required the old sender digest in three updated runtime consumers",
+    "repair": "Separate exact LTS runtime admission from unchanged build-only SQLite/SDK inputs; checks remain enabled",
+    "local_root_tests_after_repair": 136
   }
 }
