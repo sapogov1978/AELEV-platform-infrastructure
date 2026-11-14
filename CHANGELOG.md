@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: exact-source CI выявил три воспроизводимых отказа: недостающий Grafana Python build arg, anonymous GHCR pull и четыре B104 fingerprints. CI использует канонический pinned Python image и только `packages:read`; B104 review различает mTLS listeners и wildcard-rejection comparisons, не меняя публичное размещение и не отключая scanner rules.
+
 - 2026-11-14: Linux native SPIRE gate требует все пять фактических CLI/mount/renewal cases без skips; прежний счётчик трёх cases актуализирован после добавления отдельных runtime targets.
 
 - 2026-11-14: native четырёхролевой SPIRE proof прошёл установку без общих volumes, readiness, ONLINE publication ACK, центральный durable ACK/опустошение собственного журнала и повтор всех четырёх ролей без замены контейнеров. Отчёт сохраняет предыдущие failures и открытые security/автоматическое renewal/физические gates; одна машина не считается распределённой приёмкой.

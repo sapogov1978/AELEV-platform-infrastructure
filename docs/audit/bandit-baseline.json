@@ -20,12 +20,21 @@
     "spire/build_artifacts.py|B310|75a459727a7b957676ccb72a49b54332bf509096b4ae70783c03b597463884a4": 1,
     "spire/build_sqlite.py|B310|2073fc9273f1d86c8156996ac083e41a0ea9bafceaa94d0947c4bd14123c6bc5": 1,
     "spire/src/aelev_spire/observation.py|B104|7c8e2a69c4fe8b358656cf8d63f0ecc55f0e982c660ca7c0c1ccc788bb261b8f": 1,
-    "spire/src/aelev_spire/observation_setup.py|B104|0a63d63c301c22ebd2fa7b5dde9babb7b259683acda4a1464084a1da5acf9615": 1,
+    "spire/src/aelev_spire/observation_setup.py|B104|bf4b109b1b6b23c6a9c803c69d9f7ad5053798ae957bbb2cb7663474481b0f8f": 1,
+    "spire/src/aelev_spire/supervisor.py|B104|f00561da0c8e7e8b7e846e3e629c382e9d61f4dc4c007b13b0457576110ce418": 1,
+    "tools/placement.py|B104|58501196d0776f4fe1a94586a8eee56c614ef86858d038cb7c25ca1807aa68ff": 1,
+    "tools/placement.py|B104|f99ff8763e50843d185c71086820f44792dc366cea9bd51f679b081d3ed4d00a": 1,
     "translator-service/deployment/check_state.py|B608|15a0185f81b7865b412c6046170682b0a30ba5be8bebaca7f38363fadfe28c9a": 1,
     "translator-service/download-model.py|B310|e7db1c805f061d30084a9be46936d6ba08e50fc835aa32189e5c4d19826c8844": 1,
     "translator-service/src/translator_service/api_server.py|B104|70ea8e387eafb6bff8f2e50d588667e711531fd1ef7a263cbb4aa16d6f757a4b": 2,
     "translator-service/src/translator_service/api_server.py|B104|f922fb360c422b1deef55c11ec2c0d2cfeac2136b26e3aee22e2168c836f55a4": 1,
     "translator-service/src/translator_service/local_health.py|B108|0a8df619b93ee50d25f779054dcb78a649e34176034260cc9ab41c68cf2383f2": 1
+  },
+  "fingerprint_reviews_20261114": {
+    "spire/src/aelev_spire/observation_setup.py|B104|bf4b109b1b6b23c6a9c803c69d9f7ad5053798ae957bbb2cb7663474481b0f8f": "Existing owner sender ingestion listener; only surrounding source context changed. RequireAndVerifyClientCert and purpose-specific issuer trust remain mandatory. Published address belongs to the explicit owner placement. Supersedes observation_setup B104 fingerprint 0a63d63c301c22ebd2fa7b5dde9babb7b259683acda4a1464084a1da5acf9615.",
+    "spire/src/aelev_spire/supervisor.py|B104|f00561da0c8e7e8b7e846e3e629c382e9d61f4dc4c007b13b0457576110ce418": "Explicit opt-in read-only public-source HTTPS listener under INFRA-0018; mandatory mutual TLS, exact peer allowlist, no native admin API, bounded handlers and public projection only. Container wildcard bind does not select the operator's published or advertised address.",
+    "tools/placement.py|B104|58501196d0776f4fe1a94586a8eee56c614ef86858d038cb7c25ca1807aa68ff": "Validator rejects wildcard advertised addresses. This occurrence compares a string and does not create a socket or listener.",
+    "tools/placement.py|B104|f99ff8763e50843d185c71086820f44792dc366cea9bd51f679b081d3ed4d00a": "Validator rejects wildcard endpoint hosts. This occurrence compares a string and does not create a socket or listener."
   },
   "maximum_medium_findings": {
     "B104": {

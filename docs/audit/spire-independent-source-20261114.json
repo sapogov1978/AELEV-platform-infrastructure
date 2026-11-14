@@ -268,5 +268,19 @@
     "ruff": "PASS",
     "pyright": "PASS",
     "junit_sha256": "89b314b9dedd5fe7f11ac721352aa68e2a7fb2397313587c4567bbc829e1ad0a"
-  }
+  },
+  "source_ci_attempts": [
+    {
+      "source_commit": "151132fbac02a9755c2e37e9f4fee918e1632617",
+      "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43578734711",
+      "conclusion": "failure",
+      "successful_jobs": 23,
+      "total_jobs": 26,
+      "failed_jobs": {
+        "sast": "four exact B104 fingerprints require review; network listeners and rejection comparisons unchanged",
+        "python-tests (observability/grafana, pytest)": "native image build omitted required pinned PYTHON_IMAGE argument",
+        "python-tests (spire, pytest)": "anonymous GHCR pull denied before native tests"
+      }
+    }
+  ]
 }

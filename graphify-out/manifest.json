@@ -6,9 +6,9 @@
     "semantic_hash": "c88dd2c7ee4e1ffe888ed1cfc4d89b24"
   },
   ".github/workflows/audit.yml": {
-    "mtime": 1794646734.7032948,
-    "seen": 1794646973.973962,
-    "ast_hash": "30a3b322fa001bf3cd9efab3765f85fd",
+    "mtime": 1794647718.2301567,
+    "seen": 1794647783.723975,
+    "ast_hash": "db3d75872464655027019dc5eaef2cbe",
     "semantic_hash": ""
   },
   ".semgrep.yml": {
@@ -18,9 +18,9 @@
     "semantic_hash": "67224e04366e6ffb90dccda594e19bb3"
   },
   "docs/audit/bandit-baseline.json": {
-    "mtime": 1794633522.8441956,
-    "seen": 1794633820.504832,
-    "ast_hash": "89f2990206bf1a23b7f4e584a72854dd",
+    "mtime": 1794647718.2304654,
+    "seen": 1794647783.7241678,
+    "ast_hash": "b5eaee920bfb157bfc61a3bf91d44e81",
     "semantic_hash": ""
   },
   "docs/audit/container-security-exceptions.json": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794646734.7041008,
-    "seen": 1794646973.982434,
-    "ast_hash": "0cda39751b0acca7d5db2dd7a65bef5c",
+    "mtime": 1794647718.2311988,
+    "seen": 1794647783.73389,
+    "ast_hash": "aa37446cbf6b2b9c36d212f211bbc7c4",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6390,9 +6390,9 @@
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
-    "mtime": 1794646734.8716774,
-    "seen": 1794646973.974252,
-    "ast_hash": "2ea813592b7148865ab1c5ae22644456",
+    "mtime": 1794647718.2307463,
+    "seen": 1794647783.724301,
+    "ast_hash": "4dabb2f05d380a613e1afa79d6f56271",
     "semantic_hash": ""
   },
   "observability/grafana/local-publisher.py": {
