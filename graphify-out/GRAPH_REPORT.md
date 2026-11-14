@@ -1,17 +1,17 @@
 # Graph Report - source  (2026-11-15)
 
 ## Corpus Check
-- 1099 files · ~742,968 words
+- 1099 files · ~743,388 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 206 file(s) not represented in the graph (top: .whl 64, (none) 46, .example 23)
 
 ## Summary
-- 12798 nodes · 27298 edges · 710 communities (654 shown, 56 thin omitted)
+- 12798 nodes · 27299 edges · 710 communities (654 shown, 56 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 1463 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cae11fde`
+- Built from commit: `09892fbf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3365,7 +3365,7 @@ Nodes (3): Наблюдение и восстановление, Резервн�
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `replace` to `Store`, `recovery.py`, `suspend`, `Blackbox Exporter — руководство пользователя`, `ADR-0171: Восстановление после паузы хоста и передача Compose-инкарнации`, `test_automatic_recovery.py`, `test_delivery_http.py`, `Техническая инъекция разделов и состояния`, `Tempo — руководство пользователя`, `Loki — руководство пользователя`, `platform-ui/test/test_api.py`, `Prometheus — руководство пользователя`, `Path`, `json`, `keycloak/test/test_status_publisher.py`, `test/test_documentation.py`, `test_recovery_cli.py`, `Подключение телеметрии gateway — 22 октября 2026`, `test_authorization.py`, `OpenTelemetry Collector — руководство пользователя`, `test_restart_intent.py`, `typing`, `re`, `up`, `Руководство: метрики и панели нового владельца`, `Kafka — руководство пользователя`, `time`, `Keycloak — руководство пользователя`, `Создание и подключение UI нового сервиса`, `Восстановление входа при потере cookie — 2026-10-26`, `MinIO — руководство пользователя`, `Обновление журналов инфраструктурных издателей — 23 октября 2026`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `grafana/PROVIDER_OPERATIONS.md` be split into smaller, more focused modules?**

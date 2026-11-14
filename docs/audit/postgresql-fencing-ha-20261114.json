@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "NATIVE_ARM_HA_PASS_AMD64_PENDING",
+  "status": "NATIVE_ARM_AND_AMD64_HA_PASS_STACK_APPROVAL_PENDING",
   "source_base": "cae11fde90b6f9fa951d796864e8711b09464cb4",
   "public_entrypoint": "postgresql/test/fencing-ssh-lifecycle.py",
   "source_checks": {
@@ -173,14 +173,82 @@
     }
   ],
   "open_gates": [
-    "completed native AMD64 workflow and independent image evidence",
+    "native AMD64 physical SQL restore added after its completed HA/crash/replay proof",
     "explicit stack approval for OpenSSH addition and zlib 1.4",
     "signed immutable image publication",
     "complete public per-role installer",
     "migration of prior local fencing history without budget reset",
-    "PostgreSQL data backup and restore; technical ledger restoration is distinct",
+    "independent SQL backup storage, WAL/PITR and full disaster recovery",
     "resource soak and physical multi-host acceptance"
   ],
   "production_admitted": false,
-  "full_platform_ready": false
+  "full_platform_ready": false,
+  "native_amd64": {
+    "workflow_run": 43652728730,
+    "source_commit": "09892fbf10fe0c00a28de78b85b2ead2692ee5e9",
+    "artifact_id": 14136638780,
+    "artifact_sha256": "ef783f6b86058171ffe9cefa4e08852e31ae53aaa954bd618b75339f2a475664",
+    "proof_sha256": "72c2e00035e99a00fb1325f69453846ac499737b6294bb833a914b6161e03737",
+    "status": "PASS",
+    "platform": "linux/amd64",
+    "fencing_image": "sha256:fbd10703f1272a887c4a005528076df65944a1bf06bb738e1f87a378fc098d69",
+    "sql_image": "sha256:697972dfe1f42594227f8bc11dc0e5141a500ec6744e2687c2c90ec7d77c3a4e",
+    "native_dcs_simulated": false,
+    "physical_nodes": 1,
+    "real_ha_failover": true,
+    "committed_rows": 1000,
+    "committed_rows_sha256": "46fd7857e4c7b8f59b44e801950583585cf5e8a646c001099e834855a3cd8279",
+    "lost_rpc_ack_reconciled": true,
+    "coordinator_replica_recovery": true,
+    "coordinator_replacement_preserved_budget": true,
+    "persisted_start_attempts": 1,
+    "both_native_peer_termination_audits_retained": true,
+    "baseline_containers_preserved": true,
+    "owned_resources_removed": true,
+    "image_evidence": {
+      "schema_version": 1,
+      "recorded_at": "2026-11-14T23:25:04.128785+00:00",
+      "image_id": "sha256:fbd10703f1272a887c4a005528076df65944a1bf06bb738e1f87a378fc098d69",
+      "source_commit": "09892fbf10fe0c00a28de78b85b2ead2692ee5e9",
+      "working_tree_dirty": false,
+      "scanner": "Version: 0.76.1\nVulnerability DB:\n  Version: 2\n  UpdatedAt: 2026-11-14 19:00:12.815668408 +0000 UTC\n  NextUpdate: 2026-11-15 19:00:12.815668137 +0000 UTC\n  DownloadedAt: 2026-11-14 23:25:03.278038153 +0000 UTC",
+      "severity_counts": {},
+      "vulnerability_gate": "PASS",
+      "production_admission": "NOT_EVALUATED",
+      "files": {
+        "vulnerabilities.json": "f92cb27a5d28ef5fb3c5f94d2ba544cc47528e49546578fad352e506c172cef3",
+        "sbom.cdx.json": "7189942bdd0c7ffbe1fdf18e8c21beb0873acfe317bf70512ccc4467e76daf61"
+      }
+    }
+  },
+  "completed_source_audit": {
+    "source_commit": "09892fbf10fe0c00a28de78b85b2ead2692ee5e9",
+    "workflow_run": 43652728717,
+    "passed_jobs": 26,
+    "total_jobs": 26
+  },
+  "later_native_arm_sql_restore": {
+    "proof_sha256": "d086b9e34faf399e6f2edc4d62277ffbd6fc385b7cc624a0b3767373ba692b7d",
+    "platform": "linux/arm64",
+    "source_worktree_sha256": {
+      "postgresql/prepare-tls.py": "a59f48cf88255759084d6720898e176a06204a8f2c2a69c71deb73eb4f5f2fa4",
+      "postgresql/fencing-node.py": "5e331894ced22891b82168eb09ac1cc46b5d8753976d3b6cf99a94ce1ee8d7f9",
+      "postgresql/compose.runtime.yml": "156f12e7dfde7f6019d329451d12568866c0dedf2aef874f670e671ac3857614",
+      "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
+      "postgresql/test/fencing-ssh-lifecycle.py": "2c449c5f3e2e825199bb69007574bf0ad031a6446ea4dc1e4afba4a128af8620"
+    },
+    "sql_physical_backup_restore": {
+      "status": "PASS",
+      "manifest_sha256": "a36d8269e90cefea32101fbead382c05e00d068acd955bc3377d140c52db7007",
+      "restored_rows": 1000,
+      "restored_rows_sha256": "46fd7857e4c7b8f59b44e801950583585cf5e8a646c001099e834855a3cd8279",
+      "source_transport": "verify-full mTLS published primary",
+      "restore_listener": "127.0.0.1:16432",
+      "independent_backup_storage_proven": false,
+      "pitr_proven": false
+    },
+    "real_ha_failover": true,
+    "baseline_containers_preserved": true,
+    "owned_resources_removed": true
+  }
 }

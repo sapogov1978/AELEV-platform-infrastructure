@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: SSH HA acceptance дополнен нативным `pg_basebackup`, проверкой SHA256 manifest и восстановлением отдельного SQL-процесса на loopback. Сравниваются все 1000 строк и их SHA после failover/crash/replay; независимое backup-хранилище и PITR остаются отдельными требованиями. Рабочие данные и volumes в сценарий не подключаются.
+
 - 2026-11-14: проверка владельческой конфигурации отдельно закрепляет ровно три initial-PKI inputs peer client IPs и запрещает их передачу в runtime Compose; остальные поля по-прежнему обязаны использоваться recipe. Первичный full-suite failure сохранён до повторной проверки.
 
 - 2026-11-14: кандидат PostgreSQL SSH fencing получил публичный native HA/crash/replay CLI и отдельный AMD64 workflow. ARM-проверка по каноническим recipes сохранила 1000 подтверждённых строк при зависшем старом writer, восстановила узел второй копией fencer и сохранила budget после replacement; пять journals и оба peer receipts удержаны отдельно от cleanup. Проверки одного Engine не объявляются физической распределённой приёмкой или готовым installer.

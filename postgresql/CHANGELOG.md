@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-14: публичный SSH HA-тест выполняет physical basebackup по прежнему `verify-full` mTLS, проверяет manifest штатным `pg_verifybackup`, запускает восстановленную копию на непубликуемом loopback и сверяет 1000 строк/SHA. Сохранение исходного primary/quorum проверяется повторно; архив WAL и независимое backup-хранилище не объявлены настроенными.
+
 - 2026-11-14: ownership test различает три exact initial-PKI inputs и runtime-конфигурацию: peer source SANs потребляет только генератор сертификатов, Compose их не получает. Общая проверка использования остальных переменных сохраняется.
 
 - 2026-11-14: опубликован повторяемый `test/fencing-ssh-lifecycle.py`: настоящие три etcd/SQL, две копии fencer, отдельные projects/networks и public endpoint routes; native ARM подтвердил failover с живым старым SQL, 1000 сохранённых строк, неизвестный RPC, recovery второй копией, replacement первого и прежний budget. Сохраняются оба termination receipts и пять technical archives; baseline сохраняется. Добавлен отдельный native AMD64 CI без registry publication; installer, площадка и SQL restore остаются отдельными воротами.

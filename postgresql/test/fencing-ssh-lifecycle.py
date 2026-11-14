@@ -369,14 +369,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise TimeoutError("OWNED_NATIVE_READINESS_UNCONFIRMED")
 
     def sql(
-        number: int, code: str, *, check: bool = True
+        number: int, code: str, *, check: bool = True, timeout: int = 30
     ) -> subprocess.CompletedProcess[str]:
         prelude = "from aelev_postgresql.__main__ import connection,setting,secret,SECRETS\nimport json,hashlib,psycopg\n"
         return process(
             ["docker", "exec", "-i", ids["postgresql-" + str(number)], "python", "-"],
             body=prelude + code,
             check=check,
-            timeout=30,
+            timeout=timeout,
         )
 
     def roles() -> dict[int, bool]:
@@ -1050,6 +1050,52 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         assert sql(final_writer, digest_code).stdout.strip() == digest
         phase(
             "coordinator replacement preserved identities, target history, budget and SQL primary"
+        )
+        restored = sql(
+            final_writer,
+            "table="
+            + repr(table)
+            + "\nexpected="
+            + repr(digest)
+            + "\n"
+            + textwrap.dedent(
+                """
+                import os,pathlib,subprocess,tempfile
+                from psycopg.conninfo import make_conninfo
+                with connection() as current:
+                    host,port=current.info.host,current.info.port
+                credentials=dict(host=host,port=port,user=setting('ADMIN_USER'),dbname='postgres',sslmode='verify-full',sslrootcert=str(SECRETS/'ca.crt'),sslcert=str(SECRETS/'admin.crt'),sslkey=str(SECRETS/'admin.key'))
+                with tempfile.TemporaryDirectory(prefix='aelev-ssh-backup-restore-') as temporary:
+                    directory=pathlib.Path(temporary)
+                    data=directory/'data'
+                    subprocess.run(['pg_basebackup','--dbname='+make_conninfo(**credentials),'--pgdata='+str(data),'--wal-method=stream','--checkpoint=fast','--manifest-checksums=SHA256'],env={**os.environ,'PGPASSWORD':secret('admin-password')},check=True,capture_output=True,timeout=90)
+                    subprocess.run(['pg_verifybackup',str(data)],check=True,capture_output=True,timeout=30)
+                    manifest=hashlib.sha256((data/'backup_manifest').read_bytes()).hexdigest()
+                    for name in ('standby.signal','recovery.signal'):
+                        (data/name).unlink(missing_ok=True)
+                    subprocess.run(['chown','-R','postgres:postgres',str(directory)],check=True,capture_output=True)
+                    options=f"-p 16432 -c listen_addresses=127.0.0.1 -c unix_socket_directories={directory} -c data_directory={data} -c hba_file={data}/pg_hba.conf -c primary_conninfo='' -c archive_mode=off -c synchronous_standby_names='' -c shared_buffers=32MB -c max_connections=30"
+                    ctl=['su-exec','postgres','pg_ctl','-D',str(data),'-w']
+                    try:
+                        subprocess.run([*ctl,'-l',str(directory/'restore.log'),'-o',options,'start'],check=True,capture_output=True,timeout=40)
+                        credentials.update(host='127.0.0.1',port=16432,password=secret('admin-password'))
+                        with psycopg.connect(**credentials) as copy:
+                            rows=copy.execute('select * from '+table+' order by id').fetchall()
+                            actual=hashlib.sha256(json.dumps(rows).encode()).hexdigest()
+                            assert len(rows)==1000 and actual==expected
+                            assert copy.execute('select pg_is_in_recovery()').fetchone()[0] is False
+                        print(json.dumps(dict(status='PASS',manifest_sha256=manifest,restored_rows=len(rows),restored_rows_sha256=actual,source_transport='verify-full mTLS published primary',restore_listener='127.0.0.1:16432',independent_backup_storage_proven=False,pitr_proven=False)))
+                    finally:
+                        subprocess.run([*ctl,'-m','fast','stop'],check=False,capture_output=True,timeout=30)
+                """
+            ),
+            timeout=210,
+        )
+        proof["sql_physical_backup_restore"] = json.loads(restored.stdout)
+        assert sql(final_writer, digest_code).stdout.strip() == digest
+        assert writer(seconds=60) == final_writer
+        phase(
+            "native basebackup manifest verified and separate loopback SQL restored all committed rows"
         )
         proof.update(
             status="PASS",
