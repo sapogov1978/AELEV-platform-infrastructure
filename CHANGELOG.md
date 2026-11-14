@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: согласованный Sender LTS 3.13.5 принят в исходники после scoped security admission signed multiarch-кандидата, 131 native TLS/durability tests на каждой архитектуре, TSDB/restart/restore и живого private-Prometheus профиля. Python 3.13.7, Alpine 3.22 и SQLite 3.53.4 сохранены. Raw findings и ограничение конкретными профилями не скрываются; новое main artifact и rollout проверяются отдельно.
+
 - 2026-11-14: добавлен отдельный native amd64 admission workflow для exact signed Sender digest и его source SHA. Он проверяет 131 TLS/durability case без skips, совпадение установленных модулей и сохранность runtime OpenSSL/Python/SQLite при добавлении тестовых инструментов; сеть приложения закрыта, model calls и рабочие процессы не запускаются.
 
 - 2026-11-14: отдельный export всех четырёх SPIRE-ролей прошёл реальный native Shell CLI и побайтно одинаковый повтор; readiness, ONLINE ACK и центральная доставка сохранились. Source contract tests — 49, native — 48 passed / 1 Compose-CLI skip; фактические exports проверены отдельно через operator image. Это один физический компьютер, не production admission.

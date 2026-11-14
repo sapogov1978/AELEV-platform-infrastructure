@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-14: Sender переходит на согласованный Prometheus LTS 3.13.5 и patched Alpine 3.22 после проверки signed amd64/arm64 artifact. Native 131/131 на обеих архитектурах и runtime library hashes подтверждены; raw HIGH/UNKNOWN сохраняются с точными причинами неприменимости в объявленных profiles. Публикация из main, owner rollout и площадочный допуск остаются отдельными.
+
 - 2026-11-14: отдельная проверка опубликованного amd64 Sender выполняется на native runner с неизменёнными runtime libraries и точным source SHA. Сохраняются JUnit и admission proof; тестовый слой не считается production image или разрешением RESUME.
 
 - 2026-11-14: добавлена необязательная generic `certificate_renewal` readiness-проверка собственного issuer receipt и фактических публичных leaf SHA-256/expiry. Устаревший, чужой или подменённый receipt закрывает `/readyz` и метрику, сохраняя liveness, приём и журнал. Прежняя конфигурация без этого поля совместима; конкретные consumers/identity задаются только их владельцами.

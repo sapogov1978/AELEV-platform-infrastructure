@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794652788.225319,
-    "seen": 1794652868.690611,
-    "ast_hash": "8efb69c53b3a56082ca81058c461b50a",
+    "mtime": 1794653951.6122422,
+    "seen": 1794654125.247849,
+    "ast_hash": "9c509444d30a489fce1399cd337c3da0",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3444,21 +3444,21 @@
     "semantic_hash": ""
   },
   "observability/delivery/CHANGELOG.md": {
-    "mtime": 1794652788.2258983,
-    "seen": 1794652868.694112,
-    "ast_hash": "eb4511f16ee556b3ea326cbd0118312e",
+    "mtime": 1794653951.6126022,
+    "seen": 1794654125.251431,
+    "ast_hash": "4d6ef1857b4b421d2875b2ec19483090",
     "semantic_hash": ""
   },
   "observability/delivery/README.md": {
-    "mtime": 1794636919.1685221,
-    "seen": 1794646822.735571,
-    "ast_hash": "d72702f475600a69f7ffb71d8dbd1efb",
+    "mtime": 1794654049.526727,
+    "seen": 1794654125.251446,
+    "ast_hash": "90d5762bd77e7fe91eca3fc9cd9c7fdc",
     "semantic_hash": ""
   },
   "observability/delivery/SPEC.md": {
-    "mtime": 1794636919.1678128,
-    "seen": 1794646822.735571,
-    "ast_hash": "a5d51cafa01e2acddc3ff275dd096b7a",
+    "mtime": 1794654049.5272214,
+    "seen": 1794654125.251447,
+    "ast_hash": "9a03d0d646c85fb6126cd65a927a680f",
     "semantic_hash": ""
   },
   "observability/delivery/TASKS.md": {
@@ -6222,9 +6222,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/observability-sender-release.yml": {
-    "mtime": 1794006031.9468002,
-    "seen": 1794006042.704128,
-    "ast_hash": "01330faa89b6e5bf728a3a9cf7821427",
+    "mtime": 1794653951.611537,
+    "seen": 1794654125.2405372,
+    "ast_hash": "11a2b98d8981ea74b729f68731f6ef47",
     "semantic_hash": ""
   },
   ".github/workflows/observability-delivery-release.yml": {
@@ -6582,9 +6582,9 @@
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
-    "mtime": 1794649327.9509077,
-    "seen": 1794649654.20294,
-    "ast_hash": "3f106d22fc6b3965e40126f61f6d48a0",
+    "mtime": 1794654049.497568,
+    "seen": 1794654125.240733,
+    "ast_hash": "0da7f42d0023e22641093f3edff0beec",
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/components.py": {
@@ -6669,6 +6669,12 @@
     "mtime": 1794652788.2246366,
     "seen": 1794652868.6837199,
     "ast_hash": "2f541089f3d679ace9cdfe3b5e8de252",
+    "semantic_hash": ""
+  },
+  "docs/audit/sender-lts-candidate-20261114.json": {
+    "mtime": 1794654049.4968338,
+    "seen": 1794654125.240732,
+    "ast_hash": "6c7f6788749f42cec43531e03e006498",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

@@ -298,7 +298,13 @@
       "scope": "committed full-startup and independent-role foundation; later component-export work is separately qualified"
     }
   ],
-  "component_export_source_ci": "PENDING",
+  "component_export_source_ci": {
+    "source_commit": "1f6619c13f16860402c52fd5989b745c348d7786",
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43582389767",
+    "conclusion": "success",
+    "successful_jobs": 26,
+    "total_jobs": 26
+  },
   "scoped_component_export_native": {
     "status": "PASS",
     "module_id": "6b8ef1f9-18c5-47e5-8549-fe860e2c61b4",

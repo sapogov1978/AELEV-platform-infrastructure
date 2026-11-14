@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-14)
 
 ## Corpus Check
-- 1081 files · ~709,908 words
+- 1082 files · ~711,362 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 205 file(s) not represented in the graph (top: .whl 64, (none) 45, .example 23)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1f6619c1`
+- Built from commit: `05fd6154`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
