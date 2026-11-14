@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-14: в самостоятельных network templates закреплены квалифицированный main worker 03191fa и выпущенный provider 9d1929b. Новые слои main worker проверены повторно; результаты кандидата не перенесены автоматически. Полный installation workflow, canonical queue/quality и production site admission остаются отдельными gates.
+
 - 2026-11-14: проверенный Psycopg 3.3.9 принят в main с изменением только driver dependency pair; сохранены Python 3.13.7, Bookworm и PostgreSQL server profile. Допуск candidate image не переносится автоматически на новый main-ref artifact; runtime pins и рабочий контур ещё не переключены.
 
 - 2026-11-14: кандидат worker 040b65b квалифицирован на точном signed digest обеих архитектур с actual bundled OpenSSL 3.5.9/libpq 18.6. Native SQL, mTLS и SVID proofs отделены от ещё открытых main-line approval, owner queue/quality, rollout и площадочного допуска. Сырые findings и failures тестовой оснастки сохраняются в отчёте.

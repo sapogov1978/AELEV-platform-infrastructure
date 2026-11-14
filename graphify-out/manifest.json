@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794667356.3143482,
-    "seen": 1794667365.44722,
-    "ast_hash": "c3b2c37ae29dafbbf83f68a4fee16260",
+    "mtime": 1794668768.322829,
+    "seen": 1794668776.98719,
+    "ast_hash": "cfdc3432954a78418ede7164208ab665",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1794667356.3147402,
-    "seen": 1794667365.447532,
-    "ast_hash": "ea68f61e0494c9b9bd8329e36fa5ad40",
+    "mtime": 1794668768.323366,
+    "seen": 1794668776.994283,
+    "ast_hash": "0a66770f8ab4ac2baf380ec79a30ae27",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -4638,9 +4638,9 @@
     "semantic_hash": ""
   },
   "translator-service/README.md": {
-    "mtime": 1794667356.326596,
-    "seen": 1794667365.447534,
-    "ast_hash": "74205853c06818648c670fe6ac68b6f1",
+    "mtime": 1794668768.3207452,
+    "seen": 1794668776.994317,
+    "ast_hash": "38a9f500bdeb00b200ec7e1f66bc385a",
     "semantic_hash": ""
   },
   "translator-service/SPEC.md": {
@@ -4662,9 +4662,9 @@
     "semantic_hash": ""
   },
   "translator-service/compute-runtime/README.md": {
-    "mtime": 1794537257.0918105,
-    "seen": 1794667365.4475362,
-    "ast_hash": "fac29556712fa083c8a9fb1cc1bc51ea",
+    "mtime": 1794668768.3219035,
+    "seen": 1794668776.994368,
+    "ast_hash": "ff1a3883baba0160edfdde18b48e49d2",
     "semantic_hash": ""
   },
   "translator-service/test/bounded-recovery-result-20261022.md": {
@@ -6648,9 +6648,9 @@
     "semantic_hash": ""
   },
   "docs/audit/translator-psycopg-main-20261114.json": {
-    "mtime": 1794667356.3289635,
-    "seen": 1794667365.446867,
-    "ast_hash": "8c1a8dfcd6d17b8727db9b465c8e0f8b",
+    "mtime": 1794668768.3811903,
+    "seen": 1794668776.977053,
+    "ast_hash": "b12ec6ed207fbeb946fe47ca8386d82d",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20261106_092000_eadf3147_\u0430_\u043f\u043e\u0447\u0435\u043c\u0443_\u0430_adr_\u0441\u0442\u043e\u043b\u044c\u043a\u043e_\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u043e\u0432_\u0435\u0441\u0442\u044c_\u0432_\u043e\u0444\u0438\u0446\u0438\u0430\u043b\u044c\u043d.md": {

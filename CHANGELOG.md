@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: signed main worker 03191fa из e7db87c прошёл signature/source/SBOM/provenance, повторные native TLS 23/23 на каждой CPU, SQL 64/64 и свежий SPIRE identity/renewal/withdrawal/recovery. Сетевые шаблоны закрепляют exact worker и provider v0.2.1; scoped security review сохраняет raw findings и ограничения профиля. Действующие env, контейнеры, очереди и RESUME не менялись.
+
 - 2026-11-14: проверенная линия Translator Psycopg 3.3.9 принята после подтверждения продолжения владельцем. Candidate source/lock, signed multiarch artifact и scoped security evidence сохранены; отдельный main-ref worker release и его exact artifact verification обязательны до обновления runtime pins. Рабочее переключение и RESUME не выполняются.
 
 - 2026-11-14: exact signed Psycopg candidate 040b65b из 20b924e подтвердил source/signature/SBOM/provenance, native TLS 23/23 на каждой CPU, 64 SQL/TLS/runtime tests и свежие native SVID GET/renewal/withdrawal/recovery. Scoped HIGH/CRITICAL review сохраняет raw counts и исключает произвольные roles/GSS/commands; новая dependency line ожидает отдельного согласования, main и рабочий контур не переключаются.

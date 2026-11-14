@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-14)
 
 ## Corpus Check
-- 1086 files · ~720,866 words
+- 1086 files · ~725,853 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 205 file(s) not represented in the graph (top: .whl 64, (none) 45, .example 23)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `42acb38e`
+- Built from commit: `e7db87c0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3124,7 +3124,7 @@ Nodes (3): Лёгкие пробы и исходные политики — 23 �
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `recovery.py` to `Store`, `suspend`, `Blackbox Exporter — руководство пользователя`, `ADR-0171: Восстановление после паузы хоста и передача Compose-инкарнации`, `Восстановление входа при потере cookie — 2026-10-26`, `test_automatic_recovery.py`, `postgresql/renewal.py`, `Сохранение истории остановленных предшественников — 22 октября 2026`, `test_delivery_http.py`, `Техническая инъекция разделов и состояния`, `Tempo — руководство пользователя`, `platform-ui/test/test_api.py`, `Loki — руководство пользователя`, `Prometheus — руководство пользователя`, `Проверка исправления счётчиков и управления Prometheus`, `atomic`, `test_experiment.py`, `keycloak/test/test_status_publisher.py`, `test/test_documentation.py`, `recovery_host.py`, `test_authorization.py`, `replace`, `OpenTelemetry Collector — руководство пользователя`, `test_restart_intent.py`, `argparse`, `os`, `Руководство: метрики и панели нового владельца`, `Path`, `Kafka — руководство пользователя`, `Keycloak — руководство пользователя`, `Диагностика listener и восстановление приёмника — 21 октября 2026`, `Создание и подключение UI нового сервиса`, `MinIO — руководство пользователя`, `Обновление журналов инфраструктурных издателей — 23 октября 2026`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `observability/USER_MANUAL.md` be split into smaller, more focused modules?**
@@ -3134,6 +3134,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `recovery.py` be split into smaller, more focused modules?**
   _Cohesion score 0.062454212454212454 - nodes in this community are weakly interconnected._
 - **Why does `Platform UI — нормативная спецификация` connect `Техническая инъекция разделов и состояния` to `recovery.py`, `platform-ui-injection.md`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
 - **Should `delivery/USER_MANUAL.md` be split into smaller, more focused modules?**
   _Cohesion score 0.05384150030248034 - nodes in this community are weakly interconnected._
