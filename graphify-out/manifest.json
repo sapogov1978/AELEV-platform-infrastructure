@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794633590.182165,
-    "seen": 1794633820.505194,
-    "ast_hash": "9367abe54b334258feabe7cbba028a5f",
+    "mtime": 1794637602.3873644,
+    "seen": 1794637611.601666,
+    "ast_hash": "eced3c8f5ef2cb6252eee5263e6f0838",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -678,9 +678,9 @@
     "semantic_hash": ""
   },
   "observability/delivery/delivery.py": {
-    "mtime": 1794633523.0050793,
-    "seen": 1794633820.504885,
-    "ast_hash": "99a81c25a8e538e4a9ba7cce8425955d",
+    "mtime": 1794637602.3663876,
+    "seen": 1794637611.593583,
+    "ast_hash": "22e2edbb2c2d43bbd53705f2c855d19c",
     "semantic_hash": ""
   },
   "observability/delivery/delivery_health.py": {
@@ -756,9 +756,9 @@
     "semantic_hash": ""
   },
   "observability/delivery/test/test_delivery_http.py": {
-    "mtime": 1794633523.0136542,
-    "seen": 1794633820.504894,
-    "ast_hash": "579ad114336ef7da70f720396bbba156",
+    "mtime": 1794637602.366912,
+    "seen": 1794637611.593803,
+    "ast_hash": "db6f3d53dd5d9b673753028657d40a32",
     "semantic_hash": ""
   },
   "observability/delivery/test/test_delivery_snapshot.py": {
@@ -3444,21 +3444,21 @@
     "semantic_hash": ""
   },
   "observability/delivery/CHANGELOG.md": {
-    "mtime": 1794633589.253656,
-    "seen": 1794633820.505377,
-    "ast_hash": "54b8fbc9717a469c865a3359431f208b",
+    "mtime": 1794637602.368892,
+    "seen": 1794637611.6063209,
+    "ast_hash": "9f106d350092a7658dfaea0136110ad9",
     "semantic_hash": ""
   },
   "observability/delivery/README.md": {
-    "mtime": 1794633523.001827,
-    "seen": 1794633820.505378,
-    "ast_hash": "59b7395fe6e8ec387b764076129f5297",
+    "mtime": 1794637602.367483,
+    "seen": 1794637611.6063402,
+    "ast_hash": "d72702f475600a69f7ffb71d8dbd1efb",
     "semantic_hash": ""
   },
   "observability/delivery/SPEC.md": {
-    "mtime": 1794633589.2525887,
-    "seen": 1794633820.505379,
-    "ast_hash": "6d14f99fe9c80f40b2ad64e668562ef3",
+    "mtime": 1794637602.3678641,
+    "seen": 1794637611.6063411,
+    "ast_hash": "a5d51cafa01e2acddc3ff275dd096b7a",
     "semantic_hash": ""
   },
   "observability/delivery/TASKS.md": {
@@ -3468,9 +3468,9 @@
     "semantic_hash": ""
   },
   "observability/delivery/USER_MANUAL.md": {
-    "mtime": 1794633589.2532704,
-    "seen": 1794633820.505381,
-    "ast_hash": "dd44a1a0a14d9527d51ee38447dcf3dc",
+    "mtime": 1794637602.368654,
+    "seen": 1794637611.606359,
+    "ast_hash": "38942c198830f275d1355afe3f5f3cab",
     "semantic_hash": ""
   },
   "observability/delivery/test/counter-fix-result.md": {
@@ -6372,9 +6372,15 @@
     "semantic_hash": ""
   },
   "docs/audit/platform-ui-sdk-handoff-20261114.json": {
-    "mtime": 1794633590.4056294,
-    "seen": 1794633820.504837,
-    "ast_hash": "9837a05a3280c605aab10e7be83bf975",
+    "mtime": 1794637602.3692813,
+    "seen": 1794637611.592342,
+    "ast_hash": "67910e0ac0f3e1008de10b589580d170",
+    "semantic_hash": ""
+  },
+  "docs/audit/telemetry-renewal-readiness-20261114.json": {
+    "mtime": 1794637641.881847,
+    "seen": 1794637694.787798,
+    "ast_hash": "484df7e24bf226e6852018de3600f233",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

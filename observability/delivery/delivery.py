@@ -8,12 +8,14 @@ import hashlib
 import http.client
 import json
 import logging
+import math
 import os
 import re
 import signal
 import socket
 import sqlite3
 import ssl
+import stat
 import subprocess
 import sys
 import tempfile
@@ -349,16 +351,19 @@ class Settings:
     health_key: str
     destinations: dict[str, str]
     prometheus_command: list[str]
+    certificate_renewal: dict[str, Any] | None = None
 
     @classmethod
     def read(cls, path: Path) -> Settings:
         data = json.loads(path.read_text())
+        data.setdefault("certificate_renewal", None)
         if set(data) != set(cls.__dataclass_fields__):
             raise ValueError(
                 "delivery config must contain exactly the documented settings"
             )
         data["journal"] = Path(data["journal"])
         result = cls(**data)
+        validate_renewal(result.certificate_renewal)
         if result.mode not in {"sender", "archive"}:
             raise ValueError("mode must be sender or archive")
         if set(result.destinations) != set(PATHS.values()):
@@ -400,6 +405,109 @@ class Settings:
                 "the supervised process must be the pinned Prometheus binary"
             )
         return result
+
+
+def validate_renewal(value: dict[str, Any] | None) -> None:
+    if value is None:
+        return
+    if (
+        not isinstance(value, dict)
+        or set(value) != {"consumer_owner", "report", "certificates"}
+        or not isinstance(value["consumer_owner"], str)
+        or not re.fullmatch(r"[a-z][a-z0-9-]{1,95}", value["consumer_owner"])
+        or not isinstance(value["report"], str)
+        or not Path(value["report"]).is_absolute()
+        or not isinstance(value["certificates"], dict)
+        or not 1 <= len(value["certificates"]) <= 32
+    ):
+        raise ValueError("certificate renewal configuration invalid")
+    for name, path in value["certificates"].items():
+        if (
+            not isinstance(name, str)
+            or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name)
+            or not isinstance(path, str)
+            or not Path(path).is_absolute()
+        ):
+            raise ValueError("certificate renewal configuration invalid")
+
+
+def renewal_material(path: Path) -> bytes:
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as stream:
+        info = os.fstat(stream.fileno())
+        if not stat.S_ISREG(info.st_mode) or not 0 < info.st_size <= 65536:
+            raise ValueError("certificate renewal material invalid")
+        raw = stream.read(65537)
+    if not 0 < len(raw) <= 65536:
+        raise ValueError("certificate renewal material invalid")
+    return raw
+
+
+def renewal_ready(value: dict[str, Any] | None) -> bool:
+    """Read only explicitly configured own public leaves and issuer receipt."""
+    if value is None:
+        return True
+    try:
+        validate_renewal(value)
+        receipt = json.loads(renewal_material(Path(value["report"])))
+        now = time.time()
+        if (
+            not isinstance(receipt, dict)
+            or receipt.get("schema_version") != 1
+            or receipt.get("owner") != "telemetry-certificate-renewal"
+            or receipt.get("consumer_owner") != value["consumer_owner"]
+            or receipt.get("renewal_healthy") is not True
+            or receipt.get("ready") is not True
+        ):
+            return False
+        for field in ("checked_at", "last_success_at"):
+            number = receipt.get(field)
+            if (
+                not isinstance(number, (int, float))
+                or isinstance(number, bool)
+                or not math.isfinite(number)
+                or not 0 <= number <= now
+                or (field == "checked_at" and now - number > 180)
+            ):
+                return False
+        items = receipt.get("certificates")
+        if not isinstance(items, list) or len(items) != len(value["certificates"]):
+            return False
+        seen: set[str] = set()
+        for item in items:
+            if (
+                not isinstance(item, dict)
+                or item.get("healthy") is not True
+                or not isinstance(item.get("id"), str)
+                or item["id"] not in value["certificates"]
+                or item["id"] in seen
+            ):
+                return False
+            for field in ("certificate_expires_at", "ca_expires_at"):
+                number = item.get(field)
+                if (
+                    not isinstance(number, (int, float))
+                    or isinstance(number, bool)
+                    or not math.isfinite(number)
+                    or number - now <= 30 * 86400
+                ):
+                    return False
+            path = Path(value["certificates"][item["id"]])
+            raw = renewal_material(path)
+            # This is the pinned CPython certificate decoder, not an external
+            # executable or an additional runtime dependency.
+            decoded = getattr(ssl, "_ssl")._test_decode_cert(str(path))
+            if (
+                hashlib.sha256(raw).hexdigest() != item.get("certificate_sha256")
+                or ssl.cert_time_to_seconds(decoded["notAfter"])
+                != item["certificate_expires_at"]
+                or raw != renewal_material(path)
+            ):
+                return False
+            seen.add(item["id"])
+        return seen == set(value["certificates"])
+    except (OSError, ValueError, TypeError, KeyError):
+        return False
 
 
 def client_tls(settings: Settings) -> ssl.SSLContext:
@@ -730,10 +838,14 @@ class Handler(BaseHTTPRequestHandler):
             status["worker_alive"] = int(delivery.worker_alive())
             status["admission_pressure"] = int(delivery.pressure.is_set())
             status["blocking_errors"] = delivery.journal.blocking_errors()
+            certificate_ready = renewal_ready(delivery.settings.certificate_renewal)
+            if delivery.settings.certificate_renewal is not None:
+                status["certificate_renewal_ready"] = int(certificate_ready)
             ready = (
                 status["worker_alive"]
                 and not status["failed"]
                 and not delivery.pressure.is_set()
+                and certificate_ready
             )
             if self.path == "/readyz":
                 self.reply(
@@ -748,6 +860,12 @@ class Handler(BaseHTTPRequestHandler):
                 f"aelev_telemetry_delivery_{key} {value}\n"
                 for key, value in counters.items()
             ).encode()
+            if delivery.settings.certificate_renewal is not None:
+                content += (
+                    "aelev_telemetry_delivery_certificate_renewal_ready "
+                    + str(int(renewal_ready(delivery.settings.certificate_renewal)))
+                    + "\n"
+                ).encode()
             self.send_response(200)
             self.send_header("Content-Type", "text/plain; version=0.0.4")
             self.send_header("Content-Length", str(len(content)))

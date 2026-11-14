@@ -366,9 +366,15 @@
   "working_runtime_switched": false,
   "credentials_rotated": false,
   "full_product_release_admitted": false,
-  "hosted_exact_commit_ci": "PENDING",
+  "hosted_exact_commit_ci": {
+    "status": "PASS",
+    "source_commit": "aed701b435c1e0f2f1b06c7a9f5f038497be8993",
+    "jobs_passed": 26,
+    "jobs_total": 26,
+    "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43561475967",
+    "dependency_graph": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43561484141"
+  },
   "open_gates": [
-    "exact committed source CI",
     "signed product release and image builds",
     "owner-controlled runtime rollout",
     "full distributed and local acceptance"

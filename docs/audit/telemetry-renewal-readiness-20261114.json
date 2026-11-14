@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "status": "GENERIC_RENEWAL_READINESS_SOURCE_VERIFIED_RELEASE_PENDING",
+  "source_sha256": {
+    "delivery.py": "9a8b22b3fc19f09338c8144055adbff6dcca695983bf3531d48579ded80c55cc",
+    "test/test_delivery_http.py": "c626150b39b0f151b6f48414b9bdd2da9a39325b7cf5848f2f3bc97a7afddc50"
+  },
+  "native_checks": {
+    "status": "PASS",
+    "image": "sha256:397bccfe7dd04ccf10cde992109ce4a6017b39473ecb9d229fe9761a946fc19b",
+    "platform": "linux/arm64",
+    "versions": {
+      "python": "3.13.7",
+      "sqlite": "3.49.2"
+    },
+    "totals": {
+      "tests": 131,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "oom_killed": false,
+    "inference_requested": false,
+    "working_runtime_switched": false
+  },
+  "host_checks": {
+    "python": "3.13.16",
+    "tests": 131,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compatibility": {
+    "old_configuration_supported": true,
+    "default_readiness_unchanged": true,
+    "liveness_unchanged": true,
+    "domain_resume_performed": false,
+    "runtime_dependencies_changed": false
+  },
+  "open_gates": [
+    "exact committed source CI",
+    "signed multi-architecture sender release",
+    "native runtime SQLite 3.53.4 verification",
+    "owner-specific adoption and independently placed runtime E2E",
+    "physical distributed acceptance"
+  ]
+}

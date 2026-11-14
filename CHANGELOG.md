@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-14: Telemetry Delivery поддерживает необязательный контроль собственной квитанции продления в readiness и метриках с проверкой фактических leaf SHA-256/expiry; прежние конфигурация, liveness, durable ACK и очередь совместимы. Issuer/private keys не передаются runtime.
+
+- 2026-11-14: SDK handoff aed701b подтверждён опубликованным exact-source audit 26/26 SUCCESS и обновлённым dependency graph; отчёт сохраняет открытые full release/rollout gates.
+
 - 2026-11-14: 15 владельцев закрепляют один неизменяемый Platform UI client SDK 1.1.2 по SHA-256; source gate сверяет фактические bytes каждого активного wheel. Старые 1.1.1 artifacts сохраняются. Handoff меняет operator PKI prepare, не runtime protocol, рабочие credentials, журналы или recovery budgets; locks проверяются на отсутствие постороннего dependency drift.
 
 - 2026-11-14: exact-source audit коммита 5099ad6 завершён 26/26 SUCCESS; GitHub dependency graph показывает исправленные версии, открытых Dependabot alerts нет. Отчёт dependency remediation отделяет закрытие source findings от ещё открытых полного infrastructure release и рабочего rollout.

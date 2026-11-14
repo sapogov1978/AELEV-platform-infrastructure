@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-14: добавлена необязательная generic `certificate_renewal` readiness-проверка собственного issuer receipt и фактических публичных leaf SHA-256/expiry. Устаревший, чужой или подменённый receipt закрывает `/readyz` и метрику, сохраняя liveness, приём и журнал. Прежняя конфигурация без этого поля совместима; конкретные consumers/identity задаются только их владельцами.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-07: sender впервые выпущен owner-controlled multi-architecture GHCR workflow с закреплённым Prometheus base, SBOM, provenance и Cosign signature. Digest `sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864fcba0ce1f80dd941e` заменяет недоступные Docker Hub 1.0.6/1.0.7 как SQLite/runtime base. Центральный receiver отдельно выпущен и подписан под digest `sha256:d54693da1819b78a20af65d3fc5eaab12b6b12873dd231f65f18f4aa5f3aedc0`; исходники, журнал, протокол и исторические evidence не переписаны.

@@ -43,9 +43,17 @@ def renewed(tls: Path, certificate: Path, destination: Path) -> None:
     request = destination.with_suffix(".csr")
     subprocess.run(
         [
-            "openssl", "x509", "-x509toreq", "-in", str(certificate),
-            "-signkey", str(certificate.with_suffix(".key")),
-            "-copy_extensions", "copyall", "-out", str(request),
+            "openssl",
+            "x509",
+            "-x509toreq",
+            "-in",
+            str(certificate),
+            "-signkey",
+            str(certificate.with_suffix(".key")),
+            "-copy_extensions",
+            "copyall",
+            "-out",
+            str(request),
         ],
         capture_output=True,
         check=True,
@@ -396,6 +404,100 @@ def test_canonical_readiness_requires_real_worker_presence(
         )
     finally:
         connection.close()
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+        agent.lease.close()
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [None, "missing", "stale", "hash", "foreign", "duplicate", "expiry", "future"],
+)
+def test_own_renewal_receipt_controls_real_tls_readiness(
+    delivery_setup: tuple[Settings, FaultServer],
+    tls: Path,
+    tmp_path: Path,
+    fault: str | None,
+) -> None:
+    settings, _ = delivery_setup
+    certificate = tmp_path / "client.crt"
+    renewed(tls, tls / "client.crt", certificate)
+    expires = ssl.cert_time_to_seconds(
+        getattr(ssl, "_ssl")._test_decode_cert(str(certificate))["notAfter"]
+    )
+    report = tmp_path / "own-renewal.json"
+    now = time.time()
+    value: dict[str, Any] = {
+        "schema_version": 1,
+        "owner": "telemetry-certificate-renewal",
+        "consumer_owner": "fixture-owner",
+        "ready": True,
+        "renewal_healthy": True,
+        "checked_at": now,
+        "last_success_at": now,
+        "certificates": [
+            {
+                "id": "own-client",
+                "healthy": True,
+                "certificate_sha256": hashlib.sha256(
+                    certificate.read_bytes()
+                ).hexdigest(),
+                "certificate_expires_at": expires,
+                "ca_expires_at": expires + 86400,
+            }
+        ],
+    }
+    if fault == "stale":
+        value["checked_at"] -= 181
+    elif fault == "hash":
+        value["certificates"][0]["certificate_sha256"] = "0" * 64
+    elif fault == "foreign":
+        value["consumer_owner"] = "foreign-owner"
+    elif fault == "duplicate":
+        value["certificates"].append(value["certificates"][0])
+    elif fault == "expiry":
+        value["certificates"][0]["certificate_expires_at"] = now + 86400
+    elif fault == "future":
+        value["checked_at"] += 3600
+    if fault != "missing":
+        report.write_text(json.dumps(value))
+    settings = replace(
+        settings,
+        client_cert=str(certificate),
+        certificate_renewal={
+            "consumer_owner": "fixture-owner",
+            "report": str(report),
+            "certificates": {"own-client": str(certificate)},
+        },
+    )
+    agent = Delivery(settings)
+    agent.worker = Mock(is_alive=Mock(return_value=True))
+    server = DeliveryServer(agent, health_only=True)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    context = ssl.create_default_context(cafile=str(tls / "ca.crt"))
+    context.load_cert_chain(tls / "client.crt", tls / "client.key")
+    try:
+        for path in ("/readyz", "/healthz", "/metrics"):
+            connection = http.client.HTTPSConnection(
+                "localhost", settings.health_port, context=context, timeout=2
+            )
+            try:
+                connection.request("GET", path)
+                response = connection.getresponse()
+                body = response.read()
+                assert response.status == (
+                    503 if path == "/readyz" and fault is not None else 200
+                )
+                if path == "/metrics":
+                    assert (
+                        "aelev_telemetry_delivery_certificate_renewal_ready "
+                        + str(int(fault is None))
+                    ).encode() in body
+            finally:
+                connection.close()
+    finally:
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
