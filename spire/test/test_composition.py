@@ -191,6 +191,141 @@ def test_export_is_read_only_and_keeps_all_four_releases(
     )
 
 
+@pytest.mark.parametrize("component", composition.COMPONENTS)
+def test_independent_export_does_not_require_other_roles(
+    installed: dict[str, Any], component: str
+) -> None:
+    root = installed["root"]
+    role = composition.COMPONENTS[component]
+    original = composition.ROLES[role][0]
+    model = copy.deepcopy(installed["models"][original])
+    model["services"] = {role: model["services"][role]}
+    if component != "server":
+        model["services"][role]["labels"]["io.aelev.component"] = component
+        installed["rows"][role]["Config"]["Labels"]["io.aelev.component"] = component
+    for name in ("compose.json", "observation-compose.json"):
+        (root / name).unlink()
+    target = "compose.json" if component == "server" else "component-compose.json"
+    (root / target).write_text(json.dumps(model))
+    (root / "component-deployment.json").write_text(
+        json.dumps({"owner": composition.OWNER, "role": component})
+    )
+    value = composition.export(root, PROJECT, DAEMON, component)
+    assert set(value["models"]) == set(value["roles"]) == {role}
+    assert value["component"] == component
+    assert all(
+        call[-1] == "label=com.docker.compose.service=" + role
+        for call in installed["calls"]
+        if call[0] == "ps"
+    )
+    output = root / "public"
+    composition.publish(value, output)
+    receipt = json.loads((output / "receipt.json").read_text())
+    assert set(receipt) == {role, "generation"}
+    public = json.loads((output / receipt["generation"] / "compose.json").read_text())
+    assert set(public["services"]) == {role}
+
+
+@pytest.mark.parametrize("component", ["unknown", "../server", "", "all-roles"])
+def test_invalid_component_fails_before_docker(
+    installed: dict[str, Any], component: str
+) -> None:
+    with pytest.raises(ValueError, match="SPIRE_COMPOSITION_COMPONENT_INVALID"):
+        composition.export(installed["root"], PROJECT, DAEMON, component)
+    assert not installed["calls"]
+
+
+def test_component_deployment_cannot_impersonate_another_role(
+    installed: dict[str, Any],
+) -> None:
+    root = installed["root"]
+    model = installed["models"]["observation-compose.json"]
+    (root / "component-compose.json").write_text(json.dumps(model))
+    (root / "component-deployment.json").write_text(
+        json.dumps({"owner": composition.OWNER, "role": "status-publisher"})
+    )
+    with pytest.raises(ValueError, match="SPIRE_COMPOSITION_COMPONENT_MISMATCH"):
+        composition.export(root, PROJECT, DAEMON, "observer")
+
+
+@pytest.mark.parametrize("fault", ["none", "port", "bind", "extra-port", "route"])
+def test_export_preserves_actual_published_ports_and_aliases(
+    installed: dict[str, Any], fault: str
+) -> None:
+    model = installed["models"]["compose.json"]
+    service = model["services"]["spire-server"]
+    service["ports"] = [
+        {"target": 8084, "published": "18443", "host_ip": "192.168.10.4"}
+    ]
+    service["extra_hosts"] = {"source.example": "192.168.10.4"}
+    (installed["root"] / "compose.json").write_text(json.dumps(model))
+    host = installed["rows"]["spire-server"]["HostConfig"]
+    host["PortBindings"] = {
+        "8084/tcp": [{"HostIp": "192.168.10.4", "HostPort": "18443"}]
+    }
+    host["ExtraHosts"] = ["source.example:192.168.10.4"]
+    if fault == "port":
+        host["PortBindings"]["8084/tcp"][0]["HostPort"] = "18444"
+    elif fault == "bind":
+        host["PortBindings"]["8084/tcp"][0]["HostIp"] = "127.0.0.1"
+    elif fault == "extra-port":
+        host["PortBindings"]["9999/tcp"] = [{"HostIp": "", "HostPort": "9999"}]
+    elif fault == "route":
+        host["ExtraHosts"] = ["source.example:192.168.10.5"]
+    if fault == "none":
+        exported = composition.export(installed["root"], PROJECT, DAEMON)
+        actual = exported["models"]["spire-server"]["services"]["spire-server"]
+        assert actual["ports"] == service["ports"]
+        assert actual["extra_hosts"] == service["extra_hosts"]
+    else:
+        with pytest.raises(ValueError, match="SPIRE_COMPOSITION_(PORT|ROUTE)_MISMATCH"):
+            composition.export(installed["root"], PROJECT, DAEMON)
+
+
+@pytest.mark.parametrize("role", composition.ROLES)
+def test_only_role_specific_public_network_environment_is_exported(
+    installed: dict[str, Any], role: str
+) -> None:
+    root = installed["root"]
+    filename = composition.ROLES[role][0]
+    model = installed["models"][filename]
+    service = model["services"][role]
+    own = {
+        "spire-server": {
+            "PUBLIC_SOURCE_MODE": "https",
+            "PUBLIC_SOURCE_IDENTITY": "cn:AELEV SPIRE public-source",
+            "PUBLIC_SOURCE_CLIENT_IDENTITIES": "cn:AELEV SPIRE observer,spiffe://test.example/query",
+        },
+        "spire-observer": {
+            "SOURCE_MODE": "https",
+            "SOURCE_URL": "https://source.example:8443",
+            "SOURCE_IDENTITY": "cn:AELEV SPIRE public-source",
+        },
+        "spire-status-publisher": {
+            "SOURCE_MODE": "https",
+            "SOURCE_URL": "https://source.example:8443",
+            "SOURCE_IDENTITY": "cn:AELEV SPIRE public-source",
+            "OBSERVER_URL": "https://observer.example:8444",
+            "SENDER_HEALTH_URL": "https://sender.example:8445",
+        },
+        "spire-telemetry-sender": {},
+    }[role]
+    service["environment"] = {composition.PREFIX + k: v for k, v in own.items()}
+    installed["rows"][role]["Config"]["Env"] += [
+        key + "=" + value for key, value in service["environment"].items()
+    ]
+    (root / filename).write_text(json.dumps(model))
+    exported = composition.export(root, PROJECT, DAEMON)
+    assert (
+        exported["models"][role]["services"][role]["environment"]
+        == service["environment"]
+    )
+    service["environment"][composition.PREFIX + "TOKEN"] = "private"
+    (root / filename).write_text(json.dumps(model))
+    with pytest.raises(ValueError, match="SPIRE_COMPOSITION_SECRET_ENV_REFUSED"):
+        composition.export(root, PROJECT, DAEMON)
+
+
 def test_image_entrypoint_inheritance_is_explicit_in_export(
     installed: dict[str, Any],
 ) -> None:

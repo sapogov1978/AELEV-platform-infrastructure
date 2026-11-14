@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794647718.2311988,
-    "seen": 1794647783.73389,
-    "ast_hash": "aa37446cbf6b2b9c36d212f211bbc7c4",
+    "mtime": 1794649707.0550077,
+    "seen": 1794649764.216193,
+    "ast_hash": "77224500c3a4c76ef2eb37ecd9062ea8",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2130,15 +2130,15 @@
     "semantic_hash": ""
   },
   "spire/export.ps1": {
-    "mtime": 1794646735.3693428,
-    "seen": 1794646973.979624,
-    "ast_hash": "22c5a659c188150e19c7d96e5003420d",
+    "mtime": 1794649707.059101,
+    "seen": 1794649764.2123,
+    "ast_hash": "902c086deb696cd1e369b3df080dcc71",
     "semantic_hash": ""
   },
   "spire/export.sh": {
-    "mtime": 1794646735.3694446,
-    "seen": 1794646973.979625,
-    "ast_hash": "608378b012097669e0e730d08c475b7f",
+    "mtime": 1794649707.0592637,
+    "seen": 1794649764.212301,
+    "ast_hash": "38def2448c23f5b4850525d3c1c0c0f6",
     "semantic_hash": ""
   },
   "spire/install.ps1": {
@@ -2196,9 +2196,9 @@
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/composition.py": {
-    "mtime": 1794633523.177628,
-    "seen": 1794633820.505059,
-    "ast_hash": "3f77802e1c05e0b90283da2c184e8ffd",
+    "mtime": 1794649707.0596359,
+    "seen": 1794649764.212498,
+    "ast_hash": "4555ce25d8fdcd6b238b2529a1779268",
     "semantic_hash": ""
   },
   "spire/src/aelev_spire/configuration.py": {
@@ -2322,9 +2322,9 @@
     "semantic_hash": ""
   },
   "spire/test/test_composition.py": {
-    "mtime": 1794633523.1873796,
-    "seen": 1794633820.505077,
-    "ast_hash": "2f327e9ed2d2d4d8b49036d29f31d11b",
+    "mtime": 1794649707.0598614,
+    "seen": 1794649764.213004,
+    "ast_hash": "cbdb577dc2643993a7359aa37546006b",
     "semantic_hash": ""
   },
   "spire/test/test_coordinator.py": {
@@ -4338,9 +4338,9 @@
     "semantic_hash": ""
   },
   "spire/CHANGELOG.md": {
-    "mtime": 1794646735.154662,
-    "seen": 1794646973.988964,
-    "ast_hash": "f3d52b1219c35bef3391c99feabbdabc",
+    "mtime": 1794649707.0562875,
+    "seen": 1794649764.2234612,
+    "ast_hash": "9616b5256d1982ed46e641716c2ad711",
     "semantic_hash": ""
   },
   "spire/ENDPOINTS.md": {
@@ -4350,15 +4350,15 @@
     "semantic_hash": ""
   },
   "spire/README.md": {
-    "mtime": 1794646735.1558526,
-    "seen": 1794646973.988967,
-    "ast_hash": "1a69545e20bdb7fdcfbe0e4ec59e957c",
+    "mtime": 1794649707.0567327,
+    "seen": 1794649764.2234938,
+    "ast_hash": "ee8092468cf4bf458c5606f2ab2e1649",
     "semantic_hash": ""
   },
   "spire/SPEC.md": {
-    "mtime": 1794646735.2531269,
-    "seen": 1794646973.988968,
-    "ast_hash": "a33f8ae2971ebcfc1c0e5287b549b29b",
+    "mtime": 1794649707.0573344,
+    "seen": 1794649764.223495,
+    "ast_hash": "f10613a2642d82192cf1b1706edd62ba",
     "semantic_hash": ""
   },
   "spire/TASKS.md": {
@@ -4368,9 +4368,9 @@
     "semantic_hash": ""
   },
   "spire/USER_MANUAL.md": {
-    "mtime": 1794646735.2539442,
-    "seen": 1794646973.988984,
-    "ast_hash": "4efed63b41fe05eef649c574bfa14c55",
+    "mtime": 1794649707.0586922,
+    "seen": 1794649764.2235131,
+    "ast_hash": "d150e9d8aaa1298c46e91c366d57f817",
     "semantic_hash": ""
   },
   "spire/licenses/README.md": {
@@ -6390,9 +6390,9 @@
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
-    "mtime": 1794647718.2307463,
-    "seen": 1794647783.724301,
-    "ast_hash": "4dabb2f05d380a613e1afa79d6f56271",
+    "mtime": 1794649707.0555022,
+    "seen": 1794649764.2035651,
+    "ast_hash": "3f106d22fc6b3965e40126f61f6d48a0",
     "semantic_hash": ""
   },
   "observability/grafana/local-publisher.py": {
@@ -6474,9 +6474,9 @@
     "semantic_hash": ""
   },
   "spire/test/test_export_entrypoints.py": {
-    "mtime": 1794646735.749772,
-    "seen": 1794646973.9799979,
-    "ast_hash": "b8ad2e12cb7237278a771bed635687ce",
+    "mtime": 1794649707.0601563,
+    "seen": 1794649764.21304,
+    "ast_hash": "364121e8e3ca725dfae6b5c779e0638e",
     "semantic_hash": ""
   },
   "spire/test/test_local_inputs.py": {

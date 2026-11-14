@@ -1,6 +1,14 @@
 # Changelog
 
+- 2026-11-14: отдельный export всех четырёх SPIRE-ролей прошёл реальный native Shell CLI и побайтно одинаковый повтор; readiness, ONLINE ACK и центральная доставка сохранились. Source contract tests — 49, native — 48 passed / 1 Compose-CLI skip; фактические exports проверены отдельно через operator image. Это один физический компьютер, не production admission.
+
+- 2026-11-14: full-startup/independent-role foundation d4ea54a прошла exact-source audit 26/26, включая Grafana fresh OIDC и пять native SPIRE CLI/mount/renewal cases без skips. Прежний failure 151132f сохранён; последующий component export, security admission и полный release проверяются отдельно.
+
+- 2026-11-14: экспорт SPIRE закрыто отклоняет drift публичных port mappings и host aliases относительно владельческого плана. Loopback и Docker DNS не подставляются вместо выбранного межузлового endpoint.
+
 - 2026-11-14: exact-source CI выявил три воспроизводимых отказа: недостающий Grafana Python build arg, anonymous GHCR pull и четыре B104 fingerprints. CI использует канонический pinned Python image и только `packages:read`; B104 review различает mTLS listeners и wildcard-rejection comparisons, не меняя публичное размещение и не отключая scanner rules.
+
+- 2026-11-14: SPIRE component export подготавливает отдельную владельческую привязку для распределённого установщика, без обязательного единого project/daemon четырёх ролей. Оператор читает только собственное installation state; export не выполняет запуск или RESUME.
 
 - 2026-11-14: Linux native SPIRE gate требует все пять фактических CLI/mount/renewal cases без skips; прежний счётчик трёх cases актуализирован после добавления отдельных runtime targets.
 

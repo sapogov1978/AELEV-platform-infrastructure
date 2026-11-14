@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-z][a-z0-9_-]{2,63}$')][string]$Project,
     [Parameter(Mandatory=$true)][string]$ExportOperatorImage,
-    [ValidateNotNullOrEmpty()][string]$OutputRoot = $PSScriptRoot
+    [ValidateNotNullOrEmpty()][string]$OutputRoot = $PSScriptRoot,
+    [ValidateSet('all','server','observer','status-publisher','telemetry-sender')][string]$Component = 'all'
 )
 $ErrorActionPreference = 'Stop'
 if ($env:DRP_SPIRE_DOCKER_SOCKET_APPROVAL -ne 'operator-root-equivalent-v1') { throw 'SPIRE_EXPORT_DOCKER_SOCKET_APPROVAL_REQUIRED' }
@@ -31,13 +32,15 @@ if (Test-Path -LiteralPath $spireEnv) {
 $spireOutput = Join-Path $spireRoot 'runtime/installed-composition'
 New-Item -ItemType Directory -Force -Path $spireOutput | Out-Null
 $spireHelper = $Project + '-composition-' + [Guid]::NewGuid().ToString('N')
+$spireComponentArguments = @()
+if ($Component -ne 'all') { $spireComponentArguments = @('--component', $Component) }
 docker run --rm --name $spireHelper --user 0:0 --read-only --network none --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true `
     --label io.aelev.owner=infrastructure-spire --label io.aelev.role=operator-composition-export `
     --label "io.aelev.installation=$Project" --memory 256m --tmpfs /tmp:mode=1777,size=16m `
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock `
-    --mount "type=volume,source=$spireVolume,target=/installation,readonly" `
+    --mount "type=volume,source=$spireVolume,target=/installation,readonly,volume-nocopy" `
     --mount "type=bind,source=$spireOutput,target=/output" --entrypoint python `
-    $ExportOperatorImage -m aelev_spire.composition --project $Project --daemon-id $spireDaemon --output /output
+    $ExportOperatorImage -m aelev_spire.composition --project $Project --daemon-id $spireDaemon --output /output @spireComponentArguments
 if ($LASTEXITCODE -ne 0) { throw 'SPIRE_EXPORT_FAILED' }
 if (Test-Path -LiteralPath $spireEnv) {
     $spireCurrent = [IO.File]::ReadAllBytes($spireEnv)

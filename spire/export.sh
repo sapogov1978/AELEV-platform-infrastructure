@@ -2,19 +2,21 @@
 # Operator-only projection; never starts or recreates a provider role.
 set -eu
 umask 077
-if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
-  echo 'Usage: export.sh PROJECT EXPORT_OPERATOR_IMAGE [OUTPUT_ROOT]' >&2
+if [ "$#" -lt 2 ] || [ "$#" -gt 4 ]; then
+  echo 'Usage: export.sh PROJECT EXPORT_OPERATOR_IMAGE [OUTPUT_ROOT] [COMPONENT]' >&2
   exit 64
 fi
 spire_export_project=$1
 spire_export_image=$2
+spire_export_component=${4-all}
+case "$spire_export_component" in all|server|observer|status-publisher|telemetry-sender) ;; *) exit 64 ;; esac
 if [ "${DRP_SPIRE_DOCKER_SOCKET_APPROVAL:-}" != 'operator-root-equivalent-v1' ]; then
   echo 'SPIRE_EXPORT_DOCKER_SOCKET_APPROVAL_REQUIRED' >&2
   exit 77
 fi
 case "$spire_export_project" in ''|*[!a-z0-9_-]*) exit 64 ;; esac
 case $(uname -s) in Darwin|Linux) ;; *) echo 'USE_EXPORT_PS1' >&2; exit 78 ;; esac
-if [ "$#" -eq 3 ]; then
+if [ "$#" -ge 3 ]; then
   [ -n "$3" ] || exit 64
   spire_export_root=$3
 else
@@ -48,14 +50,16 @@ spire_export_next=$(mktemp "$spire_export_root/runtime/installed-composition/env
 spire_export_helper="${spire_export_project}-composition-$(basename -- "$spire_export_next")"
 trap 'rm -f "$spire_export_before" "$spire_export_next"' EXIT
 if [ -e "$spire_export_root/.env" ]; then cp "$spire_export_root/.env" "$spire_export_before"; fi
+set --
+if [ "$spire_export_component" != all ]; then set -- --component "$spire_export_component"; fi
 docker run --rm --name "$spire_export_helper" --user 0:0 --read-only --network none --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true \
   --label io.aelev.owner=infrastructure-spire --label io.aelev.role=operator-composition-export \
   --label "io.aelev.installation=$spire_export_project" --memory 256m --tmpfs /tmp:mode=1777,size=16m \
   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-  --mount "type=volume,source=$spire_export_volume,target=/installation,readonly" \
+  --mount "type=volume,source=$spire_export_volume,target=/installation,readonly,volume-nocopy" \
   --mount "type=bind,source=$spire_export_root/runtime/installed-composition,target=/output" \
   --entrypoint python "$spire_export_image" -m aelev_spire.composition \
-  --project "$spire_export_project" --daemon-id "$spire_export_daemon" --output /output
+  --project "$spire_export_project" --daemon-id "$spire_export_daemon" --output /output "$@"
 cp "$spire_export_root/runtime/installed-composition/binding.env" "$spire_export_next"
 if [ -e "$spire_export_root/.env" ]; then
   cmp -s "$spire_export_root/.env" "$spire_export_before" || { echo 'SPIRE_EXPORT_ENV_CHANGED' >&2; exit 78; }

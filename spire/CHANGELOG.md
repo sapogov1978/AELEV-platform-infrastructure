@@ -1,5 +1,9 @@
 # История SPIRE
 
+- 2026-11-14: composition export сверяет опубликованные ports/bind и `extra_hosts` с фактическим Docker HostConfig, отклоняя подменённый маршрут без его автоматической замены. Сохраняются явные адреса и непривилегированные runtime с read-only root.
+
+- 2026-11-14: читающий export отдельного server/observer/sender/publisher прошёл native публичный Shell CLI и побайтно одинаковый повтор каждой роли без файлов или runtime других ролей. Явный scope сохраняет image/container/recovery проверки и собственные external volumes; общий четырёхролевой export совместим. Сетевые публичные параметры проверяются по роли, private env по-прежнему запрещён; физическая распределённая приёмка остаётся отдельной.
+
 - 2026-11-14: отдельные server/observer/sender/publisher прошли native local E2E с раздельными volumes, собственными renewal receipts, публичными endpoints, ONLINE publication ACK и центральной доставкой. Повтор сохранил все четыре контейнера; production/security и автоматическое межузловое сопровождение остаются открытыми. SPEC уточняет отсутствие общего renewal volume в network profile.
 
 - 2026-11-14: telemetry-sender target создаёт собственный закрытый renewal mountpoint для UID/GID 10001. Это устраняет воспроизведённый отказ отдельного sender при доставке первого receipt; native CI проверяет первичную запись и server runtime, и sender runtime, сохраняя существующие непустые volumes.

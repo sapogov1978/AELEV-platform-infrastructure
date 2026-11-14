@@ -10,10 +10,11 @@ import json
 import re
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlsplit
 
 from .files import atomic, read
+from .public_state import principal
 
 OWNER = "infrastructure-spire"
 PREFIX = "AELEV_INFRASTRUCTURE_SPIRE_"
@@ -60,6 +61,26 @@ PUBLIC_ENV = {
     "UI_INTERVAL_SECONDS",
     "UI_TIMEOUT_SECONDS",
 }
+SOURCE_ENV = {"SOURCE_MODE", "SOURCE_URL", "SOURCE_IDENTITY"}
+ROLE_ENV = {
+    "spire-server": {
+        "PUBLIC_SOURCE_MODE",
+        "PUBLIC_SOURCE_TLS_ROOT",
+        "PUBLIC_SOURCE_IDENTITY",
+        "PUBLIC_SOURCE_CLIENT_IDENTITIES",
+        "PUBLIC_SOURCE_BIND_ADDRESS",
+        "PUBLIC_SOURCE_PORT",
+        "PUBLIC_SOURCE_RENEWAL_PATH",
+    },
+    "spire-observer": SOURCE_ENV,
+    "spire-status-publisher": SOURCE_ENV | {"OBSERVER_URL", "SENDER_HEALTH_URL"},
+    "spire-telemetry-sender": set[str](),
+}
+COMPONENTS = {role.removeprefix("spire-"): role for role in ROLES}
+PUBLIC_MODES = {
+    "SOURCE_MODE": {"file", "https"},
+    "PUBLIC_SOURCE_MODE": {"disabled", "https"},
+}
 
 
 def docker(*arguments: str) -> Any:
@@ -105,16 +126,22 @@ def _public_service(service: dict[str, Any], role: str) -> dict[str, Any]:
                 "io.aelev.configuration-revision",
                 "io.aelev.sender-recovery",
                 "io.aelev.observer-recovery",
+                "io.aelev.component",
             }
             or not isinstance(value, str)
             or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", value)
         ):
             raise ValueError("SPIRE_COMPOSITION_PRIVATE_LABEL_REFUSED")
+        if key == "io.aelev.component" and value != role.removeprefix("spire-"):
+            raise ValueError("SPIRE_COMPOSITION_COMPONENT_MISMATCH")
     for key, value in service.get("environment", {}).items():
-        if not key.startswith(PREFIX) or key[len(PREFIX) :] not in PUBLIC_ENV:
+        if not key.startswith(PREFIX) or key[len(PREFIX) :] not in (
+            PUBLIC_ENV | ROLE_ENV[role]
+        ):
             raise ValueError("SPIRE_COMPOSITION_SECRET_ENV_REFUSED")
         if not isinstance(value, str) or not value or len(value) > 1024:
             raise ValueError("SPIRE_COMPOSITION_PUBLIC_VALUE_INVALID")
+        suffix = key[len(PREFIX) :]
         if key.endswith(("URL", "ENDPOINT")):
             url = urlsplit(value)
             if (
@@ -126,7 +153,27 @@ def _public_service(service: dict[str, Any], role: str) -> dict[str, Any]:
                 or url.fragment
             ):
                 raise ValueError("SPIRE_COMPOSITION_PUBLIC_VALUE_INVALID")
-        elif not re.fullmatch(r"[A-Za-z0-9._:/-]+", value):
+        elif key.endswith("CLIENT_IDENTITIES"):
+            identities = value.split(",")
+            if not 1 <= len(identities) <= 32 or len(set(identities)) != len(
+                identities
+            ):
+                raise ValueError("SPIRE_COMPOSITION_PUBLIC_VALUE_INVALID")
+            for identity in identities:
+                try:
+                    principal(identity)
+                except ValueError:
+                    raise ValueError("SPIRE_COMPOSITION_PUBLIC_VALUE_INVALID") from None
+        elif key.endswith("_IDENTITY"):
+            try:
+                principal(value)
+            except ValueError:
+                raise ValueError("SPIRE_COMPOSITION_PUBLIC_VALUE_INVALID") from None
+        elif (
+            suffix in PUBLIC_MODES
+            and value not in PUBLIC_MODES[suffix]
+            or not re.fullmatch(r"[A-Za-z0-9._:/-]+", value)
+        ):
             raise ValueError("SPIRE_COMPOSITION_PUBLIC_VALUE_INVALID")
     result = copy.deepcopy(service)
     # Administrative one-shot services are deliberately not part of this export.
@@ -150,10 +197,57 @@ def remaining_restart_policy(value: dict[str, Any], native: int) -> str:
     return "on-failure:" + str(remaining) if remaining else "no"
 
 
-def export(root: Path, project: str, daemon: str) -> dict[str, Any]:
+def verify_routes(source: dict[str, Any], host: dict[str, Any]) -> None:
+    """Export the installed public routes, not an unverified saved intention."""
+    bindings: dict[str, list[dict[str, str]]] = {}
+    for raw in source.get("ports", []):
+        if not isinstance(raw, dict):
+            raise ValueError("SPIRE_COMPOSITION_PORT_MISMATCH")
+        port = cast(dict[str, Any], raw)
+        if not port.get("published"):
+            raise ValueError("SPIRE_COMPOSITION_PORT_MISMATCH")
+        key = str(port["target"]) + "/" + port.get("protocol", "tcp")
+        bindings.setdefault(key, []).append(
+            {
+                "HostIp": port.get("host_ip", ""),
+                "HostPort": str(port["published"]),
+            }
+        )
+    actual = cast(dict[str, list[dict[str, str]]], host.get("PortBindings") or {})
+    if set(actual) != set(bindings) or any(
+        sorted(actual[key] or [], key=lambda item: (item["HostIp"], item["HostPort"]))
+        != sorted(value, key=lambda item: (item["HostIp"], item["HostPort"]))
+        for key, value in bindings.items()
+    ):
+        raise ValueError("SPIRE_COMPOSITION_PORT_MISMATCH")
+    raw_aliases = source.get("extra_hosts", {})
+    if not isinstance(raw_aliases, dict):
+        raise ValueError("SPIRE_COMPOSITION_ROUTE_MISMATCH")
+    aliases = cast(dict[str, str], raw_aliases)
+    if sorted(name + ":" + address for name, address in aliases.items()) != sorted(
+        host.get("ExtraHosts") or []
+    ):
+        raise ValueError("SPIRE_COMPOSITION_ROUTE_MISMATCH")
+
+
+def export(
+    root: Path, project: str, daemon: str, component: str = "all"
+) -> dict[str, Any]:
     """Verify own saved plans against two live reads and export public bindings."""
     if not re.fullmatch(r"[a-z][a-z0-9_-]{2,63}", project):
         raise ValueError("SPIRE_COMPOSITION_PROJECT_INVALID")
+    if component != "all" and component not in COMPONENTS:
+        raise ValueError("SPIRE_COMPOSITION_COMPONENT_INVALID")
+    roles = (
+        ROLES
+        if component == "all"
+        else {
+            COMPONENTS[component]: (
+                "compose.json" if component == "server" else "component-compose.json",
+                ROLES[COMPONENTS[component]][1],
+            )
+        }
+    )
     if docker("info", "--format", "{{.ID}}") != daemon:
         raise ValueError("SPIRE_COMPOSITION_DAEMON_MISMATCH")
     marker = read(root / "owner.json")
@@ -170,7 +264,9 @@ def export(root: Path, project: str, daemon: str) -> dict[str, Any]:
         or (root / ".restore-incomplete").exists()
     ):
         raise ValueError("SPIRE_COMPOSITION_OWNER_MISMATCH")
-    files = ["owner.json", "compose.json", "observation-compose.json"]
+    files = ["owner.json", *sorted({file for file, _command in roles.values()})]
+    if component not in {"all", "server"}:
+        files.append("component-deployment.json")
     for recovery_role in ("sender", "observer"):
         if (
             marker.get(recovery_role + "_recovery_schema") == 1
@@ -183,6 +279,10 @@ def export(root: Path, project: str, daemon: str) -> dict[str, Any]:
         if (root / (role + "-recovery.json")).exists()
     ]
     snapshot = {name: read(root / name) for name in files}
+    if component not in {"all", "server"}:
+        deployment = snapshot["component-deployment.json"]
+        if deployment.get("owner") != OWNER or deployment.get("role") != component:
+            raise ValueError("SPIRE_COMPOSITION_COMPONENT_MISMATCH")
     models = {
         name: value for name, value in snapshot.items() if name.endswith("compose.json")
     }
@@ -192,9 +292,11 @@ def export(root: Path, project: str, daemon: str) -> dict[str, Any]:
         "project": project,
         "daemon_id": daemon,
     }
+    if component != "all":
+        result["component"] = component
     exported: dict[str, Any] = {}
     receipts: dict[str, Any] = {}
-    for role, (file, _command) in ROLES.items():
+    for role, (file, _command) in roles.items():
         model = models[file]
         if model.get("name") != project:
             raise ValueError("SPIRE_COMPOSITION_OWNER_MISMATCH")
@@ -251,6 +353,7 @@ def export(root: Path, project: str, daemon: str) -> dict[str, Any]:
             != source.get("healthcheck", {}).get("test")
         ):
             raise ValueError("SPIRE_COMPOSITION_SECURITY_MISMATCH")
+        verify_routes(source, row["HostConfig"])
         public["image"] = row["Image"]
         public["restart"] = remaining_restart_policy(
             row["HostConfig"]["RestartPolicy"], row["RestartCount"]
@@ -383,12 +486,13 @@ def main() -> None:
     parser.add_argument("--daemon-id", required=True)
     parser.add_argument("--root", type=Path, default=Path("/installation"))
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--component", choices=["all", *COMPONENTS], default="all")
     args = parser.parse_args()
     if (args.root / "installation.lock").is_symlink():
         raise ValueError("SPIRE_COMPOSITION_LOCK_INVALID")
     with (args.root / "installation.lock").open("rb") as lock:
         fcntl.flock(lock, fcntl.LOCK_SH | fcntl.LOCK_NB)
-        value = export(args.root, args.project, args.daemon_id)
+        value = export(args.root, args.project, args.daemon_id, args.component)
         publish(value, args.output)
 
 

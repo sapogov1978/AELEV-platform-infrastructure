@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -153,6 +154,33 @@ def test_two_argument_api_still_activates_the_default_export(
         package / "runtime/installed-composition/binding.env"
     ).read_bytes()
     assert (package / "runtime/installed-composition/receipt.json").is_file()
+
+
+@pytest.mark.parametrize(
+    "component", ["server", "observer", "status-publisher", "telemetry-sender"]
+)
+def test_shell_forwards_only_explicit_component_scope(
+    operator: tuple[Path, dict[str, str], Path], tmp_path: Path, component: str
+) -> None:
+    entrypoint, environment, log = operator
+    result = subprocess.run(
+        shell_arguments(
+            entrypoint,
+            "fixture-spire",
+            "approved-export-image",
+            str(tmp_path / component),
+            component,
+        ),
+        env=environment,
+        capture_output=True,
+        timeout=15,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    calls = [json.loads(line) for line in log.read_text().splitlines()]
+    run = next(call for call in calls if call[0] == "run")
+    assert run[-2:] == ["--component", component]
+    assert any("target=/installation,readonly,volume-nocopy" in item for item in run)
 
 
 def test_external_output_keeps_the_per_process_socket_approval_gate(

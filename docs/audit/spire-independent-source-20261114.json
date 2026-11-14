@@ -62,7 +62,7 @@
     "observer.install.log": "d238863ace728f1c72f8d43334585d0411f45991aee0c5085328234c6bad382f"
   },
   "open_gates": [
-    "committed exact-source SPIRE CI and signed infrastructure release",
+    "signed infrastructure release; later component-export source CI tracked separately",
     "sender security admission and admitted base pin before complete network release",
     "automatic renewal scheduling and protected public-receipt delivery on independently placed nodes",
     "owner quality admission and signed final compute workers",
@@ -281,6 +281,152 @@
         "python-tests (observability/grafana, pytest)": "native image build omitted required pinned PYTHON_IMAGE argument",
         "python-tests (spire, pytest)": "anonymous GHCR pull denied before native tests"
       }
+    },
+    {
+      "source_commit": "d4ea54a18a256c550d053b6a6d33470546ae5710",
+      "url": "https://github.com/sapogov1978/AELEV-platform-infrastructure/actions/runs/43579785407",
+      "conclusion": "success",
+      "successful_jobs": 26,
+      "total_jobs": 26,
+      "native_spire_public_cli_cases": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "grafana_fresh_oidc_native_e2e": "PASS",
+      "scope": "committed full-startup and independent-role foundation; later component-export work is separately qualified"
     }
-  ]
+  ],
+  "component_export_source_ci": "PENDING",
+  "scoped_component_export_native": {
+    "status": "PASS",
+    "module_id": "6b8ef1f9-18c5-47e5-8549-fe860e2c61b4",
+    "projects": {
+      "server": "aelev_spire_four_66be32e1_server",
+      "observer": "aelev_spire_four_66be32e1_observer",
+      "telemetry-sender": "aelev_spire_four_66be32e1_telemetry_sender",
+      "status-publisher": "aelev_spire_four_66be32e1_status_publisher"
+    },
+    "images": {
+      "runtime": "sha256:73ce9153d95eacf9394fac90d234dc1f0266e9e0e946f9fc7fa03f655eb52d03",
+      "operator-installer": "sha256:3e81269d6857010a8ac64b71e3d64b7c76f9e08247f580d211f8f85e778dab27",
+      "telemetry-sender": "sha256:a5a3343665f1fb6d45a9c790a7044e8ce58ae8ec4e2dafc46c1fa845e874770d",
+      "checks": "sha256:0a89a8c54abf7b389c600089acd14eaaf03f806a7c54a15bd21d0071f3022ed9"
+    },
+    "physical_nodes": 1,
+    "working_runtime_switched": false,
+    "inference_requested": false,
+    "signed_sender_base_security_admitted": false,
+    "ui_catalog_readback_verified": false,
+    "assertions": {
+      "no_shared_volumes_between_roles": true,
+      "observer_ready": true,
+      "sender_ready": true,
+      "real_central_durable_delivery": true,
+      "real_platform_ui_ack": true,
+      "all_repeats_preserve_instances": true,
+      "scoped_public_exports": true,
+      "export_repeats_identical": true,
+      "readiness_after_exports": true
+    },
+    "sender_journal": {
+      "accepted_sequence": 16,
+      "remaining_records": 0
+    },
+    "central_ack_proof_method": "own sender accepted sequence advanced and journal drained; exact-source forward() removes only after matching central durable ACK",
+    "publisher_ack": {
+      "module": "6b8ef1f9-18c5-47e5-8549-fe860e2c61b4",
+      "sequence": 3,
+      "pending": false
+    },
+    "exports": {
+      "server": {
+        "generation": "c496fc27583d42da85ecdfe638127e18df963ab01ecf7fbcf6466d4b37d0a197",
+        "roles": [
+          "spire-server"
+        ],
+        "repeat_identical": true
+      },
+      "observer": {
+        "generation": "7c5c372043dafaf264faa349f9bb7e3b5ffa932dd47d7b4d5045d06661e3cbb2",
+        "roles": [
+          "spire-observer"
+        ],
+        "repeat_identical": true
+      },
+      "telemetry-sender": {
+        "generation": "f86dadf9050b7f9fb87aab9195bf32568f36ceec05541554bc6f54dfcfef7a19",
+        "roles": [
+          "spire-telemetry-sender"
+        ],
+        "repeat_identical": true
+      },
+      "status-publisher": {
+        "generation": "5c969489a704202a328627d957b8170c61c61d67a706552dd5309efdb4684ff9",
+        "roles": [
+          "spire-status-publisher"
+        ],
+        "repeat_identical": true
+      }
+    },
+    "test_containers_removed": true,
+    "test_owned_volumes_preserved": true,
+    "evidence_sha256": {
+      "proof.json": "921ab32dd9a0613d808a2edc2874d8604f956561f05ffd08f95c4b4fedacb9a2",
+      "operator-script.py": "6979bab5d1681b8576ca86b0e3a5a1bb00be1807aa834ca023d009f2e213dca2",
+      "sender.public-status.json": "ad4bdfd9914f039603311e9841c63f3b74182771490c06bdc6b7e1c3db8c0436",
+      "telemetry-sender.transport-diagnostic.json": "ed8289febbdfe5de7d357349eb649fbc17c8894c26bdd7ab267ad257a9bfe8e8",
+      "status-publisher.runtime.log": "de3899a34ab884408ef96549162e8cfa090b7ff04d11f4ee0a09d00bf8d5e928"
+    },
+    "source_sha256": {
+      "spire/src/aelev_spire/composition.py": "ce8cfb5e9a0652af66d7da403125a8ad49f1bc0a2cd515d8d2bb27b95e72d11b",
+      "spire/export.sh": "90edaedc2d62a298795b746827111e3f947f668761e01732b6952fa26f7c7943",
+      "spire/export.ps1": "11f95e0b29f08d47fcd60733882a99ec0b17d375dea626cbe369e616746f8d06",
+      "spire/test/test_composition.py": "fa41bf460e15dec75296b14a0cac96c1788082406e6bcd401ced7f7fa1294798",
+      "spire/test/test_export_entrypoints.py": "a71fdc4ca22846e8c99b8a83ad40b25799a1fcbf5ea5b2a81e1ca403b06b247e"
+    }
+  },
+  "scoped_component_export_native_contracts": {
+    "status": "PASS",
+    "images": {
+      "runtime": "sha256:73ce9153d95eacf9394fac90d234dc1f0266e9e0e946f9fc7fa03f655eb52d03",
+      "operator-installer": "sha256:3e81269d6857010a8ac64b71e3d64b7c76f9e08247f580d211f8f85e778dab27",
+      "telemetry-sender": "sha256:a5a3343665f1fb6d45a9c790a7044e8ce58ae8ec4e2dafc46c1fa845e874770d",
+      "checks": "sha256:0a89a8c54abf7b389c600089acd14eaaf03f806a7c54a15bd21d0071f3022ed9"
+    },
+    "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:ac458a37be0ddc05c8227e96c193f671acd28102647ec6890c31faaa26925a0b",
+    "platform": "linux/arm64",
+    "python": "3.13.7",
+    "totals": {
+      "tests": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    "exit_code": 0,
+    "working_runtime_switched": false,
+    "inference_requested": false
+  },
+  "component_export_full_native_baseline": {
+    "status": "PASS",
+    "images": {
+      "runtime": "sha256:15a97ede92036d873c1f845bda77609862a59539e7c973ec23f9d45a4bcea54c",
+      "operator-installer": "sha256:6393212bb7997c0e62647175bd9c0ac9fa695493754bf2763cf48124cba37a45",
+      "telemetry-sender": "sha256:bfdb679bb9f4f8cc31b58c82fa1c1eebc519214b4f3b7d1545528e370dabcba8",
+      "checks": "sha256:4a68caf1903f25619578b8a7e125baa25c8ab0d90664e48c3367dd9524b24598"
+    },
+    "signed_sender_base": "ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender@sha256:ac458a37be0ddc05c8227e96c193f671acd28102647ec6890c31faaa26925a0b",
+    "platform": "linux/arm64",
+    "python": "3.13.7",
+    "totals": {
+      "tests": 293,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 12
+    },
+    "exit_code": 0,
+    "working_runtime_switched": false,
+    "inference_requested": false
+  }
 }
