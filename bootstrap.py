@@ -568,16 +568,17 @@ def initialize_postgresql() -> None:
         run([sys.executable, "prepare-tls.py"], cwd=POSTGRESQL)
 
 
-def initialize() -> None:
+def initialize(capabilities: list[str] | None = None) -> None:
     for executable in ("docker", "openssl"):
         if shutil.which(executable) is None:
             raise QuickstartError(f"required tool unavailable: {executable}")
     initialize_env(ROOT / ".env")
     initialize_owner_environments()
     initialize_additive_local_paths()
-    migrate_legacy_translation_image_references()
-    migrate_legacy_translation_ui_description_revision()
-    initialize_translation_provider_credential()
+    if capabilities is None or "translation" in capabilities:
+        migrate_legacy_translation_image_references()
+        migrate_legacy_translation_ui_description_revision()
+        initialize_translation_provider_credential()
     initialize_keycloak()
     initialize_minio()
     initialize_postgresql()
@@ -677,7 +678,7 @@ def execute(command: str, capabilities: list[str], no_build: bool = False) -> No
         verify_scope()
         compose(ROOT, "stop", *selected(capabilities))
         return
-    initialize()
+    initialize(capabilities)
     if command == "init":
         return
     if command == "up":

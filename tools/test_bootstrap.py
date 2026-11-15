@@ -20,6 +20,54 @@ SPEC.loader.exec_module(provider)
 
 
 class BootstrapTest(unittest.TestCase):
+    def test_initialization_limits_translator_inputs_to_selected_capability(
+        self,
+    ) -> None:
+        preparation = (
+            "initialize_env",
+            "initialize_owner_environments",
+            "initialize_additive_local_paths",
+            "migrate_legacy_translation_image_references",
+            "migrate_legacy_translation_ui_description_revision",
+            "initialize_translation_provider_credential",
+            "initialize_keycloak",
+            "initialize_minio",
+            "initialize_postgresql",
+            "initialize_platform",
+            "initialize_local_bridge_routes",
+            "compose",
+        )
+        for capabilities in (
+            ["postgresql", "kafka", "object-storage", "identity", "platform-ui"],
+            ["kafka"],
+            ["translation"],
+            None,
+        ):
+            with self.subTest(capabilities=capabilities):
+                with (
+                    mock.patch.multiple(
+                        provider, **dict.fromkeys(preparation, mock.DEFAULT)
+                    ) as steps,
+                    mock.patch.object(
+                        provider.shutil, "which", return_value="available"
+                    ),
+                    mock.patch.object(
+                        provider, "docker_bridge_gateway", return_value="127.0.0.1"
+                    ),
+                ):
+                    if capabilities is None:
+                        provider.initialize()
+                    else:
+                        provider.execute("init", capabilities)
+                for name in preparation[3:6]:
+                    if capabilities is None or "translation" in capabilities:
+                        steps[name].assert_called_once_with()
+                    else:
+                        steps[name].assert_not_called()
+                steps["compose"].assert_called_once_with(
+                    provider.ROOT, "config", "--quiet"
+                )
+
     def test_desktop_listener_uses_host_loopback_without_inspecting_vm_bridge(
         self,
     ) -> None:

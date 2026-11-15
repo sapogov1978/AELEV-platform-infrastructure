@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-15: capability init без `translation` больше не требует credential её provider и не мигрирует настройки Translator. Состав capabilities передаётся в сохраняющую инициализацию; полный профиль и запуск по умолчанию сохраняют обязательную проверку ключа. Регрессия проверяет пять management capabilities, Kafka отдельно, явный Translator и прежний прямой полный init; Compose, env/PKI, images и runtime не переключаются.
+
 - 2026-11-14: exact source 6eb047f прошёл audit 26/26 и native SSH цепочку для 1357 source files и 33 synthetic initial-input files с CLI из материализованного source. Зафиксированы 179 tools tests, wrong-host-key/wire-corruption/drift refusals и раздельные source/input generations. Старый executor proof помечен историческим; полный inventory/runtime/site admission открыт.
 
 - 2026-11-14: добавлена воспроизводимая local/SSH доставка source bundles формата 2 и отдельных owner-input пакетов по явному списку. Проверяются archive/member hashes, пути, permissions, scope и drift; generations публикуются атомарно без переключения runtime. Общий workflow может готовить request и private archive без ручного копирования checkout. Проверки carrier SHA выполняются также при Python -O.
