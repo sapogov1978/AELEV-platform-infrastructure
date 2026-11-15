@@ -2,18 +2,11 @@
 
 from __future__ import annotations
 
-import contextlib
-import io
-import json
-import os
-from pathlib import Path
-import re
-import textwrap
 from typing import Any
 import unittest
-from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[1]
+from workflow_admission import AdmissionError, require_success
+
 REVISION = "1" * 40
 
 
@@ -32,37 +25,11 @@ class FencingReleaseGateTests(unittest.TestCase):
         ]
 
     def admitted(self, runs: list[dict[str, Any]]) -> bool:
-        workflow = (
-            ROOT / ".github/workflows/postgresql-fencing-release.yml"
-        ).read_text()
-        match = re.search(r"(?ms)^([ ]+)python - <<'PY'\n(.*?)^\1PY\s*$", workflow)
-        self.assertIsNotNone(match)
-        assert match is not None
-        code = compile(textwrap.dedent(match.group(2)), "release-workflow", "exec")
-        with (
-            patch.dict(
-                os.environ,
-                GITHUB_REPOSITORY="sapogov1978/AELEV-platform-infrastructure",
-                GITHUB_SHA=REVISION,
-                GH_TOKEN="offline-test-token",
-            ),
-            patch(
-                "urllib.request.urlopen",
-                return_value=io.StringIO(json.dumps({"workflow_runs": runs})),
-            ) as request,
-            contextlib.redirect_stdout(io.StringIO()),
-        ):
-            try:
-                exec(code, {})
-                result = True
-            except SystemExit:
-                result = False
-        request.assert_called_once()
-        self.assertEqual(
-            request.call_args.args[0].full_url,
-            "https://api.github.com/repos/sapogov1978/AELEV-platform-infrastructure/actions/runs?per_page=100",
-        )
-        return result
+        try:
+            require_success(runs, REVISION, ("audit", "postgresql-fencing-ssh-native"))
+            return True
+        except AdmissionError:
+            return False
 
     def test_exact_source_success(self) -> None:
         self.assertTrue(self.admitted(self.runs()))

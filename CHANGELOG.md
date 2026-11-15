@@ -1,5 +1,9 @@
 # Changelog
 
+- 2026-11-15: диагностические trials 6a7a9d2 выявили неоднозначность observer: последовательные SQL-ответы не доказывали одновременных writers; fault injection не подтверждал остановку владельца REST socket. Новый test helper удерживает те же SQL connections при перепроверке двух primary и подтверждает точный listener owner в kernel state T. Product fencing/leases/return budgets и admission timeout сохраняются; истинный split brain остаётся ошибкой.
+
+- 2026-11-14: SAST source 6a7a9d2 отклонил dynamic exec теста release preflight. Preflight вынесен в обычный typed CLI `tools/workflow_admission.py` с bounded HTTPS query к фиксированному GitHub origin; workflow и regression tests используют его напрямую. Правила Semgrep и их exclusions сохраняются.
+
 - 2026-11-14: native AMD64 run 43653529360 source b17f01c остановился до SQL restore: после зависания Patroni не подтвердились все SQL-роли с единственным healthy primary. Причина ещё неизвестна; в safe proof добавлены process/health/code counts и whitelist summaries fencing phases/budgets. Следующий workflow ограничен тремя независимыми диагностическими trials. Raw logs, credentials и канонические payloads не публикуются; timeouts/admission сохраняются.
 
 - 2026-11-14: подготовлен ручной multiarch release workflow PostgreSQL fencing с exact-source audit/HA precondition, SBOM/provenance и подписью digest по принятой инфраструктурной схеме. Шесть offline regression cases исполняют настоящий preflight с успешным, чужим, отсутствующим, более новым failed/pending и повторным результатом. Push/tag не публикует образ автоматически; stack approval, запуск выпуска и допуск registry image сохраняются отдельными действиями.

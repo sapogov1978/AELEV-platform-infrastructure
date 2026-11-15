@@ -14,6 +14,7 @@ on:
       - postgresql/prepare-tls.py
       - postgresql/fencing-node.py
       - postgresql/test/fencing-ssh-lifecycle.py
+      - postgresql/test/ha_observation.py
       - postgresql/vendor/**
 
 permissions:

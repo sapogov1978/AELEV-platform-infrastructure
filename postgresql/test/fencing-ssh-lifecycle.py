@@ -197,6 +197,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     PREFIX = "AELEV_INFRASTRUCTURE_POSTGRESQL_"
     SCOPE = "ssh-ha-" + uuid.uuid4().hex[:12]
     FENCER, SQL = args.fencing_image, args.sql_image
+    observer_source = Path(__file__).with_name("ha_observation.py").read_text()
+    observer_name = SCOPE + "-sql-observer"
+    observer_volume = ""
     for reference in (FENCER, SQL, args.ssh_host_base_image):
         if not re.fullmatch(
             r"(?:[a-z0-9][a-z0-9._:/-]*@)?sha256:[a-f0-9]{64}", reference
@@ -224,6 +227,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "postgresql/compose.runtime.yml",
                 "postgresql/compose.fencing-ssh.yml",
                 "postgresql/test/fencing-ssh-lifecycle.py",
+                "postgresql/test/ha_observation.py",
             )
         },
         "fencing_image": FENCER,
@@ -520,18 +524,55 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
 
     def roles() -> dict[int, bool]:
-        found = {}
-        for n in range(1, 4):
-            r = sql(
-                n,
-                f"with psycopg.connect(host=setting('NODE_{n}_HOST'),port=setting('NODE_{n}_PORT'),user=setting('ADMIN_USER'),password=secret('admin-password'),dbname='postgres',sslmode='verify-full',sslrootcert=str(SECRETS/'ca.crt'),sslcert=str(SECRETS/'admin.crt'),sslkey=str(SECRETS/'admin.key'),connect_timeout=2) as c:\n print(c.execute('select pg_is_in_recovery()').fetchone()[0])\n",
-                check=False,
+        r = process(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "-i",
+                "--name",
+                observer_name,
+                "--network",
+                "bridge",
+                "--read-only",
+                "--cap-drop",
+                "ALL",
+                "--security-opt",
+                "no-new-privileges",
+                "--memory",
+                "128m",
+                "--pids-limit",
+                "64",
+                "--label",
+                "io.aelev.evidence.scope=" + SCOPE,
+                "--env-file",
+                str(OWNER / ".env"),
+                "--mount",
+                "type=volume,source="
+                + observer_volume
+                + ",target=/run/aelev/secrets,readonly,volume-nocopy",
+                "--entrypoint",
+                "python",
+                SQL,
+                "-",
+                "observe",
+            ],
+            body=observer_source,
+            timeout=30,
+            check=False,
+        )
+        if r.returncode:
+            code = (
+                "MULTIPLE_SQL_WRITERS_ON_LIVE_CONNECTIONS"
+                if "MULTIPLE_SQL_WRITERS_ON_LIVE_CONNECTIONS" in r.stderr
+                else "SQL_OBSERVER_UNAVAILABLE"
             )
-            if r.returncode == 0:
-                found[n] = r.stdout.strip() == "True"
-        assert (
-            sum(value is False for value in found.values()) <= 1
-        ), "MULTIPLE_SQL_WRITERS"
+            proof["sql_observer_failure"] = code
+            raise AssertionError(code)
+        found = {
+            int(node): recovery
+            for node, recovery in json.loads(r.stdout)["roles"].items()
+        }
         proof["last_sql_roles"] = {
             str(n): (
                 "REPLICA"
@@ -850,6 +891,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "\n".join(k + "=" + v for k, v in values.items()) + "\n"
         )
         process([sys.executable, str(OWNER / "prepare-tls.py")], cwd=OWNER)
+        observer_inputs = OUT / "sql-observer-inputs"
+        observer_inputs.mkdir(mode=0o700)
+        for name in ("admin.crt", "admin.key", "admin-password", "ca.crt"):
+            shutil.copyfile(OWNER / "secrets/admin" / name, observer_inputs / name)
+        observer_volume = volume(SCOPE + "-sql-observer-credentials")
+        materialize(observer_inputs, observer_volume)
         phase("fresh public TLS preparation and published endpoint plan")
         for n in range(1, 4):
             for name, cn in (
@@ -1122,8 +1169,22 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "State"
         ]["StartedAt"]
         phase("1000 rows synchronously committed before failure")
-        freeze = "import os,signal\nfrom pathlib import Path\npids=[int(p.name) for p in Path('/proc').iterdir() if p.name.isdigit() and p.name!='1' and (p/'comm').exists() and (p/'comm').read_text().strip()=='patroni']\nassert pids\nfor pid in pids:os.kill(pid,signal.SIGSTOP)"
-        docker("exec", ids[f"postgresql-{first}"], "python", "-c", freeze)
+        fault = process(
+            [
+                "docker",
+                "exec",
+                "--user",
+                "postgres",
+                "-i",
+                ids[f"postgresql-{first}"],
+                "python",
+                "-",
+                "suspend",
+                values[PREFIX + f"NODE_{first}_REST_PORT"],
+            ],
+            body=observer_source,
+        )
+        proof["patroni_fault"] = json.loads(fault.stdout)
         assert roles().get(first) is False
         phase("Patroni suspended while old SQL writer remains alive")
         second = writer(exclude=first, seconds=210)
@@ -1306,6 +1367,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             (OUT / (role + ".log.private")).write_text(logs.stdout + logs.stderr)
         for role in reversed(list(recipes)):
             compose(role, "down", "--remove-orphans", check=False)
+        observer = process(["docker", "inspect", observer_name], check=False)
+        if observer.returncode == 0:
+            assert (
+                json.loads(observer.stdout)[0]["Config"]["Labels"][
+                    "io.aelev.evidence.scope"
+                ]
+                == SCOPE
+            )
+            docker("rm", "--force", observer_name)
         deadline = time.monotonic() + 45
         while time.monotonic() < deadline:
             transient = docker(

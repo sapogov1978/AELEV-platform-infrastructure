@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-15: SSH acceptance получил отдельный operator observer без подключения к PGDATA и с собственным read-only набором admin inputs. Неодновременные SQL samples перепроверяются на прежних живых connections; два подтверждённых primary по-прежнему запрещены. Fault injection выбирает процесс по REST socket и подтверждает SIGSTOP через proc state; PID 1/неоднозначная цель отклоняются. Старый name selector сохраняется только как диагностический признак.
+
 - 2026-11-14: первый AMD64 повтор расширенного HA/restore сценария source b17f01c не дошёл до restore из-за неготового кластера после Patroni fault; ARM прошёл полностью, прежний AMD64 HA source 09892fb сохранён отдельно. Для локализации proof получил безопасные runtime/intent/audit summaries с проверками redaction; причина не объявлена исправленной.
 
 - 2026-11-14: отдельный ручной workflow готовит подписанный multiarch fencing image после успешных audit/native HA для точного source SHA. Он не запускает SQL, не переключает runtime и не выдаёт RESUME; после публикации всё ещё требуется проверка exact registry digest.

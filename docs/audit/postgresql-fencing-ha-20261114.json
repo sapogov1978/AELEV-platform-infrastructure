@@ -1,7 +1,18 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "status": "LATER_AMD64_HA_FAILURE_DIAGNOSIS_PENDING",
+  "status": "NATIVE_ARM_CONFIRMED_FAULT_AND_RESTORE_PASS_AMD64_REVALIDATION_PENDING",
+  "observer_extension_checks": {
+    "postgresql_tests": 271,
+    "failures": 0,
+    "skips": 0,
+    "held_connection_and_positive_fault_regressions": 9,
+    "tools_tests": 185,
+    "ruff_black_strict_mypy": "PASS",
+    "semgrep_1_136_0": "PASS_ZERO_FINDINGS",
+    "bandit_1_8_6": "PASS_176_FILES_NO_NEW_MEDIUM_OR_HIGH",
+    "publication_started": false
+  },
   "diagnostic_extension_checks": {
     "postgresql_tests": 262,
     "failures": 0,
@@ -184,7 +195,7 @@
     }
   ],
   "open_gates": [
-    "establish cause of AMD64 run 43653529360 before claiming reliable HA; diagnostic evidence added without changing runtime or timeout",
+    "repeat AMD64 qualification with positive kernel fault confirmation and held-connection SQL observation; retain all earlier failed outcomes",
     "native AMD64 physical SQL restore added after its completed HA/crash/replay proof",
     "explicit stack approval for OpenSSH addition and zlib 1.4",
     "signed immutable image publication",
@@ -294,5 +305,73 @@
     "provenance": "mode=max",
     "signature": "Cosign exact digest",
     "production_admission": false
+  },
+  "native_arm_listener_observer": {
+    "proof_sha256": "8dc101bd9e1b0d885746b71972168111158d3a721fb0bce415b76bc689eca2ed",
+    "status": "PASS",
+    "platform": "linux/arm64",
+    "patroni_fault": {
+      "selection": "exact REST listener owner",
+      "kernel_stop_confirmed": true,
+      "legacy_name_selector_matched": true,
+      "legacy_name_match_count": 1
+    },
+    "source_worktree_sha256": {
+      "postgresql/prepare-tls.py": "a59f48cf88255759084d6720898e176a06204a8f2c2a69c71deb73eb4f5f2fa4",
+      "postgresql/fencing-node.py": "5e331894ced22891b82168eb09ac1cc46b5d8753976d3b6cf99a94ce1ee8d7f9",
+      "postgresql/compose.runtime.yml": "156f12e7dfde7f6019d329451d12568866c0dedf2aef874f670e671ac3857614",
+      "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
+      "postgresql/test/fencing-ssh-lifecycle.py": "991354a8eed67e621fbb45809ff9c35d2be511ac51f4b4cf9bd37e93fea8bfcc",
+      "postgresql/test/ha_observation.py": "2702c5c36b349d8fab379e27fd919739a4c7609e8bfd1994a4da21fcaf229caa"
+    },
+    "initial_writer": 1,
+    "replacement_writer": 2,
+    "committed_rows_sha256": "46fd7857e4c7b8f59b44e801950583585cf5e8a646c001099e834855a3cd8279",
+    "sql_physical_backup_restore": {
+      "status": "PASS",
+      "manifest_sha256": "119f36dedfa058f6957d5fbed0f898f4ffb158ff3db745e02ebb4f5b992c2a45",
+      "restored_rows": 1000,
+      "restored_rows_sha256": "46fd7857e4c7b8f59b44e801950583585cf5e8a646c001099e834855a3cd8279",
+      "source_transport": "verify-full mTLS published primary",
+      "restore_listener": "127.0.0.1:16432",
+      "independent_backup_storage_proven": false,
+      "pitr_proven": false
+    },
+    "persisted_start_attempts": 1,
+    "baseline_containers_preserved": true,
+    "owned_resources_removed": true
+  },
+  "sast_repair": {
+    "failed_source": "6a7a9d2e2bb3a3905190a6ea8a8ce4038310cd15",
+    "failed_run": 43654776816,
+    "rule": "drp-python-exec",
+    "change": "Preflight uses ordinary workflow_admission CLI and direct regression imports, no dynamic exec.",
+    "local_semgrep": "1.136.0, 0 findings, unchanged rules/exclusions",
+    "local_bandit": "176 files, no new medium/high"
+  },
+  "diagnostic_trials_6a7a9d2": {
+    "run": 43654776890,
+    "results": [
+      {
+        "trial": 1,
+        "artifact": 14137458487,
+        "status": "FAIL",
+        "reason": "MULTIPLE_SQL_WRITERS from sequential snapshots"
+      },
+      {
+        "trial": 2,
+        "artifact": 14137463833,
+        "status": "FAIL",
+        "reason": "timeout; all SQL healthy, original writer, no fencing intents; stopped listener not positively verified by this revision"
+      },
+      {
+        "trial": 3,
+        "artifact": 14137453476,
+        "status": "FAIL",
+        "reason": "MULTIPLE_SQL_WRITERS from sequential snapshots"
+      }
+    ],
+    "interpretation": "Observer ambiguity isolated; these historical outcomes do not by themselves establish simultaneous writers or the exact root cause of every prior timeout.",
+    "runtime_logic_changed": false
   }
 }
