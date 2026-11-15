@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794780393.1246789,
-    "seen": 1794780468.685333,
-    "ast_hash": "230c2ce04f24138fea3e2bcca485c0de",
+    "mtime": 1794781402.8210638,
+    "seen": 1794781441.0109031,
+    "ast_hash": "8c84d66e3a53b5884b683fc2b9e1c381",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794469975.0051076,
-    "seen": 1794780468.685227,
-    "ast_hash": "752861e02ec20d3f0f9fb4366a958e1d",
+    "mtime": 1794781402.8190987,
+    "seen": 1794781441.009195,
+    "ast_hash": "57e616dd030149a01a2ae94f490c6e26",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -2496,9 +2496,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_orchestration.py": {
-    "mtime": 1794469975.0055037,
-    "seen": 1794780468.685235,
-    "ast_hash": "37984dbb339037497efb11963196758a",
+    "mtime": 1794781402.8199823,
+    "seen": 1794781441.0093172,
+    "ast_hash": "d1a8ea5bab8d54dedbebedd51956bf1e",
     "semantic_hash": ""
   },
   "test_infrastructure/test_recovery.py": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794390501.2542062,
-    "seen": 1794780468.6854641,
-    "ast_hash": "671546b9ec1e99e8e8a72a727e1884bc",
+    "mtime": 1794781402.820458,
+    "seen": 1794781441.013128,
+    "ast_hash": "540954cd6b4245806a1e321db7be6fe6",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {

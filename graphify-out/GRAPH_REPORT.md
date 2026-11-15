@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-15)
 
 ## Corpus Check
-- 1094 files · ~733,595 words
+- 1094 files · ~733,751 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 205 file(s) not represented in the graph (top: .whl 64, (none) 45, .example 23)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `07e07e37`
+- Built from commit: `fbf28a42`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3096,7 +3096,7 @@ Nodes (5): interval, retries, test, timeout, healthcheck
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `replace()` connect `replace` to `Store`, `recovery.py`, `suspend`, `Blackbox Exporter — руководство пользователя`, `re`, `Восстановление входа при потере cookie — 2026-10-26`, `test_automatic_recovery.py`, `test_delivery_http.py`, `Техническая инъекция разделов и состояния`, `Tempo — руководство пользователя`, `platform-ui/test/test_api.py`, `Loki — руководство пользователя`, `Prometheus — руководство пользователя`, `main`, `Проверка исправления счётчиков и управления Prometheus`, `test_experiment.py`, `keycloak/test/test_status_publisher.py`, `test/test_documentation.py`, `recovery_host.py`, `up`, `public-egress-gateway/test/test_renewal.py`, `Руководство: метрики и панели нового владельца`, `Kafka — руководство пользователя`, `Keycloak — руководство пользователя`, `gateway.py`, `Keycloak — нормативная спецификация`, `Обновление журналов инфраструктурных издателей — 23 октября 2026`, `MinIO — руководство пользователя`?**
-  _High betweenness centrality (0.066) - this node is a cross-community bridge._
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `observability/USER_MANUAL.md` be split into smaller, more focused modules?**
@@ -3106,6 +3106,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `recovery.py` be split into smaller, more focused modules?**
   _Cohesion score 0.06600877192982456 - nodes in this community are weakly interconnected._
 - **Why does `Platform UI — нормативная спецификация` connect `Техническая инъекция разделов и состояния` to `platform-ui-injection.md`, `replace`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Should `public-egress-gateway/renewal.py` be split into smaller, more focused modules?**
   _Cohesion score 0.08604038630377524 - nodes in this community are weakly interconnected._

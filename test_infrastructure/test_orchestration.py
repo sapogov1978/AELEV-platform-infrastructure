@@ -363,6 +363,26 @@ def test_unknown_grafana_message_never_becomes_persisted_text() -> None:
             "DEPENDENCY_NOT_READY",
         ),
         ("permission denied: /secret/path", "RUNTIME_PERMISSION_DENIED"),
+        (
+            "[infrastructure] FULL_RUNTIME_SPIRE_PUBLIC_EXPORT_REQUIRED\n",
+            "FULL_RUNTIME_SPIRE_PUBLIC_EXPORT_REQUIRED",
+        ),
+        (
+            "progress\n[infrastructure] FULL_RUNTIME_COMMAND_RESULT_UNKNOWN\n",
+            "FULL_RUNTIME_COMMAND_RESULT_UNKNOWN",
+        ),
+        (
+            "[infrastructure] FULL_RUNTIME_OWNER_HANDOFF_REQUIRED",
+            "FULL_RUNTIME_OWNER_HANDOFF_REQUIRED",
+        ),
+        (
+            "[infrastructure] FULL_RUNTIME_UNRECOGNIZED_PRIVATE_VALUE",
+            "COMPOSE_UP_FAILED",
+        ),
+        (
+            "[infrastructure] FULL_RUNTIME_SPIRE_PUBLIC_EXPORT_REQUIRED secret=value",
+            "COMPOSE_UP_FAILED",
+        ),
         ("unexpected token=must-not-survive", "COMPOSE_UP_FAILED"),
     ],
 )

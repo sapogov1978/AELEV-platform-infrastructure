@@ -91,6 +91,8 @@ BOM закрепляет source commit, канонические digest отре
 
 ## 6. Функциональная приёмка
 
+При отказе публичного full-runtime CLI root lifecycle сохраняет только точное известное имя защитного кода `FULL_RUNTIME_*`, без исходных stdout/stderr. Неизвестная строка или дополнительные данные остаются общим `COMPOSE_UP_FAILED`; отсутствие public export SPIRE и требование owner handoff не маскируются этим общим кодом. Это классификация отказа, без повторной команды и без автоматической подготовки/замены identities. Основания — [результат subprocess](https://docs.python.org/3.13/library/subprocess.html#subprocess.CompletedProcess) и [OWASP: исключение credentials из журналов](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#data-to-exclude).
+
 Полный прогон обязан получить отдельное доказательство для каждой функции из `full-local.json`:
 
 1. реальный OIDC login;

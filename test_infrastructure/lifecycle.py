@@ -391,6 +391,20 @@ def capture_group_startup_diagnostic(
 
 
 def classify_group_start_failure(output: str) -> str:
+    reported = set(output.splitlines())
+    for code in (
+        "FULL_RUNTIME_SPIRE_PUBLIC_EXPORT_REQUIRED",
+        "FULL_RUNTIME_SPIRE_EXPORT_STALE",
+        "FULL_RUNTIME_SPIRE_OWNER_RUNTIME_NOT_READY",
+        "FULL_RUNTIME_OWNER_HANDOFF_REQUIRED",
+        "FULL_RUNTIME_IMAGE_HANDOFF_REQUIRED",
+        "FULL_RUNTIME_REPLICA_HANDOFF_REQUIRED",
+        "FULL_RUNTIME_UNDECLARED_WRITER",
+        "FULL_RUNTIME_COMMAND_FAILED",
+        "FULL_RUNTIME_COMMAND_RESULT_UNKNOWN",
+    ):
+        if "[infrastructure] " + code in reported:
+            return code
     normalized = output.lower()
     classifications = (
         (
