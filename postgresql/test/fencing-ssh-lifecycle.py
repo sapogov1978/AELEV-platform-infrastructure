@@ -26,6 +26,8 @@ import textwrap
 import time
 import uuid
 
+from ha_cleanup import verify_cleanup
+
 NODES = frozenset(f"postgresql-{n}" for n in range(1, 4))
 CODES = frozenset(
     (
@@ -231,6 +233,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "postgresql/compose.fencing-ssh.yml",
                 "postgresql/test/fencing-ssh-lifecycle.py",
                 "postgresql/test/ha_observation.py",
+                "postgresql/test/ha_cleanup.py",
             )
         },
         "fencing_image": FENCER,
@@ -1410,60 +1413,73 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             archive_error = error
             proof["status"] = "FAIL"
             proof["journal_archive_error"] = type(error).__name__
-        for role, identity in ids.items():
-            state = json.loads(docker("inspect", identity))[0]
-            assert state["Config"]["Labels"]["io.aelev.evidence.scope"] == SCOPE
-            (OUT / (role + ".state.private.json")).write_text(
-                json.dumps(state, indent=2)
+        proof["owned_resources_removed"] = False
+        try:
+            for role, identity in ids.items():
+                state = json.loads(docker("inspect", identity))[0]
+                assert state["Config"]["Labels"]["io.aelev.evidence.scope"] == SCOPE
+                (OUT / (role + ".state.private.json")).write_text(
+                    json.dumps(state, indent=2)
+                )
+                logs = process(["docker", "logs", identity], check=False)
+                proof.setdefault("native_role_states", {})[role] = safe_runtime_state(
+                    state, logs.stdout + logs.stderr
+                )
+                (OUT / (role + ".log.private")).write_text(logs.stdout + logs.stderr)
+            for role in reversed(list(recipes)):
+                compose(role, "down", "--remove-orphans", check=False)
+            observer = process(["docker", "inspect", observer_name], check=False)
+            if observer.returncode == 0:
+                assert (
+                    json.loads(observer.stdout)[0]["Config"]["Labels"][
+                        "io.aelev.evidence.scope"
+                    ]
+                    == SCOPE
+                )
+                docker("rm", "--force", observer_name)
+            deadline = time.monotonic() + 45
+            while time.monotonic() < deadline:
+                transient = docker(
+                    "ps",
+                    "-aq",
+                    "--filter",
+                    "label=io.aelev.postgresql.fencing-cluster=" + SCOPE,
+                ).split()
+                if not transient:
+                    break
+                time.sleep(0.5)
+            assert not transient, "OWNED_NODE_OPERATIONS_STILL_RUNNING"
+            for name in reversed(volumes):
+                row = process(["docker", "volume", "inspect", name], check=False)
+                if row.returncode == 0:
+                    info = json.loads(row.stdout)[0]
+                    assert info["Labels"]["io.aelev.evidence.scope"] == SCOPE
+                    docker("volume", "rm", name)
+            for name in reversed(networks):
+                row = process(["docker", "network", "inspect", name], check=False)
+                if row.returncode == 0:
+                    info = json.loads(row.stdout)[0]
+                    assert info["Labels"]["io.aelev.evidence.scope"] == SCOPE
+                    docker("network", "rm", name, check=False)
+            verify_cleanup(docker, SCOPE, proof)
+            after = inventory()
+            proof["baseline_containers_preserved"] = all(
+                after.get(k) == value for k, value in baseline.items()
             )
-            logs = process(["docker", "logs", identity], check=False)
-            proof.setdefault("native_role_states", {})[role] = safe_runtime_state(
-                state, logs.stdout + logs.stderr
+            assert proof[
+                "baseline_containers_preserved"
+            ], "BASELINE_CONTAINER_STATE_CHANGED"
+        except Exception as error:
+            proof["status"] = "FAIL"
+            proof["cleanup_error"] = type(error).__name__
+            raise
+        finally:
+            (OUT / "proof.json").write_text(
+                json.dumps({**proof, "stages": history}, indent=2) + "\n"
             )
-            (OUT / (role + ".log.private")).write_text(logs.stdout + logs.stderr)
-        for role in reversed(list(recipes)):
-            compose(role, "down", "--remove-orphans", check=False)
-        observer = process(["docker", "inspect", observer_name], check=False)
-        if observer.returncode == 0:
-            assert (
-                json.loads(observer.stdout)[0]["Config"]["Labels"][
-                    "io.aelev.evidence.scope"
-                ]
-                == SCOPE
-            )
-            docker("rm", "--force", observer_name)
-        deadline = time.monotonic() + 45
-        while time.monotonic() < deadline:
-            transient = docker(
-                "ps",
-                "-aq",
-                "--filter",
-                "label=io.aelev.postgresql.fencing-cluster=" + SCOPE,
-            ).split()
-            if not transient:
-                break
-            time.sleep(0.5)
-        assert not transient, "OWNED_NODE_OPERATIONS_STILL_RUNNING"
-        for name in reversed(volumes):
-            row = process(["docker", "volume", "inspect", name], check=False)
-            if row.returncode == 0:
-                info = json.loads(row.stdout)[0]
-                assert info["Labels"]["io.aelev.evidence.scope"] == SCOPE
-                docker("volume", "rm", name)
-        after = inventory()
-        proof["baseline_containers_preserved"] = all(
-            after.get(k) == value for k, value in baseline.items()
-        )
-        assert proof[
-            "baseline_containers_preserved"
-        ], "BASELINE_CONTAINER_STATE_CHANGED"
-        proof["owned_resources_removed"] = True
-        (OUT / "proof.json").write_text(
-            json.dumps({**proof, "stages": history}, indent=2) + "\n"
-        )
-        if guard is not None:
-            guard.terminate()
-            guard.wait()
+            if guard is not None:
+                guard.terminate()
+                guard.wait()
         if original_status == "PASS" and archive_error is not None:
             raise RuntimeError("TECHNICAL_JOURNAL_RETENTION_FAILED") from archive_error
     return proof

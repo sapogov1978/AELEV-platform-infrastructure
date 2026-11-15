@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794705395.5459912,
-    "seen": 1794705692.849977,
-    "ast_hash": "f34edfb1f5c011d3b3696ff6ab19e585",
+    "mtime": 1794780768.251791,
+    "seen": 1794780864.164043,
+    "ast_hash": "76b4b58346dcd74d16ba06a16f2a825c",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794705395.5470324,
-    "seen": 1794705692.857151,
-    "ast_hash": "4421f7803dbc206be4cfeae32ee22794",
+    "mtime": 1794780768.2511024,
+    "seen": 1794780864.173474,
+    "ast_hash": "3b35e3a71ab55d044514ff1a92d95c50",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -6750,9 +6750,9 @@
     "semantic_hash": ""
   },
   "postgresql/FENCING_SSH.md": {
-    "mtime": 1794701220.2754488,
-    "seen": 1794701548.638199,
-    "ast_hash": "80641a1db1a76eef57e5b24916bc208d",
+    "mtime": 1794780768.2504258,
+    "seen": 1794780864.1734972,
+    "ast_hash": "10a7b68d5eb143c01d2c6c20514c6fa0",
     "semantic_hash": ""
   },
   "docs/audit/postgresql-fencing-ssh-20261114.json": {
@@ -6774,9 +6774,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/fencing-ssh-lifecycle.py": {
-    "mtime": 1794705456.7705595,
-    "seen": 1794705692.844629,
-    "ast_hash": "91c8d9d63f009dada837d6417bbd9289",
+    "mtime": 1794780814.9774468,
+    "seen": 1794780864.157887,
+    "ast_hash": "0468e68189901486e75c25e77207c3b1",
     "semantic_hash": ""
   },
   ".github/workflows/postgresql-fencing-release.yml": {
@@ -6813,6 +6813,18 @@
     "mtime": 1794700876.2839496,
     "seen": 1794701548.623853,
     "ast_hash": "9cf16ee63d094e566ee3e4bd1eb0b4e6",
+    "semantic_hash": ""
+  },
+  "postgresql/test/ha_cleanup.py": {
+    "mtime": 1794780814.9749475,
+    "seen": 1794780864.1578891,
+    "ast_hash": "470a1dbbabad35c24555769fabfaa56f",
+    "semantic_hash": ""
+  },
+  "postgresql/test/test_ha_cleanup.py": {
+    "mtime": 1794780814.976309,
+    "seen": 1794780864.158109,
+    "ast_hash": "67e3afe61bab8685df0919d4b3323fdd",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
