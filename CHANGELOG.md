@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-15: после отдельного failed cold build MinIO получает прежние exact commits по canonical Go pseudo-versions через официальный proxy/checksum database, без VCS hash lookup. Commit guards сохраняют соответствие build source и OCI labels; Go, Alpine, MinIO/mc releases и runtime не обновляются. Предшествующие build/root failures сохраняются отдельно от следующей квалификации.
+
 - 2026-11-15: root clean-room сохраняет whitelist фиксированных full-runtime guard codes вместо общего Compose-отказа; неизвестный код и строка с дополнительными данными закрыто остаются общими. Это локализует несовместимость SPIRE initial-input/public-export в приёмочном caller без ослабления runtime guards или публикации сырых diagnostics; предыдущий failed full run сохранён.
 
 - 2026-11-15: capability init без `translation` больше не требует credential её provider и не мигрирует настройки Translator. Состав capabilities передаётся в сохраняющую инициализацию; полный профиль и запуск по умолчанию сохраняют обязательную проверку ключа. Регрессия проверяет пять management capabilities, Kafka отдельно, явный Translator и прежний прямой полный init; Compose, env/PKI, images и runtime не переключаются.

@@ -9,26 +9,30 @@ ARG MC_COMMIT=b00526b153a31b36767991a4f5ce2cced435ee8e
 
 ENV CGO_ENABLED=0
 ENV GOBIN=/out
+ENV GOPROXY=https://proxy.golang.org
+ENV GOSUMDB=sum.golang.org
 
 RUN apk add --no-cache ca-certificates
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
+    test "${MINIO_COMMIT}" = "0d7408fc9969caf07de6a8c3a84f9fbb10a6739e" && \
     go install -tags kqueue -trimpath -ldflags="-s -w \
       -X github.com/minio/minio/cmd.Version=2025-04-22T22:12:26Z \
       -X github.com/minio/minio/cmd.CopyrightYear=2025 \
       -X github.com/minio/minio/cmd.ReleaseTag=${MINIO_RELEASE} \
       -X github.com/minio/minio/cmd.CommitID=${MINIO_COMMIT} \
       -X github.com/minio/minio/cmd.ShortCommitID=0d7408fc9969" \
-      "github.com/minio/minio@${MINIO_COMMIT}"
+      "github.com/minio/minio@v0.0.0-20250422221226-0d7408fc9969"
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
+    test "${MC_COMMIT}" = "b00526b153a31b36767991a4f5ce2cced435ee8e" && \
     go install -tags kqueue -trimpath -ldflags="-s -w \
       -X github.com/minio/mc/cmd.Version=2025-04-16T18:13:26Z \
       -X github.com/minio/mc/cmd.CopyrightYear=2025 \
       -X github.com/minio/mc/cmd.ReleaseTag=${MC_RELEASE} \
       -X github.com/minio/mc/cmd.CommitID=${MC_COMMIT} \
       -X github.com/minio/mc/cmd.ShortCommitID=b00526b153a3" \
-      "github.com/minio/mc@${MC_COMMIT}"
+      "github.com/minio/mc@v0.0.0-20250416181326-b00526b153a3"
 RUN --mount=type=cache,target=/go/pkg/mod \
     mkdir -p /out/licenses/minio /out/licenses/mc && \
     cp /go/pkg/mod/github.com/minio/minio@v0.0.0-20250422221226-0d7408fc9969/LICENSE /out/licenses/minio/LICENSE && \

@@ -9,7 +9,6 @@ import subprocess
 import unittest
 from pathlib import Path
 
-
 COMPONENT_ROOT = Path(__file__).resolve().parents[1]
 COMPOSE_PATH = COMPONENT_ROOT / "compose.yml"
 ENV_PATH = COMPONENT_ROOT / ".env.example"
@@ -137,8 +136,20 @@ class MinioConfigurationTest(unittest.TestCase):
         self.assertIn('MINIO_BROWSER: "off"', compose)
         self.assertIn('test: ["CMD", "minio-healthcheck"]', compose)
         self.assertIn("exec mc ready healthcheck", healthcheck)
-        self.assertIn("github.com/minio/minio@${MINIO_COMMIT}", dockerfile)
-        self.assertIn("github.com/minio/mc@${MC_COMMIT}", dockerfile)
+        self.assertIn("ENV GOPROXY=https://proxy.golang.org\n", dockerfile)
+        self.assertIn("ENV GOSUMDB=sum.golang.org\n", dockerfile)
+        for component, prefix in (("minio", "MINIO"), ("mc", "MC")):
+            commit = re.search(
+                rf"(?m)^ARG {prefix}_COMMIT=([a-f0-9]{{40}})$", dockerfile
+            )
+            release = re.search(
+                rf"(?m)^ARG {prefix}_RELEASE=RELEASE\.([0-9TZ-]+)$", dockerfile
+            )
+            assert commit is not None and release is not None
+            timestamp = release[1].replace("-", "").replace("T", "").replace("Z", "")
+            version = f"v0.0.0-{timestamp}-{commit[1][:12]}"
+            self.assertIn(f"github.com/minio/{component}@{version}", dockerfile)
+            self.assertIn(f'test "${{{prefix}_COMMIT}}" = "{commit[1]}"', dockerfile)
         self.assertFalse((COMPONENT_ROOT / "healthcheck.go").exists())
         self.assertNotIn("http://minio:9000", compose)
         self.assertIn("minio-ingress: {}", compose)
@@ -149,7 +160,7 @@ class MinioConfigurationTest(unittest.TestCase):
         self.assertIn("mc admin replicate add site-a site-b", replication)
         self.assertIn("mc admin replicate status site-a", replication)
         for site in ("a", "b"):
-            local_ca = f'$secrets_dir/site-{site}/CAs/aelev-minio-sites.crt'
+            local_ca = f"$secrets_dir/site-{site}/CAs/aelev-minio-sites.crt"
             self.assertIn(f'cp "$secrets_dir/sites-ca.crt" "{local_ca}"', generator)
             self.assertIn(f'"{local_ca}"', generator)
         self.assertRegex(

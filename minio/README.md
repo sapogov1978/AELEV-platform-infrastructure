@@ -19,6 +19,8 @@ docker compose up -d --no-build --pull never
 
 Первоначальная сборка, обновление и восстановление описаны в руководстве. При работе через общую инфраструктурную композицию не запускайте отдельный проект поверх тех же данных.
 
+Builder использует canonical Go module versions закреплённых commits MinIO/`mc` через официальный module proxy с checksum verification; параметры и границы воспроизводимости описаны в [SPEC](SPEC.md).
+
 ## Навигация
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.
