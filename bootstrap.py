@@ -331,6 +331,13 @@ def openssl(*arguments: str) -> None:
 
 
 def docker_bridge_gateway() -> str:
+    # Desktop publishes ports on the host, where the VM bridge gateway is not
+    # a bindable interface. Its host forwarding reaches loopback publications.
+    operating_system = run(
+        ["docker", "info", "--format", "{{.OperatingSystem}}"], capture=True
+    ).stdout.strip()
+    if operating_system.casefold().startswith("docker desktop"):
+        return "127.0.0.1"
     result = run(
         [
             "docker",
@@ -375,7 +382,9 @@ def initialize_local_bridge_routes(gateway: str) -> None:
             primary_address = ipaddress.ip_address(primary or "")
         except ValueError as error:
             raise QuickstartError(f"{primary_key} must be an IP address") from error
-        if primary_address.is_unspecified or str(primary_address) == gateway:
+        if primary_address.is_unspecified or (
+            str(primary_address) == gateway and not primary_address.is_loopback
+        ):
             raise QuickstartError(
                 f"{primary_key} must not overlap the Docker bridge listener"
             )
@@ -439,6 +448,10 @@ def initialize_keycloak() -> None:
             "basicConstraints=critical,CA:TRUE",
             "-addext",
             "keyUsage=critical,keyCertSign,cRLSign",
+            "-addext",
+            "subjectKeyIdentifier=hash",
+            "-addext",
+            "authorityKeyIdentifier=keyid:always",
             "-keyout",
             str(scratch / "ca.key"),
             "-out",
@@ -460,6 +473,8 @@ def initialize_keycloak() -> None:
         (scratch / "extensions").write_text(
             "basicConstraints=critical,CA:FALSE\n"
             "keyUsage=critical,digitalSignature,keyEncipherment\n"
+            "subjectKeyIdentifier=hash\n"
+            "authorityKeyIdentifier=keyid,issuer\n"
             "extendedKeyUsage=serverAuth\n"
             "subjectAltName=DNS:keycloak,DNS:localhost,DNS:host.docker.internal,IP:127.0.0.1\n"
         )
@@ -697,10 +712,44 @@ def main() -> int:
     )
     parser.add_argument("--capability", action="append", choices=tuple(CAPABILITIES))
     parser.add_argument("--no-build", action="store_true")
+    parser.add_argument("--full-runtime", action="store_true")
+    spire_inputs = parser.add_mutually_exclusive_group()
+    spire_inputs.add_argument("--spire-initial-input", type=Path)
+    spire_inputs.add_argument("--spire-local-input", type=Path)
+    parser.add_argument("--spire-renewal-input", type=Path)
     args = parser.parse_args()
+    if args.full_runtime and args.capability:
+        parser.error("--full-runtime cannot be combined with --capability")
+    if (
+        args.spire_initial_input is not None
+        or args.spire_local_input is not None
+        or args.spire_renewal_input is not None
+    ) and (not args.full_runtime or args.command != "up"):
+        parser.error("SPIRE input options require up --full-runtime")
+
+    def operation() -> None:
+        if not args.full_runtime:
+            execute(args.command, args.capability or list(CAPABILITIES), args.no_build)
+            return
+        from tools import full_local, full_runtime
+
+        try:
+            full_runtime.execute_full(
+                args.command,
+                ROOT,
+                no_build=args.no_build,
+                verify_scope=verify_scope,
+                initialize_core=initialize,
+                spire_initial_input=args.spire_initial_input,
+                spire_local_input=args.spire_local_input,
+                spire_renewal_input=args.spire_renewal_input,
+            )
+        except full_local.FullLocalError as error:
+            raise QuickstartError(str(error)) from None
+
     try:
         if args.command == "plan":
-            execute(args.command, args.capability or list(CAPABILITIES), args.no_build)
+            operation()
             return 0
         lock = ROOT / "runtime/lifecycle.lock"
         lock.parent.mkdir(parents=True, exist_ok=True)
@@ -712,7 +761,7 @@ def main() -> int:
                 "inspect runtime/lifecycle.lock before retrying"
             ) from None
         try:
-            execute(args.command, args.capability or list(CAPABILITIES), args.no_build)
+            operation()
         finally:
             lock.rmdir()
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:

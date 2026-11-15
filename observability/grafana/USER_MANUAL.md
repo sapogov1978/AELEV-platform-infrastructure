@@ -217,7 +217,52 @@ python3.13 grafana_api.py save-token --token-file secrets/publisher/token
 
 Ввод скрыт, файл создаётся с `0600`, существующий файл не перезаписывается. Публичную CA Grafana доставьте как `secrets/publisher/grafana-ca.crt`. Токен — только для публикации/обновления собственной панели, не пароль браузерного пользователя, не OIDC client-secret и не сертификат доставки метрик. Не передавайте его приложению, Prometheus, отправителю телеметрии или platform-ui.
 
+### Первичная локальная выдача через OIDC
+
+Для нового локального развёртывания [local-publisher.py](local-publisher.py) выполняет обычный вход `platform-operator` через Keycloak. Нужны работающие Grafana/IdP, их точные HTTPS loopback origins, PEM-bundle обоих доверенных серверных CA и уже выданный оператору файл пароля `0600`. Пароль, cookies и токены не передаются аргументами или через env. Этот вход предназначен только для `local|test`; производственные credentials и MFA выдаются оператором площадки по прежнему порядку.
+
+Из каталога Grafana, с собственными путями и UID новой папки:
+
+```sh
+python3.13 local-publisher.py issue --environment local \
+  --grafana-url https://localhost:13000 \
+  --identity-url https://127.0.0.1:18443 --realm aelev \
+  --ca-file /private/operator/grafana-identity-ca.pem \
+  --operator-password-file /private/operator/password \
+  --folder owner-demo --title 'Учебный владелец' \
+  --with-alert-provisioner --output /private/operator/new-owner-tokens
+```
+
+Output должен отсутствовать: оператор создаёт новый каталог `0700`, внутри — `publisher.token`, необязательный `provisioner.token` и `receipt.json`, все с `0600`. Publisher имеет Viewer и Edit только выданной новой папки, срок токена — 24 часа. Отдельный provisioner имеет Admin организации и срок токена 15 минут; передавайте его только одноразовой задаче установки правила. Для одной панели опустите `--with-alert-provisioner`. Указанный origin Grafana должен совпадать с настроенным callback origin (`localhost` и `127.0.0.1` не взаимозаменяемы для session cookie).
+
+Перед каждым POST квитанция устойчиво фиксирует точную фазу. `INSPECTION_REQUIRED` или `IN_PROGRESS` после прерывания требуют сверки `pending` и созданных объектов по ID/имени в этой Grafana. Повторная команда в прежний output запрещена; не удаляйте его и не создавайте новый для обхода неоднозначной выдачи. Токен показывается API только один раз: при потерянном ответе сначала отзовите соответствующий токен/identity через обычный операторский интерфейс. Чужая или уже существующая папка не обновляется этой командой.
+
+После успешной установки правила отзовите точную временную identity тем же операторским входом:
+
+```sh
+python3.13 local-publisher.py retire-provisioner --environment local \
+  --grafana-url https://localhost:13000 \
+  --identity-url https://127.0.0.1:18443 --realm aelev \
+  --ca-file /private/operator/grafana-identity-ca.pem \
+  --operator-password-file /private/operator/password \
+  --output /private/operator/new-owner-tokens
+```
+
+Команда сверяет ID, имя и роль, удаляет только эту временную service account вместе с её токенами и сохраняет publisher. Квитанция получает `PROVISIONER_RETIRED`. При прерывании уже начатого отзыва отсутствие точного ID подтверждается GET без повторного выпуска. Токен-файл остаётся частью закрытой истории операции; удаление файла не заменяет отзыв на сервере. API service accounts и permissions соответствуют [закреплённой Grafana 12.1.0](https://github.com/grafana/grafana/blob/v12.1.0/docs/sources/developers/http_api/serviceaccount.md). Полный свежий запуск и отрицательные проверки прав должны подтвердить этот путь на реальных продуктах до допуска выпуска.
+
+Изолированная проверка этого операторского пути — [test/local_publisher_e2e.py](test/local_publisher_e2e.py). Она использует новые native Keycloak/PostgreSQL/Grafana, новые TLS/учётные записи и собственные уникальные volumes/networks; до старта и очистки проверяется состав всех профилей, включая неактивные роли. Из каталога Grafana, после доставки канонических образов Keycloak/БД/Grafana и своего status-образа:
+
+```sh
+python3.13 test/local_publisher_e2e.py \
+  --status-image aelev/grafana-status:approved \
+  --output /private/operator/new-grafana-e2e
+```
+
+Проверяются настоящие OIDC/PKCE, TLS, выдача, запись своей панели, HTTP 403 для чужой папки/создания account, первоначальный доступ к API правил и HTTP 401 после удаления временной identity. Обычный тест удаляет только собственные новые ресурсы. Для разбора `--retain-on-failure` сохраняет отказавший одноразовый контур; его точные пути/проект — в `sandbox.json`. Весь output содержит исходные тестовые секреты и закрытые diagnostics: публиковать можно только `result.json`. Ни отдельная эта проверка, ни Docker health не доказывают готовность всей платформы.
+
 ## 7. Создание и публикация панели
+
+Native проверка выше также вызывает корневой координатор первоначальных входов SPIRE: настоящие scoped tokens доставляются в закрытый PKI bundle, повтор сохраняет число service accounts, временная identity отзывается с HTTP 401, publisher остаётся действительным. Эта часть проверяет подготовку и права; SPIRE runtime и фактическое renewal enrollment она не запускает.
 
 [Минимальный JSON](examples/owner-metrics/dashboard.json) — рабочая панель `timeseries` с одним запросом. `uid=owner-demo-metrics` — стабильный ID панели; `id=null` и `version=0` в исходнике — не номер объекта чужой БД. `title` и `description` задаёт владелец. `datasource.uid=aelev-prometheus` указан в самой панели и в запросе; замените оба места, если оператор выдал другой UID. PromQL `aelev_demo_ticks_total{owner_id="owner-demo"}` выбирает только этот учебный ряд. `fieldConfig.defaults.unit=short` означает безразмерное число; для реальной метрики укажите корректную единицу (`s`, `bytes`, `percentunit` и т. п.), а не изменяйте число для красивой шкалы. `gridPos`, легенда, tooltip и период обновления — собственное оформление.
 

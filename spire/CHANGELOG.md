@@ -1,5 +1,15 @@
 # История SPIRE
 
+- 2026-11-13: fresh runtime заранее создаёт закрытый `/run/certificate-renewal` для UID/GID `10001:10001`. Это устраняет воспроизведённый отказ первой native доставки из-за root-owned пустого тома; Docker-регрессия проверяет первичное подключение и реальную запись без capabilities, без подготовленных положительных reports. Linux CI требует все три native проверки без skips.
+
+- 2026-11-12: defaults томов `compose.observation.yml` следуют своему `COMPOSE_PROJECT`; отдельные overrides сохраняются. Это устраняет обращения fresh полного профиля к заводским томам соседней установки. Immutable native export не переписывается.
+
+- 2026-11-12: `local-inputs.py` готовит закрытый initial bundle только local/test: собственные query/server/write CA и шесть leaf, два отдельно выданных внешними операторами client identity без внешних issuer keys. Strict OpenSSL проверяет цепочку, EKU, ключи и срок; повтор сохраняет проверенные файлы. Три `renewal-requests` не подменяют approval, timer, доставку или готовность; native установка и общий clean-room продолжаются отдельно.
+
+- 2026-11-12: `bootstrap.py validate|up` проверяет закрытый initial bundle, затем делегирует штатным `install.sh/ps1 server`, `observation` и `export.sh/ps1`. Native PKI/plan validation остаётся у собственного установщика. Runtime/installer references один раз разрешаются в image IDs; сервер и наблюдение получают native `no`, `--update` не вызывается. Неизвестный результат не повторяется; диагностические файлы закрыты и сохраняются в отдельном каталоге операции. Оба входа используют общий `observation-inputs.json` с прежним перечнем файлов.
+
+- 2026-11-12: публичные Shell/PowerShell export entrypoints принимают необязательный отдельный output root. Полный комплект binding/immutable Compose/receipt создаётся там с прежней защитой ручного `.env` и обязательным per-process socket approval; runtime, registrations, credentials и recovery history не меняются. Полный установщик учитывает текущие точные контейнеры в сохранённом физическом координаторе без переноса в корневой проект.
+
 - 2026-11-11: общий Python observation installer Shell/PowerShell на Docker Desktop разрешает фиксированный host alias через непривилегированный helper без секретов и socket. Установщик с Docker socket сохраняет `network=none` и формирует `extra_hosts` по проверенному адресу; native Linux и отсутствие aliases не требуют resolver.
 - 2026-11-11: общая компиляция наблюдения применяет recovery-метки sender и observer после общих labels и configuration revision. Повторная установка после адресного восстановления сохраняет обе цепочки и `restart=no`; regression проверяет следующий допуск `require_running` и неизменные байты recovery-журналов.
 - 2026-11-11: entrypoint адресного восстановления observer/sender сохраняет валидированный marker `native_restart_no_roles`; совместимость с ужесточённым установщиком проверена вместе с lost-ack и прежним исчерпанным бюджетом.

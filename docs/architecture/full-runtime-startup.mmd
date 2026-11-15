@@ -1,0 +1,24 @@
+flowchart TD
+    OP[Operator or consumer installer] --> CLI[Public bootstrap full-runtime]
+    CLI --> LOCK[Infrastructure lifecycle lock]
+    LOCK --> INIT[Owner preparation with supplied credentials]
+    INIT --> MODEL[Canonical manifest and Compose model]
+    MODEL --> GUARD[Installation owner, configuration, image and replicas]
+    MODEL --> SPIRE[Public SPIRE export and exact receipt]
+    SPIRE --> NATIVE[Existing owner coordinator, no root recreation]
+    GUARD --> PREP[Owner provisioning and migration barriers]
+    PREP --> START[Start without container recreation]
+    START --> FRESH[New installation: native SPIRE bootstrap from private inputs]
+    START --> LOCAL[Optional local owner input configuration]
+    LOCAL --> GRAFANA[Public Grafana operator issues separate scoped tokens]
+    GRAFANA --> MATERIAL[SPIRE prepares own PKI with separately issued client identities]
+    MATERIAL --> FRESH
+    FRESH --> SPIRE
+    START --> HEALTH[All declared runtime health contracts]
+    NATIVE --> HEALTH
+    HEALTH --> TEMP{Auto-created temporary Grafana authority?}
+    TEMP -->|yes| REVOKE[Retire exact provisioner through public operator]
+    REVOKE --> RESULT[RUNTIME_HEALTHY]
+    TEMP -->|no| RESULT
+    GUARD --> HANDOFF[Drift requires owner handoff]
+    RESULT -.-> ADMISSION[Separate quality and site admission]

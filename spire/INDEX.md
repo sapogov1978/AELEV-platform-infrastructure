@@ -7,6 +7,9 @@
 | Назначение и состав | [README.md](README.md) |
 | Владение, аттестация, обновление, отзыв и восстановление | [SPEC.md](SPEC.md) |
 | Установка, команды и диагностика | [USER_MANUAL.md](USER_MANUAL.md) |
+| Полный bootstrap из закрытого initial bundle | `bootstrap.py`, `src/aelev_spire/observation-inputs.json`; [публичный вход](README.md#запуск) |
+| Локальная подготовка PKI и трёх запросов сопровождения | `local-inputs.py`; [формат входов](USER_MANUAL.md#подготовить-локальный-initial-bundle) |
+| Три отдельные операторские привязки и настоящая доставка сертификатов | `../tools/spire_renewal.py`, `test/test_real_renewal.py`; [сопровождение](USER_MANUAL.md#автоматическое-сопровождение-локальных-сертификатов) |
 | Технические входы | [ENDPOINTS.md](ENDPOINTS.md) |
 | Текущее состояние и непроверенные ворота | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |

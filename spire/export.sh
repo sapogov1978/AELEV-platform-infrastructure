@@ -2,8 +2,8 @@
 # Operator-only projection; never starts or recreates a provider role.
 set -eu
 umask 077
-if [ "$#" -ne 2 ]; then
-  echo 'Usage: export.sh PROJECT EXPORT_OPERATOR_IMAGE' >&2
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+  echo 'Usage: export.sh PROJECT EXPORT_OPERATOR_IMAGE [OUTPUT_ROOT]' >&2
   exit 64
 fi
 spire_export_project=$1
@@ -14,7 +14,12 @@ if [ "${DRP_SPIRE_DOCKER_SOCKET_APPROVAL:-}" != 'operator-root-equivalent-v1' ];
 fi
 case "$spire_export_project" in ''|*[!a-z0-9_-]*) exit 64 ;; esac
 case $(uname -s) in Darwin|Linux) ;; *) echo 'USE_EXPORT_PS1' >&2; exit 78 ;; esac
-spire_export_root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+if [ "$#" -eq 3 ]; then
+  [ -n "$3" ] || exit 64
+  spire_export_root=$3
+else
+  spire_export_root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+fi
 spire_export_endpoint=${DOCKER_HOST:-$(docker context inspect --format '{{.Endpoints.docker.Host}}')}
 case "$spire_export_endpoint" in unix://*) ;; *) echo 'SPIRE_EXPORT_LOCAL_DAEMON_REQUIRED' >&2; exit 78 ;; esac
 if [ "$(docker info --format '{{.OSType}}')" != linux ]; then exit 78; fi
@@ -26,6 +31,8 @@ if [ "$(docker volume inspect --format '{{index .Labels "io.aelev.owner"}}' "$sp
   echo 'SPIRE_EXPORT_FOREIGN_STATE_REFUSED' >&2
   exit 78
 fi
+mkdir -p -- "$spire_export_root"
+spire_export_root=$(CDPATH= cd -- "$spire_export_root" && pwd)
 # A manually maintained .env may contain other settings: never replace it.
 if [ -e "$spire_export_root/.env" ]; then
   if [ -L "$spire_export_root/.env" ] || [ "$(head -n 1 "$spire_export_root/.env")" != '# AELEV SPIRE installed composition v1' ] ||

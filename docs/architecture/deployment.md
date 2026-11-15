@@ -1,5 +1,7 @@
 # Развёртывание Platform Infrastructure
 
+Полный штатный состав запускается `bootstrap.py --full-runtime` по [решению 0017](../adr/00-INFRA-20261112-0017-full-runtime-startup.md). Его [последовательность](full-runtime-startup.mmd) использует канонический manifest и владельческие Compose, сохраняет предоставленные credentials и инкарнации и требует handoff при drift. Техническое здоровье состава не подменяет quality admission и функциональную приёмку.
+
 Нормативная граница определяется [самостоятельным продуктом](../adr/00-INFRA-20261105-0001-independent-infrastructure-product.md), [границами владельцев](../adr/00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources.md) и [самодостаточными поставками](../adr/00-INFRA-20261106-0004-self-contained-service-delivery.md). Этот документ принадлежит инфраструктуре и не требует архитектуры конкретного потребителя.
 
 ## Композиция

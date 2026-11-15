@@ -408,6 +408,25 @@ def test_repeated_group_start_failure_persists_no_raw_output(
     assert "must-not-survive" not in output.read_text()
 
 
+def test_initial_group_start_uses_the_public_full_runtime(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls: list[list[str]] = []
+
+    def successful(arguments: list[str], **kwargs: Any) -> SimpleNamespace:
+        calls.append(arguments)
+        return SimpleNamespace(returncode=0, stdout="{}", stderr="")
+
+    monkeypatch.setattr("lifecycle.subprocess.run", successful)
+    execute_group_start(
+        ["docker", "compose"], "project", {}, tmp_path / "unused.json", "initial"
+    )
+    assert len(calls) == 1
+    assert calls[0][1].endswith("/bootstrap.py")
+    assert calls[0][2:] == ["up", "--full-runtime", "--no-build"]
+    assert not (tmp_path / "unused.json").exists()
+
+
 def test_targeted_group_start_restores_network_provider_first(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

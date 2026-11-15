@@ -7,6 +7,8 @@
 | Что искать | Где находится |
 |---|---|
 | Состав и быстрый запуск инфраструктуры | [README.md](README.md) |
+| Полный штатный runtime и защита инкарнаций | [API установки](docs/api/installation.md#полный-локальный-профиль), [full_runtime.py](tools/full_runtime.py) |
+| Первоначальные локальные входы SPIRE и оператор Grafana | [spire_local.py](tools/spire_local.py), [подготовка владельца](spire/USER_MANUAL.md#подготовить-локальный-initial-bundle) |
 | Подготовка, эксплуатация и восстановление | [USER_MANUAL.md](USER_MANUAL.md) |
 | Нормативные ограничения | [SPEC.md](SPEC.md) |
 | Состояние задач слоя | [TASKS.md](TASKS.md) |

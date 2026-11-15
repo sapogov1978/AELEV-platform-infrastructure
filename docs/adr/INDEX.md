@@ -6,6 +6,7 @@
 
 | Решение | Зафиксированный выбор |
 |---|---|
+| [00-INFRA-20261112-0017-full-runtime-startup](00-INFRA-20261112-0017-full-runtime-startup.md) | Полный штатный runtime сохраняет инкарнации и отделён от acceptance-сценариев и quality admission. |
 | [00-INFRA-20261105-0001-independent-infrastructure-product](00-INFRA-20261105-0001-independent-infrastructure-product.md) | Platform Infrastructure является самостоятельным, независимо выпускаемым продуктом; потребители не владеют его жизненным циклом или ресурсами. |
 | [00-INFRA-20261106-0002-infrastructure-repository-layout](00-INFRA-20261106-0002-infrastructure-repository-layout.md) | Канонический репозиторий имеет плоский корень, а путь уже установленной зависимости и runtime-данные не переносятся вместе с исходниками. |
 | [00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources](00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources.md) | Инфраструктура предоставляет domain-neutral capabilities; конкретные ресурсы и идентификаторы принадлежат потребителю. |

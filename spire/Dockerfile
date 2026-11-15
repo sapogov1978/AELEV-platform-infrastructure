@@ -38,6 +38,7 @@ RUN install -d --owner=10001 --group=10001 /var/lib/spire /run/spire /run/svid /
     && rm -rf /usr/local/lib/python3.13/ensurepip/_bundled
 COPY --from=sqlite /out/libsqlite3.so.0 /usr/local/lib/libsqlite3.so.0
 RUN ldconfig && python -c "import sqlite3; assert sqlite3.sqlite_version_info == (3, 53, 4), sqlite3.sqlite_version"
+RUN install -d --owner=10001 --group=10001 --mode=0700 /run/certificate-renewal
 COPY artifacts.lock.json ./
 COPY licenses/SPIRE-LICENSE-1.15.4 /licenses/spire/LICENSE
 COPY src ./src
@@ -62,7 +63,7 @@ FROM runtime AS checks
 USER root
 COPY --from=check-dependencies /opt/aelev/.venv ./.venv
 COPY test ./test
-COPY install.sh install.ps1 export.sh export.ps1 ./
+COPY install.sh install.ps1 export.sh export.ps1 bootstrap.py local-inputs.py ./
 COPY pyproject.toml build_artifacts.py build_sqlite.py ./
 COPY compose.yml compose.agent.yml compose.observation.yml ./
 USER 10001:10001

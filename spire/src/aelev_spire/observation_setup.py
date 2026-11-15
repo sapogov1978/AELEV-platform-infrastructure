@@ -25,40 +25,11 @@ if TYPE_CHECKING:
 OWNER = "infrastructure-spire"
 PREFIX = "AELEV_INFRASTRUCTURE_SPIRE_"
 SECRET_FILES = {
-    "observer": {
-        "metrics.crt",
-        "metrics.key",
-        "query-ca.crt",
-        "observer.crt",
-        "observer.key",
-        "sender-ca.crt",
-    },
-    "sender": {
-        "sender.crt",
-        "sender.key",
-        "server-ca.crt",
-        "local-write-ca.crt",
-        "local-write.crt",
-        "local-write.key",
-        "central-ca.crt",
-        "central-write.crt",
-        "central-write.key",
-        "local-query-ca.crt",
-        "local-query.crt",
-        "local-query.key",
-    },
-    "status": {
-        "publisher.crt",
-        "publisher.key",
-        "shell-ca.crt",
-        "identity-ca.crt",
-        "query-ca.crt",
-        "query.crt",
-        "query.key",
-    },
-    "status-admin": {"admin-user", "admin-password"},
-    "grafana": {"grafana-ca.crt", "token"},
-    "grafana-admin": {"grafana-ca.crt", "token"},
+    role: set(paths)
+    for role, paths in cast(
+        dict[str, list[str]],
+        json.loads(Path(__file__).with_name("observation-inputs.json").read_text()),
+    ).items()
 }
 
 

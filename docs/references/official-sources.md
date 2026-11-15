@@ -4,6 +4,8 @@
 
 ## Общие технические основания
 
+- [00-INFRA-20261112-0017-full-runtime-startup](../adr/00-INFRA-20261112-0017-full-runtime-startup.md) использует официальные [Compose up](https://docs.docker.com/reference/cli/docker/compose/up/) и [Compose config](https://docs.docker.com/reference/cli/docker/compose/config/) для сохранения инкарнаций и проверки configuration hash. Эти две страницы проверены 2026-11-12; точные runtime guards определены локальным ADR и тестами.
+
 - Композиция самостоятельных владельцев использует официальный [`include` Docker Compose](https://docs.docker.com/reference/compose-file/include/), [модель сервисов, healthcheck, volumes и сетей](https://docs.docker.com/reference/compose-file/services/) и [файловые secrets](https://docs.docker.com/reference/compose-file/secrets/).
 - Межсервисные события опираются на [CloudEvents 1.0](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md), [Apache Kafka 3.9](https://kafka.apache.org/39/documentation/) и [JSON Schema 2020-12](https://json-schema.org/draft/2020-12).
 - Техническая телеметрия следует [OTLP](https://opentelemetry.io/docs/specs/otlp/) и документации [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/).

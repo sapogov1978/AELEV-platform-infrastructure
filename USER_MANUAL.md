@@ -126,6 +126,10 @@ Prometheus и Blackbox Exporter дополнительно требуют соб
 
 ## Запуск и остановка всего комплекса
 
+Штатный полный состав: `./infrastructure plan --full-runtime`, затем `./infrastructure up --full-runtime`. Для собранного выпуска добавьте `--no-build`. Проверка — `./infrastructure status --full-runtime`; остановка — `./infrastructure down --full-runtime` с сохранением данных. Подготовьте владельческие credentials, включая provider secret. Drift требует handoff; повторный запуск сохраняет инкарнации и recovery budgets. `RUNTIME_HEALTHY` подтверждает технический состав; реальный inference, приёмка функций и допуск площадки проверяются отдельно.
+
+Для новой local/test установки `up --full-runtime --spire-local-input PRIVATE_CONFIG` готовит собственную PKI SPIRE после core и, если `grafana_tokens` опущены, получает их штатным OIDC-входом оператора Grafana. Две выданные client identity и публичное доверие поступают от соответствующих операторов без внешних CA-ключей; [формат входов](spire/USER_MANUAL.md#подготовить-локальный-initial-bundle) и [API](docs/api/installation.md#полный-локальный-профиль) описывают сохранный повтор и отзыв автоматически созданного provisioner. Сопровождение сертификатов регистрируется отдельно и проверяется по настоящим квитанциям, не по факту подготовки файлов.
+
 После подготовки из этого каталога:
 
 ```sh

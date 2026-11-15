@@ -202,6 +202,10 @@ def development_pki(config: Path, identity_ca: Path, admin_password: Path) -> No
             "basicConstraints=critical,CA:TRUE",
             "-addext",
             "keyUsage=critical,keyCertSign,cRLSign",
+            "-addext",
+            "subjectKeyIdentifier=hash",
+            "-addext",
+            "authorityKeyIdentifier=keyid:always",
             "-keyout",
             str(issuer / f"{name}.key"),
             "-out",
@@ -228,7 +232,7 @@ def development_pki(config: Path, identity_ca: Path, admin_password: Path) -> No
             "basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage="
             + purpose
             + ("\nsubjectAltName=" + sans if sans else "")
-            + "\n",
+            + "\nsubjectKeyIdentifier=hash\nauthorityKeyIdentifier=keyid:always\n",
             0o600,
         )
         openssl(
