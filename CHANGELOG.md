@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-16: PostgreSQL SSH HA teardown учитывает наблюдённый на Desktop helper, оставшийся между create/start. После снятия собственных roles проверяются полный scope/image/labels, baseline и никогда не запущенное состояние; обычный rm не обходит гонку с запуском. Runtime fencing, DCS, budgets и стек сохраняются; первый ARM cleanup FAIL и отдельная reconciliation receipt не переписываются.
+
 - 2026-11-15: PostgreSQL SSH HA proof закрыто проверяет cleanup контейнеров, узловых helpers, сетей и томов по scope labels, сохраняет остатки и итоговый FAIL при ошибке teardown. Прежние functional PASS остаются ограниченными без новой inventory; runtime, stack versions и production admission не меняются.
 
 - 2026-11-15: три native AMD64 trials abd7780 подтвердили первоначальный SIGSTOP, но завершились со здоровым прежним writer без fencing. Test injector теперь остаётся до fencing и отдельно отклоняет потерю удерживаемого fault; SIGCONT не посылается. Перед записью в той же SQL-сессии добавлены persisted safety verification и прямой барьер actual synchronous_commit/ANY 1/streaming quorum, пропущенный в раннем SSH сценарии. Старые synchronous claims без прямого замера ограничены этим замечанием.

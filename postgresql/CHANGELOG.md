@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-16: ARM HA/restore прошёл функциональные этапы, но teardown нашёл AutoRemove helper в `created` без PID/StartedAt после снятия SSH host. Failed proof сохранён; собственный scope снят отдельной квитанцией с неизменным baseline 260 контейнеров. Harness теперь удаляет только такой exact never-started helper после прекращения всех собственных ролей; живые, чужие и прежние контейнеры защищены, итоговый inventory gate сохраняется.
+
 - 2026-11-15: SSH HA teardown проверяет итоговые остатки четырёх классов собственных Docker resources по exact scope labels. Сеть удаляется только по проверенному собственному имени/label; ошибки cleanup сохраняют итоговый FAIL. Прежний boolean не подменяет inventory, рабочий кластер и runtime fencing не меняются.
 
 - 2026-11-15: после повторяемого AMD64 timeout с восстановившимся старым writer fault injector удерживает собственный lifecycle до ограждения и сообщает FAULT_LOST при возобновлении цели. Добавлен канонический actual SQL quorum barrier перед INSERT и подтверждением COMMIT; runtime fencing, healthchecks и recovery budgets не изменяются.

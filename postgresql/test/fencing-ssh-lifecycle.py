@@ -26,7 +26,7 @@ import textwrap
 import time
 import uuid
 
-from ha_cleanup import verify_cleanup
+from ha_cleanup import remove_never_started_helpers, verify_cleanup
 
 NODES = frozenset(f"postgresql-{n}" for n in range(1, 4))
 CODES = frozenset(
@@ -688,8 +688,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     proof["published_bind"] = PUBLISHED_BIND
     if platform.python_version_tuple()[:2] != ("3", "13"):
         raise ValueError("PYTHON_313_OPERATOR_REQUIRED")
+    native_image_ids = {}
     for reference in (FENCER, SQL, args.ssh_host_base_image):
         value = json.loads(docker("image", "inspect", reference))[0]
+        native_image_ids[reference] = value["Id"]
         if value["Architecture"] != native or value["Os"] != "linux":
             raise ValueError("NATIVE_LINUX_IMAGE_REQUIRED")
     runtime_program = "from pathlib import Path;import hashlib,json,sys;from aelev_postgresql import fencing;p=Path(fencing.__file__).parent;print(json.dumps({'python':sys.version.split()[0],'files':{q.name:hashlib.sha256(q.read_bytes()).hexdigest() for q in p.glob('*.py')}}))"
@@ -853,6 +855,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             proof["both_native_peer_termination_audits_retained"] = True
 
     baseline = inventory()
+    baseline_container_ids = set(docker("ps", "-aq", "--no-trunc").split())
     baseline_volumes = set(docker("volume", "ls", "-q").split())
     guard = (
         subprocess.Popen(["/usr/bin/caffeinate", "-i"])
@@ -1438,7 +1441,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 )
                 docker("rm", "--force", observer_name)
             deadline = time.monotonic() + 45
+            proof["removed_never_started_helpers"] = []
             while time.monotonic() < deadline:
+                proof["removed_never_started_helpers"].extend(
+                    remove_never_started_helpers(
+                        docker, SCOPE, native_image_ids[FENCER], baseline_container_ids
+                    )
+                )
                 transient = docker(
                     "ps",
                     "-aq",
@@ -1448,7 +1457,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 if not transient:
                     break
                 time.sleep(0.5)
-            assert not transient, "OWNED_NODE_OPERATIONS_STILL_RUNNING"
+            assert not transient, "OWNED_NODE_OPERATIONS_REMAIN"
             for name in reversed(volumes):
                 row = process(["docker", "volume", "inspect", name], check=False)
                 if row.returncode == 0:
