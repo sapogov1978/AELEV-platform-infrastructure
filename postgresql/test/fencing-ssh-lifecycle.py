@@ -200,6 +200,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     observer_source = Path(__file__).with_name("ha_observation.py").read_text()
     observer_name = SCOPE + "-sql-observer"
     observer_volume = ""
+    fault_path: str | None = None
+    fault_node: int | None = None
+    fault_original_start: str | None = None
     for reference in (FENCER, SQL, args.ssh_host_base_image):
         if not re.fullmatch(
             r"(?:[a-z0-9][a-z0-9._:/-]*@)?sha256:[a-f0-9]{64}", reference
@@ -524,6 +527,30 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
 
     def roles() -> dict[int, bool]:
+        if fault_path is not None and fault_node is not None:
+            state = json.loads(docker("inspect", ids[f"postgresql-{fault_node}"]))[0][
+                "State"
+            ]
+            if state["Running"] and state["StartedAt"] == fault_original_start:
+                fault = process(
+                    [
+                        "docker",
+                        "exec",
+                        ids[f"postgresql-{fault_node}"],
+                        "python",
+                        "-c",
+                        "from pathlib import Path;print(Path("
+                        + repr(fault_path)
+                        + ").read_text())",
+                    ],
+                    check=False,
+                )
+                if fault.returncode == 0:
+                    observation = json.loads(fault.stdout)
+                    proof["patroni_fault"] = observation
+                    assert (
+                        observation["phase"] == "HELD"
+                    ), "PATRONI_FAULT_DID_NOT_PERSIST"
         r = process(
             [
                 "docker",
@@ -1159,32 +1186,61 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         proof["initial_writer"] = first
         phase("three native SQL participants and one primary over published endpoints")
         table = "ssh_fencing_audit_" + uuid.uuid4().hex
-        sql(
+        committed = sql(
             first,
-            f"with connection() as c:\n c.execute('set statement_timeout=15000')\n c.execute('create table {table} (id integer primary key, payload text not null)')\n c.execute(\"insert into {table} select n,md5(n::text) from generate_series(1,1000) n\")\n",
+            "import time\nfrom aelev_postgresql.__main__ import verify\nverify()\nwith connection() as c:\n"
+            " c.execute('set statement_timeout=15000')\n deadline=time.monotonic()+120\n"
+            " while True:\n"
+            "  c.execute('select pg_stat_clear_snapshot()')\n"
+            "  state={'commit_on':c.execute('SHOW synchronous_commit').fetchone()[0]=='on','quorum_rule':c.execute('SHOW synchronous_standby_names').fetchone()[0].startswith('ANY 1'),'sync_replicas':c.execute(\"SELECT count(*) FROM pg_stat_replication WHERE state='streaming' AND sync_state IN ('sync','quorum')\").fetchone()[0]}\n"
+            "  assert state['commit_on'], 'SYNCHRONOUS_COMMIT_DISABLED'\n"
+            "  if state['quorum_rule'] and state['sync_replicas']>=1:break\n"
+            "  if time.monotonic()>=deadline:raise TimeoutError('SYNCHRONOUS_QUORUM_NOT_READY')\n"
+            "  time.sleep(2)\n"
+            f" c.execute('create table {table} (id integer primary key, payload text not null)')\n c.execute(\"insert into {table} select n,md5(n::text) from generate_series(1,1000) n\")\n"
+            "print(json.dumps(state))\n",
+            timeout=150,
         )
+        proof["synchronous_quorum_before_write"] = json.loads(committed.stdout)
         digest_code = f"with connection() as c:\n print(hashlib.sha256(json.dumps(c.execute('select * from {table} order by id').fetchall()).encode()).hexdigest())\n"
         digest = sql(first, digest_code).stdout.strip()
         original_start = json.loads(docker("inspect", ids[f"postgresql-{first}"]))[0][
             "State"
         ]["StartedAt"]
         phase("1000 rows synchronously committed before failure")
-        fault = process(
-            [
-                "docker",
-                "exec",
-                "--user",
-                "postgres",
-                "-i",
-                ids[f"postgresql-{first}"],
-                "python",
-                "-",
-                "suspend",
-                values[PREFIX + f"NODE_{first}_REST_PORT"],
-            ],
-            body=observer_source,
+        fault_path = "/tmp/aelev-patroni-fault-" + SCOPE + ".json"
+        fault_node, fault_original_start = first, original_start
+        docker(
+            "exec",
+            "--detach",
+            "--user",
+            "postgres",
+            ids[f"postgresql-{first}"],
+            "python",
+            "-c",
+            observer_source,
+            "hold",
+            values[PREFIX + f"NODE_{first}_REST_PORT"],
+            fault_path,
         )
-        proof["patroni_fault"] = json.loads(fault.stdout)
+        deadline = time.monotonic() + 5
+        while True:
+            ready = process(
+                [
+                    "docker",
+                    "exec",
+                    ids[f"postgresql-{first}"],
+                    "test",
+                    "-f",
+                    fault_path,
+                ],
+                check=False,
+            )
+            if ready.returncode == 0:
+                break
+            if time.monotonic() >= deadline:
+                raise TimeoutError("PATRONI_FAULT_INJECTOR_NOT_READY")
+            time.sleep(0.1)
         assert roles().get(first) is False
         phase("Patroni suspended while old SQL writer remains alive")
         second = writer(exclude=first, seconds=210)

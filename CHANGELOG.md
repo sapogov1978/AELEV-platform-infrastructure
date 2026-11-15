@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-15: три native AMD64 trials abd7780 подтвердили первоначальный SIGSTOP, но завершились со здоровым прежним writer без fencing. Test injector теперь остаётся до fencing и отдельно отклоняет потерю удерживаемого fault; SIGCONT не посылается. Перед записью в той же SQL-сессии добавлены persisted safety verification и прямой барьер actual synchronous_commit/ANY 1/streaming quorum, пропущенный в раннем SSH сценарии. Старые synchronous claims без прямого замера ограничены этим замечанием.
+
 - 2026-11-15: диагностические trials 6a7a9d2 выявили неоднозначность observer: последовательные SQL-ответы не доказывали одновременных writers; fault injection не подтверждал остановку владельца REST socket. Новый test helper удерживает те же SQL connections при перепроверке двух primary и подтверждает точный listener owner в kernel state T. Product fencing/leases/return budgets и admission timeout сохраняются; истинный split brain остаётся ошибкой.
 
 - 2026-11-14: SAST source 6a7a9d2 отклонил dynamic exec теста release preflight. Preflight вынесен в обычный typed CLI `tools/workflow_admission.py` с bounded HTTPS query к фиксированному GitHub origin; workflow и regression tests используют его напрямую. Правила Semgrep и их exclusions сохраняются.

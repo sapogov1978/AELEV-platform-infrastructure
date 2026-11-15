@@ -123,3 +123,42 @@ def test_unconfirmed_stop_does_not_count_as_injected_fault(
     monkeypatch.setattr(observation.time, "sleep", lambda duration: None)
     with pytest.raises(ValueError, match="PATRONI_LISTENER_STOP_UNCONFIRMED"):
         observation.suspend_listener(9000, root)
+
+
+def test_held_fault_reports_resumed_target_instead_of_claiming_ha_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    root = proc(tmp_path, [7])
+    (root / "7/status").write_text("State:\tS (sleeping)\n")
+    monkeypatch.setattr(
+        observation,
+        "suspend_listener",
+        lambda port, proc: {"target_pid": 7, "kernel_stop_confirmed": True},
+    )
+    monkeypatch.setattr(observation.os, "getpgid", lambda pid: 1)
+    marker = root / "fault.json"
+    with pytest.raises(ValueError, match="PATRONI_FAULT_DID_NOT_PERSIST"):
+        observation.hold_listener(9000, marker, root)
+    assert __import__("json").loads(marker.read_text())["phase"] == "FAULT_LOST"
+
+
+def test_held_fault_is_bounded_and_never_resumes_the_target(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    root = proc(tmp_path, [7])
+    monkeypatch.setattr(
+        observation,
+        "suspend_listener",
+        lambda port, proc: {"target_pid": 7, "kernel_stop_confirmed": True},
+    )
+    monkeypatch.setattr(observation.os, "getpgid", lambda pid: 1)
+    clock = iter([0.0, 0.0, 400.0])
+    monkeypatch.setattr(observation.time, "monotonic", lambda: next(clock))
+    monkeypatch.setattr(observation.time, "sleep", lambda duration: None)
+    signals: list[Any] = []
+    monkeypatch.setattr(observation.os, "kill", lambda *args: signals.append(args))
+    marker = root / "fault.json"
+    with pytest.raises(TimeoutError, match="PATRONI_FAULT_HOLD_TIMEOUT"):
+        observation.hold_listener(9000, marker, root)
+    assert __import__("json").loads(marker.read_text())["phase"] == "HOLD_TIMEOUT"
+    assert signals == []

@@ -106,6 +106,7 @@ def suspend_listener(port: int, proc: Path = Path("/proc")) -> dict[str, Any]:
         )
         if state == "T":
             return {
+                "target_pid": pid,
                 "selection": "exact REST listener owner",
                 "kernel_stop_confirmed": True,
                 "legacy_name_selector_matched": pid in legacy,
@@ -115,9 +116,51 @@ def suspend_listener(port: int, proc: Path = Path("/proc")) -> dict[str, Any]:
     raise ValueError("PATRONI_LISTENER_STOP_UNCONFIRMED")
 
 
+def hold_listener(port: int, marker: Path, proc: Path = Path("/proc")) -> None:
+    """Keep the fault injector present until fencing, never issue SIGCONT."""
+    os.umask(0o077)
+    result = suspend_listener(port, proc)
+    result.update(
+        phase="HELD",
+        injector_pid=os.getpid(),
+        injector_group=os.getpgrp(),
+        target_group=os.getpgid(result["target_pid"]),
+    )
+
+    def save() -> None:
+        pending = marker.with_suffix(".pending")
+        pending.write_text(json.dumps(result))
+        os.replace(pending, marker)
+
+    save()
+    deadline = time.monotonic() + 300
+    while time.monotonic() < deadline:
+        try:
+            state = next(
+                line.split()[1]
+                for line in (proc / str(result["target_pid"]) / "status")
+                .read_text()
+                .splitlines()
+                if line.startswith("State:")
+            )
+        except FileNotFoundError:
+            return
+        if state != "T":
+            result.update(phase="FAULT_LOST", observed_state=state)
+            save()
+            raise ValueError("PATRONI_FAULT_DID_NOT_PERSIST")
+        time.sleep(0.1)
+    result["phase"] = "HOLD_TIMEOUT"
+    save()
+    raise TimeoutError("PATRONI_FAULT_HOLD_TIMEOUT")
+
+
 def main() -> None:
     if sys.argv[1] == "suspend":
         result = suspend_listener(int(sys.argv[2]))
+    elif sys.argv[1] == "hold":
+        hold_listener(int(sys.argv[2]), Path(sys.argv[3]))
+        return
     elif sys.argv[1] == "observe":
         from aelev_postgresql.__main__ import SECRETS, secret, setting
 
