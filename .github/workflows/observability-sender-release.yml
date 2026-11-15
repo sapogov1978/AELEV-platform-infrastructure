@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: ghcr.io/sapogov1978/aelev-platform-infrastructure-observability-sender:${{ github.sha }}
           build-args: |
-            PROMETHEUS_IMAGE=prom/prometheus:v3.5.0@sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996
+            PROMETHEUS_IMAGE=prom/prometheus:v3.13.5@sha256:aafa9d694e6a883c02db516d9f6e5b84e14195f49a2a6456a4cca815edda72b9
           sbom: true
           provenance: mode=max
           cache-from: type=gha

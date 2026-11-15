@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-14: подготовлен отдельный compatibility candidate Telemetry Sender с Prometheus 3.13.5 LTS по exact digest и security patches Alpine 3.22; Python 3.13.7, SQLite 3.53.4, SDK 1.1.2 и протоколы сохранены. Переход закреплённой линии Prometheus требует ревью результата; рабочие TSDB/journals и текущие pins основной поставки не переключены.
+
 - 2026-11-14: Telemetry Delivery поддерживает необязательный контроль собственной квитанции продления в readiness и метриках с проверкой фактических leaf SHA-256/expiry; прежние конфигурация, liveness, durable ACK и очередь совместимы. Issuer/private keys не передаются runtime.
 
 - 2026-11-14: SDK handoff aed701b подтверждён опубликованным exact-source audit 26/26 SUCCESS и обновлённым dependency graph; отчёт сохраняет открытые full release/rollout gates.
