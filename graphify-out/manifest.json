@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794789076.5660155,
-    "seen": 1794789246.385429,
-    "ast_hash": "c1e3e9f86701926b567ec2d1dd198b22",
+    "mtime": 1794789528.9377923,
+    "seen": 1794789613.461335,
+    "ast_hash": "75260c40cd1f93ddb86a9e6f7ac574b9",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6756,9 +6756,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/spire_fixture.py": {
-    "mtime": 1794789159.8150992,
-    "seen": 1794789246.3836899,
-    "ast_hash": "d0d38f0c14945bb7d651b55f9278c570",
+    "mtime": 1794789529.2343116,
+    "seen": 1794789613.4587111,
+    "ast_hash": "e629c0f4c0799ec212e7588b6904bf6c",
     "semantic_hash": ""
   },
   "test_infrastructure/test_spire_fixture.py": {

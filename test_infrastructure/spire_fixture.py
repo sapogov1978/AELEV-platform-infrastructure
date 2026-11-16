@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import os
 import shutil
@@ -74,7 +75,10 @@ class Fixture:
             path = self.root / "observability" / owner / ".env"
             name = "AELEV_INFRASTRUCTURE_" + key + "_BIND"
             values = full_local.read_env(path, self.root)
-            if values[name] not in {gateway, "0.0.0.0"}:
+            address = ipaddress.ip_address(values[name])
+            if address.version != 4 or not (
+                str(address) == gateway or address.is_unspecified
+            ):
                 raise RuntimeError("ROOT_SPIRE_PUBLISHED_ROUTE_REQUIRED")
 
         telemetry = self.root / "observability/runtime/local-issuer/internal-ca.crt"
