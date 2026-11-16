@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-16
+
+- Clean-room root lifecycle передаёт явные local/test inputs SPIRE в штатный full-runtime CLI, выполняет реальный enrollment/delivery пяти renewal profiles и сверяет все 57 ролей двух координаторов при initial/repeat/status. Core stop/up/down/up явно выбирают только свои роли, сохраняя отдельную инкарнацию SPIRE; runtime guards, версии и Process Control не меняются. Прогноз перед блоком: 60–90 минут на реализацию/узкие проверки и 30–60 минут на native gate.
+- Учёт cleanup включает точные owner/installation labels native SPIRE, partial bootstrap и volumes без Compose labels. Удаляются только новые ресурсы; существующая public binding/state запрещают fresh-bootstrap тест. Неизвестные операторские результаты не повторяются, временное сопровождение останавливается перед cleanup.
+- Только fresh ephemeral CI объявляет два опубликованных TLS маршрута Grafana/Delivery до build/BOM и адресно восстанавливает записанные env после завершения. Изменение не применяется к рабочей установке; межмашинная приёмка и production scheduler этим не подтверждаются. Основания: [SPIRE configuration](https://spiffe.io/docs/latest/deploying/spire_server/), [Workload API](https://spiffe.io/docs/latest/spiffe-specs/spiffe_workload_api/), [Compose projects](https://docs.docker.com/compose/how-tos/project-name/), [port publishing](https://docs.docker.com/engine/network/port-publishing/), [Compose down](https://docs.docker.com/reference/cli/docker/compose/down/).
+
 - 2026-11-15: после отдельного failed cold build MinIO получает прежние exact commits по canonical Go pseudo-versions через официальный proxy/checksum database, без VCS hash lookup. Commit guards сохраняют соответствие build source и OCI labels; Go, Alpine, MinIO/mc releases и runtime не обновляются. Предшествующие build/root failures сохраняются отдельно от следующей квалификации.
 
 - 2026-11-15: root clean-room сохраняет whitelist фиксированных full-runtime guard codes вместо общего Compose-отказа; неизвестный код и строка с дополнительными данными закрыто остаются общими. Это локализует несовместимость SPIRE initial-input/public-export в приёмочном caller без ослабления runtime guards или публикации сырых diagnostics; предыдущий failed full run сохранён.

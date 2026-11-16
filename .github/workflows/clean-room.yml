@@ -67,6 +67,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Initialize owner-local inputs without starting containers
         run: python3 tools/full_local.py init
+      - name: Declare fresh CI published routes before build and BOM
+        run: python3 test_infrastructure/root_routes.py prepare
       - name: Verify admitted images before the expensive build
         run: |
           python3 - <<'PY' > "$RUNNER_TEMP/admitted-private-images"
@@ -129,3 +131,6 @@ jobs:
       - name: Remove ephemeral registry session
         if: always()
         run: docker logout ghcr.io || true
+      - name: Restore only the recorded CI route settings
+        if: always()
+        run: python3 test_infrastructure/root_routes.py restore

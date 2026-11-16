@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 from resources import (
     Inventory,
+    Owners,
     cleanup_plan,
     inventory,
     mounted_volumes,
@@ -24,6 +25,7 @@ from resources import (
     preflight,
     verify_preserved,
 )
+from spire_fixture import Fixture
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = Path(__file__).with_name("lifecycle-result.md")
@@ -396,6 +398,8 @@ def classify_group_start_failure(output: str) -> str:
         "FULL_RUNTIME_SPIRE_PUBLIC_EXPORT_REQUIRED",
         "FULL_RUNTIME_SPIRE_EXPORT_STALE",
         "FULL_RUNTIME_SPIRE_OWNER_RUNTIME_NOT_READY",
+        "FULL_RUNTIME_SPIRE_BOOTSTRAP_NATIVE_OPERATION_FAILED",
+        "FULL_RUNTIME_SPIRE_LOCAL_PREPARATION_FAILED",
         "FULL_RUNTIME_OWNER_HANDOFF_REQUIRED",
         "FULL_RUNTIME_IMAGE_HANDOFF_REQUIRED",
         "FULL_RUNTIME_REPLICA_HANDOFF_REQUIRED",
@@ -458,6 +462,7 @@ def execute_group_start(
     output: Path,
     stage: str,
     targets: tuple[str, ...] = (),
+    runtime_inputs: tuple[str, ...] = (),
 ) -> str:
     arguments = [
         *prefix,
@@ -467,15 +472,16 @@ def execute_group_start(
         "--no-build",
         "--pull",
         "never",
-        *targets,
+        *(targets or tuple(sorted(services))),
     ]
-    if stage == "initial" and not targets:
+    if stage in {"initial", "repeat"} and not targets:
         arguments = [
             sys.executable,
             str(ROOT / "bootstrap.py"),
             "up",
             "--full-runtime",
             "--no-build",
+            *runtime_inputs,
         ]
     try:
         result = subprocess.run(
@@ -783,17 +789,27 @@ def assert_sequence_advanced(previous: dict[str, Any], current: dict[str, Any]) 
 
 
 def cleanup(
-    before: Inventory, project: str, witnessed: set[str], compose: list[str]
+    before: Inventory,
+    project: str,
+    witnessed: set[str],
+    compose: list[str],
+    owners: Owners = frozenset(),
+    additional_compose: list[str] | None = None,
 ) -> dict[str, int]:
     current = inventory(execute)
-    containers = owned_containers(current, project)
+    containers = owned_containers(current, project, owners)
     witnessed.update(mounted_volumes(execute, containers))
     try:
         execute([*compose, *PROFILES, "down"])
     except RuntimeError:
         # Still remove only resources proved to be created by this run.
         pass
-    plan = cleanup_plan(before, inventory(execute), project, witnessed)
+    if additional_compose:
+        try:
+            execute([*additional_compose, "down"])
+        except RuntimeError:
+            pass  # Partial owner startup still has exact labels for scoped cleanup.
+    plan = cleanup_plan(before, inventory(execute), project, witnessed, owners)
     # Every remaining resource is individually owned and absent from the baseline.
     if plan["containers"]:
         execute(["docker", "container", "rm", "-f", *plan["containers"]])
@@ -802,11 +818,33 @@ def cleanup(
     if plan["volumes"]:
         execute(["docker", "volume", "rm", *plan["volumes"]])
     after = inventory(execute)
-    verify_preserved(before, after, project)
+    verify_preserved(before, after, project, owners)
     for name in witnessed - before["volumes"].keys():
         if name in after["volumes"]:
             raise RuntimeError("created mounted volume remains")
     return {kind: len(before[kind]) for kind in before}
+
+
+def verify_full_runtime(fixture: Fixture) -> None:
+    fixture.check()
+    observed = json.loads(
+        execute(
+            [sys.executable, str(ROOT / "bootstrap.py"), "status", "--full-runtime"]
+        )
+    )
+    required = set(
+        json.loads((ROOT / "full-local.json").read_bytes())["root_compose"][
+            "required_services"
+        ]
+    )
+    if (
+        observed.get("status") != "RUNTIME_HEALTHY"
+        or set(observed.get("services", [])) != required
+        or set(observed.get("owner_coordinators", {})) != {"core", "spire"}
+        or observed["owner_coordinators"]["spire"] != fixture.project
+        or observed["owner_coordinators"]["core"] == fixture.project
+    ):
+        raise RuntimeError("ROOT_FULL_RUNTIME_NOT_VERIFIED")
 
 
 def run(args: argparse.Namespace) -> int:
@@ -821,6 +859,8 @@ def run(args: argparse.Namespace) -> int:
     protected: dict[str, int] = {}
     failure = ""
     admitted = False
+    fixture: Fixture | None = None
+    owners: Owners = frozenset()
 
     def passed(name: str, detail: str = "") -> None:
         checks.append((name, detail))
@@ -858,6 +898,11 @@ def run(args: argparse.Namespace) -> int:
         if not ids:
             raise RuntimeError("no owner publisher identities in model")
         before = inventory(execute)
+        if getattr(args, "prepare_local_spire", False):
+            fixture = Fixture()
+            fixture.preflight(before)
+            owners = fixture.owners
+            ids.add(fixture.module_id)
         preflight(
             execute,
             before,
@@ -866,6 +911,8 @@ def run(args: argparse.Namespace) -> int:
             regular_names,
         )
         admitted = True
+        if fixture:
+            fixture.prepare()
         passed("Исходные ресурсы учтены; существующих писателей общих томов нет")
         execute([*prefix, "up", "-d", "--no-build", "--pull", "never", "kafka"])
         try:
@@ -936,6 +983,9 @@ def run(args: argparse.Namespace) -> int:
                 regular,
                 args.report.with_name("group-startup-diagnostic.json"),
                 "initial",
+                runtime_inputs=(
+                    ("--spire-local-input", str(fixture.source)) if fixture else ()
+                ),
             )
         except RuntimeError:
             capture_startup_diagnostic(
@@ -945,6 +995,26 @@ def run(args: argparse.Namespace) -> int:
                 "POSTGRESQL_FENCER_STARTUP_FAILED",
             )
             raise
+        if fixture:
+            renewal = fixture.enroll()
+            execute_group_start(
+                prefix,
+                project,
+                regular,
+                args.report.with_name("group-startup-diagnostic.json"),
+                "repeat",
+                runtime_inputs=(
+                    "--spire-local-input",
+                    str(fixture.source),
+                    "--spire-renewal-input",
+                    str(renewal),
+                ),
+            )
+            fixture.maintain()
+            verify_full_runtime(fixture)
+            passed(
+                "Полный публичный up/repeat: 57 ролей двух координаторов и реальная доставка квитанций SPIRE"
+            )
         try:
             wait_ready(project, regular, args.timeout)
         except RuntimeError:
@@ -972,7 +1042,9 @@ def run(args: argparse.Namespace) -> int:
         execute([*prefix, *PROFILES, "stop"])
         if any(row.get("Running") for row in states(project).values()):
             raise RuntimeError("a project container is still running after stop")
-        passed("Общая остановка: ни один контейнер группы не работает")
+        passed(
+            "Остановка core: ни один контейнер корневого координатора не работает; отдельный SPIRE не останавливается"
+        )
         execute_group_start(
             prefix,
             project,
@@ -982,12 +1054,14 @@ def run(args: argparse.Namespace) -> int:
         )
         wait_ready(project, regular, args.timeout)
         resumed = ui_snapshot(args, ids)
+        if fixture:
+            verify_full_runtime(fixture)
         assert_sequence_advanced(rows, resumed)
         if set(owned_containers(inventory(execute), project)) != first_ids:
             raise RuntimeError("stop/up unexpectedly replaced containers")
         rows = resumed
         passed(
-            "Повторный старт: прежние контейнеры, identities и возрастающие последовательности"
+            "Повторный старт core: прежние контейнеры, identities и возрастающие последовательности; SPIRE сохраняет свой координатор"
         )
         current = inventory(execute)
         witnessed.update(mounted_volumes(execute, owned_containers(current, project)))
@@ -1020,6 +1094,8 @@ def run(args: argparse.Namespace) -> int:
         )
         wait_ready(project, regular, args.timeout)
         recreated = ui_snapshot(args, ids)
+        if fixture:
+            verify_full_runtime(fixture)
         assert_sequence_advanced(rows, recreated)
         if first_ids & set(owned_containers(inventory(execute), project)):
             raise RuntimeError("down/up did not recreate all containers")
@@ -1033,7 +1109,19 @@ def run(args: argparse.Namespace) -> int:
     finally:
         if admitted and before is not None:
             try:
-                protected = cleanup(before, project, witnessed, prefix)
+                if fixture:
+                    fixture.stop()
+                protected = cleanup(
+                    before,
+                    project,
+                    witnessed,
+                    prefix,
+                    owners,
+                    fixture.compose() if fixture else None,
+                )
+                if fixture:
+                    fixture.restore_binding()
+                    fixture.check()
                 passed(
                     "Очистка: созданное снято, все исходные ресурсы и чужие состояния сохранены"
                 )
@@ -1086,6 +1174,11 @@ def main() -> int:
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--reuse-existing-data", action="store_true")
     parser.add_argument("--allow-local-certificate", action="store_true")
+    parser.add_argument(
+        "--prepare-local-spire",
+        action="store_true",
+        help="Fresh local/test owner inputs, enrollment and both-coordinator cleanup",
+    )
     args = parser.parse_args()
     if urlsplit(args.ui_url).scheme != "https" or args.timeout <= 0:
         parser.error("HTTPS UI and a positive timeout required")

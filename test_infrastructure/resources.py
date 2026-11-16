@@ -8,6 +8,14 @@ from typing import Any
 
 Inventory = dict[str, dict[str, dict[str, str]]]
 Execute = Callable[[list[str]], str]
+Owners = frozenset[tuple[str, str]]
+
+
+def owned(row: dict[str, str], project: str, owners: Owners = frozenset()) -> bool:
+    return (
+        row.get("project") == project
+        or (row.get("owner", ""), row.get("installation", "")) in owners
+    )
 
 
 def inventory(execute: Execute) -> Inventory:
@@ -39,16 +47,20 @@ def inventory(execute: Execute) -> Inventory:
                     "project": labels.get("com.docker.compose.project", ""),
                     "state": row.get("State", ""),
                     "anonymous": str("com.docker.volume.anonymous" in labels),
+                    "owner": labels.get("io.aelev.owner", ""),
+                    "installation": labels.get("io.aelev.installation", ""),
                 }
         result[kind] = resources
     return result
 
 
-def owned_containers(current: Inventory, project: str) -> list[str]:
+def owned_containers(
+    current: Inventory, project: str, owners: Owners = frozenset()
+) -> list[str]:
     return [
         identity
         for identity, row in current["containers"].items()
-        if row["project"] == project
+        if owned(row, project, owners)
     ]
 
 
@@ -112,6 +124,7 @@ def cleanup_plan(
     current: Inventory,
     project: str,
     witnessed_mounts: set[str],
+    owners: Owners = frozenset(),
 ) -> dict[str, list[str]]:
     plan: dict[str, list[str]] = {}
     for kind in ("containers", "networks", "volumes"):
@@ -120,7 +133,7 @@ def cleanup_plan(
             for identity, row in current[kind].items()
             if identity not in before[kind]
             and (
-                row["project"] == project
+                owned(row, project, owners)
                 or (
                     kind == "volumes"
                     and identity in witnessed_mounts
@@ -132,13 +145,15 @@ def cleanup_plan(
     return plan
 
 
-def verify_preserved(before: Inventory, after: Inventory, project: str) -> None:
+def verify_preserved(
+    before: Inventory, after: Inventory, project: str, owners: Owners = frozenset()
+) -> None:
     for kind, resources in before.items():
         for identity, row in resources.items():
             if after[kind].get(identity) != row:
                 raise RuntimeError(f"pre-existing {kind} changed")
     if any(
-        row["project"] == project and identity not in before[kind]
+        owned(row, project, owners) and identity not in before[kind]
         for kind in ("containers", "networks", "volumes")
         for identity, row in after[kind].items()
     ):

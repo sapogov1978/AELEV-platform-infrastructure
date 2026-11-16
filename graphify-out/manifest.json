@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794782860.3054256,
-    "seen": 1794782924.368897,
-    "ast_hash": "438baa324e84ee2dc15e16f3a2ce566f",
+    "mtime": 1794789076.5660155,
+    "seen": 1794789246.385429,
+    "ast_hash": "c1e3e9f86701926b567ec2d1dd198b22",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794781402.8190987,
-    "seen": 1794781441.009195,
-    "ast_hash": "57e616dd030149a01a2ae94f490c6e26",
+    "mtime": 1794789076.5636804,
+    "seen": 1794789246.383637,
+    "ast_hash": "ba68b4d438a914c7d4f633c1a7ee2ac7",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -2448,9 +2448,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/resources.py": {
-    "mtime": 1794014847.1966918,
-    "seen": 1794780468.68523,
-    "ast_hash": "12b23d11f1ee4ea5a024e894a787ed07",
+    "mtime": 1794788468.939226,
+    "seen": 1794789246.383678,
+    "ast_hash": "0c127507e26360cceb469afe66eb10c3",
     "semantic_hash": ""
   },
   "test_infrastructure/restart_intent_sandbox.py": {
@@ -4458,15 +4458,15 @@
     "semantic_hash": ""
   },
   "test_infrastructure/README.md": {
-    "mtime": 1793957794.5952282,
-    "seen": 1794780468.685652,
-    "ast_hash": "b9c5dd1b446f26b060eceee5ef42d5fa",
+    "mtime": 1794789076.5641322,
+    "seen": 1794789246.3905332,
+    "ast_hash": "0f4d4d2625af1c0d01695be00ce2d5fe",
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794414909.2357163,
-    "seen": 1794780468.685652,
-    "ast_hash": "1df011206c6ffe3ec2cbbe7df9ae9723",
+    "mtime": 1794789076.5651605,
+    "seen": 1794789246.390534,
+    "ast_hash": "8933f7c5e568cebf877bcfa25747dc91",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6138,21 +6138,21 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794781402.820458,
-    "seen": 1794781441.013128,
-    "ast_hash": "540954cd6b4245806a1e321db7be6fe6",
+    "mtime": 1794789159.8160326,
+    "seen": 1794789246.387737,
+    "ast_hash": "a81e9ab5eaa125a44adb5e920fd1784b",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1794240581.044067,
-    "seen": 1794780468.684951,
-    "ast_hash": "270f5530d5979f8528426b5458ddb5a5",
+    "mtime": 1794788758.6055248,
+    "seen": 1794789246.3788202,
+    "ast_hash": "ca6574caf971f942b6f4a3532918130d",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
-    "mtime": 1794223506.9937208,
-    "seen": 1794780468.685226,
-    "ast_hash": "8dd50e1debf05cba0f3b83df34e89bdd",
+    "mtime": 1794788758.6047277,
+    "seen": 1794789246.383636,
+    "ast_hash": "0635d1dbc4ecfe8d69bc21b81d9bb311",
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
@@ -6747,6 +6747,24 @@
     "mtime": 1793980103.0157366,
     "seen": 1794780468.685473,
     "ast_hash": "ba6780af82371b2e5039d76c2b19c67e",
+    "semantic_hash": ""
+  },
+  "test_infrastructure/root_routes.py": {
+    "mtime": 1794788997.5100648,
+    "seen": 1794789246.383689,
+    "ast_hash": "9f4c35e57ab0be27858c23ced88aa892",
+    "semantic_hash": ""
+  },
+  "test_infrastructure/spire_fixture.py": {
+    "mtime": 1794789159.8150992,
+    "seen": 1794789246.3836899,
+    "ast_hash": "d0d38f0c14945bb7d651b55f9278c570",
+    "semantic_hash": ""
+  },
+  "test_infrastructure/test_spire_fixture.py": {
+    "mtime": 1794789076.5625942,
+    "seen": 1794789246.383889,
+    "ast_hash": "0ca8dc606fbdb503296249bd4aa7f8b7",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

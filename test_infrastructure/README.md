@@ -12,6 +12,8 @@
 
 Из этого каталога: `poetry install --no-root`, затем `poetry run pytest -q`. Реальный жизненный тест запускается отдельно по [руководству](USER_MANUAL.md#реальный-тест) и управляет контейнерами.
 
+Полный clean-room передаёт `--prepare-local-spire`: новая установка получает собственные initial inputs, реальный enrollment и доставку квитанций через публичные CLI. Первый и повторный `up`, затем `status` проверяют все роли `full-local.json` в обоих физических Compose-проектах; core stop/down циклы сохраняют отдельную инкарнацию SPIRE. Это локальная приёмка одного Docker Engine, без утверждения о физических разных узлах или production maintenance scheduler.
+
 ## Навигация
 
 - [USER_MANUAL.md](USER_MANUAL.md) — подробные интерфейсы, условия и ограничения.

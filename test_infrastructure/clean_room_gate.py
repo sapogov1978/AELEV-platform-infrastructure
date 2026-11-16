@@ -169,6 +169,7 @@ def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
         "run",
         "python",
         "lifecycle.py",
+        "--prepare-local-spire",
         "--ui-url",
         arguments.ui_url,
         "--viewer-user",
