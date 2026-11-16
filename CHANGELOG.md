@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- В отдельном integration checkout объединены root/SPIRE `093baaa` и PostgreSQL HA `474d69f`: код/configuration обеих веток сохраняются, вручную соединяется только changelog, generated graph строится заново. Контрольные проверки сравнивают все изменённые source blobs с соответствующим родителем; общий source остаётся кандидатом до собственных gates. Runtime, Process Control и release refs не переключаются. Прогноз перед интеграцией — 20–30 минут на merge/graph/совместимость.
+
 - Root `77c7006` подтвердил ONLINE всех пяти SPIRE компонентов и отсутствие TLS delivery errors; поздний UI failure теперь у центральной Delivery. Failure context читает её существующий mTLS `/status` собственной query identity и сохраняет тот же bounded формат counters/codes. Настоящий DeliveryServer дополнительно проверяет health diagnostic при имеющейся записи и неработающем worker; readiness остаётся отрицательной. Прогноз — 5–10 минут и один отдельный root diagnostic.
 
 - Root diagnostic `c489633` установил действующий worker/renewal и TLS-отказ трёх сигналов SPIRE Sender. Fresh test initial inputs теперь выдают `central-write` от observability publisher CA, которую доверяет ingestion Delivery; internal CA остаётся доверием server/query/Grafana. Настоящий DeliveryServer проверяет отказ прежнего client issuer и durable ACK нового через mTLS; TLS/SAN/readiness guards и runtime не меняются. Прогноз перед правкой — 20–30 минут на разбор/проверки, затем 20–30 минут root gate.
@@ -30,6 +32,40 @@
 - 2026-11-15: root clean-room сохраняет whitelist фиксированных full-runtime guard codes вместо общего Compose-отказа; неизвестный код и строка с дополнительными данными закрыто остаются общими. Это локализует несовместимость SPIRE initial-input/public-export в приёмочном caller без ослабления runtime guards или публикации сырых diagnostics; предыдущий failed full run сохранён.
 
 - 2026-11-15: capability init без `translation` больше не требует credential её provider и не мигрирует настройки Translator. Состав capabilities передаётся в сохраняющую инициализацию; полный профиль и запуск по умолчанию сохраняют обязательную проверку ключа. Регрессия проверяет пять management capabilities, Kafka отдельно, явный Translator и прежний прямой полный init; Compose, env/PKI, images и runtime не переключаются.
+## PostgreSQL HA — история кандидата до объединения
+
+- 2026-11-16: Native AMD64 source `a5b7e58` подтвердил crash/recovery, затем выявил оставшийся test barrier при замене первой копии. После точного SIGKILL и подтверждения termination барьер теперь освобождается для новой копии; старые marker/hash сохраняются, SIGCONT/unknown discard не разрешают продолжение. Runtime budgets/guards не меняются. Прогноз перед исправлением — 10–15 минут и отдельный native повтор изменённого source; ARM timeout до SQL observation сохранён без повторного запуска.
+
+- 2026-11-16: SSH HA crash injection использует test-only forced-command barrier первого controller до native return dispatcher. Перед потерей копии требуются kernel `T` и канонический `STOP_CONFIRMED/start_attempts=0`; удержанный запрос уничтожается через exact-incarnation `pidfd`, последующие запросы первой копии закрыто отклоняются, вторая использует прежний dispatcher. Runtime interval/guards, состав образов и рабочая установка сохраняются. Прогноз перед изменением — 25–40 минут на реализацию/проверки, затем один native trial 20–40 минут; прежний ARM `CRASH_FAULT_POINT_MISSED` сохранён.
+
+- 2026-11-16: PostgreSQL SSH HA teardown учитывает наблюдённый на Desktop helper, оставшийся между create/start. После снятия собственных roles проверяются полный scope/image/labels, baseline и никогда не запущенное состояние; обычный rm не обходит гонку с запуском. Runtime fencing, DCS, budgets и стек сохраняются; первый ARM cleanup FAIL и отдельная reconciliation receipt не переписываются.
+
+- 2026-11-15: PostgreSQL SSH HA proof закрыто проверяет cleanup контейнеров, узловых helpers, сетей и томов по scope labels, сохраняет остатки и итоговый FAIL при ошибке teardown. Прежние functional PASS остаются ограниченными без новой inventory; runtime, stack versions и production admission не меняются.
+
+- 2026-11-15: три native AMD64 trials abd7780 подтвердили первоначальный SIGSTOP, но завершились со здоровым прежним writer без fencing. Test injector теперь остаётся до fencing и отдельно отклоняет потерю удерживаемого fault; SIGCONT не посылается. Перед записью в той же SQL-сессии добавлены persisted safety verification и прямой барьер actual synchronous_commit/ANY 1/streaming quorum, пропущенный в раннем SSH сценарии. Старые synchronous claims без прямого замера ограничены этим замечанием.
+
+- 2026-11-15: диагностические trials 6a7a9d2 выявили неоднозначность observer: последовательные SQL-ответы не доказывали одновременных writers; fault injection не подтверждал остановку владельца REST socket. Новый test helper удерживает те же SQL connections при перепроверке двух primary и подтверждает точный listener owner в kernel state T. Product fencing/leases/return budgets и admission timeout сохраняются; истинный split brain остаётся ошибкой.
+
+- 2026-11-14: SAST source 6a7a9d2 отклонил dynamic exec теста release preflight. Preflight вынесен в обычный typed CLI `tools/workflow_admission.py` с bounded HTTPS query к фиксированному GitHub origin; workflow и regression tests используют его напрямую. Правила Semgrep и их exclusions сохраняются.
+
+- 2026-11-14: native AMD64 run 43653529360 source b17f01c остановился до SQL restore: после зависания Patroni не подтвердились все SQL-роли с единственным healthy primary. Причина ещё неизвестна; в safe proof добавлены process/health/code counts и whitelist summaries fencing phases/budgets. Следующий workflow ограничен тремя независимыми диагностическими trials. Raw logs, credentials и канонические payloads не публикуются; timeouts/admission сохраняются.
+
+- 2026-11-14: подготовлен ручной multiarch release workflow PostgreSQL fencing с exact-source audit/HA precondition, SBOM/provenance и подписью digest по принятой инфраструктурной схеме. Шесть offline regression cases исполняют настоящий preflight с успешным, чужим, отсутствующим, более новым failed/pending и повторным результатом. Push/tag не публикует образ автоматически; stack approval, запуск выпуска и допуск registry image сохраняются отдельными действиями.
+
+- 2026-11-14: SSH HA acceptance дополнен нативным `pg_basebackup`, проверкой SHA256 manifest и восстановлением отдельного SQL-процесса на loopback. Сравниваются все 1000 строк и их SHA после failover/crash/replay; независимое backup-хранилище и PITR остаются отдельными требованиями. Рабочие данные и volumes в сценарий не подключаются.
+
+- 2026-11-14: проверка владельческой конфигурации отдельно закрепляет ровно три initial-PKI inputs peer client IPs и запрещает их передачу в runtime Compose; остальные поля по-прежнему обязаны использоваться recipe. Первичный full-suite failure сохранён до повторной проверки.
+
+- 2026-11-14: кандидат PostgreSQL SSH fencing получил публичный native HA/crash/replay CLI и отдельный AMD64 workflow. ARM-проверка по каноническим recipes сохранила 1000 подтверждённых строк при зависшем старом writer, восстановила узел второй копией fencer и сохранила budget после replacement; пять journals и оба peer receipts удержаны отдельно от cleanup. Проверки одного Engine не объявляются физической распределённой приёмкой или готовым installer.
+
+- 2026-11-14: native etcd HA-проверка по опубликованным адресам выявила peer source SAN mismatch при NAT. PostgreSQL initial PKI получила явный проверяемый список peer client IPs без смены endpoints или отключения проверок; при невалидном input частичная PKI не создаётся.
+
+- 2026-11-14: PostgreSQL node launcher получил явный owner-labelled credentials volume input, отдельный от канонического fencing-журнала. Новый вариант сохраняет filesystem input, exact Engine/image checks, read-only credentials и отсутствие fallback; предназначен для проверки штатного helper с настоящим DCS и раздельными ролями.
+
+- 2026-11-14: audit run 43642909661 кандидата 66b4716 завершился 25/26 из-за Grafana readiness в isolated OIDC E2E. Тест теперь сохраняет безопасный process/OOM/probe snapshot до удаления собственных ресурсов; workflow публикует только разрешённый JSON. Отказ, deadline, runtime и security gates сохраняются; причина ещё требует подтверждения.
+
+- 2026-11-14: подготовлен [кандидат независимого PostgreSQL fencer](postgresql/FENCING_SSH.md) с одноразовой узловой операцией и единым persistent return budget для копий контроллера. Добавлены fail-closed input/identity/lease/receipt checks, отдельный рецепт без Docker socket и минимальные fencing targets. Default SQL/local runtime и рабочий стенд сохраняются; OpenSSH addition требует согласования стека и последующего security/HA admission.
+## Предыдущие изменения инфраструктуры
 
 - 2026-11-14: exact source 6eb047f прошёл audit 26/26 и native SSH цепочку для 1357 source files и 33 synthetic initial-input files с CLI из материализованного source. Зафиксированы 179 tools tests, wrong-host-key/wire-corruption/drift refusals и раздельные source/input generations. Старый executor proof помечен историческим; полный inventory/runtime/site admission открыт.
 

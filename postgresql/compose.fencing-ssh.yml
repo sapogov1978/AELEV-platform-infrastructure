@@ -1,0 +1,47 @@
+# Independent candidate fencer placement. SQL/etcd roles are not included.
+name: ${AELEV_INFRASTRUCTURE_POSTGRESQL_COMPOSE_PROJECT:?set project}
+services:
+  postgresql-fencer:
+    image: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_IMAGE:?set reviewed SSH image}
+    build: {context: ., dockerfile: Dockerfile, target: fencing-ssh}
+    entrypoint: [python, -m, aelev_postgresql.fencing_executor]
+    command: [serve]
+    restart: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_RESTART_POLICY:?set restart}
+    read_only: true
+    tmpfs: [/tmp:mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MEMORY:?set memory}
+    cpu_shares: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_CPU_SHARES:?set cpu shares}
+    environment:
+      AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE: docker
+      AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_TRANSPORT: ssh
+      AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_SSH_BINDINGS: /run/aelev/secrets/ssh-bindings.json
+      AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER: ${AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER:?set cluster}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER: ${AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER:?set admin}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_PORT: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_PORT:?set port}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS:?set timeout}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST:?set etcd host}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT:?set etcd port}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST:?set etcd host}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT:?set etcd port}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST:?set etcd host}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_CLIENT_PORT:?set etcd port}
+    ports:
+      - "${AELEV_INFRASTRUCTURE_POSTGRESQL_BIND:?set bind}:${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_PORT:?set port}:${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_PORT:?set port}"
+    volumes:
+      - type: bind
+        source: ./secrets/fencing
+        target: /run/aelev/secrets
+        read_only: true
+        bind: {create_host_path: false}
+      - ssh-audit:/var/lib/aelev-fencing
+    healthcheck:
+      test: [CMD, python, -S, -m, aelev_postgresql.fencing_probe]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+volumes:
+  ssh-audit:
+    name: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_SSH_AUDIT_VOLUME:?set separate coordinator audit volume}

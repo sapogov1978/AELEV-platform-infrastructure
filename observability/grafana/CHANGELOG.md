@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-14: isolated OIDC E2E сохраняет перед cleanup безопасный readiness snapshot: process state, OOM, exit/restart counters и фиксированные причины healthcheck. CI публикует только этот JSON либо успешный result; private native logs, env, пароли и токены остаются закрытыми. Прежний отказ готовности и его deadline сохраняются.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-12: добавлен native изолированный сценарий `test/local_publisher_e2e.py` и его обязательный запуск в Python CI Grafana. Проверка фиксирует раздельные имена token в пределах организации, реальные 403/401, собственную область всех profiles до очистки и отсутствие остаточных тестовых ресурсов. Первичный отказ strict TLS позволил исправить локальный генератор Keycloak; секретные diagnostics не публикуются.

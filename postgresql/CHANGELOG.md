@@ -1,5 +1,33 @@
 # История PostgreSQL
 
+- 2026-11-16: Test-only barrier снимает запрет только после доказанного уничтожения held request, чтобы новая инкарнация первой копии могла пройти прежнюю readiness. История marker/hash и канонический PostgreSQL журнал сохраняются. Отдельные real Linux tests проверяют запрет до discard и отсутствие release после SIGCONT.
+
+- 2026-11-16: В native SSH test добавлен доэффектный барьер только первого controller key: первый return RPC удерживается SIGSTOP, повторные не вызывают dispatcher, SIGCONT заканчивается отказом. Snapshot проверяет PID/start ticks/kernel `T`; перед запуском второй копии held request удаляется SIGKILL через pidfd. Новые tests проверяют настоящие Linux stop/discard/resume-refusal и подмену marker/incarnation; owner runtime не изменён.
+
+- 2026-11-16: ARM HA/restore прошёл функциональные этапы, но teardown нашёл AutoRemove helper в `created` без PID/StartedAt после снятия SSH host. Failed proof сохранён; собственный scope снят отдельной квитанцией с неизменным baseline 260 контейнеров. Harness теперь удаляет только такой exact never-started helper после прекращения всех собственных ролей; живые, чужие и прежние контейнеры защищены, итоговый inventory gate сохраняется.
+
+- 2026-11-15: SSH HA teardown проверяет итоговые остатки четырёх классов собственных Docker resources по exact scope labels. Сеть удаляется только по проверенному собственному имени/label; ошибки cleanup сохраняют итоговый FAIL. Прежний boolean не подменяет inventory, рабочий кластер и runtime fencing не меняются.
+
+- 2026-11-15: после повторяемого AMD64 timeout с восстановившимся старым writer fault injector удерживает собственный lifecycle до ограждения и сообщает FAULT_LOST при возобновлении цели. Добавлен канонический actual SQL quorum barrier перед INSERT и подтверждением COMMIT; runtime fencing, healthchecks и recovery budgets не изменяются.
+
+- 2026-11-15: SSH acceptance получил отдельный operator observer без подключения к PGDATA и с собственным read-only набором admin inputs. Неодновременные SQL samples перепроверяются на прежних живых connections; два подтверждённых primary по-прежнему запрещены. Fault injection выбирает процесс по REST socket и подтверждает SIGSTOP через proc state; PID 1/неоднозначная цель отклоняются. Старый name selector сохраняется только как диагностический признак.
+
+- 2026-11-14: первый AMD64 повтор расширенного HA/restore сценария source b17f01c не дошёл до restore из-за неготового кластера после Patroni fault; ARM прошёл полностью, прежний AMD64 HA source 09892fb сохранён отдельно. Для локализации proof получил безопасные runtime/intent/audit summaries с проверками redaction; причина не объявлена исправленной.
+
+- 2026-11-14: отдельный ручной workflow готовит подписанный multiarch fencing image после успешных audit/native HA для точного source SHA. Он не запускает SQL, не переключает runtime и не выдаёт RESUME; после публикации всё ещё требуется проверка exact registry digest.
+
+- 2026-11-14: публичный SSH HA-тест выполняет physical basebackup по прежнему `verify-full` mTLS, проверяет manifest штатным `pg_verifybackup`, запускает восстановленную копию на непубликуемом loopback и сверяет 1000 строк/SHA. Сохранение исходного primary/quorum проверяется повторно; архив WAL и независимое backup-хранилище не объявлены настроенными.
+
+- 2026-11-14: ownership test различает три exact initial-PKI inputs и runtime-конфигурацию: peer source SANs потребляет только генератор сертификатов, Compose их не получает. Общая проверка использования остальных переменных сохраняется.
+
+- 2026-11-14: опубликован повторяемый `test/fencing-ssh-lifecycle.py`: настоящие три etcd/SQL, две копии fencer, отдельные projects/networks и public endpoint routes; native ARM подтвердил failover с живым старым SQL, 1000 сохранённых строк, неизвестный RPC, recovery второй копией, replacement первого и прежний budget. Сохраняются оба termination receipts и пять technical archives; baseline сохраняется. Добавлен отдельный native AMD64 CI без registry publication; installer, площадка и SQL restore остаются отдельными воротами.
+
+- 2026-11-14: реальное раздельное размещение etcd выявило SAN mismatch на исходящем адресе NAT. Первоначальная PKI принимает явные bounded `NODE_N_ETCD_PEER_CLIENT_IPS`, сохраняя advertised endpoints и все native TLS checks. Валидация выполняется до записи файлов; существующие identities не заменяются. Добавлены strict chain/IP и отрицательные проверки.
+
+- 2026-11-14: кандидат node launcher принимает явный собственный `secrets_volume` как альтернативу закрытому directory input. Перед запуском проверяются cluster/node/purpose и отделение от state volume; credentials монтируются read-only без неявного создания или fallback. Это позволяет готовить отдельные runtime-owned keys для реального HA-испытания с прежним `cap_drop=ALL` helper.
+
+- 2026-11-14: подготовлен [кандидат SSH-размещения fencer](FENCING_SSH.md): forced node operation с привязкой Engine/cluster/node, общим узловым журналом копий контроллера и прежними lease/termination/return guards. Отдельные минимальные targets не импортируют SQL/Patroni. Добавление OpenSSH требует согласования стека и дальнейшего полного admission; рабочие установки не переключались.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-14: существующая зависимость Patroni dnspython явно закреплена на исправленной версии 2.9.2 (GHSA-vvf4-9x63-8xvv). Остальные PostgreSQL/Patroni версии, fencing, PKI, данные и работающий кластер сохраняются.

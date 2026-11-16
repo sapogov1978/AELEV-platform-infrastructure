@@ -26,4 +26,5 @@ docker compose up -d --no-build --pull never
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.
 - [USER_MANUAL.md](USER_MANUAL.md), [SPEC.md](SPEC.md) — использование и правила продукта.
 - [FENCING.md](FENCING.md) — механизм ограждения.
+- [FENCING_SSH.md](FENCING_SSH.md) — кандидат независимого размещения Docker fencer с общим узловым бюджетом его копий.
 - [INDEX.md](INDEX.md), [TASKS.md](TASKS.md), [CHANGELOG.md](CHANGELOG.md) — агентская карта, ограничения и история.

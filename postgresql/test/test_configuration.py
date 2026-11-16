@@ -38,11 +38,19 @@ class PostgresqlConfigurationTest(unittest.TestCase):
             if line and not line.startswith("#")
         ]
         self.assertTrue(variables)
+        initial_pki_only = {
+            f"AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_{node}_ETCD_PEER_CLIENT_IPS"
+            for node in range(1, 4)
+        }
+        self.assertTrue(initial_pki_only.issubset(variables))
         for variable in variables:
             self.assertTrue(
                 variable.startswith("AELEV_INFRASTRUCTURE_POSTGRESQL_"), variable
             )
-            self.assertIn(variable, compose, variable)
+            if variable in initial_pki_only:
+                self.assertNotIn(variable, compose, variable)
+            else:
+                self.assertIn(variable, compose, variable)
 
     def test_restart_policy_distinguishes_provisioning(self) -> None:
         environment = {

@@ -108,7 +108,9 @@ jobs:
         if: always() && matrix.suite.path == 'observability/grafana'
         with:
           name: grafana-local-publisher-${{ github.sha }}
-          path: ${{ runner.temp }}/grafana-local-publisher/result.json
+          path: |
+            ${{ runner.temp }}/grafana-local-publisher/result.json
+            ${{ runner.temp }}/grafana-local-publisher/readiness.failure.json
           if-no-files-found: ignore
       - name: Enforce SPIRE lint, formatting and strict typing
         if: matrix.suite.path == 'spire'

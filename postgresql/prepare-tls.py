@@ -21,6 +21,26 @@ def run(*arguments: str) -> None:
     subprocess.run(["openssl", *arguments], check=True, capture_output=True)
 
 
+def peer_client_ips(values: dict[str, str], node: int) -> list[str]:
+    """Read explicit peer source addresses, including operator-declared NAT IPs."""
+    raw = values.get(PREFIX + f"NODE_{node}_ETCD_PEER_CLIENT_IPS", "")
+    if not raw.strip():
+        return []
+    entries = [part.strip() for part in raw.split(",")]
+    if len(raw) > 1024 or len(entries) > 16:
+        raise ValueError("Invalid etcd peer client IP list")
+    result = set()
+    for entry in entries:
+        try:
+            address = ipaddress.ip_address(entry)
+        except ValueError:
+            raise ValueError("Invalid etcd peer client IP list") from None
+        if "%" in entry or address.is_unspecified or address.is_multicast:
+            raise ValueError("Invalid etcd peer client IP list")
+        result.add(address.compressed)
+    return sorted(result)
+
+
 def main() -> None:
     """Generate two separate trust domains and all cluster identities."""
     if not shutil.which("openssl"):
@@ -36,6 +56,10 @@ def main() -> None:
     if args.fencing_only:
         prepare_fencing(values)
         return
+    try:
+        peer_addresses = {node: peer_client_ips(values, node) for node in range(1, 4)}
+    except ValueError:
+        raise SystemExit("Invalid NODE_N_ETCD_PEER_CLIENT_IPS") from None
     destination = ROOT / "secrets"
     if any(
         (destination / name).exists()
@@ -85,6 +109,7 @@ def main() -> None:
         common_name: str,
         domain: str,
         host: str | None = None,
+        extra_ips: list[str] | None = None,
     ) -> None:
         directory.mkdir(parents=True, exist_ok=True)
         run(
@@ -117,9 +142,9 @@ def main() -> None:
                 alternative = f"IP:{host}"
             except ValueError:
                 alternative = f"DNS:{host}"
-            extensions.append(
-                f"subjectAltName={alternative},DNS:localhost,IP:127.0.0.1"
-            )
+            alternatives = [alternative, "DNS:localhost", "IP:127.0.0.1"]
+            alternatives.extend("IP:" + address for address in extra_ips or [])
+            extensions.append("subjectAltName=" + ",".join(dict.fromkeys(alternatives)))
         config = directory / f"{name}.extensions"
         config.write_text("\n".join(extensions) + "\n")
         run(
@@ -178,6 +203,7 @@ def main() -> None:
             f"etcd-{node}",
             "etcd",
             values[PREFIX + f"NODE_{node}_ETCD_HOST"],
+            peer_addresses[node],
         )
         certificate(etcd_dir, "client", f"etcd-probe-{node}", "etcd")
         shutil.copyfile(issuer / "etcd.crt", etcd_dir / "ca.crt")
