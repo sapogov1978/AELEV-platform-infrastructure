@@ -358,6 +358,7 @@ def test_generated_fixture_passes_actual_public_initial_bundle_cli(
     authorities = (
         root / "runtime/root-spire-publisher-authority/publisher.crt",
         root / "observability/runtime/local-issuer/internal-ca.crt",
+        root / "observability/runtime/local-issuer/publisher-ca.crt",
     )
     for issuer in authorities:
         issuer.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -401,6 +402,24 @@ def test_generated_fixture_passes_actual_public_initial_bundle_cli(
     monkeypatch.setattr(owner, "image", lambda _: "sha256:" + "a" * 64)
     owner.prepare()
     cfg = json.loads(owner.source.read_bytes())
+    wrong_client = owner.issue_client("rejected-central-write", authorities[1])
+    boundary = subprocess.run(
+        [
+            sys.executable,
+            str(Path(__file__).with_name("spire_delivery_tls_check.py")),
+            str(owner.source),
+            wrong_client["certificate"],
+        ],
+        capture_output=True,
+        text=True,
+        timeout=40,
+    )
+    assert boundary.returncode == 0, boundary.stderr
+    assert json.loads(boundary.stdout) == {
+        "accepted_packets": 1,
+        "wrong_client_issuer_rejected": True,
+        "durable_ack": True,
+    }
     # Only file/PKI contracts are exercised here; no Grafana/API success is claimed.
     cfg["grafana_tokens"] = {}
     for name in ("publisher", "provisioner"):

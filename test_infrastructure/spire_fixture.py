@@ -85,10 +85,13 @@ class Fixture:
                 raise RuntimeError("ROOT_SPIRE_PUBLISHED_ROUTE_REQUIRED")
 
         telemetry = self.root / "observability/runtime/local-issuer/internal-ca.crt"
+        telemetry_publisher = (
+            self.root / "observability/runtime/local-issuer/publisher-ca.crt"
+        )
         publisher = self.root / "runtime/root-spire-publisher-authority/publisher.crt"
         issued = {}
         for name, issuer in (
-            ("central-write", telemetry),
+            ("central-write", telemetry_publisher),
             ("status-publisher", publisher),
         ):
             issued[name] = self.issue_client(name, issuer)
