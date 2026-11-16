@@ -130,6 +130,8 @@ fixture = ROOT / "source"
 (fixture / "tools").mkdir(parents=True)
 for name in ("node_execution.py", "owner_compose.py"):
     shutil.copyfile(SOURCE / "tools" / name, fixture / "tools" / name)
+owner_source = ROOT / "owner-source"
+owner_source.mkdir()
 worker = """import os,time
 with open('/data/history','ab') as stream:
  stream.write(b'worker-start\\n');stream.flush();os.fsync(stream.fileno())
@@ -170,7 +172,7 @@ model = {
 }
 for service in model["services"].values():
     service["labels"] = {"aelev.qualification": SCOPE}
-(fixture / "compose.json").write_text(json.dumps(model))
+(owner_source / "compose.json").write_text(json.dumps(model))
 catalog = {
     "schema_version": 1,
     "product": "qualification",
@@ -185,10 +187,15 @@ catalog = {
         for name in model["services"]
     ],
 }
-(fixture / "deployment-catalog.json").write_text(json.dumps(catalog))
+(owner_source / "deployment-catalog.json").write_text(json.dumps(catalog))
 FILES = {
     str(path.relative_to(fixture)): hashlib.sha256(path.read_bytes()).hexdigest()
     for path in fixture.rglob("*")
+    if path.is_file()
+}
+OWNER_FILES = {
+    str(path.relative_to(owner_source)): hashlib.sha256(path.read_bytes()).hexdigest()
+    for path in owner_source.rglob("*")
     if path.is_file()
 }
 
@@ -207,8 +214,10 @@ def definition(project: str, role: str) -> dict[str, Any]:
     env.chmod(0o600)
     return {
         "schema_version": 1,
-        "source_root": str(fixture),
-        "source_files": FILES,
+        "executor_root": str(fixture),
+        "executor_files": FILES,
+        "owner_root": str(owner_source),
+        "owner_files": OWNER_FILES,
         "catalog": "deployment-catalog.json",
         "role": "qualification/" + role,
         "recipes": ["compose.json"],
@@ -237,8 +246,8 @@ def execute(
         request = {
             "schema_version": 1,
             "operation": operation,
-            "source_root": value["source_root"],
-            "source_files": value["source_files"],
+            "source_root": value["executor_root"],
+            "source_files": value["executor_files"],
             "state_root": str(ROOT / (value["project"] + "-journal")),
             "procedure": "owner-compose",
             "arguments": [
@@ -284,6 +293,13 @@ try:
             ]
         ).stdout.strip()
     first = definition(PROJECTS[0], "worker")
+    assert first["owner_root"] != first["executor_root"]
+    assert "tools/owner_compose.py" not in first["owner_files"]
+    record(
+        "independent-executor-and-owner-source-generations",
+        separate_roots=True,
+        helper_copied_into_owner=False,
+    )
     planned, _, _ = execute(first, "plan")
     first["configuration_sha256"] = planned["configuration_sha256"]
     started, request, receipt = execute(first, "start")

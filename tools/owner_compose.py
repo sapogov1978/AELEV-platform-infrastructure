@@ -16,8 +16,10 @@ from tools import node_execution as node
 
 FIELDS = {
     "schema_version",
-    "source_root",
-    "source_files",
+    "executor_root",
+    "executor_files",
+    "owner_root",
+    "owner_files",
     "catalog",
     "role",
     "recipes",
@@ -40,6 +42,11 @@ class CommandFailure(node.ExecutionError):
         self.stderr = stderr
 
 
+class EffectUnknown(node.ExecutionError):
+    def __init__(self) -> None:
+        super().__init__("OWNER_COMPOSE_RESULT_UNKNOWN_RECONCILIATION_REQUIRED")
+
+
 def require(value: bool, code: str) -> None:
     node.require(value, code)
 
@@ -56,29 +63,27 @@ def environment() -> dict[str, str]:
     }
 
 
-def call(command: list[str]) -> bytes:
-    result = subprocess.run(
-        command,
-        env=environment(),
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        timeout=600,
-        check=False,
-    )
+def call(command: list[str], *, effectful: bool = False) -> bytes:
+    try:
+        result = subprocess.run(
+            command,
+            env=environment(),
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            timeout=600,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        if effectful:
+            raise EffectUnknown() from error
+        raise
     if result.returncode:
         raise CommandFailure(result.returncode, result.stdout, result.stderr)
     return result.stdout
 
 
-def definition(value: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
-    require(
-        set(value) == FIELDS
-        and type(value["schema_version"]) is int
-        and value["schema_version"] == 1,
-        "OWNER_COMPOSE_REQUEST_INVALID",
-    )
-    root = node.absolute(value["source_root"])
-    files = value["source_files"]
+def source_tree(root_value: Any, files: Any) -> tuple[Path, dict[str, Any]]:
+    root = node.absolute(root_value)
     require(isinstance(files, dict) and bool(files), "OWNER_COMPOSE_SOURCE_REQUIRED")
     for name, expected in files.items():
         require(
@@ -95,10 +100,25 @@ def definition(value: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
             path.is_file() and digest(path.read_bytes()) == expected,
             "OWNER_COMPOSE_SOURCE_DRIFT",
         )
+    return root, cast(dict[str, Any], files)
+
+
+def definition(value: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
     require(
-        "tools/owner_compose.py" in files
-        and "tools/node_execution.py" in files
-        and digest(Path(__file__).read_bytes()) == files["tools/owner_compose.py"],
+        set(value) == FIELDS
+        and type(value["schema_version"]) is int
+        and value["schema_version"] == 1,
+        "OWNER_COMPOSE_REQUEST_INVALID",
+    )
+    executor_root, executor_files = source_tree(
+        value["executor_root"], value["executor_files"]
+    )
+    root, files = source_tree(value["owner_root"], value["owner_files"])
+    require(
+        "tools/owner_compose.py" in executor_files
+        and "tools/node_execution.py" in executor_files
+        and digest(Path(__file__).read_bytes())
+        == executor_files["tools/owner_compose.py"],
         "OWNER_COMPOSE_EXECUTOR_MISMATCH",
     )
     catalog_path = value["catalog"]
@@ -131,7 +151,9 @@ def definition(value: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
     workspace = node.absolute(value["project_directory"])
     node.private(workspace, directory=True)
     require(
-        not workspace.is_relative_to(root), "OWNER_COMPOSE_PRIVATE_WORKSPACE_REQUIRED"
+        not workspace.is_relative_to(root)
+        and not workspace.is_relative_to(executor_root),
+        "OWNER_COMPOSE_PRIVATE_WORKSPACE_REQUIRED",
     )
     require(
         isinstance(value["project"], str)
@@ -275,10 +297,11 @@ def apply_model(
                 "--no-deps",
                 "--pull",
                 "never",
-                "--no-tty",
+                "-T",
                 "--interactive=false",
                 service,
-            ]
+            ],
+            effectful=True,
         )
         result["status"] = "OWNER_TASK_COMPLETED"
         return result
@@ -294,7 +317,8 @@ def apply_model(
                 "never",
                 "--no-recreate",
                 service,
-            ]
+            ],
+            effectful=True,
         )
         rows = inspect_role(value, service, config_hash, image_id)
         require(bool(rows), "OWNER_COMPOSE_START_NOT_OBSERVED")
@@ -398,6 +422,9 @@ def main() -> int:
         value = json.loads(data, object_pairs_hook=unique)
         require(isinstance(value, dict), "OWNER_COMPOSE_REQUEST_INVALID")
         result = execute(value, args.action)
+    except EffectUnknown as error:
+        print(json.dumps({"status": "RESULT_UNKNOWN", "code": str(error)}))
+        return 3
     except CommandFailure as error:
         retained = False
         directory = os.environ.get("AELEV_NODE_OPERATION_DIRECTORY")

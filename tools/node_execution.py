@@ -196,8 +196,8 @@ def validate(
             private(selected_request)
             selected_definition = read(selected_request)
             require(
-                selected_definition.get("source_root") == request["source_root"]
-                and selected_definition.get("source_files") == request["source_files"]
+                selected_definition.get("executor_root") == request["source_root"]
+                and selected_definition.get("executor_files") == request["source_files"]
                 and selected_definition.get("inputs")
                 == {
                     name: value
@@ -447,6 +447,8 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
                 ),
                 exit_code=completed.returncode,
             )
+            if request["procedure"] == "owner-compose" and completed.returncode == 3:
+                result["status"] = "RESULT_UNKNOWN"
         except (OSError, subprocess.TimeoutExpired):
             result["status"] = "RESULT_UNKNOWN"
         result["owner_output_retained_privately"] = True

@@ -28,7 +28,9 @@ class OwnerComposeTest(unittest.TestCase):
             (self.source / "tools" / name).write_bytes(
                 (Path(__file__).parent / name).read_bytes()
             )
-        (self.source / "compose.yml").write_text("services: {}\n")
+        self.owner = self.root / "owner"
+        self.owner.mkdir()
+        (self.owner / "compose.yml").write_text("services: {}\n")
         self.catalog = {
             "product": "qualification",
             "roles": [
@@ -41,7 +43,7 @@ class OwnerComposeTest(unittest.TestCase):
                 }
             ],
         }
-        (self.source / "deployment-catalog.json").write_text(json.dumps(self.catalog))
+        (self.owner / "deployment-catalog.json").write_text(json.dumps(self.catalog))
         workspace = self.root / "workspace"
         workspace.mkdir(mode=0o700)
         self.env = self.root / "owner.env"
@@ -52,8 +54,10 @@ class OwnerComposeTest(unittest.TestCase):
         self.config_hash = "c" * 64
         self.value = {
             "schema_version": 1,
-            "source_root": str(self.source),
-            "source_files": self.source_files(),
+            "executor_root": str(self.source),
+            "executor_files": self.source_files(),
+            "owner_root": str(self.owner),
+            "owner_files": self.owner_files(),
             "catalog": "deployment-catalog.json",
             "role": "qualification/worker",
             "recipes": ["compose.yml"],
@@ -84,6 +88,13 @@ class OwnerComposeTest(unittest.TestCase):
             if path.is_file()
         }
 
+    def owner_files(self):
+        return {
+            str(path.relative_to(self.owner)): subject.digest(path.read_bytes())
+            for path in self.owner.rglob("*")
+            if path.is_file()
+        }
+
     def row(self):
         return {
             "Id": "d" * 64,
@@ -105,7 +116,7 @@ class OwnerComposeTest(unittest.TestCase):
             },
         }
 
-    def docker(self, command):
+    def docker(self, command, **kwargs):
         self.commands.append(command)
         if command[:3] == ["docker", "image", "inspect"]:
             return json.dumps([{"Id": self.image_id}]).encode()
@@ -116,7 +127,7 @@ class OwnerComposeTest(unittest.TestCase):
         if "config" in command and "--format" in command:
             return json.dumps(self.model).encode()
         snapshot = Path(command[command.index("--file") + 1])
-        self.assertNotEqual(snapshot, self.source / "compose.yml")
+        self.assertNotEqual(snapshot, self.owner / "compose.yml")
         self.assertEqual(snapshot.stat().st_mode & 0o777, 0o600)
         self.assertEqual(json.loads(snapshot.read_text()), self.model)
         self.assertEqual(
@@ -144,6 +155,16 @@ class OwnerComposeTest(unittest.TestCase):
         self.assertEqual(result["status"], "OWNER_COMPOSE_PLANNED")
         self.assertEqual(self.mutations, [])
         self.assertEqual(len(self.commands), 2)
+
+    def test_executor_and_owner_have_independent_source_generations(self):
+        command, role = subject.definition(self.value)
+        self.assertNotEqual(self.value["executor_root"], self.value["owner_root"])
+        self.assertNotIn("tools/owner_compose.py", self.value["owner_files"])
+        self.assertEqual(role["id"], "worker")
+        self.assertEqual(command[-1], str(self.owner / "compose.yml"))
+        (self.source / "tools/node_execution.py").write_text("changed executor\n")
+        with self.assertRaisesRegex(node.ExecutionError, "OWNER_COMPOSE_SOURCE_DRIFT"):
+            subject.definition(self.value)
 
     def test_start_and_repeat_only_touch_selected_role_once(self):
         first = self.run_action("start")
@@ -207,7 +228,7 @@ class OwnerComposeTest(unittest.TestCase):
         call.assert_not_called()
 
     def test_source_drift_is_rejected_before_compose(self):
-        (self.source / "compose.yml").write_text("changed\n")
+        (self.owner / "compose.yml").write_text("changed\n")
         with mock.patch.object(subject, "call") as call:
             with self.assertRaisesRegex(
                 node.ExecutionError, "OWNER_COMPOSE_SOURCE_DRIFT"
@@ -245,19 +266,21 @@ class OwnerComposeTest(unittest.TestCase):
         ):
             self.run_action("task")
         self.catalog["roles"][0]["kind"] = "operation"
-        (self.source / "deployment-catalog.json").write_text(json.dumps(self.catalog))
-        self.value["source_files"] = self.source_files()
+        (self.owner / "deployment-catalog.json").write_text(json.dumps(self.catalog))
+        self.value["owner_files"] = self.owner_files()
         result = self.run_action("task")
         self.assertEqual(result["status"], "OWNER_TASK_COMPLETED")
         self.assertEqual(self.mutations[0][-1], "worker")
         self.assertIn("--no-deps", self.mutations[0])
         self.assertIn("--rm", self.mutations[0])
+        self.assertIn("-T", self.mutations[0])
+        self.assertNotIn("--no-tty", self.mutations[0])
         self.assertNotIn("--build", self.mutations[0])
 
     def test_env_edit_after_render_cannot_change_frozen_model(self):
         original = self.docker
 
-        def editing_docker(command):
+        def editing_docker(command, **kwargs):
             data = original(command)
             if "--format" in command:
                 self.env.write_text("OWNER_SETTING=concurrent-edit\n")
@@ -276,7 +299,7 @@ class OwnerComposeTest(unittest.TestCase):
             "schema_version": 1,
             "operation": str(uuid.uuid4()),
             "source_root": str(self.source),
-            "source_files": self.value["source_files"],
+            "source_files": self.value["executor_files"],
             "state_root": str(self.root / "state"),
             "procedure": "owner-compose",
             "arguments": [
@@ -318,6 +341,48 @@ class OwnerComposeTest(unittest.TestCase):
         self.assertEqual(failure.exception.exit_code, 7)
         self.assertNotIn("private", str(failure.exception))
         self.assertEqual(failure.exception.stderr, b"private-stderr")
+
+    def test_effectful_timeout_is_unknown_instead_of_invalid_input(self):
+        with mock.patch.object(
+            subject.subprocess,
+            "run",
+            side_effect=subprocess.TimeoutExpired(["private-command"], 600),
+        ):
+            with self.assertRaises(subject.EffectUnknown) as failure:
+                subject.call(["docker", "compose", "up"], effectful=True)
+        self.assertNotIn("private-command", str(failure.exception))
+
+    def test_unknown_owner_exit_is_retained_without_reexecution(self):
+        path = self.root / "definition.json"
+        path.write_text(json.dumps(self.value))
+        path.chmod(0o600)
+        request_hash = subject.digest(path.read_bytes())
+        request = {
+            "schema_version": 1,
+            "operation": str(uuid.uuid4()),
+            "source_root": str(self.source),
+            "source_files": self.value["executor_files"],
+            "state_root": str(self.root / "state"),
+            "procedure": "owner-compose",
+            "arguments": [
+                "start",
+                "--request",
+                str(path),
+                "--request-sha256",
+                request_hash,
+            ],
+            "inputs": {**self.value["inputs"], str(path): request_hash},
+            "environment": {},
+            "timeout_seconds": 60,
+        }
+        with mock.patch.object(
+            node.subprocess, "run", return_value=subprocess.CompletedProcess([], 3)
+        ) as run:
+            first = node.target(request, "execute")
+            second = node.target(request, "execute")
+        self.assertEqual(first["status"], "RESULT_UNKNOWN")
+        self.assertEqual(first, second)
+        run.assert_called_once()
 
     def test_private_command_diagnostics_are_saved_only_inside_node_operation(self):
         request = self.root / "definition.json"
