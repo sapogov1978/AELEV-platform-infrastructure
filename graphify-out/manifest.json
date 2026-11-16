@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794805437.1246657,
-    "seen": 1794805768.8289878,
-    "ast_hash": "69343934a0e7b8cd9ffd1e5af3ac0c22",
+    "mtime": 1794806978.8130956,
+    "seen": 1794807066.6283698,
+    "ast_hash": "b25370379357e4b7289064ea76e3d781",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794805290.8766365,
-    "seen": 1794805768.8312268,
-    "ast_hash": "20358c14e6a859046216f9d8093ea860",
+    "mtime": 1794806978.8102965,
+    "seen": 1794807066.6360478,
+    "ast_hash": "7787854d5ebe0893e1ade447febc90ef",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794805290.1615708,
-    "seen": 1794805768.829553,
-    "ast_hash": "f108b0e4dc054137e3a89c95a0ef17f0",
+    "mtime": 1794806978.8109925,
+    "seen": 1794807066.6318562,
+    "ast_hash": "e926e6b3b2d49adf3260e81429035b44",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
@@ -6702,9 +6702,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/root_routes.py": {
-    "mtime": 1794805290.9028075,
-    "seen": 1794805768.828275,
-    "ast_hash": "9f4c35e57ab0be27858c23ced88aa892",
+    "mtime": 1794806978.8087409,
+    "seen": 1794807066.625586,
+    "ast_hash": "618c35203a34ca5f8341ad2443a30e06",
     "semantic_hash": ""
   },
   "test_infrastructure/spire_fixture.py": {
@@ -6714,9 +6714,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_spire_fixture.py": {
-    "mtime": 1794805290.9168286,
-    "seen": 1794805768.828531,
-    "ast_hash": "66f068f46e8e0fd080695dcfb0dd6496",
+    "mtime": 1794806990.7679558,
+    "seen": 1794807066.626,
+    "ast_hash": "c57457d803a0a5cb572650238bb49ffa",
     "semantic_hash": ""
   },
   "test_infrastructure/sender_diagnostic.py": {

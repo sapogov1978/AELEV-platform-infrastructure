@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- Native root `093baaa` подтвердил живой central Delivery worker и `transport_failure` всех трёх сигналов: consumers используют прежние host-gateway published ports, но backend bind оставался loopback. Fresh ephemeral CI теперь объявляет достижимые TLS listeners всех семи владельцев наблюдаемости до build/BOM, согласуя также Grafana/Collector/Prometheus/Blackbox обращения. Все owner overrides проверяются до первой записи, восстановление проверяет все семь файлов. Рабочие defaults, operator-only binds, номера портов, CA и Process Control сохраняются. Основание — [Docker published-port reachability](https://docs.docker.com/engine/network/port-publishing/). Прогноз перед правкой — 15–25 минут на реализацию/узкие checks, затем 25–35 минут native gate.
+
 - В отдельном integration checkout объединены root/SPIRE `093baaa` и PostgreSQL HA `474d69f`: код/configuration обеих веток сохраняются, вручную соединяется только changelog, generated graph строится заново. Контрольные проверки сравнивают все изменённые source blobs с соответствующим родителем; общий source остаётся кандидатом до собственных gates. Runtime, Process Control и release refs не переключаются. Прогноз перед интеграцией — 20–30 минут на merge/graph/совместимость.
 
 - Root `77c7006` подтвердил ONLINE всех пяти SPIRE компонентов и отсутствие TLS delivery errors; поздний UI failure теперь у центральной Delivery. Failure context читает её существующий mTLS `/status` собственной query identity и сохраняет тот же bounded формат counters/codes. Настоящий DeliveryServer дополнительно проверяет health diagnostic при имеющейся записи и неработающем worker; readiness остаётся отрицательной. Прогноз — 5–10 минут и один отдельный root diagnostic.

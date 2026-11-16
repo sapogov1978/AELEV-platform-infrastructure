@@ -12,7 +12,15 @@ from resources import inventory, preflight
 from spire_fixture import ROOT, Fixture
 from tools import full_local, spire_local
 
-OWNERS = {"delivery": "DELIVERY", "grafana": "GRAFANA"}
+OWNERS = {
+    "delivery": "DELIVERY",
+    "grafana": "GRAFANA",
+    "loki": "LOKI",
+    "tempo": "TEMPO",
+    "prometheus": "PROMETHEUS",
+    "otel-collector": "OTEL_COLLECTOR",
+    "blackbox-exporter": "BLACKBOX_EXPORTER",
+}
 
 
 def prepare(root: Path = ROOT) -> None:

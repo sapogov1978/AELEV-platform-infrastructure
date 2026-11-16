@@ -211,8 +211,9 @@ def test_route_preparation_requires_explicit_ephemeral_ci(
     assert list(tmp_path.iterdir()) == []
 
 
+@pytest.mark.parametrize("changed_owner", root_routes.OWNERS)
 def test_route_restore_checks_every_file_before_writing(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, changed_owner: str
 ) -> None:
     monkeypatch.setattr(root_routes, "ensure_stopped", lambda _: None)
     record: dict[str, Any] = {"schema_version": 1, "files": {}}
@@ -223,12 +224,65 @@ def test_route_restore_checks_every_file_before_writing(
         record["files"][name] = {"original": "original\n", "changed": "changed\n"}
     (tmp_path / "runtime").mkdir()
     (tmp_path / "runtime/root-spire-routes.json").write_text(json.dumps(record))
-    last = tmp_path / "observability/grafana/.env"
-    last.write_text("operator-change\n")
+    changed = tmp_path / "observability" / changed_owner / ".env"
+    changed.write_text("operator-change\n")
     with pytest.raises(RuntimeError, match="ENV_CHANGED"):
         root_routes.restore(tmp_path)
-    assert (tmp_path / "observability/delivery/.env").read_text() == "changed\n"
-    assert last.read_text() == "operator-change\n"
+    for name in root_routes.OWNERS:
+        expected = "operator-change\n" if name == changed_owner else "changed\n"
+        assert (tmp_path / "observability" / name / ".env").read_text() == expected
+
+
+@pytest.mark.parametrize("override_owner", [None, *root_routes.OWNERS])
+def test_ci_routes_preserve_published_endpoints_and_refuse_any_operator_override(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, override_owner: str | None
+) -> None:
+    fixture(tmp_path)
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    monkeypatch.setattr(root_routes.full_local, "load_json", lambda *_: {})
+    monkeypatch.setattr(root_routes.full_local, "compose_prefix", lambda *_: [])
+    monkeypatch.setattr(
+        root_routes.full_local,
+        "command",
+        lambda *_args, **_kw: subprocess.CompletedProcess([], 0, "{}", ""),
+    )
+    monkeypatch.setattr(root_routes, "inventory", lambda _: empty())
+    monkeypatch.setattr(root_routes, "preflight", lambda *_: None)
+    original: dict[str, bytes] = {}
+    for name in root_routes.OWNERS:
+        target = tmp_path / "observability" / name / ".env"
+        target.parent.mkdir(parents=True)
+        # Keep the actual public owner template, including published ports and TLS.
+        raw = (
+            Path(__file__).resolve().parents[1]
+            / "observability"
+            / name
+            / ".env.example"
+        ).read_bytes()
+        if name == override_owner:
+            key = "AELEV_INFRASTRUCTURE_" + root_routes.OWNERS[name] + "_BIND"
+            raw = raw.replace(
+                (key + "=127.0.0.1").encode(), (key + "=192.0.2.10").encode()
+            )
+        target.write_bytes(raw)
+        original[name] = raw
+    if override_owner is not None:
+        with pytest.raises(RuntimeError, match="OPERATOR_ROUTE_REFUSED"):
+            root_routes.prepare(tmp_path)
+        for name, raw in original.items():
+            assert (tmp_path / "observability" / name / ".env").read_bytes() == raw
+        assert not (tmp_path / "runtime/root-spire-routes.json").exists()
+        return
+    root_routes.prepare(tmp_path)
+    for name, raw in original.items():
+        key = "AELEV_INFRASTRUCTURE_" + root_routes.OWNERS[name] + "_BIND"
+        assert (tmp_path / "observability" / name / ".env").read_bytes() == raw.replace(
+            (key + "=127.0.0.1").encode(), (key + "=0.0.0.0").encode()
+        )
+    monkeypatch.setattr(root_routes, "ensure_stopped", lambda _: None)
+    root_routes.restore(tmp_path)
+    for name, raw in original.items():
+        assert (tmp_path / "observability" / name / ".env").read_bytes() == raw
 
 
 def test_core_restart_targets_exclude_delegated_spire(
