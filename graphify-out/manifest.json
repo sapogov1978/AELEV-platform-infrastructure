@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794789528.9377923,
-    "seen": 1794789613.461335,
-    "ast_hash": "75260c40cd1f93ddb86a9e6f7ac574b9",
+    "mtime": 1794792489.1689754,
+    "seen": 1794792770.460835,
+    "ast_hash": "e85a8712b461851609c46beceeadd104",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794789076.5636804,
-    "seen": 1794789246.383637,
-    "ast_hash": "ba68b4d438a914c7d4f633c1a7ee2ac7",
+    "mtime": 1794792032.666606,
+    "seen": 1794792770.456108,
+    "ast_hash": "23468bb18b296b33a86bc5b260799d7c",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794789076.5651605,
-    "seen": 1794789246.390534,
-    "ast_hash": "8933f7c5e568cebf877bcfa25747dc91",
+    "mtime": 1794792489.1671128,
+    "seen": 1794792770.474519,
+    "ast_hash": "25760c51a6effccb68a78b66adc7b173",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6138,15 +6138,15 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794789159.8160326,
-    "seen": 1794789246.387737,
-    "ast_hash": "a81e9ab5eaa125a44adb5e920fd1784b",
+    "mtime": 1794792489.1680703,
+    "seen": 1794792770.466892,
+    "ast_hash": "f108b0e4dc054137e3a89c95a0ef17f0",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
-    "mtime": 1794788758.6055248,
-    "seen": 1794789246.3788202,
-    "ast_hash": "ca6574caf971f942b6f4a3532918130d",
+    "mtime": 1794792489.1663618,
+    "seen": 1794792770.445442,
+    "ast_hash": "a6cf02bdb3ffc0a1d8686c0f0ab98e8a",
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
@@ -6756,15 +6756,15 @@
     "semantic_hash": ""
   },
   "test_infrastructure/spire_fixture.py": {
-    "mtime": 1794789529.2343116,
-    "seen": 1794789613.4587111,
-    "ast_hash": "e629c0f4c0799ec212e7588b6904bf6c",
+    "mtime": 1794792489.165787,
+    "seen": 1794792770.4563,
+    "ast_hash": "7d6b43911a3eb87fa214ab03c4b31009",
     "semantic_hash": ""
   },
   "test_infrastructure/test_spire_fixture.py": {
-    "mtime": 1794789076.5625942,
-    "seen": 1794789246.383889,
-    "ast_hash": "0ca8dc606fbdb503296249bd4aa7f8b7",
+    "mtime": 1794792630.747427,
+    "seen": 1794792770.456799,
+    "ast_hash": "83e536f3966011e3614268f6d75fc1d7",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

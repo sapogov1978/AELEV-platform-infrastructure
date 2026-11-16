@@ -69,6 +69,18 @@ jobs:
         run: python3 tools/full_local.py init
       - name: Declare fresh CI published routes before build and BOM
         run: python3 test_infrastructure/root_routes.py prepare
+      - name: Prepare and stage an explicit fresh test publisher authority
+        run: |
+          poetry --directory platform-ui install --no-interaction --no-ansi
+          poetry --directory platform-ui run python publisher_authority.py prepare \
+            --source "$GITHUB_WORKSPACE/platform-ui/secrets/issuer" \
+            --output "$GITHUB_WORKSPACE/runtime/root-spire-publisher-authority" \
+            --environment test
+          poetry --directory platform-ui run python publisher_authority.py stage \
+            --source "$GITHUB_WORKSPACE/platform-ui/secrets/issuer" \
+            --output "$GITHUB_WORKSPACE/runtime/root-spire-publisher-authority" \
+            --trust "$GITHUB_WORKSPACE/platform-ui/secrets/nginx/publisher-ca.crt" \
+            --environment test
       - name: Verify admitted images before the expensive build
         run: |
           python3 - <<'PY' > "$RUNNER_TEMP/admitted-private-images"

@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import copy
+import importlib.util
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 from unittest.mock import Mock
@@ -262,3 +264,186 @@ def test_complete_status_requires_every_role_and_both_coordinators(
             lifecycle.verify_full_runtime(owner)
     else:
         lifecycle.verify_full_runtime(owner)
+
+
+def test_issued_leaf_passes_actual_spire_crypto_and_private_file_contract(
+    tmp_path: Path,
+) -> None:
+    owner = fixture(tmp_path)
+    owner.directory.mkdir(mode=0o700, parents=True)
+    issuer = owner.root / "operator-ca.crt"
+    ca_key = issuer.with_suffix(".key")
+    subprocess.run(
+        [
+            "openssl",
+            "req",
+            "-x509",
+            "-newkey",
+            "rsa:2048",
+            "-nodes",
+            "-sha256",
+            "-days",
+            "365",
+            "-subj",
+            "/CN=isolated operator",
+            "-addext",
+            "basicConstraints=critical,CA:TRUE,pathlen:0",
+            "-addext",
+            "keyUsage=critical,keyCertSign,cRLSign",
+            "-addext",
+            "subjectKeyIdentifier=hash",
+            "-addext",
+            "authorityKeyIdentifier=keyid:always",
+            "-keyout",
+            str(ca_key),
+            "-out",
+            str(issuer),
+        ],
+        capture_output=True,
+        check=True,
+        timeout=30,
+    )
+    original_ca = issuer.read_bytes(), ca_key.read_bytes()
+    issued = owner.issue_client("central-write", issuer)
+    source = Path(__file__).resolve().parents[1] / "spire/local-inputs.py"
+    spec = importlib.util.spec_from_file_location("owner_crypto_contract", source)
+    assert spec and spec.loader
+    inputs: Any = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(inputs)
+    public = inputs.verify_pair(
+        "openssl", Path(issued["certificate"]), Path(issued["key"]), issuer, "sslclient"
+    )
+    assert public and Path(issued["key"]).stat().st_mode & 0o777 == 0o600
+    assert Path(issued["certificate"]).stat().st_mode & 0o777 == 0o600
+    assert owner.directory.stat().st_mode & 0o777 == 0o700
+    assert original_ca == (issuer.read_bytes(), ca_key.read_bytes())
+    with pytest.raises(RuntimeError, match="ISSUED_IDENTITY_EXISTS"):
+        owner.issue_client("central-write", issuer)
+
+
+@pytest.mark.parametrize(
+    "code",
+    [
+        "SPIRE_LOCAL_INPUT_FILE_INVALID",
+        "SPIRE_LOCAL_PKI_VALIDATION_FAILED",
+        "GRAFANA_LOCAL_TLS_CERTIFICATE_REJECTED",
+    ],
+)
+def test_known_preparation_failure_preserves_only_exact_public_code(code: str) -> None:
+    message = "[infrastructure] FULL_RUNTIME_" + code
+    assert lifecycle.classify_group_start_failure(message) == "FULL_RUNTIME_" + code
+    assert (
+        lifecycle.classify_group_start_failure(message + " arbitrary private text")
+        == "COMPOSE_UP_FAILED"
+    )
+
+
+def test_generated_fixture_passes_actual_public_initial_bundle_cli(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner = fixture(tmp_path)
+    root = owner.root
+    paths = {
+        "platform-ui/.env": "AELEV_INFRASTRUCTURE_PLATFORM_UI_LOCAL_BRIDGE_BIND=172.17.0.1\nAELEV_INFRASTRUCTURE_PLATFORM_UI_UI_URL=https://host.docker.internal:18082\nAELEV_INFRASTRUCTURE_PLATFORM_UI_UI_IDENTITY_URL=https://keycloak:18443\nAELEV_INFRASTRUCTURE_PLATFORM_UI_KEYCLOAK_REALM=aelev\n",
+        "observability/delivery/.env": "AELEV_INFRASTRUCTURE_DELIVERY_BIND=172.17.0.1\nAELEV_INFRASTRUCTURE_DELIVERY_PORT=4318\n",
+        "observability/grafana/.env": "AELEV_INFRASTRUCTURE_GRAFANA_BIND=172.17.0.1\nAELEV_INFRASTRUCTURE_GRAFANA_PORT=13000\n",
+        "keycloak/.env": "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER=admin\n",
+        "keycloak/secrets/admin-password": "offline-layout-only\n",
+    }
+    for name, value in paths.items():
+        path = root / name
+        path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        path.write_text(value)
+        path.chmod(0o600)
+    authorities = (
+        root / "runtime/root-spire-publisher-authority/publisher.crt",
+        root / "observability/runtime/local-issuer/internal-ca.crt",
+    )
+    for issuer in authorities:
+        issuer.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        subprocess.run(
+            [
+                "openssl",
+                "req",
+                "-x509",
+                "-newkey",
+                "rsa:2048",
+                "-nodes",
+                "-sha256",
+                "-days",
+                "365",
+                "-subj",
+                "/CN=" + issuer.stem,
+                "-addext",
+                "basicConstraints=critical,CA:TRUE,pathlen:0",
+                "-addext",
+                "keyUsage=critical,keyCertSign,cRLSign",
+                "-addext",
+                "subjectKeyIdentifier=hash",
+                "-addext",
+                "authorityKeyIdentifier=keyid:always",
+                "-keyout",
+                str(issuer.with_suffix(".key")),
+                "-out",
+                str(issuer),
+            ],
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
+    for name in (
+        "platform-ui/secrets/issuer/transport.crt",
+        "keycloak/secrets/https/ca.crt",
+    ):
+        path = root / name
+        path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        path.write_bytes(authorities[1].read_bytes())
+    monkeypatch.setattr(owner, "image", lambda _: "sha256:" + "a" * 64)
+    owner.prepare()
+    cfg = json.loads(owner.source.read_bytes())
+    # Only file/PKI contracts are exercised here; no Grafana/API success is claimed.
+    cfg["grafana_tokens"] = {}
+    for name in ("publisher", "provisioner"):
+        path = owner.directory / (name + ".token")
+        path.write_text("offline-layout-only\n")
+        path.chmod(0o600)
+        cfg["grafana_tokens"][name] = str(path)
+    owner.source.write_text(json.dumps(cfg))
+    source = Path(__file__).resolve().parents[1]
+    output = root / "prepared"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(source / "spire/local-inputs.py"),
+            "--input",
+            str(owner.source),
+            "--output",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+    assert result.returncode == 0, result.stderr
+    checked = subprocess.run(
+        [
+            sys.executable,
+            str(source / "spire/bootstrap.py"),
+            "validate",
+            "--initial-input",
+            str(output / "initial-input"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert checked.returncode == 0, checked.stderr
+    assert json.loads(checked.stdout)["status"] == "INITIAL_BUNDLE_LAYOUT_VALID"
+    requests = json.loads((output / "renewal-requests.json").read_bytes())
+    assert len(requests["profiles"]) == 5
+    assert sum(len(values) for values in requests["profiles"].values()) == 9
+    assert set(p.stem for p in (output / "authorities").glob("*.key")) == {
+        "server",
+        "write",
+        "query",
+    }

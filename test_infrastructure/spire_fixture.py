@@ -5,6 +5,7 @@ from __future__ import annotations
 import ipaddress
 import json
 import os
+import secrets
 import shutil
 import subprocess
 import sys
@@ -82,34 +83,13 @@ class Fixture:
                 raise RuntimeError("ROOT_SPIRE_PUBLISHED_ROUTE_REQUIRED")
 
         telemetry = self.root / "observability/runtime/local-issuer/internal-ca.crt"
-        publisher = self.root / "platform-ui/secrets/issuer/publisher.crt"
+        publisher = self.root / "runtime/root-spire-publisher-authority/publisher.crt"
         issued = {}
         for name, issuer in (
             ("central-write", telemetry),
             ("status-publisher", publisher),
         ):
-            self.invoke(
-                [
-                    sys.executable,
-                    str(
-                        self.root
-                        / "platform-ui/client/src/aelev_platform_ui_client/prepare.py"
-                    ),
-                    "--root",
-                    str(self.directory),
-                    "--name",
-                    name,
-                    "--ca-cert",
-                    str(issuer),
-                    "--ca-key",
-                    str(issuer.with_suffix(".key")),
-                ]
-            )
-            issued[name] = {
-                "certificate": str(self.directory / (name + ".crt")),
-                "key": str(self.directory / (name + ".key")),
-                "issuer_certificate": str(issuer),
-            }
+            issued[name] = self.issue_client(name, issuer)
         delivery = full_local.read_env(
             self.root / "observability/delivery/.env", self.root
         )
@@ -193,6 +173,87 @@ class Fixture:
         return self.invoke(
             ["docker", "image", "inspect", "--format", "{{.Id}}", reference]
         ).strip()
+
+    def issue_client(self, name: str, issuer: Path) -> dict[str, str]:
+        """Issue a fresh 90-day owner leaf; never reuse another runtime identity."""
+        key = self.directory / (name + ".key")
+        request = self.directory / (name + ".csr")
+        certificate = self.directory / (name + ".crt")
+        extensions = self.directory / (name + ".extensions")
+        if any(p.exists() for p in (key, request, certificate, extensions)):
+            raise RuntimeError("ROOT_SPIRE_ISSUED_IDENTITY_EXISTS")
+        spire_local.private(
+            extensions,
+            b"basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=clientAuth\nsubjectKeyIdentifier=hash\nauthorityKeyIdentifier=keyid:always\n",
+        )
+        self.invoke(
+            [
+                "openssl",
+                "req",
+                "-new",
+                "-newkey",
+                "rsa:2048",
+                "-nodes",
+                "-subj",
+                "/CN=SPIRE " + name,
+                "-keyout",
+                str(key),
+                "-out",
+                str(request),
+            ]
+        )
+        self.invoke(
+            [
+                "openssl",
+                "x509",
+                "-req",
+                "-in",
+                str(request),
+                "-CA",
+                str(issuer),
+                "-CAkey",
+                str(issuer.with_suffix(".key")),
+                "-set_serial",
+                str(secrets.randbits(128)),
+                "-days",
+                "90",
+                "-sha256",
+                "-extfile",
+                str(extensions),
+                "-out",
+                str(certificate),
+            ]
+        )
+        for path in (key, request, certificate):
+            path.chmod(0o600)
+        self.invoke(
+            [
+                "openssl",
+                "verify",
+                "-x509_strict",
+                "-purpose",
+                "sslclient",
+                "-CAfile",
+                str(issuer),
+                str(certificate),
+            ]
+        )
+        self.invoke(
+            [
+                "openssl",
+                "x509",
+                "-in",
+                str(certificate),
+                "-checkend",
+                str(30 * 86400),
+                "-noout",
+            ]
+        )
+        return {
+            "certificate": str(certificate),
+            "key": str(key),
+            "issuer_certificate": str(issuer),
+        }
 
     def enroll(self) -> Path:
         material = self.root / "runtime/spire-local-input/material"
