@@ -425,11 +425,20 @@ class Fixture:
                 {"phase": source.stem, "failure_codes": sorted(set(found) & allowed)}
             )
         roles = []
+        sender = {"code": "ROOT_SPIRE_SENDER_STATUS_UNAVAILABLE"}
         for row in full_runtime.containers(self.project, self.root):
-            name = (row["Config"].get("Labels") or {}).get("com.docker.compose.service")
+            labels = row["Config"].get("Labels") or {}
+            name = labels.get("com.docker.compose.service")
             if name not in full_runtime.SPIRE_ROLES:
                 continue
             state = row["State"]
+            if (
+                name == "spire-status-publisher"
+                and state.get("Running") is True
+                and labels.get("io.aelev.owner") == "infrastructure-spire"
+                and labels.get("io.aelev.installation") == self.project
+            ):
+                sender = self.sender_diagnostic(row["Id"])
             roles.append(
                 {
                     "service": name,
@@ -444,15 +453,40 @@ class Fixture:
             json.dumps(
                 {
                     "schema_version": 1,
-                    "code": "ROOT_SPIRE_BOOTSTRAP_FAILED",
+                    "code": "ROOT_SPIRE_FAILURE_CONTEXT",
                     "operations": operations,
                     "roles": roles,
+                    "sender": sender,
                 },
                 indent=2,
                 sort_keys=True,
             )
             + "\n"
         )
+
+    def sender_diagnostic(self, container: str) -> dict[str, Any]:
+        from sender_diagnostic import sanitize
+
+        unavailable = {"code": "ROOT_SPIRE_SENDER_STATUS_UNAVAILABLE"}
+        try:
+            script = self.root / "test_infrastructure/sender_diagnostic.py"
+            result = subprocess.run(
+                ["docker", "exec", "-i", container, "python", "-S", "-"],
+                input=script.read_bytes(),
+                capture_output=True,
+                timeout=12,
+            )
+            if result.returncode or len(result.stdout) > 65536:
+                return unavailable
+            value = json.loads(result.stdout)
+            if (
+                not isinstance(value, dict)
+                or value.get("code") != "ROOT_SPIRE_SENDER_STATUS"
+            ):
+                return unavailable
+            return {"code": value["code"], "status": sanitize(value.get("status"))}
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
+            return unavailable
 
     @staticmethod
     def replace(path: Path, expected: bytes, updated: bytes) -> None:
