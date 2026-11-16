@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794797038.4746509,
-    "seen": 1794797190.0425348,
-    "ast_hash": "3ca7b1422e66516a57599962f5949030",
+    "mtime": 1794797683.345148,
+    "seen": 1794797727.5159092,
+    "ast_hash": "c4fff2044ee935635d534af4c92e364a",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6372,9 +6372,9 @@
     "semantic_hash": ""
   },
   "spire/test/test_export_entrypoints.py": {
-    "mtime": 1794796738.2170177,
-    "seen": 1794797190.037029,
-    "ast_hash": "01357316e7beceea002558b0f0384b0e",
+    "mtime": 1794797683.3436198,
+    "seen": 1794797727.510005,
+    "ast_hash": "8ecd93a363c4553f267ecd5664b7f578",
     "semantic_hash": ""
   },
   "observability/grafana/local-publisher.py": {

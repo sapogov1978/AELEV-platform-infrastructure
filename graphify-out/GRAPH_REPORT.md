@@ -1,7 +1,7 @@
 # Graph Report - PlatformInfrastructure  (2026-11-16)
 
 ## Corpus Check
-- 1097 files · ~739,047 words
+- 1097 files · ~739,083 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 205 file(s) not represented in the graph (top: .whl 64, (none) 45, .example 23)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `161a45c2`
+- Built from commit: `80f7527f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3245,7 +3245,7 @@ Nodes (3): Объём и результат, Проверка, Сохранен�
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `up()` connect `up` to `PostgreSQL — руководство пользователя`, `Blackbox Exporter — руководство пользователя`, `Руководство SPIRE`, `.test_fresh_start_waits_for_core_before_owner_bootstrap_and_checks_all_roles`, `Руководство по оркестрации Platform Infrastructure`, `re`, `json`, `ADR-0093: Многоплощадочная топология инфраструктурного MinIO`, `Диагностика listener и восстановление приёмника — 21 октября 2026`, `Changelog`, `kafka: спецификация`, `observability/test/lifecycle-result.md`, `stat`, `Tempo — руководство пользователя`, `Loki — руководство пользователя`, `Observability — руководство по оркестрации`, `Обновление центрального приёмника, 21 октября 2026`, `Prometheus — руководство пользователя`, `SPIRE`, `Проверки инфраструктурной композиции`, `Инфраструктурная оркестрация — спецификация`, `ADR-0107: Самостоятельные продукты и слой оркестрации наблюдения`, `Подключение к Public Egress Gateway`, `ADR-0090: Границы конфигурации инфраструктурных компонентов`, `OpenTelemetry Collector — руководство пользователя`, `Platform UI — эксплуатация поставщика`, `ADR-0151: Физическая группа и совместная композиция Discovery Engine`, `Руководство: метрики и панели нового владельца`, `Delivery — руководство пользователя`, `apply`, `Kafka — руководство пользователя`, `prepare`, `Keycloak — руководство пользователя`, `Создание и подключение UI нового сервиса`, `full_local.py`, `00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры`, `MinIO — руководство пользователя`?**
-  _High betweenness centrality (0.066) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `aelev_postgresql/__main__.py` be split into smaller, more focused modules?**

@@ -35,7 +35,11 @@ def operator(tmp_path: Path) -> tuple[Path, dict[str, str], Path]:
     binary = tmp_path / "bin"
     binary.mkdir()
     docker = binary / "docker"
-    docker.write_text("#!" + sys.executable + "\n" + r"""import json, os, sys
+    docker.write_text(
+        "#!"
+        + sys.executable
+        + "\n"
+        + r"""import json, os, sys
 from pathlib import Path
 args = sys.argv[1:]
 with Path(os.environ['AELEV_TEST_EXPORT_CALLS']).open('a') as output:
@@ -65,7 +69,8 @@ elif args[0] == 'run':
     )
 else:
     raise SystemExit(64)
-""")
+"""
+    )
     docker.chmod(0o700)
     log = tmp_path / "docker-calls.jsonl"
     environment = {

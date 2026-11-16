@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- SPIRE export entrypoint test приведён к закреплённому `ruff format`, как требует owner CI; это закрывает единственный formatting failure exact-source audit `80f7527`. Логика теста и exporter не меняются. Прогноз перед правкой — 5 минут.
+
 - POSIX SPIRE exporter согласует UID/GID публичного вывода после воспроизведения реального PermissionError: helper UID 0 получает host primary GID, а только собственный каталог derived public files внутри `0700` parent — mode `0770`. Capabilities, read-only installation state и runtime сохраняются; чужие/открытые paths закрыто отклоняются. Прогноз перед правкой — 20–30 минут на реализацию/проверки/native gate. Предшествующий diagnostic подтвердил healthy всех четырёх SPIRE ролей и отказ в export; native proof после исправления остаётся отдельным gate.
 
 - Тот же ограниченный diagnostic распознаёт source-declared error codes в точных terminal traceback/Shell строках, сохраняя фильтр неизвестных/private значений и исключая raw stderr. Отдельная проверка Compose selection не воспроизвела создания тома невыбранной роли; гипотеза не стала runtime-правкой.
