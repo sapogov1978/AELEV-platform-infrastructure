@@ -2,7 +2,7 @@
 
 ## 2026-11-16 — registry fencer acceptance
 
-- Existing native SSH HA workflow accepts paired exact registry digest/source inputs, verifies the main release identity with Cosign, and runs three unchanged HA/physical-restore trials against the pulled AMD64 fencer. Source-build mode remains available; signature, registry binding, raw scan and SBOM are retained. No runtime recipe, package, timeout, endpoint, working deployment or queue state changes. The already qualified source release remains independently pinned.
+- Existing native SSH HA workflow accepts paired exact registry digest/source inputs, verifies the main release identity and expected workflow source SHA with Cosign, and runs three unchanged HA/physical-restore trials against the pulled AMD64 fencer. Source-build mode remains available; signature, registry binding, raw scan and SBOM are retained. No runtime recipe, package, timeout, endpoint, working deployment or queue state changes. The already qualified source release remains independently pinned. A live signature check accepted the exact SHA and rejected a substituted SHA before runtime execution.
 
 ## 2026-11-16
 
