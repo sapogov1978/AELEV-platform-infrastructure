@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-16 — registry fencer acceptance
+
+- Existing native SSH HA workflow accepts paired exact registry digest/source inputs, verifies the main release identity with Cosign, and runs three unchanged HA/physical-restore trials against the pulled AMD64 fencer. Source-build mode remains available; signature, registry binding, raw scan and SBOM are retained. No runtime recipe, package, timeout, endpoint, working deployment or queue state changes. The already qualified source release remains independently pinned.
+
 ## 2026-11-16
 
 - Full clean-room `eafe330` прошёл MinIO replication, затем остановился на вложенном `FULL_RUNTIME_COMMAND_FAILED`; все восемь MinIO узлов healthy, OOM отсутствует. Root test caller теперь сохраняет последний объявленный full-runtime этап, public-catalog task и finite metadata существующих закрытых command failure files. Raw output/paths/credentials исключены; FAILED/UNKNOWN, исходный exit code, runtime/retries/endpoint guards сохраняются. Прогноз — 15–25 минут на реализацию/проверки и один диагностический trial для установления вложенной причины.
