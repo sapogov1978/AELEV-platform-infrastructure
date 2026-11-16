@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import ast
 import ipaddress
 import json
 import os
+import re
 import secrets
 import shutil
 import subprocess
@@ -369,6 +371,68 @@ class Fixture:
             "-f",
             str(full_runtime.spire_projection(self.root)),
         ]
+
+    def diagnostic(self, output: Path) -> None:
+        """Publish only literal raised codes, never raw native operator output."""
+        allowed: set[str] = set()
+        for source in (self.root / "spire/src/aelev_spire").glob("*.py"):
+            for node in ast.walk(ast.parse(source.read_text())):
+                if (
+                    isinstance(node, ast.Raise)
+                    and isinstance(node.exc, ast.Call)
+                    and node.exc.args
+                    and isinstance(node.exc.args[0], ast.Constant)
+                    and isinstance(node.exc.args[0].value, str)
+                    and re.fullmatch(r"SPIRE_[A-Z0-9_]{1,120}", node.exc.args[0].value)
+                ):
+                    allowed.add(node.exc.args[0].value)
+        operations = []
+        for source in (self.root / "runtime/spire-installed").glob(
+            "bootstrap-*/*.stderr"
+        ):
+            if (
+                source.name
+                not in {"server.stderr", "observation.stderr", "export.stderr"}
+                or source.is_symlink()
+                or source.stat().st_size > 2 * 1024 * 1024
+            ):
+                continue
+            found = re.findall(
+                r'"code"\s*:\s*"(SPIRE_[A-Z0-9_]{1,120})"',
+                source.read_text(errors="replace"),
+            )
+            operations.append(
+                {"phase": source.stem, "failure_codes": sorted(set(found) & allowed)}
+            )
+        roles = []
+        for row in full_runtime.containers(self.project, self.root):
+            name = (row["Config"].get("Labels") or {}).get("com.docker.compose.service")
+            if name not in full_runtime.SPIRE_ROLES:
+                continue
+            state = row["State"]
+            roles.append(
+                {
+                    "service": name,
+                    "status": state.get("Status"),
+                    "running": state.get("Running"),
+                    "exit_code": state.get("ExitCode"),
+                    "health": state.get("Health", {}).get("Status"),
+                }
+            )
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "code": "ROOT_SPIRE_BOOTSTRAP_FAILED",
+                    "operations": operations,
+                    "roles": roles,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        )
 
     @staticmethod
     def replace(path: Path, expected: bytes, updated: bytes) -> None:

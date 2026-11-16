@@ -1152,6 +1152,13 @@ def run(args: argparse.Namespace) -> int:
         print("FAIL: " + failure, flush=True)
     finally:
         if admitted and before is not None:
+            if failure and fixture:
+                try:
+                    fixture.diagnostic(
+                        args.report.with_name("spire-bootstrap-diagnostic.json")
+                    )
+                except Exception:
+                    print("ROOT_SPIRE_DIAGNOSTIC_UNAVAILABLE", flush=True)
             try:
                 if fixture:
                     fixture.stop()

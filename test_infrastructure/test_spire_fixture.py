@@ -447,3 +447,48 @@ def test_generated_fixture_passes_actual_public_initial_bundle_cli(
         "write",
         "query",
     }
+
+
+def test_native_diagnostic_excludes_unknown_codes_success_and_private_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner = fixture(tmp_path)
+    source = tmp_path / "spire/src/aelev_spire"
+    source.mkdir(parents=True)
+    (source / "native.py").write_text(
+        'raise ValueError("SPIRE_KNOWN_FAILURE")\nprint("SPIRE_SUCCESS_MARKER")\n'
+    )
+    logs = tmp_path / "runtime/spire-installed/bootstrap-new"
+    logs.mkdir(parents=True)
+    (logs / "server.stderr").write_text(
+        '{"code":"SPIRE_KNOWN_FAILURE"}\n{"code":"SPIRE_SUCCESS_MARKER"}\n{"code":"SPIRE_UNKNOWN_PRIVATE"}\nprivate-output-must-not-persist\n'
+    )
+    monkeypatch.setattr(
+        "spire_fixture.full_runtime.containers",
+        lambda *_: [
+            {
+                "Config": {
+                    "Labels": {"com.docker.compose.service": "spire-server"},
+                    "Env": ["private-env-must-not-persist"],
+                },
+                "State": {"Status": "exited", "Running": False, "ExitCode": 1},
+            }
+        ],
+    )
+    output = tmp_path / "public/diagnostic.json"
+    owner.diagnostic(output)
+    value = json.loads(output.read_text())
+    assert value["operations"] == [
+        {"phase": "server", "failure_codes": ["SPIRE_KNOWN_FAILURE"]}
+    ]
+    assert value["roles"] == [
+        {
+            "service": "spire-server",
+            "status": "exited",
+            "running": False,
+            "exit_code": 1,
+            "health": None,
+        }
+    ]
+    assert "private" not in output.read_text().lower()
+    assert "SPIRE_SUCCESS_MARKER" not in output.read_text()

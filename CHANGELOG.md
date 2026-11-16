@@ -12,6 +12,8 @@
 
 - Для 30-дневной первоначальной publisher CA fresh CI перед build/BOM выполняет уже принятую процедуру `publisher_authority.py prepare/stage`: отдельное 365-дневное поколение и перекрывающее доверие без удаления старого корня. Новые SPIRE leaf выпускаются от этого поколения; прежние defaults/issuer files и публичные API сохраняются. Production PKI остаётся внешней; предлагаемый дополнительный CLI-флаг не потребовался.
 
+- После failed native source `2cfc728` root acceptance сохраняет только literal raised codes закреплённого SPIRE source из вложенных server/observation/export diagnostics и ограниченные состояния четырёх native ролей. Unknown/success markers, raw stderr и credentials исключены; ошибка диагностики не заменяет исходный отказ или cleanup. Runtime не изменён. Прогноз — 10–15 минут на узкую правку и один адресный диагностический прогон.
+
 - 2026-11-15: после отдельного failed cold build MinIO получает прежние exact commits по canonical Go pseudo-versions через официальный proxy/checksum database, без VCS hash lookup. Commit guards сохраняют соответствие build source и OCI labels; Go, Alpine, MinIO/mc releases и runtime не обновляются. Предшествующие build/root failures сохраняются отдельно от следующей квалификации.
 
 - 2026-11-15: root clean-room сохраняет whitelist фиксированных full-runtime guard codes вместо общего Compose-отказа; неизвестный код и строка с дополнительными данными закрыто остаются общими. Это локализует несовместимость SPIRE initial-input/public-export в приёмочном caller без ослабления runtime guards или публикации сырых diagnostics; предыдущий failed full run сохранён.

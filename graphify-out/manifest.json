@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794792489.1689754,
-    "seen": 1794792770.460835,
-    "ast_hash": "e85a8712b461851609c46beceeadd104",
+    "mtime": 1794794009.8594186,
+    "seen": 1794794225.892728,
+    "ast_hash": "920e991eb15dd5e23686dea53c02d67e",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794792032.666606,
-    "seen": 1794792770.456108,
-    "ast_hash": "23468bb18b296b33a86bc5b260799d7c",
+    "mtime": 1794794087.8411047,
+    "seen": 1794794225.888932,
+    "ast_hash": "ebe0b716d5b7dff7df88db1b25129530",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794792489.1671128,
-    "seen": 1794792770.474519,
-    "ast_hash": "25760c51a6effccb68a78b66adc7b173",
+    "mtime": 1794794009.86016,
+    "seen": 1794794225.905015,
+    "ast_hash": "1f007394c382cdd4e7b569f8ecefeb42",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6756,15 +6756,15 @@
     "semantic_hash": ""
   },
   "test_infrastructure/spire_fixture.py": {
-    "mtime": 1794792489.165787,
-    "seen": 1794792770.4563,
-    "ast_hash": "7d6b43911a3eb87fa214ab03c4b31009",
+    "mtime": 1794794087.6511421,
+    "seen": 1794794225.889086,
+    "ast_hash": "25788f7af2ad6b7b47bf8c1903c44117",
     "semantic_hash": ""
   },
   "test_infrastructure/test_spire_fixture.py": {
-    "mtime": 1794792630.747427,
-    "seen": 1794792770.456799,
-    "ast_hash": "83e536f3966011e3614268f6d75fc1d7",
+    "mtime": 1794794087.6544669,
+    "seen": 1794794225.889502,
+    "ast_hash": "cd6192619826a4611d8ea7c66119f667",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
