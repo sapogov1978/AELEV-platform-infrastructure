@@ -28,6 +28,8 @@ def arm(root: Path = ROOT) -> None:
 
 def hold(body: bytes, root: Path = ROOT) -> None:
     """Never dispatch a claimed request, even if somebody sends SIGCONT."""
+    if (root / "released").exists():
+        return
     try:
         request = json.loads(body)
     except (ValueError, UnicodeError):
@@ -95,8 +97,10 @@ def discard(root: Path = ROOT) -> None:
         try:
             state, started = process_identity(value["pid"])
         except FileNotFoundError:
+            (root / "released").touch(exist_ok=False)
             return
         if started != value["start_ticks"] or state == "Z":
+            (root / "released").touch(exist_ok=False)
             return
         time.sleep(0.02)
     raise RuntimeError("RETURN_BARRIER_DISCARD_UNCONFIRMED")

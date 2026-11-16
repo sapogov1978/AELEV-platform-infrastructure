@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-16: Test-only barrier снимает запрет только после доказанного уничтожения held request, чтобы новая инкарнация первой копии могла пройти прежнюю readiness. История marker/hash и канонический PostgreSQL журнал сохраняются. Отдельные real Linux tests проверяют запрет до discard и отсутствие release после SIGCONT.
+
 - 2026-11-16: В native SSH test добавлен доэффектный барьер только первого controller key: первый return RPC удерживается SIGSTOP, повторные не вызывают dispatcher, SIGCONT заканчивается отказом. Snapshot проверяет PID/start ticks/kernel `T`; перед запуском второй копии held request удаляется SIGKILL через pidfd. Новые tests проверяют настоящие Linux stop/discard/resume-refusal и подмену marker/incarnation; owner runtime не изменён.
 
 - 2026-11-16: ARM HA/restore прошёл функциональные этапы, но teardown нашёл AutoRemove helper в `created` без PID/StartedAt после снятия SSH host. Failed proof сохранён; собственный scope снят отдельной квитанцией с неизменным baseline 260 контейнеров. Harness теперь удаляет только такой exact never-started helper после прекращения всех собственных ролей; живые, чужие и прежние контейнеры защищены, итоговый inventory gate сохраняется.

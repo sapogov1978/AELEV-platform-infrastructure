@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-16: Native AMD64 source `a5b7e58` подтвердил crash/recovery, затем выявил оставшийся test barrier при замене первой копии. После точного SIGKILL и подтверждения termination барьер теперь освобождается для новой копии; старые marker/hash сохраняются, SIGCONT/unknown discard не разрешают продолжение. Runtime budgets/guards не меняются. Прогноз перед исправлением — 10–15 минут и отдельный native повтор изменённого source; ARM timeout до SQL observation сохранён без повторного запуска.
+
 - 2026-11-16: SSH HA crash injection использует test-only forced-command barrier первого controller до native return dispatcher. Перед потерей копии требуются kernel `T` и канонический `STOP_CONFIRMED/start_attempts=0`; удержанный запрос уничтожается через exact-incarnation `pidfd`, последующие запросы первой копии закрыто отклоняются, вторая использует прежний dispatcher. Runtime interval/guards, состав образов и рабочая установка сохраняются. Прогноз перед изменением — 25–40 минут на реализацию/проверки, затем один native trial 20–40 минут; прежний ARM `CRASH_FAULT_POINT_MISSED` сохранён.
 
 - 2026-11-16: PostgreSQL SSH HA teardown учитывает наблюдённый на Desktop helper, оставшийся между create/start. После снятия собственных roles проверяются полный scope/image/labels, baseline и никогда не запущенное состояние; обычный rm не обходит гонку с запуском. Runtime fencing, DCS, budgets и стек сохраняются; первый ARM cleanup FAIL и отдельная reconciliation receipt не переписываются.

@@ -108,18 +108,22 @@ def test_real_stop_then_discard_or_refuse_resume(tmp_path: Path, resume: bool) -
             time.sleep(0.02)
         assert value["held"] is True and value["kernel_state"] == "T"
         assert not effect.exists()
+        with pytest.raises(RuntimeError, match="RETURN_BARRIER_ALREADY_CLAIMED"):
+            barrier.hold(b'{"action":"return-once"}', root)
         if resume:
             os.kill(child.pid, signal.SIGCONT)
             _, error = child.communicate(timeout=3)
             assert child.returncode != 0
             assert b"RETURN_BARRIER_RESUMPTION_REFUSED" in error
+            assert not (root / "released").exists()
         else:
             barrier.discard(root)
             child.communicate(timeout=3)
             assert child.returncode == -signal.SIGKILL
-        assert not effect.exists()
-        with pytest.raises(RuntimeError, match="RETURN_BARRIER_ALREADY_CLAIMED"):
+            assert (root / "released").exists()
             barrier.hold(b'{"action":"return-once"}', root)
+            assert (root / "held.json").exists()
+        assert not effect.exists()
     finally:
         if child.poll() is None:
             child.kill()

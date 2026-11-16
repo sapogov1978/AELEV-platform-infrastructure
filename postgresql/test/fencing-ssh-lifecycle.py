@@ -1346,6 +1346,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "pending_phase": pending["phase"],
             "pending_start_attempts": pending["start_attempts"],
             "held_request_discarded": True,
+            "replacement_controller_barrier_released": True,
             "runtime_return_interval_changed": False,
         }
         docker("start", ids["controller-2"])
