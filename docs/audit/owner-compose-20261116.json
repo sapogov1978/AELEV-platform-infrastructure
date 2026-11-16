@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "NATIVE_COMPONENT_SCOPE_VERIFIED_RELEASE_PENDING",
+  "scope": "Generic selected-role Compose execution through durable local node executor",
+  "candidate_release": "1.1.8",
+  "code_sha256": {
+    "tools/node_execution.py": "a85e83b91d533d640891828d011ccd82f29c53e87df77c90e926b390f23dae68",
+    "tools/owner_compose.py": "a222e8e0ff0b5721c116c952beed0e7d6abb13f99b25826350ebc3fef88aa0b7"
+  },
+  "native_image": "sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844",
+  "native_architecture": "arm64",
+  "node_and_owner_unit_tests_passed": 33,
+  "root_tools_tests_passed": 201,
+  "native_cases_passed": 9,
+  "real_runtime_instances_started": 2,
+  "neighbor_started": false,
+  "running_container_preserved_on_repeat": true,
+  "replica_has_independent_volume": true,
+  "successful_task_effects_after_replay": 1,
+  "failed_task_native_exit_code": 7,
+  "failed_task_effects_after_replay": 1,
+  "stopped_instance_resumed": false,
+  "literal_dollar_configuration_preserved": true,
+  "working_baseline_containers_preserved": 177,
+  "owned_test_resources_removed": true,
+  "native_verification_receipt_sha256": "9eabe7bb54cb61aee4b7c18a99d3c900c7871e00067e8eb02258dcefe097af87",
+  "repository_qualification_receipt_sha256": "f0f0b136f850cc0992313d9b4350f3239c052951429e695f94eff2c7a255fda8",
+  "qualification_source_sha256": "35411030ec8607fa71e1d628dc0c254232e8742bbf7b0b9eac26b4f4e33f7d63",
+  "prior_failures_retained": [
+    "Default Docker address pools exhausted before container creation; later scoped fixture IPAM only",
+    "Initial harness snapshot raced an unrelated transient container; baseline now selects owned deployments before inspect",
+    "Harness read state before worker initialization and compared a literal escape instead of newline; runtime algorithm unchanged"
+  ],
+  "full_inventory_workflow_verified": false,
+  "full_platform_e2e_verified": false,
+  "physical_distribution_verified": false,
+  "physical_distribution_required_for_current_product_admission": false,
+  "physical_distribution_deferred_to": "TODO-MVP.md",
+  "working_runtime_switched": false,
+  "queue_resume_issued": false,
+  "inference_requested": false,
+  "forecast_minutes": [60, 90]
+}

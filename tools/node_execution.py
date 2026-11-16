@@ -16,7 +16,7 @@ import stat
 import subprocess
 import sys
 import tempfile
-from typing import Any
+from typing import Any, cast
 import uuid
 
 LIMIT = 8 * 1024 * 1024
@@ -25,6 +25,7 @@ PROCEDURES = {
     "spire-export": ("sh", "spire/export.sh"),
     "spire-bootstrap": ("python", "spire/bootstrap.py"),
     "translator-station": ("python", "translator-service/compute-runtime/station.py"),
+    "owner-compose": ("python", "tools/owner_compose.py"),
 }
 ENVIRONMENT = {
     "DRP_SPIRE_DOCKER_SOCKET_APPROVAL",
@@ -102,7 +103,7 @@ def read(path: Path) -> dict[str, Any]:
 
     value = json.loads(path.read_bytes(), object_pairs_hook=pairs)
     require(isinstance(value, dict), "NODE_OBJECT_REQUIRED")
-    return value
+    return cast(dict[str, Any], value)
 
 
 def save(path: Path, value: dict[str, Any]) -> None:
@@ -177,7 +178,35 @@ def validate(
         "NODE_ARGUMENTS_INVALID",
     )
     require("--update" not in arguments, "NODE_OWNER_HANDOFF_REQUIRED")
-    if procedure == "translator-station":
+    if procedure == "owner-compose":
+        require(
+            len(arguments) == 5
+            and arguments[0] in {"plan", "start", "task", "status"}
+            and arguments[1] == "--request"
+            and arguments[2] in request["inputs"],
+            "NODE_CONFIGURATION_BINDING_REQUIRED",
+        )
+        require(
+            arguments[3] == "--request-sha256"
+            and arguments[4] == request["inputs"][arguments[2]],
+            "NODE_CONFIGURATION_BINDING_REQUIRED",
+        )
+        if target_filesystem:
+            selected_request = absolute(arguments[2])
+            private(selected_request)
+            selected_definition = read(selected_request)
+            require(
+                selected_definition.get("source_root") == request["source_root"]
+                and selected_definition.get("source_files") == request["source_files"]
+                and selected_definition.get("inputs")
+                == {
+                    name: value
+                    for name, value in request["inputs"].items()
+                    if name != arguments[2]
+                },
+                "NODE_COMPOSE_SOURCE_OR_INPUT_BINDING_MISMATCH",
+            )
+    elif procedure == "translator-station":
         require(
             arguments[0] in {"doctor", "prepare", "start", "status"}
             and arguments.count("--role") == 1
@@ -292,6 +321,8 @@ def validate(
             "NODE_INPUT_HASH_INVALID",
         )
     runtime, entrypoint = PROCEDURES[procedure]
+    if procedure == "owner-compose":
+        return root, state, [sys.executable, "-m", "tools.owner_compose", *arguments]
     return (
         root,
         state,
@@ -385,27 +416,35 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
         environment.update(request["environment"])
         environment["PYTHONNOUSERSITE"] = "1"
         environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        if request["procedure"] == "owner-compose":
+            environment["AELEV_NODE_OPERATION_DIRECTORY"] = str(directory)
         try:
             with (
                 (directory / "stdout").open("xb") as output,
-                (directory / "stderr").open("xb") as error,
+                (directory / "stderr").open("xb") as error_output,
             ):
                 os.chmod(directory / "stdout", 0o600)
                 os.chmod(directory / "stderr", 0o600)
                 completed = subprocess.run(
                     command,
-                    cwd=root / Path(PROCEDURES[request["procedure"]][1]).parent,
+                    cwd=(
+                        root
+                        if request["procedure"] == "owner-compose"
+                        else root / Path(PROCEDURES[request["procedure"]][1]).parent
+                    ),
                     env=environment,
                     stdin=subprocess.DEVNULL,
                     stdout=output,
-                    stderr=error,
+                    stderr=error_output,
                     timeout=request["timeout_seconds"],
                     check=False,
                 )
             result.update(
-                status="COMMAND_SUCCEEDED"
-                if completed.returncode == 0
-                else "OWNER_COMMAND_FAILED",
+                status=(
+                    "COMMAND_SUCCEEDED"
+                    if completed.returncode == 0
+                    else "OWNER_COMMAND_FAILED"
+                ),
                 exit_code=completed.returncode,
             )
         except (OSError, subprocess.TimeoutExpired):
@@ -555,7 +594,7 @@ def invoke(
         and reply.get("operation") == request["operation"],
         "NODE_REPLY_INVALID",
     )
-    return reply
+    return cast(dict[str, Any], reply)
 
 
 def main() -> int:

@@ -4,6 +4,7 @@
 
 | Что искать | Где находится |
 |---|---|
+| Выполнение одной выбранной роли из pinned owner Compose | [owner-compose.md](owner-compose.md), [node-execution.md](node-execution.md) |
 | Локальная установка, full-local и BOM | [installation.md](installation.md) |
 | Kafka envelope и владельческие event families | [internal-events.md](internal-events.md) |
 | Запрос и результат технического перевода | [translation.md](translation.md), [schema artifact](../../translator-service/contracts/translation-v1.json) |

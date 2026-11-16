@@ -30,6 +30,8 @@
 
 Нужны exact signed provider/worker digests обеих архитектур, SBOM/provenance, quality evidence, clean-room обоих режимов, реальные разные физические узлы и разнесённые replicas. Loopback или несколько сетей одного компьютера учитываются отдельно. Откат возвращает прежние совместимые digests/config после handoff, сохраняя результаты, очередь, сертификаты и pause state.
 
+Уточнение владельца от 2026-11-16: реальное испытание на разных физических компьютерах перенесено в [TODO-MVP](../../TODO-MVP.md#физически-распределённая-приёмка) и не блокирует текущий production-ready допуск продукта. Независимое размещение, оба автоматических режима и остальные software/security/recovery gates сохраняются; физический proof не маркируется выполненным. [00-INFRA-0014](00-INFRA-20261106-0014-product-readiness-and-site-admission.md) продолжает отделять допуск конкретной площадки.
+
 ## Официальные основания
 
 - [Python ssl](https://docs.python.org/3.13/library/ssl.html) — CA/hostname validation и взаимная TLS-аутентификация.

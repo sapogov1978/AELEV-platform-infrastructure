@@ -4,6 +4,8 @@
 
 ## Область интерфейса
 
+Дополнительно поддержана [owner-compose](owner-compose.md): одна выбранная runtime/node/operation role из source-pinned catalog/recipes с explicit private definition. Общий node journal и local/SSH policy сохраняются; определение процедуры и все остальные private inputs связаны с outer request. Это не включает общий dependency DAG, owner preparation или implicit RESUME.
+
 Поддержаны самостоятельные SPIRE `install.sh` roles server/agent/observer/status-publisher/telemetry-sender, административные inspect/authorize/export-bootstrap, отдельный component `export.sh`, проверка initial bundle через `bootstrap.py validate` и Translator `station.py doctor|prepare|start|status --role provider|worker`. SPIRE images задаются immutable image IDs/digests. Совместный SPIRE observation/bootstrap-up и Translator bundle, `--update`, stop/revoke и произвольные shell/process commands этим интерфейсом не выполняются. `RESUME` отсутствует. Процедуры работают только с daemon и полномочиями своего целевого узла.
 
 Это исполнитель одного явно подготовленного owner step, а не готовый полный distributed installer. Он не разрешает inventory, dependencies, routes, quality/image admission, replica fencing, актуальность public owner receipts или безопасную последовательность всех owner operations. Их обязан проверить вызывающий workflow до execute. Его `source_files` формируется из полного аутентифицированного release manifest после проверки архива; ручной неполный список не доказывает provenance или release admission. Экземпляры не делят межузловой journal/SVID volume. `state_root` выделяется одной логической owner installation; разные steps этой установки используют один state root и общий lock.
@@ -23,7 +25,7 @@
 | `source_root` | Абсолютный путь точного выпуска на целевом узле |
 | `source_files` | Относительный file path → SHA-256; включены entrypoint, его зависимости и `tools/node_execution.py` |
 | `state_root` | Абсолютный собственный технический каталог `0700` вне source root |
-| `procedure` | `spire-install`, `spire-export`, `spire-bootstrap`, `translator-station` |
+| `procedure` | `spire-install`, `spire-export`, `spire-bootstrap`, `translator-station`, `owner-compose` |
 | `arguments` | Массив буквальных аргументов публичного entrypoint |
 | `inputs` | Абсолютный target file path → SHA-256 всех закрытых подготовленных входов; файлы `0600` принадлежат target operator |
 | `environment` | Только явно выбранные node-local Docker config/socket и SPIRE initial-input/authority/socket approval |

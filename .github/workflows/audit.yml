@@ -213,6 +213,17 @@ jobs:
         with:
           python-version: "3.13"
       - run: python -m unittest discover -s tools -p 'test_*.py'
+      - name: Qualify selected owner Compose role through durable node executor
+        run: |
+          OWNER_COMPOSE_TEST_IMAGE=$(python -c 'from pathlib import Path; print(next(line.split()[1] for line in Path("postgresql/Dockerfile").read_text().splitlines() if line.startswith("FROM python:")))')
+          docker pull "$OWNER_COMPOSE_TEST_IMAGE"
+          python test_infrastructure/owner_compose_lifecycle.py --image "$OWNER_COMPOSE_TEST_IMAGE" --output "$RUNNER_TEMP/owner-compose-qualification"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: owner-compose-qualification
+          path: ${{ runner.temp }}/owner-compose-qualification/**/verification.json
+          if-no-files-found: warn
       - run: ./infrastructure init
         env:
           AELEV_INFRASTRUCTURE_FULL_LOCAL_PROVIDER_FIXTURE: health-only-no-inference-v1
