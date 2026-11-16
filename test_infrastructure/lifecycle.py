@@ -110,11 +110,100 @@ def execute_provision_task(arguments: list[str], task: str, output: Path) -> str
         # raw stdout/stderr because Compose may expand credential-bearing env.
         "safe_marker": markers[-1] if markers else "NO_SAFE_MARKER",
     }
+    if task == "site-replication-applier":
+        payload["safe_marker"] = "NO_SAFE_MARKER"
+        payload["failure_categories"] = minio_provision_markers(
+            result.stdout + "\n" + result.stderr
+        )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
     raise RuntimeError(
         "command failed (exit " + str(result.returncode) + "): " + " ".join(arguments)
     )
+
+
+def minio_provision_markers(raw: str) -> list[str]:
+    text = raw[-65536:].lower()
+    patterns = {
+        "TLS_REJECTED": ("x509:", "certificate verify failed", "tls handshake"),
+        "AUTH_REJECTED": (
+            "access denied",
+            "accessdenied",
+            "invalidaccesskeyid",
+            "signaturedoesnotmatch",
+        ),
+        "TRANSPORT_FAILED": (
+            "connection refused",
+            "no such host",
+            "dial tcp",
+            "i/o timeout",
+            "context deadline exceeded",
+        ),
+        "QUORUM_UNAVAILABLE": ("quorum", "server not initialized"),
+        "REPLICATION_STATE_UNRECOGNIZED": (
+            "cannot identify the existing site-replication state",
+        ),
+        "REPLICATION_TOPOLOGY_REJECTED": (
+            "existing site replication does not contain",
+        ),
+        "SECRET_INPUT_UNAVAILABLE": (
+            "required minio secret file is missing, empty, or unreadable",
+        ),
+    }
+    found = [
+        name for name, phrases in patterns.items() if any(p in text for p in phrases)
+    ]
+    return sorted(found) or ["UNCLASSIFIED_MINIO_PROVISION_FAILURE"]
+
+
+def capture_minio_node_diagnostic(project: str, output: Path) -> None:
+    try:
+        current = states(project)
+        nodes: dict[str, Any] = {}
+        for site in ("a", "b"):
+            for number in range(1, 5):
+                name = f"minio-site-{site}-{number}"
+                row = current.get(name, {})
+                status = row.get("Status")
+                health = row.get("Health", {}).get("Status")
+                nodes[name] = {
+                    "status": (
+                        status
+                        if isinstance(status, str)
+                        and status
+                        in {
+                            "running",
+                            "exited",
+                            "dead",
+                            "created",
+                            "restarting",
+                            "paused",
+                        }
+                        else "unknown"
+                    ),
+                    "health": (
+                        health
+                        if isinstance(health, str)
+                        and health in {"healthy", "unhealthy", "starting"}
+                        else "unknown"
+                    ),
+                    "exit_code": (
+                        row.get("ExitCode")
+                        if type(row.get("ExitCode")) is int
+                        and 0 <= row["ExitCode"] <= 255
+                        else None
+                    ),
+                    "oom_killed": (
+                        row.get("OOMKilled")
+                        if type(row.get("OOMKilled")) is bool
+                        else None
+                    ),
+                }
+        payload = {"code": "MINIO_NODE_FAILURE_CONTEXT", "nodes": nodes}
+    except Exception:
+        payload = {"code": "MINIO_NODE_FAILURE_CONTEXT_UNAVAILABLE"}
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
 def compose_prefix() -> list[str]:
@@ -1009,16 +1098,27 @@ def run(args: argparse.Namespace) -> int:
                 args.report.with_name("provision-task-diagnostic.json"),
             )
             passed("Реальная задача владельца: " + task + " — exit 0")
-        execute(
-            [
-                *prefix,
-                "--profile",
-                "provision",
-                "run",
-                "--rm",
+        try:
+            execute_provision_task(
+                [
+                    *prefix,
+                    "--profile",
+                    "provision",
+                    "run",
+                    "--rm",
+                    "site-replication-applier",
+                ],
                 "site-replication-applier",
-            ]
-        )
+                args.report.with_name("provision-task-diagnostic.json"),
+            )
+        except RuntimeError:
+            try:
+                capture_minio_node_diagnostic(
+                    project, args.report.with_name("minio-node-diagnostic.json")
+                )
+            except Exception:
+                print("MINIO_NODE_FAILURE_CONTEXT_UNAVAILABLE")
+            raise
         passed("Реальная проверка/настройка MinIO site replication: exit 0")
         try:
             execute_group_start(

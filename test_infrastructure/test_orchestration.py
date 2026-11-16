@@ -19,6 +19,8 @@ from lifecycle import (
     compose_prefix,
     execute_group_start,
     execute_provision_task,
+    capture_minio_node_diagnostic,
+    minio_provision_markers,
     grafana_startup_markers,
     run,
     status_provision_tasks,
@@ -200,7 +202,7 @@ def test_inactive_optional_mount_does_not_block_combined_start(tmp_path: Path) -
 
 
 def test_status_provisioning_is_limited_to_active_publishers() -> None:
-    description = {
+    description: dict[str, Any] = {
         "services": {
             "active-status-publisher": {},
             "active-status-provision": {},
@@ -509,6 +511,96 @@ def test_provision_failure_keeps_only_fixed_safe_marker(
     }
     assert "credential" not in output.read_text()
     assert "secret-token" not in output.read_text()
+
+
+@pytest.mark.parametrize(
+    ("detail", "expected"),
+    [
+        ("x509: certificate rejected", "TLS_REJECTED"),
+        ("AccessDenied", "AUTH_REJECTED"),
+        ("dial tcp: connection refused", "TRANSPORT_FAILED"),
+        ("not enough quorum", "QUORUM_UNAVAILABLE"),
+        (
+            "cannot identify the existing site-replication state: private",
+            "REPLICATION_STATE_UNRECOGNIZED",
+        ),
+        ("private unknown failure", "UNCLASSIFIED_MINIO_PROVISION_FAILURE"),
+        (
+            "Provisioning failed: privateCredential",
+            "UNCLASSIFIED_MINIO_PROVISION_FAILURE",
+        ),
+    ],
+)
+def test_minio_provision_failure_retains_categories_without_private_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, detail: str, expected: str
+) -> None:
+    output = tmp_path / "failure.json"
+    monkeypatch.setattr(
+        "lifecycle.subprocess.run",
+        lambda *_args, **_kw: SimpleNamespace(
+            returncode=1, stdout="credential=must-not-survive", stderr=detail
+        ),
+    )
+    with pytest.raises(RuntimeError, match="command failed"):
+        execute_provision_task(
+            ["docker", "compose", "run"], "site-replication-applier", output
+        )
+    payload = json.loads(output.read_text())
+    assert payload["failure_categories"] == [expected]
+    assert payload["safe_marker"] == "NO_SAFE_MARKER"
+    assert (
+        "must-not-survive" not in output.read_text()
+        and detail not in output.read_text()
+    )
+    assert minio_provision_markers("x" * 65537) == [
+        "UNCLASSIFIED_MINIO_PROVISION_FAILURE"
+    ]
+
+
+def test_minio_node_snapshot_excludes_raw_inspect_and_foreign_roles(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "lifecycle.states",
+        lambda _: {
+            "minio-site-a-1": {
+                "Status": "exited",
+                "ExitCode": 137,
+                "OOMKilled": True,
+                "Error": "private-error",
+                "Health": {
+                    "Status": "unhealthy",
+                    "Log": [{"Output": "private-health"}],
+                },
+            },
+            "foreign": {"Status": "private-state"},
+        },
+    )
+    output = tmp_path / "nodes.json"
+    capture_minio_node_diagnostic("owned", output)
+    payload = json.loads(output.read_text())
+    assert len(payload["nodes"]) == 8
+    assert payload["nodes"]["minio-site-a-1"] == {
+        "status": "exited",
+        "health": "unhealthy",
+        "exit_code": 137,
+        "oom_killed": True,
+    }
+    assert "private" not in output.read_text() and "foreign" not in output.read_text()
+
+
+def test_minio_snapshot_failure_keeps_only_fixed_unavailable_code(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def unavailable(_: str) -> dict[str, Any]:
+        raise RuntimeError("private-error")
+
+    monkeypatch.setattr("lifecycle.states", unavailable)
+    output = tmp_path / "nodes.json"
+    capture_minio_node_diagnostic("owned", output)
+    assert json.loads(output.read_text()) == {
+        "code": "MINIO_NODE_FAILURE_CONTEXT_UNAVAILABLE"
+    }
 
 
 def test_healthchecked_restart_no_role_is_not_treated_as_one_shot(
