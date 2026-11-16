@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794843196.7369316,
-    "seen": 1794843503.2327628,
-    "ast_hash": "55c1390d16ad1be57021625c1b1ac3eb",
+    "mtime": 1794847133.9346535,
+    "seen": 1794847193.4867048,
+    "ast_hash": "06b99e9e683e59e4c9133c2e1c8184b2",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6660,9 +6660,9 @@
     "semantic_hash": ""
   },
   "tools/node_execution.py": {
-    "mtime": 1794843196.7349823,
-    "seen": 1794843503.2294888,
-    "ast_hash": "d3d1c73f6703293ac90b7faf502b1d81",
+    "mtime": 1794844654.9709496,
+    "seen": 1794847193.483043,
+    "ast_hash": "233447a3ef1441ad48a6f6bd40eeb356",
     "semantic_hash": ""
   },
   "tools/test_node_execution.py": {
@@ -6672,9 +6672,9 @@
     "semantic_hash": ""
   },
   "docs/api/node-execution.md": {
-    "mtime": 1794840569.784353,
-    "seen": 1794843503.23379,
-    "ast_hash": "02a71696ac3ea47f78d0f82234a857c0",
+    "mtime": 1794844653.502603,
+    "seen": 1794847193.487893,
+    "ast_hash": "e553ab596d80e324d031c1827e1eb4a2",
     "semantic_hash": ""
   },
   "docs/audit/node-artifact-20261114.json": {
@@ -6684,21 +6684,21 @@
     "semantic_hash": ""
   },
   "tools/node_artifact.py": {
-    "mtime": 1794837645.8876498,
-    "seen": 1794840099.140918,
-    "ast_hash": "dfce085971b98d8b27734eba8da475fa",
+    "mtime": 1794846746.0927591,
+    "seen": 1794847193.48304,
+    "ast_hash": "5c3d3bcc296189202f40ec91a117f2b7",
     "semantic_hash": ""
   },
   "tools/test_node_artifact.py": {
-    "mtime": 1794837645.892682,
-    "seen": 1794840099.140934,
-    "ast_hash": "708539a9aa9819095b7756b38a6d14d3",
+    "mtime": 1794844654.907421,
+    "seen": 1794847193.483433,
+    "ast_hash": "a31357389ffcee33828a4595eab014d1",
     "semantic_hash": ""
   },
   "docs/api/node-artifact.md": {
-    "mtime": 1794837645.4647787,
-    "seen": 1794840099.1410701,
-    "ast_hash": "4f13af7de4ce6871b3e1ecc022f4c8ee",
+    "mtime": 1794844653.501997,
+    "seen": 1794847193.487891,
+    "ast_hash": "b52b4cbdbc4489b70908bcb6051dcfc8",
     "semantic_hash": ""
   },
   "test_infrastructure/root_routes.py": {
@@ -6894,9 +6894,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/owner_compose_lifecycle.py": {
-    "mtime": 1794840465.1919682,
-    "seen": 1794843503.227979,
-    "ast_hash": "23253a1fda649d18cfd00793474e4bdd",
+    "mtime": 1794846348.188944,
+    "seen": 1794847193.480767,
+    "ast_hash": "7ee14c453fe327ae0b7eed395515877e",
     "semantic_hash": ""
   },
   "tools/owner_compose.py": {
@@ -6906,9 +6906,9 @@
     "semantic_hash": ""
   },
   "tools/test_owner_compose.py": {
-    "mtime": 1794843198.022696,
-    "seen": 1794843503.2298958,
-    "ast_hash": "39bd72f49abb69764b8430fdb950f6ad",
+    "mtime": 1794844654.8848207,
+    "seen": 1794847193.483496,
+    "ast_hash": "f92ee0bcb234de6fcb13f2d1642724af",
     "semantic_hash": ""
   },
   "TODO-MVP.md": {
@@ -6930,9 +6930,21 @@
     "semantic_hash": ""
   },
   "docs/audit/owner-compose-20261116.md": {
-    "mtime": 1794843458.0105803,
-    "seen": 1794843503.238317,
-    "ast_hash": "8edb81d85842276ff9ebe15798bf671f",
+    "mtime": 1794847133.93331,
+    "seen": 1794847193.493705,
+    "ast_hash": "9683236f93a8e74ae3283c0a1b35b8d5",
+    "semantic_hash": ""
+  },
+  "docs/audit/owner-workflow-bridge-20261116.json": {
+    "mtime": 1794847133.9322696,
+    "seen": 1794847193.467585,
+    "ast_hash": "1743d842b848b52959f2b25353e8123e",
+    "semantic_hash": ""
+  },
+  "docs/audit/owner-workflow-bridge-20261116.md": {
+    "mtime": 1794847133.9326332,
+    "seen": 1794847193.4937081,
+    "ast_hash": "67fbae330ee75582a7eb809f90a26a5c",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

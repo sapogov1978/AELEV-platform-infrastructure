@@ -352,6 +352,31 @@ class OwnerComposeTest(unittest.TestCase):
                 subject.call(["docker", "compose", "up"], effectful=True)
         self.assertNotIn("private-command", str(failure.exception))
 
+    def test_public_owner_projection_excludes_private_fields(self):
+        path = self.root / "owner-output.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "status": "OWNER_COMPOSE_PLANNED",
+                    "configuration_sha256": "a" * 64,
+                    "api_key": "private-value",
+                    "raw_diagnostics": "private-output",
+                }
+            )
+        )
+        projection = node.owner_projection(path)
+        self.assertEqual(
+            projection,
+            {"status": "OWNER_COMPOSE_PLANNED", "configuration_sha256": "a" * 64},
+        )
+        self.assertNotIn("private", json.dumps(projection))
+        path.write_text(
+            json.dumps(
+                {"status": "OWNER_ROLE_RUNNING", "container_id": "private-value"}
+            )
+        )
+        self.assertIsNone(node.owner_projection(path))
+
     def test_unknown_owner_exit_is_retained_without_reexecution(self):
         path = self.root / "definition.json"
         path.write_text(json.dumps(self.value))

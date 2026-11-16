@@ -408,6 +408,56 @@ class NodeArtifactTest(unittest.TestCase):
             artifact.pack_inputs(root, ["linked.key"], "owner-one", output)
         self.assertFalse(output.exists())
 
+    def test_large_private_definition_roundtrip_preserves_bytes_and_replay(self):
+        root = self.root / "metadata"
+        root.mkdir(mode=0o700)
+        body = json.dumps(
+            {
+                "source_files": {
+                    "owner/file-" + str(number): "a" * 64 for number in range(4000)
+                }
+            }
+        ).encode()
+        self.assertGreater(len(body), 65536)
+        path = root / "owner-definition.json"
+        path.write_bytes(body)
+        path.chmod(0o600)
+        output = self.root / "metadata.zip"
+        manifest = artifact.pack_inputs(root, [path.name], "owner-one", output)
+        request = artifact.prepare_request(
+            "owner-input", "owner-one", str(self.root / "node"), manifest, output
+        )
+        first = artifact.deliver({"kind": "local"}, request, output)
+        installed = Path(first["path"]) / path.name
+        inode = installed.stat().st_ino
+        self.assertEqual(installed.read_bytes(), body)
+        self.assertEqual(installed.stat().st_mode & 0o777, 0o600)
+        second = artifact.deliver({"kind": "local"}, request, output)
+        self.assertEqual(first["path"], second["path"])
+        self.assertEqual(installed.stat().st_ino, inode)
+
+    def test_oversized_private_metadata_is_refused_by_packer_and_receiver(self):
+        body = b"x" * (artifact.INPUT_FILE_LIMIT + 1)
+        request, payload = self.package(
+            kind="owner-input",
+            members=[("definition.json", body, stat.S_IFREG | 0o600)],
+        )
+        with self.assertRaisesRegex(
+            artifact.DeliveryError, "ARTIFACT_MEMBER_TOO_LARGE"
+        ):
+            self.receive(request, payload)
+        root = self.root / "metadata"
+        root.mkdir(mode=0o700)
+        path = root / "definition.json"
+        path.write_bytes(body)
+        path.chmod(0o600)
+        output = self.root / "too-large.zip"
+        with self.assertRaisesRegex(
+            artifact.DeliveryError, "ARTIFACT_MEMBER_TOO_LARGE"
+        ):
+            artifact.pack_inputs(root, [path.name], "owner-one", output)
+        self.assertFalse(output.exists())
+
     def test_request_factory_preserves_target_path_without_probing_local_filesystem(
         self,
     ):

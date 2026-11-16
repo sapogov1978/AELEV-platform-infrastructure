@@ -131,6 +131,57 @@ def sync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
+def owner_projection(path: Path) -> dict[str, Any] | None:
+    """Expose only typed metadata from the pinned owner-compose procedure."""
+    try:
+        if path.stat().st_size > 65536:
+            return None
+        value = read(path)
+        if value.get("status") not in {
+            "OWNER_COMPOSE_PLANNED",
+            "OWNER_ROLE_RUNNING",
+            "OWNER_ROLE_STOPPED",
+            "OWNER_ROLE_ABSENT",
+            "OWNER_TASK_COMPLETED",
+            "BLOCKED",
+            "RESULT_UNKNOWN",
+        }:
+            return None
+        projection = {"status": value["status"]}
+        for name, pattern in {
+            "configuration_sha256": r"[a-f0-9]{64}",
+            "container_id": r"[a-f0-9]{64}",
+            "native_image_id": r"sha256:[a-f0-9]{64}",
+            "code": r"(?:OWNER|NODE)_[A-Z_]{1,128}",
+        }.items():
+            if name in value:
+                if (
+                    not isinstance(value[name], str)
+                    or re.fullmatch(pattern, value[name]) is None
+                ):
+                    return None
+                projection[name] = value[name]
+        if "health" in value:
+            if value["health"] not in {
+                "healthy",
+                "unhealthy",
+                "starting",
+                "not_configured",
+            }:
+                return None
+            projection["health"] = value["health"]
+        if "owner_exit_code" in value:
+            if (
+                type(value["owner_exit_code"]) is not int
+                or not -255 <= value["owner_exit_code"] <= 255
+            ):
+                return None
+            projection["owner_exit_code"] = value["owner_exit_code"]
+        return projection
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 def validate(
     request: dict[str, Any], *, target_filesystem: bool = True
 ) -> tuple[Path, Path, list[str]]:
@@ -449,6 +500,13 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
             )
             if request["procedure"] == "owner-compose" and completed.returncode == 3:
                 result["status"] = "RESULT_UNKNOWN"
+            if request["procedure"] == "owner-compose":
+                projection = owner_projection(directory / "stdout")
+                if projection is not None:
+                    result["owner_result"] = projection
+                elif completed.returncode == 0:
+                    result["status"] = "RESULT_UNKNOWN"
+                    result["code"] = "NODE_OWNER_RESULT_UNVERIFIED"
         except (OSError, subprocess.TimeoutExpired):
             result["status"] = "RESULT_UNKNOWN"
         result["owner_output_retained_privately"] = True

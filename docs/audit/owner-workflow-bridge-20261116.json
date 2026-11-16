@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "COMPONENT_QUALIFIED_LOCALLY",
+  "scope": "Typed owner-compose receipts and bounded owner metadata delivery",
+  "source_files_sha256": {
+    "tools/node_artifact.py": "6bd527e2bce3e276023961aa444101a6a1f3a4ca5d922be9940537c1f872b483",
+    "tools/node_execution.py": "62910f1bbd6b81dfc5d076f5fff09cea60acfffc1fcc9aa328f0c531d7346213",
+    "tools/owner_compose.py": "939fb20d3cb182c3efb9597bede9ca3f70ce2311589b74f534a56dbc60a65ca2",
+    "test_infrastructure/owner_compose_lifecycle.py": "d30eab82916b2e5dc27d348af17295d7860a97bfad99abb79c3a4dfb0bc95e07"
+  },
+  "local_checks": {
+    "root_tools_tests": 207,
+    "native_owner_cases": 10,
+    "bandit_source_files": 183,
+    "strict_mypy": ["tools/node_artifact.py", "tools/node_execution.py", "test_infrastructure/owner_compose_lifecycle.py"],
+    "black": "PASS",
+    "ruff": "PASS",
+    "secrets": "PASS"
+  },
+  "owner_qualification": {
+    "evidence_generation": "owner-compose-linux-node-e3e207df0d",
+    "receipt_sha256": "53e90219c8244e7947941ad37fd57465782594cabe2408d219752eb99303dda7",
+    "inner_receipt_sha256": "a85ba867dddc43114b808fbe606dd3e68d4b7bb5a56dba7880885edb3079e0ff",
+    "python": "3.13.7",
+    "compose": "2.40.3",
+    "platform": "Linux",
+    "typed_projection_checked_on_every_call": true
+  },
+  "consumer_fixture_qualification": {
+    "evidence_generation": "prepared-workflow-linux-1e68f89f19",
+    "receipt_sha256": "8e42029f7341f76663f3a097890dbd04ecd76864f4c30c7c0cd5a7f96da7c9c1",
+    "inner_receipt_sha256": "79108057c8844c4c8d56e49fb40b4f8e452587e7321278de8983aac94a124d37",
+    "largest_definition_bytes": 381372,
+    "successful_task_then_runtime": true,
+    "task_replay_effect_unchanged": true,
+    "failure_replay_effect_unchanged": true,
+    "dependent_runtime_blocked_on_failure": true,
+    "native_owner_failure_exit": 7,
+    "working_containers_preserved": 262,
+    "owned_resources_removed": true,
+    "platform_release_preflight_exercised": false
+  },
+  "release_admitted": false,
+  "remote_exact_source_audit_pending": true,
+  "remote_full_cleanroom_pending": true,
+  "full_platform_e2e_verified": false,
+  "physical_distribution_verified": false,
+  "inference_requested": false,
+  "queue_resume_issued": false
+}

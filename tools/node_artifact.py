@@ -13,11 +13,12 @@ import re
 import stat
 import subprocess
 import tempfile
-from typing import Any, BinaryIO
+from typing import Any, BinaryIO, cast
 import zipfile
 
 ARCHIVE_LIMIT = 256 * 1024 * 1024
 HEADER_LIMIT = 4 * 1024 * 1024
+INPUT_FILE_LIMIT = 1024 * 1024
 BOOTSTRAP = """import base64,hashlib,json,sys
 v=json.loads(sys.stdin.buffer.readline(4194305))
 c=base64.b64decode(v['code'],validate=True)
@@ -77,7 +78,7 @@ def absolute(value: Any, *, inspect: bool = True) -> Path:
 def relative(value: Any) -> str:
     require(
         isinstance(value, str)
-        and value
+        and bool(value)
         and "\\" not in value
         and not any(c in value for c in "\0\r\n"),
         "ARTIFACT_MEMBER_INVALID",
@@ -91,7 +92,7 @@ def relative(value: Any) -> str:
         and path.parts[0] not in {".git", ".codex", "graphify-out"},
         "ARTIFACT_MEMBER_INVALID",
     )
-    return value
+    return cast(str, value)
 
 
 def sha(value: Any) -> str:
@@ -99,7 +100,7 @@ def sha(value: Any) -> str:
         isinstance(value, str) and re.fullmatch(r"[a-f0-9]{64}", value) is not None,
         "ARTIFACT_SHA256_INVALID",
     )
-    return value
+    return cast(str, value)
 
 
 def sync(path: Path) -> None:
@@ -135,7 +136,7 @@ def load(path: Path) -> dict[str, Any]:
 
     result = json.loads(path.read_bytes(), object_pairs_hook=unique)
     require(isinstance(result, dict), "ARTIFACT_OBJECT_REQUIRED")
-    return result
+    return cast(dict[str, Any], result)
 
 
 def validate(request: dict[str, Any], *, inspect: bool) -> tuple[Path, dict[str, Any]]:
@@ -253,7 +254,8 @@ def archive_modes(archive: Path, files: dict[str, Any], kind: str) -> dict[str, 
                 "ARTIFACT_MEMBER_TYPE_INVALID",
             )
             require(
-                member.file_size <= (64 * 1024 * 1024 if kind == "source" else 65536),
+                member.file_size
+                <= (64 * 1024 * 1024 if kind == "source" else INPUT_FILE_LIMIT),
                 "ARTIFACT_MEMBER_TOO_LARGE",
             )
             permissions = stat.S_IMODE(mode)
@@ -472,9 +474,9 @@ def pack_inputs(
             and stat.S_IMODE(mode) == 0o600,
             "ARTIFACT_PRIVATE_INPUT_REQUIRED",
         )
-        require(path.stat().st_size <= 65536, "ARTIFACT_MEMBER_TOO_LARGE")
+        require(path.stat().st_size <= INPUT_FILE_LIMIT, "ARTIFACT_MEMBER_TOO_LARGE")
         body = path.read_bytes()
-        require(len(body) <= 65536, "ARTIFACT_MEMBER_TOO_LARGE")
+        require(len(body) <= INPUT_FILE_LIMIT, "ARTIFACT_MEMBER_TOO_LARGE")
         records[name] = body
     descriptor = os.open(output, os.O_RDWR | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(descriptor, "w+b") as stream:

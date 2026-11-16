@@ -265,6 +265,18 @@ def execute(
     assert receipt["status"] == expect, (action, receipt)
     output = Path(request["state_root"]) / request["operation"] / "stdout"
     result = cast(dict[str, Any], json.loads(output.read_text()))
+    projection = receipt.get("owner_result")
+    assert isinstance(projection, dict) and projection["status"] == result["status"]
+    assert set(projection) <= {
+        "status",
+        "configuration_sha256",
+        "container_id",
+        "native_image_id",
+        "code",
+        "health",
+        "owner_exit_code",
+    }
+    assert all(result[key] == value for key, value in projection.items())
     return result, request, receipt
 
 
