@@ -1,5 +1,7 @@
 # История SPIRE
 
+- 2026-11-16: POSIX public exporter использует host primary GID и собственный group-writable public output внутри private parent. Реальный `composition.publish` на изолированных Linux volumes воспроизвёл PermissionError при чужом UID/`0700` и успешную запись с GID/`0770` без новых capabilities. Installation state остаётся read-only, сервер и другие runtime-роли не меняются; private parent/ownership/symlink guards обязательны. Native full-runtime квалификация выполняется отдельно.
+
 - 2026-11-14: новый main Sender base проверен живыми server/observer/sender/publisher в четырёх проектах без общих volumes. Собственный журнал sender опустел после центрального ACK, издатель получил ONLINE ACK; повтор сохранил экземпляры и все четыре public exports. Отдельная native проверка подтвердила фактический loopback Prometheus и отказ public health проксировать его API.
 
 - 2026-11-14: telemetry-sender target закрепляет signed main Sender LTS digest 7729a8f после scoped artifact admission и 131 native checks на каждой архитектуре. Generic renewal guard теперь входит в runtime base; собственные SQLite 3.53.4, credentials и mountpoints сохраняются. Изменение исходников не переключает существующую установку.

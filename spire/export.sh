@@ -44,7 +44,36 @@ if [ -e "$spire_export_root/.env" ]; then
     exit 78
   fi
 fi
-mkdir -p "$spire_export_root/runtime/installed-composition"
+spire_export_uid=$(id -u)
+spire_export_gid=$(id -g)
+spire_export_parent="$spire_export_root/runtime"
+spire_export_output="$spire_export_parent/installed-composition"
+if [ -L "$spire_export_parent" ] || [ -L "$spire_export_output" ]; then
+  echo 'SPIRE_EXPORT_OUTPUT_PERMISSIONS_REQUIRED' >&2
+  exit 78
+fi
+mkdir -p "$spire_export_output"
+if [ "$spire_export_uid" != 0 ]; then
+  case $(uname -s) in
+    Darwin)
+      spire_export_parent_mode=$(stat -f '%u:%Lp' "$spire_export_parent")
+      spire_export_output_mode=$(stat -f '%u:%g:%Lp' "$spire_export_output") ;;
+    Linux)
+      spire_export_parent_mode=$(stat -c '%u:%a' "$spire_export_parent")
+      spire_export_output_mode=$(stat -c '%u:%g:%a' "$spire_export_output") ;;
+  esac
+  if [ "$spire_export_parent_mode" != "$spire_export_uid:700" ]; then
+    echo 'SPIRE_EXPORT_PRIVATE_PARENT_REQUIRED' >&2
+    exit 78
+  fi
+  case "$spire_export_output_mode" in
+    "$spire_export_uid:$spire_export_gid:700"|"$spire_export_uid:$spire_export_gid:770") ;;
+    *) echo 'SPIRE_EXPORT_OUTPUT_PERMISSIONS_REQUIRED' >&2; exit 78 ;;
+  esac
+  # Only derived public output is group-writable inside a private host parent.
+  # The root operator keeps access to its own read-only installation state.
+  chmod 0770 "$spire_export_output"
+fi
 spire_export_before=$(mktemp "$spire_export_root/runtime/installed-composition/env-before.XXXXXX")
 spire_export_next=$(mktemp "$spire_export_root/runtime/installed-composition/env-next.XXXXXX")
 spire_export_helper="${spire_export_project}-composition-$(basename -- "$spire_export_next")"
@@ -52,7 +81,7 @@ trap 'rm -f "$spire_export_before" "$spire_export_next"' EXIT
 if [ -e "$spire_export_root/.env" ]; then cp "$spire_export_root/.env" "$spire_export_before"; fi
 set --
 if [ "$spire_export_component" != all ]; then set -- --component "$spire_export_component"; fi
-docker run --rm --name "$spire_export_helper" --user 0:0 --read-only --network none --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true \
+docker run --rm --name "$spire_export_helper" --user "0:$spire_export_gid" --read-only --network none --pids-limit 128 --cap-drop ALL --security-opt no-new-privileges:true \
   --label io.aelev.owner=infrastructure-spire --label io.aelev.role=operator-composition-export \
   --label "io.aelev.installation=$spire_export_project" --memory 256m --tmpfs /tmp:mode=1777,size=16m \
   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \

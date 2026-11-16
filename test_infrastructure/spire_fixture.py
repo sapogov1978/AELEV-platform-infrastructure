@@ -373,7 +373,7 @@ class Fixture:
         ]
 
     def diagnostic(self, output: Path) -> None:
-        """Publish only literal raised codes, never raw native operator output."""
+        """Publish only source-declared failure codes, never raw operator output."""
         allowed: set[str] = set()
         for source in (self.root / "spire/src/aelev_spire").glob("*.py"):
             for node in ast.walk(ast.parse(source.read_text())):
@@ -387,6 +387,12 @@ class Fixture:
                 ):
                     allowed.add(node.exc.args[0].value)
         operations = []
+        allowed.update(
+            re.findall(
+                r"echo '(SPIRE_EXPORT_[A-Z0-9_]+)' >&2",
+                (self.root / "spire/export.sh").read_text(),
+            )
+        )
         for source in (self.root / "runtime/spire-installed").glob(
             "bootstrap-*/*.stderr"
         ):
@@ -400,6 +406,20 @@ class Fixture:
             found = re.findall(
                 r'"code"\s*:\s*"(SPIRE_[A-Z0-9_]{1,120})"',
                 source.read_text(errors="replace"),
+            )
+            found.extend(
+                re.findall(
+                    r"^(?:ValueError|RuntimeError): (SPIRE_[A-Z0-9_]{1,120})$",
+                    source.read_text(errors="replace"),
+                    re.MULTILINE,
+                )
+            )
+            found.extend(
+                re.findall(
+                    r"^(SPIRE_EXPORT_[A-Z0-9_]{1,120})$",
+                    source.read_text(errors="replace"),
+                    re.MULTILINE,
+                )
             )
             operations.append(
                 {"phase": source.stem, "failure_codes": sorted(set(found) & allowed)}

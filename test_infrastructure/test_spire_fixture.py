@@ -458,10 +458,16 @@ def test_native_diagnostic_excludes_unknown_codes_success_and_private_output(
     (source / "native.py").write_text(
         'raise ValueError("SPIRE_KNOWN_FAILURE")\nprint("SPIRE_SUCCESS_MARKER")\n'
     )
+    (tmp_path / "spire/export.sh").write_text(
+        "echo 'SPIRE_EXPORT_OUTPUT_PERMISSIONS_REQUIRED' >&2\n"
+    )
     logs = tmp_path / "runtime/spire-installed/bootstrap-new"
     logs.mkdir(parents=True)
     (logs / "server.stderr").write_text(
         '{"code":"SPIRE_KNOWN_FAILURE"}\n{"code":"SPIRE_SUCCESS_MARKER"}\n{"code":"SPIRE_UNKNOWN_PRIVATE"}\nprivate-output-must-not-persist\n'
+    )
+    (logs / "export.stderr").write_text(
+        "ValueError: SPIRE_KNOWN_FAILURE\nSPIRE_EXPORT_OUTPUT_PERMISSIONS_REQUIRED\nValueError: SPIRE_UNKNOWN_PRIVATE\n"
     )
     monkeypatch.setattr(
         "spire_fixture.full_runtime.containers",
@@ -478,8 +484,15 @@ def test_native_diagnostic_excludes_unknown_codes_success_and_private_output(
     output = tmp_path / "public/diagnostic.json"
     owner.diagnostic(output)
     value = json.loads(output.read_text())
-    assert value["operations"] == [
-        {"phase": "server", "failure_codes": ["SPIRE_KNOWN_FAILURE"]}
+    assert sorted(value["operations"], key=lambda row: row["phase"]) == [
+        {
+            "phase": "export",
+            "failure_codes": [
+                "SPIRE_EXPORT_OUTPUT_PERMISSIONS_REQUIRED",
+                "SPIRE_KNOWN_FAILURE",
+            ],
+        },
+        {"phase": "server", "failure_codes": ["SPIRE_KNOWN_FAILURE"]},
     ]
     assert value["roles"] == [
         {

@@ -35,11 +35,7 @@ def operator(tmp_path: Path) -> tuple[Path, dict[str, str], Path]:
     binary = tmp_path / "bin"
     binary.mkdir()
     docker = binary / "docker"
-    docker.write_text(
-        "#!"
-        + sys.executable
-        + "\n"
-        + r"""import json, os, sys
+    docker.write_text("#!" + sys.executable + "\n" + r"""import json, os, sys
 from pathlib import Path
 args = sys.argv[1:]
 with Path(os.environ['AELEV_TEST_EXPORT_CALLS']).open('a') as output:
@@ -69,8 +65,7 @@ elif args[0] == 'run':
     )
 else:
     raise SystemExit(64)
-"""
-    )
+""")
     docker.chmod(0o700)
     log = tmp_path / "docker-calls.jsonl"
     environment = {
@@ -117,6 +112,66 @@ def test_external_output_preserves_the_owner_env(
     assert '"--network", "none"' in calls
     assert "target=/installation,readonly" in calls
     assert '"up"' not in calls and '"stop"' not in calls
+    invocation = next(
+        json.loads(line)
+        for line in log.read_text().splitlines()
+        if json.loads(line)[0] == "run"
+    )
+    assert invocation[invocation.index("--user") + 1] == "0:" + str(os.getgid())
+    assert "--cap-add" not in invocation
+    assert (destination / "runtime").stat().st_mode & 0o777 == 0o700
+    assert (destination / "runtime/installed-composition").stat().st_mode & 0o777 == (
+        0o700 if os.getuid() == 0 else 0o770
+    )
+
+
+@pytest.mark.skipif(os.getuid() == 0, reason="Non-root POSIX host ownership boundary")
+def test_public_output_never_opens_a_shared_parent(
+    operator: tuple[Path, dict[str, str], Path], tmp_path: Path
+) -> None:
+    entrypoint, environment, log = operator
+    destination = tmp_path / "export"
+    parent = destination / "runtime"
+    parent.mkdir(parents=True)
+    parent.chmod(0o755)
+    result = subprocess.run(
+        shell_arguments(
+            entrypoint, "fixture-spire", "approved-export-image", str(destination)
+        ),
+        env=environment,
+        capture_output=True,
+        timeout=15,
+        check=False,
+    )
+    assert result.returncode == 78
+    assert b"SPIRE_EXPORT_PRIVATE_PARENT_REQUIRED" in result.stderr
+    assert parent.stat().st_mode & 0o777 == 0o755
+    assert '"run"' not in log.read_text()
+
+
+def test_public_output_refuses_symlink_without_changing_target(
+    operator: tuple[Path, dict[str, str], Path], tmp_path: Path
+) -> None:
+    entrypoint, environment, log = operator
+    destination, target = tmp_path / "export", tmp_path / "protected"
+    destination.mkdir()
+    target.mkdir()
+    marker = target / "keep"
+    marker.write_bytes(b"unchanged")
+    (destination / "runtime").symlink_to(target, target_is_directory=True)
+    result = subprocess.run(
+        shell_arguments(
+            entrypoint, "fixture-spire", "approved-export-image", str(destination)
+        ),
+        env=environment,
+        capture_output=True,
+        timeout=15,
+        check=False,
+    )
+    assert result.returncode == 78
+    assert b"SPIRE_EXPORT_OUTPUT_PERMISSIONS_REQUIRED" in result.stderr
+    assert list(target.iterdir()) == [marker] and marker.read_bytes() == b"unchanged"
+    assert '"run"' not in log.read_text()
 
 
 def test_default_output_still_preserves_a_manual_owner_env(
