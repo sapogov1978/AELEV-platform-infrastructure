@@ -26,6 +26,7 @@ from resources import (
     verify_preserved,
 )
 from spire_fixture import Fixture
+from runtime_diagnostic import command_failure_summaries, runtime_progress
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = Path(__file__).with_name("lifecycle-result.md")
@@ -616,11 +617,13 @@ def execute_group_start(
             "--no-build",
             *runtime_inputs,
         ]
+    progress_output: str | bytes | None = ""
     try:
         result = subprocess.run(
             arguments, cwd=ROOT, capture_output=True, text=True, timeout=1200
         )
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as error:
+        progress_output = error.stderr
         reason_code = "COMPOSE_UP_TIMEOUT"
         exit_code = None
     else:
@@ -628,6 +631,7 @@ def execute_group_start(
             return result.stdout
         reason_code = classify_group_start_failure(result.stdout + "\n" + result.stderr)
         exit_code = result.returncode
+        progress_output = result.stderr
     try:
         capture_group_startup_diagnostic(
             project,
@@ -654,6 +658,18 @@ def execute_group_start(
             )
             + "\n"
         )
+    try:
+        progress = runtime_progress(progress_output, ROOT)
+        commands = command_failure_summaries(ROOT)
+        if progress or commands:
+            payload = json.loads(output.read_text())
+            payload["runtime_context"] = {
+                "last_announced_step": progress,
+                "commands": commands,
+            }
+            output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    except Exception:
+        print("ROOT_RUNTIME_FAILURE_CONTEXT_UNAVAILABLE")
     raise RuntimeError("group start failed: stage=" + stage + "; reason=" + reason_code)
 
 
