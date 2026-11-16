@@ -15,6 +15,9 @@ on:
       - postgresql/fencing-node.py
       - postgresql/test/fencing-ssh-lifecycle.py
       - postgresql/test/ha_observation.py
+      - postgresql/test/ha_cleanup.py
+      - postgresql/test/ha_return_barrier.py
+      - postgresql/test/test_ha_return_barrier.py
       - postgresql/vendor/**
 
 permissions:

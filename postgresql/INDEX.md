@@ -10,6 +10,7 @@
 | Выбор и проверка ограждения | [FENCING.md](FENCING.md) |
 | Кандидат независимого SSH fencer и одноразовой узловой операции | [FENCING_SSH.md](FENCING_SSH.md), `compose.fencing-ssh.yml`, `fencing-node.py` |
 | Настоящий PostgreSQL/Patroni/etcd через published endpoints и SSH, crash/replay двух controllers | `test/fencing-ssh-lifecycle.py`, `.github/workflows/postgresql-fencing-ssh.yml` |
+| Детерминированный доэффектный crash point первого controller key | `test/ha_return_barrier.py`, `test/test_ha_return_barrier.py`; только SSH host fixture, без runtime override |
 | Ручной подписанный multiarch-выпуск после exact-source audit/HA | `.github/workflows/postgresql-fencing-release.yml`; допуск опубликованного digest проверяется отдельно |
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |

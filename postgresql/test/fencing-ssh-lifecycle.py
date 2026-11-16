@@ -234,6 +234,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "postgresql/test/fencing-ssh-lifecycle.py",
                 "postgresql/test/ha_observation.py",
                 "postgresql/test/ha_cleanup.py",
+                "postgresql/test/ha_return_barrier.py",
             )
         },
         "fencing_image": FENCER,
@@ -978,9 +979,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         context = OUT / "sshd-context"
         context.mkdir(mode=0o700)
         shutil.copy2(OWNER / "fencing-node.py", context / "fencing-node.py")
+        shutil.copy2(
+            OWNER / "test/ha_return_barrier.py", context / "ha_return_barrier.py"
+        )
         keys = (
             "\n".join(
-                'restrict,command="/usr/local/bin/python /operator/fencing-node.py --config /node-inputs/node.json" '
+                'restrict,command="/usr/local/bin/python '
+                + (
+                    "/operator/ha_return_barrier.py"
+                    if n == 1
+                    else "/operator/fencing-node.py --config /node-inputs/node.json"
+                )
+                + '" '
                 + (OUT / f"controller-{n}.key.pub").read_text().strip()
                 for n in (1, 2)
             )
@@ -993,7 +1003,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         (context / "Dockerfile").write_text(
             "FROM "
             + ssh_base_tag
-            + '\nUSER root\nRUN apk add --no-cache openssh-server=10.0_p1-r11 && mkdir -p /run/sshd && chmod 700 /root\nCOPY authorized_keys /etc/ssh/fencing-authorized-keys\nRUN chmod 600 /etc/ssh/fencing-authorized-keys\nCOPY fencing-node.py /operator/fencing-node.py\nCOPY sshd_config /etc/ssh/fencing-sshd-config\nENTRYPOINT ["/usr/sbin/sshd","-D","-e","-f","/etc/ssh/fencing-sshd-config"]\n'
+            + '\nUSER root\nRUN apk add --no-cache openssh-server=10.0_p1-r11 && mkdir -p /run/sshd && chmod 700 /root\nCOPY authorized_keys /etc/ssh/fencing-authorized-keys\nRUN chmod 600 /etc/ssh/fencing-authorized-keys\nCOPY fencing-node.py /operator/fencing-node.py\nCOPY ha_return_barrier.py /operator/ha_return_barrier.py\nCOPY sshd_config /etc/ssh/fencing-sshd-config\nENTRYPOINT ["/usr/sbin/sshd","-D","-e","-f","/etc/ssh/fencing-sshd-config"]\n'
         )
         process(
             [
@@ -1267,6 +1277,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         # the current writer or changing its native lease.
         replica = next(n for n in range(1, 4) if n != second)
         docker("stop", "-t", "5", ids["controller-2"])
+        barrier_command = (
+            "exec",
+            ids[f"ssh-node-{replica}"],
+            "/usr/local/bin/python",
+            "/operator/ha_return_barrier.py",
+        )
+        docker(*barrier_command, "arm")
         claim = json.loads(
             docker(
                 "exec",
@@ -1305,7 +1322,32 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             and pending["phase"] == "STOP_CONFIRMED"
             and pending["start_attempts"] == 0
         ), "CRASH_FAULT_POINT_MISSED"
+        barrier = None
+        end = time.monotonic() + 15
+        while time.monotonic() < end:
+            barrier = json.loads(docker(*barrier_command, "status"))
+            if barrier.get("held") is True:
+                break
+            time.sleep(0.1)
+        assert barrier and barrier.get("held") is True, "RETURN_BARRIER_NOT_HELD"
+        pending = node_intent(replica)
+        assert (
+            pending
+            and pending["phase"] == "STOP_CONFIRMED"
+            and pending["start_attempts"] == 0
+        ), "CRASH_FAULT_POINT_MISSED"
         docker("kill", "--signal", "KILL", ids["controller-1"])
+        discarded = json.loads(docker(*barrier_command, "discard"))
+        assert discarded == {"discarded": True}
+        proof["return_crash_barrier"] = {
+            "first_controller_forced_command_only": True,
+            "held_before_native_dispatch": True,
+            "kernel_state": barrier["kernel_state"],
+            "pending_phase": pending["phase"],
+            "pending_start_attempts": pending["start_attempts"],
+            "held_request_discarded": True,
+            "runtime_return_interval_changed": False,
+        }
         docker("start", ids["controller-2"])
         healthy(["controller-2"])
         end = time.monotonic() + 60

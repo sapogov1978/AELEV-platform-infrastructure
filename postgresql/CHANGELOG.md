@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-16: В native SSH test добавлен доэффектный барьер только первого controller key: первый return RPC удерживается SIGSTOP, повторные не вызывают dispatcher, SIGCONT заканчивается отказом. Snapshot проверяет PID/start ticks/kernel `T`; перед запуском второй копии held request удаляется SIGKILL через pidfd. Новые tests проверяют настоящие Linux stop/discard/resume-refusal и подмену marker/incarnation; owner runtime не изменён.
+
 - 2026-11-16: ARM HA/restore прошёл функциональные этапы, но teardown нашёл AutoRemove helper в `created` без PID/StartedAt после снятия SSH host. Failed proof сохранён; собственный scope снят отдельной квитанцией с неизменным baseline 260 контейнеров. Harness теперь удаляет только такой exact never-started helper после прекращения всех собственных ролей; живые, чужие и прежние контейнеры защищены, итоговый inventory gate сохраняется.
 
 - 2026-11-15: SSH HA teardown проверяет итоговые остатки четырёх классов собственных Docker resources по exact scope labels. Сеть удаляется только по проверенному собственному имени/label; ошибки cleanup сохраняют итоговый FAIL. Прежний boolean не подменяет inventory, рабочий кластер и runtime fencing не меняются.
