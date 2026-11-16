@@ -12,6 +12,8 @@ import sys
 import threading
 from uuid import uuid4
 
+from sender_diagnostic import read_status
+
 OWNER = Path(__file__).resolve().parents[1] / "observability/delivery"
 sys.path.insert(0, str(OWNER))
 prepare = importlib.import_module("prepare")  # verifies the pinned public wheel
@@ -58,8 +60,11 @@ def main() -> None:
     )
     agent = delivery.Delivery(settings)
     server = delivery.DeliveryServer(agent)
+    health = delivery.DeliveryServer(agent, health_only=True)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
+    health_thread = threading.Thread(target=health.serve_forever, daemon=True)
     thread.start()
+    health_thread.start()
     body = b'{"resourceLogs":[]}'
     identifier = str(uuid4())
 
@@ -99,6 +104,15 @@ def main() -> None:
             "durable": True,
         }
         assert agent.journal.status()["records"] == 1
+        diagnostic = read_status(
+            "https://localhost:" + str(health.server_port),
+            str(secrets / "ca.crt"),
+            str(secrets / "client.crt"),
+            str(secrets / "client.key"),
+        )
+        assert diagnostic["records"] == 1
+        assert diagnostic["pending"] == 1
+        assert diagnostic["worker_alive"] == 0
         print(
             json.dumps(
                 {
@@ -112,6 +126,9 @@ def main() -> None:
         server.shutdown()
         server.server_close()
         thread.join(timeout=3)
+        health.shutdown()
+        health.server_close()
+        health_thread.join(timeout=3)
         agent.lease.close()
 
 

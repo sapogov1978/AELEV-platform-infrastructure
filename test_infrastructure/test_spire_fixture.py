@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import http.client
 import importlib.util
 import json
 import subprocess
@@ -524,3 +525,27 @@ def test_native_diagnostic_excludes_unknown_codes_success_and_private_output(
     ]
     assert "private" not in output.read_text().lower()
     assert "SPIRE_SUCCESS_MARKER" not in output.read_text()
+
+
+def test_central_diagnostic_network_failure_does_not_publish_exception(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner = fixture(tmp_path)
+    service = tmp_path / "observability/delivery"
+    service.mkdir(parents=True)
+    (service / ".env").write_text(
+        "AELEV_INFRASTRUCTURE_DELIVERY_SECRET_ROOT=secrets/native\n"
+        "AELEV_INFRASTRUCTURE_DELIVERY_HEALTH_PORT=13134\n"
+    )
+    (tmp_path / "spire/export.sh").write_text("")
+    monkeypatch.setattr("spire_fixture.full_runtime.containers", lambda *_: [])
+    monkeypatch.setattr(
+        "sender_diagnostic.read_status",
+        Mock(side_effect=http.client.RemoteDisconnected("private-must-not-leave")),
+    )
+    output = tmp_path / "public/diagnostic.json"
+    owner.diagnostic(output)
+    assert json.loads(output.read_text())["central_delivery"] == {
+        "code": "ROOT_CENTRAL_DELIVERY_STATUS_UNAVAILABLE"
+    }
+    assert "private" not in output.read_text().lower()

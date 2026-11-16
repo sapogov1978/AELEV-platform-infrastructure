@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794802201.2098043,
-    "seen": 1794802404.3789618,
-    "ast_hash": "654d3e77b2d69408954ea79d044c8be5",
+    "mtime": 1794804963.5497036,
+    "seen": 1794805208.9539468,
+    "ast_hash": "9348ece703b6e83493f9fd2bd0a8251b",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4464,9 +4464,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/USER_MANUAL.md": {
-    "mtime": 1794802201.210706,
-    "seen": 1794802404.393785,
-    "ast_hash": "0c26da27a50cc28742eafcd28bd45d69",
+    "mtime": 1794804963.550771,
+    "seen": 1794805208.970332,
+    "ast_hash": "20358c14e6a859046216f9d8093ea860",
     "semantic_hash": ""
   },
   "test_infrastructure/automatic-recovery-result-20261023.md": {
@@ -6756,21 +6756,21 @@
     "semantic_hash": ""
   },
   "test_infrastructure/spire_fixture.py": {
-    "mtime": 1794802201.2072358,
-    "seen": 1794802404.374175,
-    "ast_hash": "a8a619bd47ddd861b27db5ca91eda040",
+    "mtime": 1794805064.381055,
+    "seen": 1794805208.948544,
+    "ast_hash": "baadd824f68e6526993090f704b89402",
     "semantic_hash": ""
   },
   "test_infrastructure/test_spire_fixture.py": {
-    "mtime": 1794802201.2081404,
-    "seen": 1794802404.374712,
-    "ast_hash": "0d4e3ad9e79c9752f5c7a00e99369b1f",
+    "mtime": 1794805064.3824487,
+    "seen": 1794805208.949196,
+    "ast_hash": "66f068f46e8e0fd080695dcfb0dd6496",
     "semantic_hash": ""
   },
   "test_infrastructure/sender_diagnostic.py": {
-    "mtime": 1794800224.269087,
-    "seen": 1794800410.15871,
-    "ast_hash": "384299ed15efcccf51f0b9a3aa55dc39",
+    "mtime": 1794804963.5468702,
+    "seen": 1794805208.948534,
+    "ast_hash": "c30ef3197d3e02a5221901038ee5bcf3",
     "semantic_hash": ""
   },
   "test_infrastructure/test_sender_diagnostic.py": {
@@ -6780,9 +6780,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/spire_delivery_tls_check.py": {
-    "mtime": 1794802298.7532973,
-    "seen": 1794802404.37417,
-    "ast_hash": "f86d16a5edaa09a8393ef8107d65170f",
+    "mtime": 1794804963.548284,
+    "seen": 1794805208.948541,
+    "ast_hash": "f379453660f1427afbd963a2983f55f9",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

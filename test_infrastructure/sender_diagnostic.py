@@ -45,8 +45,8 @@ def sanitize(value: Any) -> dict[str, Any]:
     return result
 
 
-def probe() -> dict[str, Any]:
-    endpoint = urlsplit(os.environ["AELEV_INFRASTRUCTURE_SPIRE_SENDER_HEALTH_URL"])
+def read_status(url: str, ca: str, certificate: str, key: str) -> dict[str, Any]:
+    endpoint = urlsplit(url)
     if (
         endpoint.scheme != "https"
         or not endpoint.hostname
@@ -57,10 +57,8 @@ def probe() -> dict[str, Any]:
         or endpoint.fragment
     ):
         raise ValueError("ROOT_SPIRE_SENDER_ORIGIN_INVALID")
-    context = ssl.create_default_context(cafile="/run/secrets/status/query-ca.crt")
-    context.load_cert_chain(
-        "/run/secrets/status/query.crt", "/run/secrets/status/query.key"
-    )
+    context = ssl.create_default_context(cafile=ca)
+    context.load_cert_chain(certificate, key)
     client = http.client.HTTPSConnection(
         endpoint.hostname, endpoint.port, timeout=3, context=context
     )
@@ -73,6 +71,15 @@ def probe() -> dict[str, Any]:
         return sanitize(json.loads(raw))
     finally:
         client.close()
+
+
+def probe() -> dict[str, Any]:
+    return read_status(
+        os.environ["AELEV_INFRASTRUCTURE_SPIRE_SENDER_HEALTH_URL"],
+        "/run/secrets/status/query-ca.crt",
+        "/run/secrets/status/query.crt",
+        "/run/secrets/status/query.key",
+    )
 
 
 def main() -> None:

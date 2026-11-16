@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- Root `77c7006` подтвердил ONLINE всех пяти SPIRE компонентов и отсутствие TLS delivery errors; поздний UI failure теперь у центральной Delivery. Failure context читает её существующий mTLS `/status` собственной query identity и сохраняет тот же bounded формат counters/codes. Настоящий DeliveryServer дополнительно проверяет health diagnostic при имеющейся записи и неработающем worker; readiness остаётся отрицательной. Прогноз — 5–10 минут и один отдельный root diagnostic.
+
 - Root diagnostic `c489633` установил действующий worker/renewal и TLS-отказ трёх сигналов SPIRE Sender. Fresh test initial inputs теперь выдают `central-write` от observability publisher CA, которую доверяет ingestion Delivery; internal CA остаётся доверием server/query/Grafana. Настоящий DeliveryServer проверяет отказ прежнего client issuer и durable ACK нового через mTLS; TLS/SAN/readiness guards и runtime не меняются. Прогноз перед правкой — 20–30 минут на разбор/проверки, затем 20–30 минут root gate.
 
 - Native root `80f7527` подтвердил public export, initial/repeat всех 57 ролей и доставку SPIRE renewal; следующий отказ — только Sender telemetry в UI. Failure context теперь читает существующий mTLS `/status` из собственного publisher и сохраняет bounded counters/flags/known codes, без raw logs/credentials и изменения readiness. Общий код context больше не утверждает, что любой поздний отказ относится к bootstrap. Прогноз перед правкой — 15–20 минут, затем 20–30 минут native gate.

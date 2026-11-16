@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import http.client
 import ipaddress
 import json
 import os
@@ -377,6 +378,32 @@ class Fixture:
 
     def diagnostic(self, output: Path) -> None:
         """Publish only source-declared failure codes, never raw operator output."""
+        from sender_diagnostic import read_status
+
+        central: dict[str, Any] = {"code": "ROOT_CENTRAL_DELIVERY_STATUS_UNAVAILABLE"}
+        try:
+            owner = self.root / "observability/delivery"
+            cfg = full_local.read_env(owner / ".env", self.root)
+            secrets = owner / cfg["AELEV_INFRASTRUCTURE_DELIVERY_SECRET_ROOT"]
+            central = {
+                "code": "ROOT_CENTRAL_DELIVERY_STATUS",
+                "status": read_status(
+                    "https://localhost:"
+                    + cfg["AELEV_INFRASTRUCTURE_DELIVERY_HEALTH_PORT"],
+                    str(secrets / "ca.crt"),
+                    str(secrets / "client.crt"),
+                    str(secrets / "client.key"),
+                ),
+            }
+        except (
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            http.client.HTTPException,
+            full_local.FullLocalError,
+        ):
+            pass
         allowed: set[str] = set()
         for source in (self.root / "spire/src/aelev_spire").glob("*.py"):
             for node in ast.walk(ast.parse(source.read_text())):
@@ -460,6 +487,7 @@ class Fixture:
                     "operations": operations,
                     "roles": roles,
                     "sender": sender,
+                    "central_delivery": central,
                 },
                 indent=2,
                 sort_keys=True,
