@@ -2,6 +2,10 @@
 
 ## 2026-11-17
 
+- Локальный full clean-room source `8ec6c3b` собрался и прошёл preflight/BOM, затем остановился до runtime на Docker inventory. Воспроизведено естественное исчезновение собственного `--rm` контейнера между list и inspect. Gate получает одну типизированную batch projection, исключает только Engine AutoRemove containers из постоянного baseline и допускает три read-only refresh; malformed/missing projection и изменение постоянного target не становятся PASS. Остальные resources и owner cleanup guards сохраняются. Прогноз correction + regressions/native proof — 25–35 минут; рабочие роли, source stack и runtime code не меняются.
+
+- Correction прошёл 22 адресных и 212 root tools tests, Black/Ruff, strict mypy и реальный Engine proof: transient disappearance пережит, persistent stop видим, 207 исходных постоянных контейнеров и остальные resources сохранены. `docs/audit/clean-room-inventory-20261117.md` связывает новый source hash и оба raw receipts; полный gate нового source остаётся pending, прежний FAIL не переписан.
+
 - Закрыт локальный Translator network queue proof: normal fixture и priority live с exact signed provider/worker, реальными Kafka/SQL consumer/worker/outbox, crash после broker ACK и тремя byte-identical результатами без recompute. Одно целое поле реальной сохранённой политики переведено `en → ru` и проверено по смыслу. Прогноз блока был 60–90 + 20–30 минут; corrective scopes и FAIL history сохранены в `docs/audit/translator-network-queue-20261117.md`. 23 transport regressions, Black/Ruff и strict mypy прошли, обе финальные проверки сохранили baseline 207. Runtime/stack, canonical profiles, работающие очереди и identities не меняются; полные deployment/CI/release и DRP E2E gates остаются открытыми.
 
 ## 2026-11-16

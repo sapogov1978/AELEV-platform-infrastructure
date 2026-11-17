@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "LOCAL_ENGINE_SNAPSHOT_REGRESSION_PASS",
+  "old_candidate_source": "8ec6c3bcacc0edb1e06a385a40a278d0e32d06b1",
+  "old_candidate_archive_sha256": "0262646fe8a8c89daa4f190a501fc5a002a25548cca53d84f57e4ab3bec7e8ff",
+  "old_full_gate": {
+    "status": "BLOCKED",
+    "code": "DOCKER_CONTAINER_INSPECT_FAILED",
+    "runtime_stage_started": false,
+    "original_failing_container_identity_recorded": false
+  },
+  "reproduction": {
+    "real_engine": true,
+    "own_auto_remove_verified": true,
+    "own_container_observed_in_real_listing": true,
+    "natural_exit_between_list_and_inspect": true,
+    "old_error_code_reproduced_on_own_container": true,
+    "private_receipt_sha256": "0a7b8c972038b9f6c87d58889a49a902ae0c82e6ccf13b01af08a564d8bb9aef"
+  },
+  "fixed_source": {
+    "file": "test_infrastructure/clean_room_gate.py",
+    "sha256": "54d918bd27c7721b257c2de31650de23041b8b7720cf9ef3a1ad024bb75038a8",
+    "container_projection": ["id", "state", "auto_remove"],
+    "container_scope": "persistent: HostConfig.AutoRemove=false",
+    "read_attempts": 3,
+    "inspect_timeout_seconds": 30,
+    "malformed_projection": "BLOCKED",
+    "network_volume_image_scope_unchanged": true,
+    "stage_owned_cleanup_guards_unchanged": true
+  },
+  "real_engine_regression": {
+    "transient_disappearance_recovered": true,
+    "persistent_state_change_visible": true,
+    "stopped_persistent_target_retained": true,
+    "original_persistent_containers": 207,
+    "all_baseline_resources_preserved": true,
+    "own_fixtures_removed": true,
+    "private_receipt_sha256": "8fc9a25768aa1ef9353d1dd9bc29ef28a49a2ef358a7ba060db27f8e36695333"
+  },
+  "checks": {
+    "focused_tests_passed": 22,
+    "new_regression_methods": 5,
+    "all_tools_tests_passed": 212,
+    "ruff": "PASS",
+    "black": "PASS",
+    "strict_mypy_gate": "PASS"
+  },
+  "private_evidence_root": "/Users/ksap/.local/share/aelev/evidence/infrastructure-integration-20261116/infra-candidate-1.1.8-8ec6c3b",
+  "runtime_code_modified": false,
+  "runtime_or_dependency_stack_modified": false,
+  "working_runtime_switched": false,
+  "queue_resume_issued": false,
+  "inference_requested": false,
+  "full_clean_room_verified": false,
+  "release_admitted": false,
+  "publication_performed": false
+}

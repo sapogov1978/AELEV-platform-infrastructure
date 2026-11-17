@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794873584.9605184,
-    "seen": 1794873639.4040499,
-    "ast_hash": "b509c149dd8f3c517320155ca85096e1",
+    "mtime": 1794879039.4876335,
+    "seen": 1794879119.569612,
+    "ast_hash": "f1e17173fab2ee407e96abadb4f6f209",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6126,9 +6126,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794837645.8920982,
-    "seen": 1794840099.140932,
-    "ast_hash": "52087ce283450de1332007eaa6a91117",
+    "mtime": 1794878676.698956,
+    "seen": 1794879119.564589,
+    "ast_hash": "9f8941afe94c205013a2273ba4f01adc",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794837645.535718,
-    "seen": 1794840099.141228,
-    "ast_hash": "e926e6b3b2d49adf3260e81429035b44",
+    "mtime": 1794879094.585135,
+    "seen": 1794879119.5778508,
+    "ast_hash": "e30f499ff5b76c19e9d7c921fcce2803",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
@@ -6150,9 +6150,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
-    "mtime": 1794837645.8536973,
-    "seen": 1794840099.140856,
-    "ast_hash": "0635d1dbc4ecfe8d69bc21b81d9bb311",
+    "mtime": 1794878676.6475866,
+    "seen": 1794879119.5620139,
+    "ast_hash": "c3a49b61097e4278514120b5f7fb8cf2",
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
@@ -6987,6 +6987,18 @@
     "mtime": 1794872914.7963107,
     "seen": 1794873639.4264069,
     "ast_hash": "20490346bd661605cb753a216f94c3c9",
+    "semantic_hash": ""
+  },
+  "docs/audit/clean-room-inventory-20261117.json": {
+    "mtime": 1794879039.4801273,
+    "seen": 1794879119.5454988,
+    "ast_hash": "87c2055750656aa2bf78e916c8da62f1",
+    "semantic_hash": ""
+  },
+  "docs/audit/clean-room-inventory-20261117.md": {
+    "mtime": 1794879039.4812336,
+    "seen": 1794879119.571601,
+    "ast_hash": "7b2c88aa5fda2e5c244a6d329812e940",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

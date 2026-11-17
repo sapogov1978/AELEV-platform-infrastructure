@@ -114,7 +114,11 @@ Root stage передаёт явный `--prepare-local-spire`, готовит �
 11. сбор, durable delivery, outage/recovery и Grafana-проекция наблюдения SPIRE;
 12. ограниченное восстановление с сохранением состояния.
 
-Runner сам устанавливает lock-pinned test drivers, выполняет owner lifecycle-сценарии последовательно, сохраняет внешние отчёты и логи, вычисляет их SHA-256, сверяет Docker baseline и повторно проверяет чистоту source tree. Каталог evidence должен находиться вне checkout и быть пустым:
+Runner сам устанавливает lock-pinned test drivers, выполняет owner lifecycle-сценарии последовательно, сохраняет внешние отчёты и логи, вычисляет их SHA-256, сверяет Docker baseline и повторно проверяет чистоту source tree. Каталог evidence должен находиться вне checkout и быть пустым.
+
+На операторской машине baseline учитывает все постоянные контейнеры, включая остановленные. `HostConfig.AutoRemove=true` исключается только из container baseline: такие процессы по [Docker `--rm`](https://docs.docker.com/reference/cli/docker/container/run/#clean-up---rm) закономерно исчезают после завершения. Типизированный [batch inspect](https://docs.docker.com/reference/cli/docker/container/inspect/) читает только ID, status и AutoRemove; исчезновение между list/inspect допускает не более трёх новых read-only снимков с 30-секундным timeout inspect. Это не атомарный snapshot и не повтор owner effects. Malformed/неполный ответ блокирует gate; исчезновение или смена status постоянного baseline target остаётся расхождением. Networks, volumes, images и собственные cleanup guards каждого этапа не исключаются и не смягчаются. Отчёт явно сохраняет `transient_container_policy=engine-auto-remove-excluded`.
+
+[Проверка snapshot на реальном Engine](../audit/clean-room-inventory-20261117.md) фиксирует controlled disappearance, обнаружение persistent stop и сохранность исходных ресурсов; она не подменяет полный функциональный gate ниже.
 
 ```sh
 CHROMIUM=$(command -v google-chrome || command -v chromium || true)

@@ -97,7 +97,7 @@ class FullLocalContractTests(unittest.TestCase):
                         "@sha256:162f07e6fd043eb3d9e04e7c415bee07771321a6f7f3864f"
                         "cba0ce1f80dd941e"
                     ),
-                }
+                },
             ],
         )
         self.assertEqual(
@@ -704,6 +704,121 @@ class FullLocalContractTests(unittest.TestCase):
                 "FUNCTION_ARTIFACT_DIGEST_MISMATCH:identity-login",
                 result["blocking_codes"],
             )
+
+
+class PersistentContainerSnapshotTests(unittest.TestCase):
+    permanent = "a" * 64
+    transient = "b" * 64
+
+    @staticmethod
+    def reply(stdout: str = "", code: int = 0) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess([], code, stdout, "")
+
+    def row(self, identity: str, state: str, auto_remove: object) -> str:
+        return (
+            json.dumps({"id": identity, "state": state, "auto_remove": auto_remove})
+            + "\n"
+        )
+
+    def test_auto_remove_is_not_a_persistent_baseline_member(self) -> None:
+        with mock.patch.object(
+            clean_room_gate,
+            "command",
+            side_effect=[
+                self.reply(self.permanent + "\n" + self.transient),
+                self.reply(
+                    self.row(self.permanent, "exited", False)
+                    + self.row(self.transient, "running", True)
+                ),
+            ],
+        ) as run:
+            self.assertEqual(
+                clean_room_gate.persistent_container_states(),
+                {self.permanent: "exited"},
+            )
+        self.assertEqual(run.call_count, 2)
+        self.assertEqual(
+            run.call_args_list[1].args[0][:3], ["docker", "container", "inspect"]
+        )
+
+    def test_disappearance_during_inspect_refreshes_read_only_membership(self) -> None:
+        with mock.patch.object(
+            clean_room_gate,
+            "command",
+            side_effect=[
+                self.reply(self.permanent + "\n" + self.transient),
+                self.reply("object disappeared", 1),
+                self.reply(self.permanent),
+                self.reply(self.row(self.permanent, "running", False)),
+            ],
+        ) as run:
+            self.assertEqual(
+                clean_room_gate.persistent_container_states(),
+                {self.permanent: "running"},
+            )
+        self.assertTrue(
+            all(call.args[0][2] in {"ls", "inspect"} for call in run.call_args_list)
+        )
+
+    def test_inspect_failures_have_three_attempts_without_mutation(self) -> None:
+        for error in (
+            self.reply("private failure", 1),
+            subprocess.TimeoutExpired("docker", 30),
+        ):
+            with (
+                self.subTest(error=type(error).__name__),
+                mock.patch.object(
+                    clean_room_gate,
+                    "command",
+                    side_effect=[self.reply(self.permanent), error] * 3,
+                ) as run,
+            ):
+                with self.assertRaisesRegex(
+                    clean_room_gate.GateError, "^DOCKER_CONTAINER_INSPECT_FAILED$"
+                ):
+                    clean_room_gate.persistent_container_states()
+                self.assertEqual(run.call_count, 6)
+
+    def test_malformed_or_incomplete_projection_fails_closed(self) -> None:
+        for raw in (
+            self.row(self.permanent, "running", 1),
+            self.row(self.transient, "running", False),
+            "",
+            "[]\n",
+        ):
+            with (
+                self.subTest(raw=raw),
+                mock.patch.object(
+                    clean_room_gate,
+                    "command",
+                    side_effect=[self.reply(self.permanent), self.reply(raw)],
+                ),
+            ):
+                with self.assertRaisesRegex(
+                    clean_room_gate.GateError, "^DOCKER_CONTAINER_INSPECT_INVALID$"
+                ):
+                    clean_room_gate.persistent_container_states()
+
+    def test_persistent_loss_and_state_change_remain_visible(self) -> None:
+        with mock.patch.object(
+            clean_room_gate,
+            "command",
+            side_effect=[
+                self.reply(self.permanent),
+                self.reply(self.row(self.permanent, "running", False)),
+                self.reply(self.permanent),
+                self.reply(self.row(self.permanent, "exited", False)),
+                self.reply(),
+            ],
+        ):
+            before = clean_room_gate.persistent_container_states()
+            stopped = clean_room_gate.persistent_container_states()
+            removed = clean_room_gate.persistent_container_states()
+        self.assertEqual(before, {self.permanent: "running"})
+        self.assertEqual(stopped, {self.permanent: "exited"})
+        self.assertEqual(removed, {})
+        self.assertNotEqual(before, stopped)
+        self.assertNotEqual(before, removed)
 
 
 if __name__ == "__main__":

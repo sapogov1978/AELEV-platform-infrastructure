@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -78,26 +79,95 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def persistent_container_states() -> dict[str, str]:
+    """Sample persistent containers without pinning normal --rm lifetimes."""
+    projection = (
+        '{"id":{{json .Id}},"state":{{json .State.Status}},'
+        '"auto_remove":{{json .HostConfig.AutoRemove}}}'
+    )
+    for _attempt in range(3):
+        listing = command(
+            ["docker", "container", "ls", "-aq", "--no-trunc"], timeout=30
+        )
+        if listing.returncode:
+            raise GateError("DOCKER_INVENTORY_FAILED:container")
+        identifiers = listing.stdout.split()
+        if not identifiers:
+            return {}
+        if len(identifiers) != len(set(identifiers)) or any(
+            re.fullmatch(r"[a-f0-9]{64}", identity) is None for identity in identifiers
+        ):
+            raise GateError("DOCKER_CONTAINER_INSPECT_INVALID")
+        try:
+            inspected = command(
+                [
+                    "docker",
+                    "container",
+                    "inspect",
+                    "--format",
+                    projection,
+                    *identifiers,
+                ],
+                timeout=30,
+            )
+        except subprocess.TimeoutExpired:
+            continue
+        if inspected.returncode:
+            # Read-only retry samples membership again. After owner effects a
+            # missing persistent baseline ID still fails the final comparison.
+            continue
+        states: dict[str, str] = {}
+        seen: set[str] = set()
+        try:
+            for line in inspected.stdout.splitlines():
+                value = json.loads(line)
+                if (
+                    not isinstance(value, dict)
+                    or set(value) != {"id", "state", "auto_remove"}
+                    or not isinstance(value["id"], str)
+                    or value["id"] not in identifiers
+                    or value["id"] in seen
+                    or type(value["auto_remove"]) is not bool
+                    or not isinstance(value["state"], str)
+                    or value["state"]
+                    not in {
+                        "created",
+                        "restarting",
+                        "running",
+                        "removing",
+                        "paused",
+                        "exited",
+                        "dead",
+                    }
+                ):
+                    raise ValueError("invalid container projection")
+                seen.add(value["id"])
+                if not value["auto_remove"]:
+                    states[value["id"]] = value["state"]
+            if seen != set(identifiers):
+                raise ValueError("incomplete container projection")
+        except (ValueError, TypeError, KeyError) as error:
+            raise GateError("DOCKER_CONTAINER_INSPECT_INVALID") from error
+        return states
+    raise GateError("DOCKER_CONTAINER_INSPECT_FAILED")
+
+
 def docker_inventory() -> dict[str, Any]:
-    result: dict[str, Any] = {}
-    for kind in ("container", "network", "volume", "image"):
+    states = persistent_container_states()
+    result: dict[str, Any] = {
+        "container": sorted(states),
+        "container_states": states,
+        "transient_container_policy": "engine-auto-remove-excluded",
+    }
+    for kind in ("network", "volume", "image"):
         listing = command(
             ["docker", kind, "ls", "-aq"]
-            if kind in {"container", "image"}
+            if kind == "image"
             else ["docker", kind, "ls", "-q"]
         )
         if listing.returncode:
             raise GateError(f"DOCKER_INVENTORY_FAILED:{kind}")
         result[kind] = sorted(listing.stdout.split())
-    states: dict[str, str] = {}
-    for identity in result["container"]:
-        inspected = command(
-            ["docker", "inspect", "--format", "{{.State.Status}}", identity]
-        )
-        if inspected.returncode:
-            raise GateError("DOCKER_CONTAINER_INSPECT_FAILED")
-        states[identity] = inspected.stdout.strip()
-    result["container_states"] = states
     return result
 
 
