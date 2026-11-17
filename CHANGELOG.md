@@ -2,6 +2,8 @@
 
 ## 2026-11-17
 
+- Full clean-room теперь отказывает до driver install/build при совпадении source-build/local-build image aliases с прежними образами Engine: `BUILD_IMAGE_REFERENCE_COLLISION_CLEAN_ENGINE_REQUIRED`. Прежняя сборка на общем Engine переназначила 32 тега, после чего exact старые image IDs перестали разрешаться; все 207 постоянных контейнеров и их данные сохранены, полный image-cache rollback не подтверждён. Runtime не переключается. Прогноз guard/регрессий и фиксации инцидента — 15–20 минут; следующий полный прогон требует отдельного чистого Engine.
+
 - Реальная source build `6556d65` завершилась и replay сохранил прежнюю квитанцию, но offline запуск от UID 10001 выявил нечитаемый package directory: operator umask 0077 переносил `0700` в Docker COPY. Snapshot теперь явно задаёт публичным source directories `0755` под закрытым ancestor `0700`, файлам прежние `0755/0644`; context hash включает directory mode. Прежний runtime FAIL сохраняется, а исправление проверяется новым exact source, без изменения Dockerfile/OS/Python/dependencies. Прогноз correction и нового native proof — 10–15 минут.
 
 - Добавляется отдельная public `owner-build` procedure по 00-INFRA-0020: native source build из manifest-only snapshot, private BuildKit metadata и typed image/context/parameters receipt через прежний node journal. Opaque roles и секретные/неизвестные ARG закрыто отклоняются; workload startup, retag/push, admission и RESUME не выполняются. Прогноз первого code/регрессии/реальной owner build — 60–90 минут; canonical Dockerfiles, стек и работающие images не меняются.

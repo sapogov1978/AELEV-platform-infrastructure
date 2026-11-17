@@ -706,6 +706,128 @@ class FullLocalContractTests(unittest.TestCase):
             )
 
 
+class BuildReferenceCollisionTests(unittest.TestCase):
+    def test_existing_owner_or_local_build_alias_refuses_before_writes(self) -> None:
+        model = {
+            "services": {
+                "source": {"image": "qualification/runtime:local", "build": {}},
+                "provider": {
+                    "image": "registry.invalid/provider@sha256:" + "a" * 64,
+                    "build": {},
+                },
+            }
+        }
+        local = [{"image": "qualification/operator:local"}]
+        for repository, tag in (
+            ("qualification/runtime", "local"),
+            ("qualification/operator", "local"),
+        ):
+            with (
+                self.subTest(repository=repository),
+                mock.patch.object(
+                    clean_room_gate,
+                    "command",
+                    return_value=subprocess.CompletedProcess(
+                        [], 0, json.dumps({"Repository": repository, "Tag": tag}), ""
+                    ),
+                ) as run,
+            ):
+                with self.assertRaisesRegex(
+                    clean_room_gate.GateError,
+                    "^BUILD_IMAGE_REFERENCE_COLLISION_CLEAN_ENGINE_REQUIRED$",
+                ):
+                    clean_room_gate.assert_no_build_reference_collisions(model, local)
+                run.assert_called_once()
+                self.assertEqual(run.call_args.args[0][0:3], ["docker", "image", "ls"])
+
+    def test_pinned_inputs_unrelated_aliases_and_empty_store_are_allowed(self) -> None:
+        model = {
+            "services": {
+                "source": {"image": "qualification/runtime:local", "build": {}},
+                "provider": {
+                    "image": "registry.invalid/provider@sha256:" + "a" * 64,
+                    "build": {},
+                },
+            }
+        }
+        for raw in (
+            "",
+            json.dumps({"Repository": "unrelated/application", "Tag": "retained"}),
+            json.dumps({"Repository": "<none>", "Tag": "<none>"}),
+        ):
+            with mock.patch.object(
+                clean_room_gate,
+                "command",
+                return_value=subprocess.CompletedProcess([], 0, raw, ""),
+            ):
+                clean_room_gate.assert_no_build_reference_collisions(model, [])
+
+    def test_invalid_listing_fails_closed(self) -> None:
+        for raw, code in (
+            ("private error", 1),
+            ("[]", 0),
+            ('{"Repository":null,"Tag":"local"}', 0),
+        ):
+            with mock.patch.object(
+                clean_room_gate,
+                "command",
+                return_value=subprocess.CompletedProcess([], code, raw, ""),
+            ):
+                with self.assertRaises(clean_room_gate.GateError):
+                    clean_room_gate.assert_no_build_reference_collisions(
+                        {"services": {}}, []
+                    )
+
+    def test_main_rejects_collision_before_driver_or_build(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            password, chromium = root / "password", root / "chromium"
+            password.touch()
+            chromium.touch()
+            args = [
+                "clean_room_gate.py",
+                "--output",
+                str(root / "result"),
+                "--viewer-user",
+                "operator",
+                "--viewer-password-file",
+                str(password),
+                "--chromium",
+                str(chromium),
+            ]
+            with (
+                mock.patch.object(sys, "argv", args),
+                mock.patch.object(
+                    clean_room_gate,
+                    "command",
+                    return_value=subprocess.CompletedProcess([], 0, "", ""),
+                ),
+                mock.patch.object(
+                    clean_room_gate,
+                    "rendered_root_model",
+                    return_value={"services": {}},
+                ),
+                mock.patch.object(
+                    clean_room_gate,
+                    "assert_no_build_reference_collisions",
+                    side_effect=clean_room_gate.GateError(
+                        "BUILD_IMAGE_REFERENCE_COLLISION_CLEAN_ENGINE_REQUIRED"
+                    ),
+                ),
+                mock.patch.object(clean_room_gate, "prepare_drivers") as drivers,
+                mock.patch.object(clean_room_gate, "run_logged") as build,
+            ):
+                self.assertEqual(clean_room_gate.main(), 2)
+                drivers.assert_not_called()
+                build.assert_not_called()
+            self.assertEqual(
+                json.loads((root / "result/blocked-run.json").read_text())[
+                    "blocking_code"
+                ],
+                "BUILD_IMAGE_REFERENCE_COLLISION_CLEAN_ENGINE_REQUIRED",
+            )
+
+
 class PersistentContainerSnapshotTests(unittest.TestCase):
     permanent = "a" * 64
     transient = "b" * 64

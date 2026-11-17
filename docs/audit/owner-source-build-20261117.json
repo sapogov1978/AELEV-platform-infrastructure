@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "LOCAL_NATIVE_OWNER_SOURCE_BUILD_AND_REPLAY_PASS",
+  "executor_source_commit": "d98472d8db2beb72ea09fb2214e5b5a274f91b77",
+  "executor_archive_sha256": "570ab1a48eac693005a09662bdc2e5e80b5210336e2fa160dc368b5170bf4715",
+  "owner_repository": "sapogov1978/AELEV-discovery-research-platform",
+  "owner_source_commit": "6910fdac4430b4d4bde2f11aa6be3602b9c77f32",
+  "owner_role": "discovery-research-platform/policy-management-api",
+  "owner_source_revalidated": true,
+  "recipe": "services/research-management/policy-management/Dockerfile",
+  "target": "runtime",
+  "platform": "linux/arm64",
+  "native_image_id": "sha256:963a187131ddafacefb90bb78dd3f86a5ccd8f9efa6e195feea9f120b4b9fb6e",
+  "context_sha256": "0582d7a3ca9ee7a8fd3c4ec4fc588ce95dc64317d6966f2325f6af504f64ec00",
+  "parameters_sha256": "223fbe3345bf25e2165f9fcd1572d8ad23f89d69a4d0c24662912a54a1b87925",
+  "build_metadata_sha256": "947581c2093bd0a2c353879bda30891d366b36ea0029b2c4daf92c3169d760e5",
+  "qualification_receipt_sha256": "263c0a070eaa5060ef940414b43edb725cb6393d74454fc3953508f0d3a5af9a",
+  "first_and_repeated_node_receipt_sha256": "6a99a25fc9b5928e374daaa1d9da2e0961129ffe8373c3988bce9b4dd458f271",
+  "replay_equal": true,
+  "metadata_mtime_unchanged_on_replay": true,
+  "offline_runtime": {
+    "network": "none",
+    "python": "3.13.7",
+    "sqlite": "3.53.4",
+    "schema_head": "20261014_0007",
+    "migrations_sha256": "b4bdadd7a1a926c5739615e06f9bb8940b61489c3c24c5e511fc59cdc16583d4",
+    "stdout_sha256": "299d0f6c870ac1ef908805e0477eb0f8525a334eead345d1ae17dbda41bc2323"
+  },
+  "source_files_sha256": {
+    "tools/owner_build.py": "609b7499f414fd612876277c7d6ddd0185f4d8559119bef9e9d5a782b9973d60",
+    "tools/node_execution.py": "18e056424870f2e2d7e1ea50658f14732cf0a1d7bbf4a91d2c65bb8473ae22fd"
+  },
+  "historical_failure": {
+    "source": "6556d6592c8eaff4faa3a3600220b8a088a4cfdc",
+    "receipt_sha256": "6aa11a69f5257219fe1f5da63b1e144b20e73526b912f152d00022b31c6c33bc",
+    "cause": "nested source directories 0700 unreadable to runtime UID 10001",
+    "old_failure_preserved": true
+  },
+  "baseline_scope": "only this tagless build scenario, after the earlier full-local tag collision incident",
+  "original_persistent_containers": 207,
+  "own_verifier_removed": true,
+  "private_evidence_root": "/Users/ksap/.local/share/aelev/evidence/infrastructure-integration-20261116/owner-build-20261117",
+  "public_platform_preflight_exercised": false,
+  "image_admitted": false,
+  "owner_readiness_verified": false,
+  "full_platform_e2e_verified": false,
+  "physical_distribution_verified": false,
+  "queue_resume_issued": false,
+  "inference_requested": false,
+  "release_published": false
+}

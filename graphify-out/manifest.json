@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794883636.1112754,
-    "seen": 1794883699.831895,
-    "ast_hash": "51c25a940fd1eadd43d8eeed6c1af2a1",
+    "mtime": 1794887293.977171,
+    "seen": 1794887539.9312809,
+    "ast_hash": "e2c6d26773989070e129699b0e106aff",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6126,9 +6126,9 @@
     "semantic_hash": ""
   },
   "tools/test_full_local.py": {
-    "mtime": 1794878676.698956,
-    "seen": 1794879119.564589,
-    "ast_hash": "9f8941afe94c205013a2273ba4f01adc",
+    "mtime": 1794887294.756781,
+    "seen": 1794887539.924978,
+    "ast_hash": "ec2cbc46a3bb96e2a4a97caaa4e7c65a",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261106-0015-clean-room-full-local-reproduction.md": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794882105.0828133,
-    "seen": 1794882427.499169,
-    "ast_hash": "b0d1188846e27b1ffbbe512274d8c3a1",
+    "mtime": 1794887293.9776142,
+    "seen": 1794887539.941421,
+    "ast_hash": "ceaa39a0cc30239544b7ab8cc0b229fd",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
@@ -6150,9 +6150,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/clean_room_gate.py": {
-    "mtime": 1794878676.6475866,
-    "seen": 1794879119.5620139,
-    "ast_hash": "c3a49b61097e4278514120b5f7fb8cf2",
+    "mtime": 1794887293.9754708,
+    "seen": 1794887539.921885,
+    "ast_hash": "7e7e41723de6db70a7e1213e9f4b0b82",
     "semantic_hash": ""
   },
   "translator-service/prepare-local.py": {
@@ -7035,6 +7035,24 @@
     "mtime": 1794883535.2448776,
     "seen": 1794883606.5787961,
     "ast_hash": "26ec0d08f28df12da97e3f042e883d31",
+    "semantic_hash": ""
+  },
+  "docs/audit/owner-source-build-20261117.json": {
+    "mtime": 1794887513.742829,
+    "seen": 1794887539.901599,
+    "ast_hash": "586f4905aa95fbf5e161f266d4bd09bf",
+    "semantic_hash": ""
+  },
+  "docs/audit/owner-source-build-20261117.md": {
+    "mtime": 1794887513.7426763,
+    "seen": 1794887539.941068,
+    "ast_hash": "a3cec0d6fc29f79ef54ad0da4f9f8793",
+    "semantic_hash": ""
+  },
+  "docs/audit/shared-engine-build-incident-20261117.md": {
+    "mtime": 1794887513.7430105,
+    "seen": 1794887539.941261,
+    "ast_hash": "5067072b29f5adbe9247538fa91bd20d",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

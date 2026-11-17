@@ -200,6 +200,37 @@ def rendered_root_model() -> dict[str, Any]:
     return value
 
 
+def assert_no_build_reference_collisions(
+    model: dict[str, Any], local_builds: list[dict[str, Any]]
+) -> None:
+    """Never overwrite a preexisting image alias while preparing acceptance."""
+    targets = {
+        row["image"]
+        for row in model["services"].values()
+        if "build" in row and "@sha256:" not in row["image"]
+    } | {row["image"] for row in local_builds}
+    listed = command(
+        ["docker", "image", "ls", "--all", "--no-trunc", "--format", "{{json .}}"],
+        timeout=30,
+    )
+    if listed.returncode:
+        raise GateError("DOCKER_IMAGE_INVENTORY_FAILED")
+    aliases = set()
+    try:
+        for line in listed.stdout.splitlines():
+            row = json.loads(line)
+            if not isinstance(row, dict) or any(
+                not isinstance(row.get(key), str) for key in ("Repository", "Tag")
+            ):
+                raise ValueError("invalid image projection")
+            if row["Repository"] != "<none>" and row["Tag"] != "<none>":
+                aliases.add(row["Repository"] + ":" + row["Tag"])
+    except (ValueError, TypeError, KeyError) as error:
+        raise GateError("DOCKER_IMAGE_INVENTORY_INVALID") from error
+    if targets & aliases:
+        raise GateError("BUILD_IMAGE_REFERENCE_COLLISION_CLEAN_ENGINE_REQUIRED")
+
+
 def stage_plan(arguments: argparse.Namespace, output: Path) -> list[Stage]:
     model = rendered_root_model()
     services = model["services"]
@@ -605,6 +636,10 @@ def main() -> int:
             raise GateError("VIEWER_PASSWORD_FILE_MISSING")
         if not arguments.chromium.is_file():
             raise GateError("CHROMIUM_EXECUTABLE_MISSING")
+        assert_no_build_reference_collisions(
+            rendered_root_model(),
+            json.loads((ROOT / "full-local.json").read_text())["local_builds"],
+        )
         prepare_drivers(output)
         run_logged(
             "full-local-build",
