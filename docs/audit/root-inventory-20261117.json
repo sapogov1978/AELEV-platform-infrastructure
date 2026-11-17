@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "LOCAL_ROOT_INVENTORY_REGRESSION_PASS_FULL_GATE_BLOCKED",
+  "full_gate_source": "601ed2e017ef413dc16a48c1749bb21056d53f01",
+  "archive_sha256": "ba7bbfb8197133533a4947d1ff71e70003afaff30f0776384746b663638b9b5a",
+  "full_gate": {
+    "build": "PASS",
+    "preflight": "PASS",
+    "bom": "PASS",
+    "bom_images": 37,
+    "functional_result": "BLOCKED",
+    "code": "STAGE_FAILED:root-lifecycle",
+    "engine_error": "all predefined address pools have been fully subnetted",
+    "kafka_container_created": false,
+    "blocked_receipt_sha256": "0420f5cc185f4ee8725be9ee8ce3e9f038b2e35a7f6db5b67ce5b360dc07bb0c",
+    "classified_diagnostic_sha256": "99f120ddf62b7143e5c3f0fc867c1e6801fb8bd8b5b92d94be577be2ee75ee5f"
+  },
+  "fixed_source": {
+    "file": "test_infrastructure/resources.py",
+    "sha256": "1ecde2ccc92b548e1f397d4d75c2d45282feb09a29c0ab3b14e476f17ffde6b8",
+    "inventory_retains_transient_writers_and_cleanup_targets": true,
+    "baseline_comparison_excludes_only_explicit_auto_remove": true,
+    "read_attempts": 3,
+    "malformed_or_incomplete_projection": "BLOCKED",
+    "permanent_resources_preservation_required": true
+  },
+  "native_regression": {
+    "status": "PASS",
+    "receipt_sha256": "3264030602083a0334288909e28171ee87146d01c493aaa0ee9470e7275d8cfb",
+    "natural_transient_exit_preserves_baseline": true,
+    "persistent_stop_detected": true,
+    "original_persistent_containers": 207,
+    "baseline_resources_preserved": true,
+    "own_fixtures_removed": true
+  },
+  "checks": {
+    "orchestration_and_spire_fixture_tests": 117,
+    "tools_tests": 212,
+    "black": "PASS",
+    "ruff": "PASS",
+    "strict_mypy_resources": "PASS",
+    "bandit_pinned_183_files": "PASS"
+  },
+  "private_evidence_root": "/Users/ksap/.local/share/aelev/evidence/infrastructure-integration-20261116/infra-candidate-1.1.8-8ec6c3b",
+  "working_runtime_switched": false,
+  "runtime_stack_modified": false,
+  "queue_resume_issued": false,
+  "inference_requested": false,
+  "full_clean_room_verified": false,
+  "release_admitted": false,
+  "publication_performed": false
+}

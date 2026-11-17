@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+import subprocess
 from collections.abc import Callable
 from typing import Any
 
@@ -18,6 +20,54 @@ def owned(row: dict[str, str], project: str, owners: Owners = frozenset()) -> bo
     )
 
 
+def container_listing(execute: Execute) -> list[dict[str, Any]]:
+    """Keep transient writers/owned tasks visible while marking their lifetime."""
+    projection = '{"id":{{json .Id}},"auto_remove":{{json .HostConfig.AutoRemove}}}'
+    for _attempt in range(3):
+        rows = [
+            json.loads(line)
+            for line in execute(
+                ["docker", "container", "ls", "--all", "--no-trunc", "--format", "json"]
+            ).splitlines()
+        ]
+        identifiers = [row["ID"] for row in rows]
+        if not identifiers:
+            return []
+        if len(identifiers) != len(set(identifiers)) or any(
+            not isinstance(identity, str)
+            or re.fullmatch(r"[a-f0-9]{64}", identity) is None
+            for identity in identifiers
+        ):
+            raise RuntimeError("DOCKER_CONTAINER_INSPECT_INVALID")
+        try:
+            raw = execute(
+                ["docker", "container", "inspect", "--format", projection, *identifiers]
+            )
+        except (RuntimeError, subprocess.TimeoutExpired):
+            # No write or retry of an owner effect; refresh list membership.
+            continue
+        flags: dict[str, bool] = {}
+        try:
+            for line in raw.splitlines():
+                value = json.loads(line)
+                if (
+                    not isinstance(value, dict)
+                    or set(value) != {"id", "auto_remove"}
+                    or not isinstance(value["id"], str)
+                    or value["id"] not in identifiers
+                    or value["id"] in flags
+                    or type(value["auto_remove"]) is not bool
+                ):
+                    raise ValueError("invalid container projection")
+                flags[value["id"]] = value["auto_remove"]
+            if set(flags) != set(identifiers):
+                raise ValueError("incomplete container projection")
+        except (ValueError, TypeError, KeyError) as error:
+            raise RuntimeError("DOCKER_CONTAINER_INSPECT_INVALID") from error
+        return [{**row, "AutoRemove": flags[row["ID"]]} for row in rows]
+    raise RuntimeError("DOCKER_CONTAINER_INSPECT_FAILED")
+
+
 def inventory(execute: Execute) -> Inventory:
     result: Inventory = {}
     for kind, arguments in {
@@ -27,8 +77,17 @@ def inventory(execute: Execute) -> Inventory:
         "images": ["image", "ls", "--all", "--no-trunc"],
     }.items():
         resources: dict[str, dict[str, str]] = {}
-        for line in execute(["docker", *arguments, "--format", "json"]).splitlines():
-            row = json.loads(line)
+        rows = (
+            container_listing(execute)
+            if kind == "containers"
+            else [
+                json.loads(line)
+                for line in execute(
+                    ["docker", *arguments, "--format", "json"]
+                ).splitlines()
+            ]
+        )
+        for row in rows:
             identity = row["Name"] if kind == "volumes" else row["ID"]
             labels = dict(
                 item.split("=", 1)
@@ -50,6 +109,8 @@ def inventory(execute: Execute) -> Inventory:
                     "owner": labels.get("io.aelev.owner", ""),
                     "installation": labels.get("io.aelev.installation", ""),
                 }
+                if kind == "containers":
+                    resources[identity]["auto_remove"] = str(row["AutoRemove"])
         result[kind] = resources
     return result
 
@@ -150,6 +211,8 @@ def verify_preserved(
 ) -> None:
     for kind, resources in before.items():
         for identity, row in resources.items():
+            if kind == "containers" and row.get("auto_remove") == "True":
+                continue
             if after[kind].get(identity) != row:
                 raise RuntimeError(f"pre-existing {kind} changed")
     if any(

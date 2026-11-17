@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -993,6 +994,114 @@ def test_inventory_merges_image_tags_without_losing_protection() -> None:
         "--format",
         "json",
     ] in calls
+
+
+def test_inventory_keeps_auto_remove_writers_and_cleanup_targets() -> None:
+    transient = "b" * 64
+
+    def listing(arguments: list[str]) -> str:
+        if arguments[1:3] == ["container", "ls"]:
+            return json.dumps(
+                {
+                    "ID": transient,
+                    "Names": "task",
+                    "State": "running",
+                    "Labels": "com.docker.compose.project=owned",
+                }
+            )
+        if arguments[1:3] == ["container", "inspect"]:
+            return json.dumps({"id": transient, "auto_remove": True})
+        return ""
+
+    current = inventory(listing)
+    assert current["containers"][transient]["auto_remove"] == "True"
+    assert cleanup_plan(empty(), current, "owned", set())["containers"] == [transient]
+    foreign = copy.deepcopy(current)
+    foreign["containers"][transient]["project"] = "foreign"
+    with pytest.raises(RuntimeError, match="another running container mounts"):
+        preflight(
+            lambda args: '[{"Type":"volume","Name":"data"}]', foreign, model(), False
+        )
+
+
+def test_inventory_refreshes_after_transient_disappearance() -> None:
+    permanent, transient = "a" * 64, "b" * 64
+    calls: list[list[str]] = []
+    replies: list[str | Exception] = [
+        json.dumps({"ID": permanent}) + "\n" + json.dumps({"ID": transient}),
+        RuntimeError("object disappeared"),
+        json.dumps({"ID": permanent}),
+        json.dumps({"id": permanent, "auto_remove": False}),
+    ]
+
+    def listing(arguments: list[str]) -> str:
+        calls.append(arguments)
+        if arguments[1] != "container":
+            return ""
+        answer = replies.pop(0)
+        if isinstance(answer, Exception):
+            raise answer
+        return answer
+
+    assert set(inventory(listing)["containers"]) == {permanent}
+    assert all(arguments[2] in {"ls", "inspect"} for arguments in calls)
+
+
+@pytest.mark.parametrize(
+    "error", [RuntimeError("private failure"), subprocess.TimeoutExpired("docker", 30)]
+)
+def test_inventory_bounds_read_only_refresh(error: Exception) -> None:
+    calls: list[list[str]] = []
+
+    def listing(arguments: list[str]) -> str:
+        calls.append(arguments)
+        if arguments[2] == "inspect":
+            raise error
+        return json.dumps({"ID": "a" * 64})
+
+    with pytest.raises(RuntimeError, match="^DOCKER_CONTAINER_INSPECT_FAILED$"):
+        inventory(listing)
+    assert len(calls) == 6
+    assert all(arguments[2] in {"ls", "inspect"} for arguments in calls)
+
+
+@pytest.mark.parametrize(
+    "projection",
+    [
+        {"id": "a" * 64, "auto_remove": 1},
+        {"id": "b" * 64, "auto_remove": False},
+        [],
+        None,
+    ],
+)
+def test_inventory_rejects_invalid_lifetime_projection(projection: Any) -> None:
+    def listing(arguments: list[str]) -> str:
+        return json.dumps({"ID": "a" * 64} if arguments[2] == "ls" else projection)
+
+    with pytest.raises(RuntimeError, match="^DOCKER_CONTAINER_INSPECT_INVALID$"):
+        inventory(listing)
+
+
+def test_preservation_ignores_only_explicit_auto_remove_baseline_containers() -> None:
+    before, after = empty(), empty()
+    before["containers"]["temporary"] = {**row(), "auto_remove": "True"}
+    verify_preserved(before, after, "owned")
+    for flag in ("False", "true", "", None):
+        before["containers"]["temporary"] = (
+            row() if flag is None else {**row(), "auto_remove": flag}
+        )
+        with pytest.raises(RuntimeError, match="pre-existing containers changed"):
+            verify_preserved(before, after, "owned")
+    before = empty()
+    before["containers"]["persistent"] = {
+        **row(),
+        "auto_remove": "False",
+        "state": "running",
+    }
+    after = copy.deepcopy(before)
+    after["containers"]["persistent"]["state"] = "exited"
+    with pytest.raises(RuntimeError, match="pre-existing containers changed"):
+        verify_preserved(before, after, "owned")
 
 
 def status(sequence: int) -> dict[str, Any]:

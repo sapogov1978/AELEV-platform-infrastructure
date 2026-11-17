@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794879039.4876335,
-    "seen": 1794879119.569612,
-    "ast_hash": "f1e17173fab2ee407e96abadb4f6f209",
+    "mtime": 1794882105.082194,
+    "seen": 1794882427.49399,
+    "ast_hash": "cca131f2fe6ff16c61d217704c4cca64",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -2448,9 +2448,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/resources.py": {
-    "mtime": 1794837645.866989,
-    "seen": 1794840099.140863,
-    "ast_hash": "0c127507e26360cceb469afe66eb10c3",
+    "mtime": 1794882075.952689,
+    "seen": 1794882427.489811,
+    "ast_hash": "39ef613c336557b5b9afdd26dbb10b44",
     "semantic_hash": ""
   },
   "test_infrastructure/restart_intent_sandbox.py": {
@@ -2496,9 +2496,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/test_orchestration.py": {
-    "mtime": 1794837645.8744905,
-    "seen": 1794840099.140876,
-    "ast_hash": "3a3c6edde5e1ddee48f006206673e556",
+    "mtime": 1794882105.7208855,
+    "seen": 1794882427.490092,
+    "ast_hash": "1e495e24b1fc9005e4f1bea5ab5a7c42",
     "semantic_hash": ""
   },
   "test_infrastructure/test_recovery.py": {
@@ -6138,9 +6138,9 @@
     "semantic_hash": ""
   },
   "docs/operations/clean-room-reproduction.md": {
-    "mtime": 1794879094.585135,
-    "seen": 1794879119.5778508,
-    "ast_hash": "e30f499ff5b76c19e9d7c921fcce2803",
+    "mtime": 1794882105.0828133,
+    "seen": 1794882427.499169,
+    "ast_hash": "b0d1188846e27b1ffbbe512274d8c3a1",
     "semantic_hash": ""
   },
   ".github/workflows/clean-room.yml": {
@@ -6999,6 +6999,18 @@
     "mtime": 1794879039.4812336,
     "seen": 1794879119.571601,
     "ast_hash": "7b2c88aa5fda2e5c244a6d329812e940",
+    "semantic_hash": ""
+  },
+  "docs/audit/root-inventory-20261117.json": {
+    "mtime": 1794882406.8189447,
+    "seen": 1794882427.4790819,
+    "ast_hash": "8cda8bb61eea4f6fe0f473ec53f2ea9f",
+    "semantic_hash": ""
+  },
+  "docs/audit/root-inventory-20261117.md": {
+    "mtime": 1794882406.8186226,
+    "seen": 1794882427.499082,
+    "ast_hash": "ab5df8c1bd5443a42d2444681ef324a3",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

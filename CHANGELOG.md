@@ -2,6 +2,9 @@
 
 ## 2026-11-17
 
+- Внутренний root lifecycle теперь отдельно отмечает Engine AutoRemove в общей inventory. Такие контейнеры сохраняются для проверки чужих писателей и адресного cleanup; только сравнение прежнего baseline допускает их естественное завершение. Batch lifetime projection получает три ограниченных read-only refresh; malformed/incomplete response закрыто отклоняется. Постоянные контейнеры, сети, тома и образы по-прежнему должны совпадать. Прогноз коррекции и регрессий — 25–35 минут; runtime/stack/Process Control не меняются.
+- Полный локальный gate `601ed2e` прошёл build/preflight/BOM 37 images, но root Kafka startup получил от Engine `all predefined address pools have been fully subnetted` до создания Kafka. Это сохранённый BLOCKED, не функциональный PASS и не ошибка Kafka. Рабочие endpoints, Docker daemon и прежние сети ради повтора не изменяются; независимый local network queue proof сохраняет собственную область.
+
 - Локальный full clean-room source `8ec6c3b` собрался и прошёл preflight/BOM, затем остановился до runtime на Docker inventory. Воспроизведено естественное исчезновение собственного `--rm` контейнера между list и inspect. Gate получает одну типизированную batch projection, исключает только Engine AutoRemove containers из постоянного baseline и допускает три read-only refresh; malformed/missing projection и изменение постоянного target не становятся PASS. Остальные resources и owner cleanup guards сохраняются. Прогноз correction + regressions/native proof — 25–35 минут; рабочие роли, source stack и runtime code не меняются.
 
 - Correction прошёл 22 адресных и 212 root tools tests, Black/Ruff, strict mypy и реальный Engine proof: transient disappearance пережит, persistent stop видим, 207 исходных постоянных контейнеров и остальные resources сохранены. `docs/audit/clean-room-inventory-20261117.md` связывает новый source hash и оба raw receipts; полный gate нового source остаётся pending, прежний FAIL не переписан.
