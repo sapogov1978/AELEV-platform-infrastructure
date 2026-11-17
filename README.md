@@ -1,5 +1,6 @@
 # AELEV Platform Infrastructure
 
+Локальный SDK candidate поддерживает [подготовку owner workspace](docs/api/owner-prepare.md) из pinned public source и exact private env перед owner-compose. Он не заменяет PKI/credential issuance, image admission или полный installer; действующие роли и настройки не переключаются.
 Опись всех владельческих ролей находится в [deployment-catalog.json](deployment-catalog.json); [проверка размещения](docs/api/placement.md) принимает явные узлы, replicas, immutable artifacts, credentials/state refs и сетевые связи. Текущий интерфейс проверяет план без запуска; он ещё не заменяет полный установочный workflow или физическую распределённую приёмку.
 
 Самостоятельная целенезависимая поставка технической инфраструктуры: Kafka, PostgreSQL, объектное хранение, идентификация, Platform UI, наблюдаемость, контролируемый сетевой доступ и перевод. Прикладные политики, topics, базы, buckets и полномочия потребителей принадлежат самим потребителям.

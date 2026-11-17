@@ -27,6 +27,12 @@ PROCEDURES = {
     "translator-station": ("python", "translator-service/compute-runtime/station.py"),
     "owner-compose": ("python", "tools/owner_compose.py"),
     "owner-build": ("python", "tools/owner_build.py"),
+    "owner-prepare": ("python", "tools/owner_prepare.py"),
+}
+OWNER_ACTIONS = {
+    "owner-compose": {"plan", "start", "task", "status"},
+    "owner-build": {"build"},
+    "owner-prepare": {"prepare", "status"},
 }
 ENVIRONMENT = {
     "DRP_SPIRE_DOCKER_SOCKET_APPROVAL",
@@ -145,6 +151,7 @@ def owner_projection(path: Path) -> dict[str, Any] | None:
             "OWNER_ROLE_ABSENT",
             "OWNER_TASK_COMPLETED",
             "OWNER_IMAGE_BUILT",
+            "OWNER_CONFIGURATION_PREPARED",
             "BLOCKED",
             "RESULT_UNKNOWN",
         }:
@@ -158,6 +165,9 @@ def owner_projection(path: Path) -> dict[str, Any] | None:
             "context_sha256": r"[a-f0-9]{64}",
             "parameters_sha256": r"[a-f0-9]{64}",
             "build_metadata_sha256": r"[a-f0-9]{64}",
+            "workspace_sha256": r"[a-f0-9]{64}",
+            "public_files_sha256": r"[a-f0-9]{64}",
+            "environment_sha256": r"[a-f0-9]{64}",
             "code": r"(?:OWNER|NODE)_[A-Z_]{1,128}",
         }.items():
             if name in value:
@@ -180,6 +190,15 @@ def owner_projection(path: Path) -> dict[str, Any] | None:
             ) or value.get("platform") not in {"linux/amd64", "linux/arm64"}:
                 return None
             projection["platform"] = value["platform"]
+        if value["status"] == "OWNER_CONFIGURATION_PREPARED" and not all(
+            name in projection
+            for name in (
+                "workspace_sha256",
+                "public_files_sha256",
+                "environment_sha256",
+            )
+        ):
+            return None
         if "health" in value:
             if value["health"] not in {
                 "healthy",
@@ -248,15 +267,10 @@ def validate(
         "NODE_ARGUMENTS_INVALID",
     )
     require("--update" not in arguments, "NODE_OWNER_HANDOFF_REQUIRED")
-    if procedure in {"owner-compose", "owner-build"}:
+    if procedure in OWNER_ACTIONS:
         require(
             len(arguments) == 5
-            and arguments[0]
-            in (
-                {"build"}
-                if procedure == "owner-build"
-                else {"plan", "start", "task", "status"}
-            )
+            and arguments[0] in OWNER_ACTIONS[procedure]
             and arguments[1] == "--request"
             and arguments[2] in request["inputs"],
             "NODE_CONFIGURATION_BINDING_REQUIRED",
@@ -396,7 +410,7 @@ def validate(
             "NODE_INPUT_HASH_INVALID",
         )
     runtime, entrypoint = PROCEDURES[procedure]
-    if procedure in {"owner-compose", "owner-build"}:
+    if procedure in OWNER_ACTIONS:
         return (
             root,
             state,
@@ -500,7 +514,7 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
         environment.update(request["environment"])
         environment["PYTHONNOUSERSITE"] = "1"
         environment["PYTHONDONTWRITEBYTECODE"] = "1"
-        if request["procedure"] in {"owner-compose", "owner-build"}:
+        if request["procedure"] in OWNER_ACTIONS:
             environment["AELEV_NODE_OPERATION_DIRECTORY"] = str(directory)
         try:
             with (
@@ -513,7 +527,7 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
                     command,
                     cwd=(
                         root
-                        if request["procedure"] in {"owner-compose", "owner-build"}
+                        if request["procedure"] in OWNER_ACTIONS
                         else root / Path(PROCEDURES[request["procedure"]][1]).parent
                     ),
                     env=environment,
@@ -531,12 +545,9 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
                 ),
                 exit_code=completed.returncode,
             )
-            if (
-                request["procedure"] in {"owner-compose", "owner-build"}
-                and completed.returncode == 3
-            ):
+            if request["procedure"] in OWNER_ACTIONS and completed.returncode == 3:
                 result["status"] = "RESULT_UNKNOWN"
-            if request["procedure"] in {"owner-compose", "owner-build"}:
+            if request["procedure"] in OWNER_ACTIONS:
                 projection = owner_projection(directory / "stdout")
                 if projection is not None:
                     result["owner_result"] = projection

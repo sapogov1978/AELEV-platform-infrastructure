@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794887293.977171,
-    "seen": 1794887539.9312809,
-    "ast_hash": "e2c6d26773989070e129699b0e106aff",
+    "mtime": 1794892626.1268315,
+    "seen": 1794892680.627968,
+    "ast_hash": "22a1944e079a06389345e5da9c917ae9",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794882937.2082212,
-    "seen": 1794883126.6311429,
-    "ast_hash": "893c44ef610ee5c9147b5396fec849be",
+    "mtime": 1794892459.816771,
+    "seen": 1794892587.699602,
+    "ast_hash": "9b7453553668d98b186dfd88e9727d92",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -204,9 +204,9 @@
     "semantic_hash": ""
   },
   "docs/adr/INDEX.md": {
-    "mtime": 1794882937.2056468,
-    "seen": 1794883126.632122,
-    "ast_hash": "2f445bbed0caf63f639e2a3ba2fb17a9",
+    "mtime": 1794892459.8125186,
+    "seen": 1794892587.700269,
+    "ast_hash": "16d534e9769583bc4cad9f305a3ff1da",
     "semantic_hash": ""
   },
   "docs/api/grpc.md": {
@@ -3078,9 +3078,9 @@
     "semantic_hash": ""
   },
   "SPEC.md": {
-    "mtime": 1794882937.207721,
-    "seen": 1794883126.631145,
-    "ast_hash": "96b6fb3bedea607cf015f732e2996fd7",
+    "mtime": 1794892459.8151336,
+    "seen": 1794892587.699604,
+    "ast_hash": "00f69095356726d68705dfb5633595d1",
     "semantic_hash": ""
   },
   "STATS.md": {
@@ -5094,9 +5094,9 @@
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
-    "mtime": 1794883101.9459546,
-    "seen": 1794883126.6396952,
-    "ast_hash": "5824dd94e70aa2b979b2dbed22977dca",
+    "mtime": 1794892556.2930613,
+    "seen": 1794892587.7048872,
+    "ast_hash": "191eddb1e53b285a92877cbc6816d204",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md": {
@@ -6264,9 +6264,9 @@
     "semantic_hash": ""
   },
   "docs/api/INDEX.md": {
-    "mtime": 1794882937.206311,
-    "seen": 1794883126.632125,
-    "ast_hash": "753a3c24a541e35cf8cc54ee82f16fe1",
+    "mtime": 1794892459.8140197,
+    "seen": 1794892587.7002711,
+    "ast_hash": "d40f133ea58e149042d5e9a8f5f5055b",
     "semantic_hash": ""
   },
   "docs/architecture/deployment.md": {
@@ -6660,9 +6660,9 @@
     "semantic_hash": ""
   },
   "tools/node_execution.py": {
-    "mtime": 1794882769.9483695,
-    "seen": 1794883126.6252952,
-    "ast_hash": "3cb4cbeac76d4489d1a5918b6caad45c",
+    "mtime": 1794892113.4576807,
+    "seen": 1794892587.696492,
+    "ast_hash": "bb61b2c3b179ad87e17f9f452ee9788d",
     "semantic_hash": ""
   },
   "tools/test_node_execution.py": {
@@ -6672,9 +6672,9 @@
     "semantic_hash": ""
   },
   "docs/api/node-execution.md": {
-    "mtime": 1794882937.2087533,
-    "seen": 1794883126.632351,
-    "ast_hash": "aaec37d18b83cfc748441ccdcaa964fa",
+    "mtime": 1794892494.8364415,
+    "seen": 1794892587.700421,
+    "ast_hash": "9194e37f65759e9738d5e05a9465a78c",
     "semantic_hash": ""
   },
   "docs/audit/node-artifact-20261114.json": {
@@ -7053,6 +7053,30 @@
     "mtime": 1794887513.7430105,
     "seen": 1794887539.941261,
     "ast_hash": "5067072b29f5adbe9247538fa91bd20d",
+    "semantic_hash": ""
+  },
+  "tools/owner_prepare.py": {
+    "mtime": 1794892494.8357568,
+    "seen": 1794892587.696542,
+    "ast_hash": "4ae9f9a09533272da59c7b0c35b4c023",
+    "semantic_hash": ""
+  },
+  "tools/test_owner_prepare.py": {
+    "mtime": 1794892260.2649326,
+    "seen": 1794892587.696945,
+    "ast_hash": "fd1fce54da57fca20b1edb8b86a322e5",
+    "semantic_hash": ""
+  },
+  "docs/adr/00-INFRA-20261117-0021-pinned-owner-workspace-preparation.md": {
+    "mtime": 1794892626.1253293,
+    "seen": 1794892680.629581,
+    "ast_hash": "78a3568c22e55cc57819c4090094c4ca",
+    "semantic_hash": ""
+  },
+  "docs/api/owner-prepare.md": {
+    "mtime": 1794892459.8083818,
+    "seen": 1794892587.700472,
+    "ast_hash": "dd04ba80722abd279ca563e60e2541fb",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
