@@ -19,6 +19,8 @@ Workspace находится вне обеих source generations. Новый к
 
 Private root/receipt/env имеют `0700/0600`; вложенные public directories/files — `0755/0644` с сохранением executable bit. Это разрешает unprivileged workloads читать свой bind-mounted public config, без расширения прав закрытого env. Новые owner-managed runtime/secrets outputs не становятся source inputs и не сканируются/не восстанавливаются этим helper. Хеши подготовленных public files/env проверяются перед использованием owner-compose; каталог не является canonical domain storage.
 
+Уточнение локального ещё не опубликованного SDK: optional `private_files` добавляет явно выбранные bootstrap inputs под `secrets/`. Их source files остаются `0600` и входят в outer input hashes; target допускает только выбранный владельцем `0600/0640` с UID/primary GID target operator. Это необходимо для непривилегированных owner roles: Compose file-secret bind не применяет `uid/gid/mode` remapping. Максимум 127 дополнительных файлов по 1 MiB сохраняет предел node-artifact 128 вместе с env. Пересечение public/private paths, traversal, чужой режим, symlink и drift закрыто блокируются. Bytes/modes/GID входят в private receipt и общий workspace hash; публичная projection не расширяется. Пустой набор сохраняет прежние env-only receipts. Owner lifecycle outputs и dynamic SVID volumes не превращаются в immutable bootstrap inputs.
+
 ## Последствия
 
 Helper не выбирает endpoints, не переписывает env, не выпускает CA/credentials/grants, не обращается к чужому canonical storage, Docker или OpenAI, не запускает приложение и не выполняет RESUME. PKI и остальные операции остаются у собственных владельцев. Typed result содержит только status и hashes workspace/public files/environment. Raw env, source tree, пути и диагностика не публикуются.
@@ -29,9 +31,12 @@ Helper не выбирает endpoints, не переписывает env, не 
 
 Перед блоком объявлен прогноз 90–120 минут для SDK, DRP-связки и bounded qualification; отдельные regressions — 15–20 минут. Это не изменение принятого стека или отказ от независимого размещения.
 
+Перед уточнением private files объявлены 45–60 минут SDK и 30–45 минут controller integration. Scope предварительно сопоставлен с input transport limits, target filesystem permissions, env-only replay и owner certificate lifecycle; endpoints и процедуры выдачи PKI не меняются.
+
 ## Официальные основания
 
 - [Docker bind mounts](https://docs.docker.com/engine/storage/bind-mounts/) привязывает файлы к **daemon host**; поэтому inputs доставляются и готовятся на каждом назначенном узле.
 - [Compose environment](https://docs.docker.com/compose/how-tos/environment-variables/) объясняет роль env в interpolation; helper сохраняет операторские bytes вместо замены адресов.
 - [Python filesystem operations](https://docs.python.org/3.13/library/os.html#os.rename), [fsync](https://docs.python.org/3.13/library/os.html#os.fsync) и [advisory flock](https://docs.python.org/3.13/library/fcntl.html#fcntl.flock) задают используемые механизмы, а create-only/handoff политику определяет продукт.
 - [OWASP logging exclusions](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#data-to-exclude) обосновывает hash-only public projection закрытых inputs.
+- [Compose file-secret permissions](https://docs.docker.com/reference/compose-file/services/#secrets) и [service-specific secrets](https://docs.docker.com/compose/how-tos/use-secrets/) определяют выбранную файловую доставку и необходимость фактических target modes.

@@ -94,6 +94,111 @@ class OwnerPrepareTest(unittest.TestCase):
             {p: p.stat().st_mtime_ns for p in self.workspace.rglob("*")}, before
         )
 
+    def private_input(self, target: str = "secrets/client/key") -> Path:
+        source = self.root / "explicit-private-input"
+        source.write_bytes(b"synthetic-private-bytes\x00\xff\n")
+        source.chmod(0o600)
+        self.value["private_files"] = {target: {"source": str(source), "mode": 0o640}}
+        self.value["inputs"][str(source)] = subject.owner.digest(source.read_bytes())
+        return source
+
+    def test_selected_private_files_preserve_bytes_group_and_declared_mode(
+        self,
+    ) -> None:
+        source = self.private_input()
+        result = subject.execute(self.value, "prepare")
+        target = self.workspace / "secrets/client/key"
+        self.assertEqual(target.read_bytes(), source.read_bytes())
+        self.assertEqual(target.stat().st_mode & 0o777, 0o640)
+        self.assertEqual(target.stat().st_gid, subject.os.getgid())
+        self.assertNotIn("synthetic-private", json.dumps(result))
+        before = target.stat().st_mtime_ns
+        self.assertEqual(subject.execute(self.value, "prepare"), result)
+        self.assertEqual(subject.execute(self.value, "status"), result)
+        self.assertEqual(target.stat().st_mtime_ns, before)
+
+    def test_private_source_hash_or_permissions_drift_prevents_publication(
+        self,
+    ) -> None:
+        source = self.private_input()
+        source.write_bytes(b"changed")
+        with self.assertRaisesRegex(node.ExecutionError, "BINDING_INVALID"):
+            subject.execute(self.value, "prepare")
+        source.chmod(0o640)
+        with self.assertRaisesRegex(
+            node.ExecutionError, "PRIVATE_PERMISSIONS_REQUIRED"
+        ):
+            subject.execute(self.value, "prepare")
+        self.assertFalse(self.workspace.exists())
+
+    def test_private_target_bytes_or_mode_drift_are_not_restored(self) -> None:
+        self.private_input()
+        subject.execute(self.value, "prepare")
+        target = self.workspace / "secrets/client/key"
+        target.chmod(0o644)
+        with self.assertRaisesRegex(node.ExecutionError, "WORKSPACE_DRIFT"):
+            subject.execute(self.value, "status")
+        target.chmod(0o640)
+        target.write_bytes(b"owner changed bytes")
+        with self.assertRaisesRegex(node.ExecutionError, "WORKSPACE_DRIFT"):
+            subject.execute(self.value, "prepare")
+        self.assertEqual(target.read_bytes(), b"owner changed bytes")
+
+    def test_private_target_scope_modes_and_collisions_are_rejected(self) -> None:
+        source = self.private_input()
+        for target, mode in (
+            ("../secrets/key", 0o600),
+            ("/secrets/key", 0o600),
+            ("config/private-key", 0o600),
+            ("secrets", 0o600),
+            ("secrets/key", 0o644),
+            ("secrets/key", True),
+        ):
+            changed = copy.deepcopy(self.value)
+            changed["private_files"] = {target: {"source": str(source), "mode": mode}}
+            with self.assertRaises(node.ExecutionError):
+                subject.execute(changed, "prepare")
+        changed = copy.deepcopy(self.value)
+        changed["private_files"]["secrets/client"] = {
+            "source": str(source),
+            "mode": 0o600,
+        }
+        with self.assertRaisesRegex(node.ExecutionError, "PRIVATE_FILE_COLLISION"):
+            subject.execute(changed, "prepare")
+        public = self.source / "service/secrets/client/key"
+        public.parent.mkdir(parents=True)
+        public.write_text("public source fixture\n")
+        self.value["owner_files"] = self.files(self.source)
+        with self.assertRaisesRegex(node.ExecutionError, "PRIVATE_FILE_COLLISION"):
+            subject.execute(self.value, "prepare")
+        self.assertFalse(self.workspace.exists())
+
+    def test_private_inputs_are_explicit_bounded_and_never_follow_symlinks(
+        self,
+    ) -> None:
+        source = self.private_input()
+        changed = copy.deepcopy(self.value)
+        changed["private_files"] = {
+            "secrets/" + str(index): {"source": str(source), "mode": 0o600}
+            for index in range(129)
+        }
+        with self.assertRaisesRegex(node.ExecutionError, "PRIVATE_FILES_INVALID"):
+            subject.execute(changed, "prepare")
+        source.write_bytes(b"x" * (1024**2 + 1))
+        with self.assertRaisesRegex(node.ExecutionError, "FILE_SIZE_INVALID"):
+            subject.execute(self.value, "prepare")
+        source.unlink()
+        source.symlink_to(self.environment)
+        with self.assertRaisesRegex(node.ExecutionError, "SYMLINK_REFUSED"):
+            subject.execute(self.value, "prepare")
+        self.assertFalse(self.workspace.exists())
+
+    def test_empty_optional_private_set_preserves_old_workspace_receipt(self) -> None:
+        first = subject.execute(self.value, "prepare")
+        self.value["private_files"] = {}
+        self.assertEqual(subject.execute(self.value, "status"), first)
+        self.assertNotIn("private_files", node.read(self.workspace / subject.RECEIPT))
+
     def test_status_cannot_create_workspace_or_lock(self) -> None:
         before = list(self.root.iterdir())
         with self.assertRaisesRegex(node.ExecutionError, "WORKSPACE_NOT_FOUND"):

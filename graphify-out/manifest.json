@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794892626.1268315,
-    "seen": 1794892680.627968,
-    "ast_hash": "22a1944e079a06389345e5da9c917ae9",
+    "mtime": 1794899862.7372,
+    "seen": 1794900001.558563,
+    "ast_hash": "8fd90d8a89befd257ff59be3ef89c2fb",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -5094,9 +5094,9 @@
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
-    "mtime": 1794892556.2930613,
-    "seen": 1794892587.7048872,
-    "ast_hash": "191eddb1e53b285a92877cbc6816d204",
+    "mtime": 1794899950.437861,
+    "seen": 1794900001.565186,
+    "ast_hash": "9d5254f056b4319d60156cc136000bcd",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md": {
@@ -7056,27 +7056,27 @@
     "semantic_hash": ""
   },
   "tools/owner_prepare.py": {
-    "mtime": 1794892494.8357568,
-    "seen": 1794892587.696542,
-    "ast_hash": "4ae9f9a09533272da59c7b0c35b4c023",
+    "mtime": 1794899731.7673552,
+    "seen": 1794900001.5547771,
+    "ast_hash": "538da3dbc892c369b6da620e57cb23fb",
     "semantic_hash": ""
   },
   "tools/test_owner_prepare.py": {
-    "mtime": 1794892260.2649326,
-    "seen": 1794892587.696945,
-    "ast_hash": "fd1fce54da57fca20b1edb8b86a322e5",
+    "mtime": 1794899596.6099455,
+    "seen": 1794900001.555289,
+    "ast_hash": "b2e4318d4d1cd6abf2d3c2a823cbeb32",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261117-0021-pinned-owner-workspace-preparation.md": {
-    "mtime": 1794892626.1253293,
-    "seen": 1794892680.629581,
-    "ast_hash": "78a3568c22e55cc57819c4090094c4ca",
+    "mtime": 1794899862.7364483,
+    "seen": 1794900001.559509,
+    "ast_hash": "331d1cbc2672579b27b007d7148d9fc9",
     "semantic_hash": ""
   },
   "docs/api/owner-prepare.md": {
-    "mtime": 1794892459.8083818,
-    "seen": 1794892587.700472,
-    "ast_hash": "dd04ba80722abd279ca563e60e2541fb",
+    "mtime": 1794899950.4370599,
+    "seen": 1794900001.559859,
+    "ast_hash": "3560d8ffe3479e4dfc69ae34fab26217",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

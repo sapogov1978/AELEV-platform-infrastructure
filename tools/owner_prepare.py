@@ -33,7 +33,7 @@ RECEIPT = ".owner-workspace.json"
 
 def definition(value: dict[str, Any]) -> tuple[Path, str, Path, dict[str, Any]]:
     node.require(
-        set(value) == FIELDS
+        set(value) - {"private_files"} == FIELDS
         and type(value["schema_version"]) is int
         and value["schema_version"] == 1,
         "OWNER_PREPARE_REQUEST_INVALID",
@@ -84,15 +84,15 @@ def definition(value: dict[str, Any]) -> tuple[Path, str, Path, dict[str, Any]]:
     node.private(workspace.parent, directory=True)
     environment = node.absolute(value["env_file"])
     node.private(environment)
+    node.require(
+        0 < environment.stat().st_size <= 1024**2,
+        "OWNER_PREPARE_ENVIRONMENT_INVALID",
+    )
     body = environment.read_bytes()
     try:
         body.decode("utf-8")
     except UnicodeDecodeError as error:
         raise node.ExecutionError("OWNER_PREPARE_ENVIRONMENT_INVALID") from error
-    node.require(
-        value["inputs"] == {str(environment): owner.digest(body)},
-        "OWNER_PREPARE_ENVIRONMENT_BINDING_INVALID",
-    )
     node.require(
         0 < len(body) <= 1024**2 and b"\0" not in body,
         "OWNER_PREPARE_ENVIRONMENT_INVALID",
@@ -111,6 +111,49 @@ def definition(value: dict[str, Any]) -> tuple[Path, str, Path, dict[str, Any]]:
                 "mode": 0o755 if (root / name).stat().st_mode & 0o111 else 0o644,
             }
     node.require(0 < len(records) <= 20000, "OWNER_PREPARE_PUBLIC_FILE_SET_INVALID")
+    selected = value.get("private_files", {})
+    node.require(
+        isinstance(selected, dict) and len(selected) <= 127,
+        "OWNER_PREPARE_PRIVATE_FILES_INVALID",
+    )
+    private_records: dict[str, dict[str, Any]] = {}
+    inputs = {str(environment): owner.digest(body)}
+    for name, item in selected.items():
+        target = PurePosixPath(build.relative(name))
+        node.require(
+            len(target.parts) > 1
+            and target.parts[0] == "secrets"
+            and isinstance(item, dict)
+            and set(item) == {"source", "mode"}
+            and type(item["mode"]) is int
+            and item["mode"] in {0o600, 0o640},
+            "OWNER_PREPARE_PRIVATE_FILE_INVALID",
+        )
+        node.require(
+            not any(
+                target.is_relative_to(PurePosixPath(other))
+                or PurePosixPath(other).is_relative_to(target)
+                for other in (*records, *private_records)
+            ),
+            "OWNER_PREPARE_PRIVATE_FILE_COLLISION",
+        )
+        source = node.absolute(item["source"])
+        node.private(source)
+        node.require(
+            0 < source.stat().st_size <= 1024**2,
+            "OWNER_PREPARE_PRIVATE_FILE_SIZE_INVALID",
+        )
+        checksum = owner.digest(source.read_bytes())
+        inputs[str(source)] = checksum
+        private_records[name] = {
+            "sha256": checksum,
+            "mode": item["mode"],
+            "gid": os.getgid(),
+        }
+    node.require(
+        value["inputs"] == inputs,
+        "OWNER_PREPARE_ENVIRONMENT_BINDING_INVALID",
+    )
     expected = {
         "schema_version": 1,
         "role": value["role"],
@@ -118,6 +161,8 @@ def definition(value: dict[str, Any]) -> tuple[Path, str, Path, dict[str, Any]]:
         "public_files": records,
         "environment_sha256": owner.digest(body),
     }
+    if private_records:
+        expected["private_files"] = private_records
     return root, prefix, workspace, expected
 
 
@@ -130,6 +175,7 @@ def verify(workspace: Path, expected: dict[str, Any]) -> dict[str, Any]:
     )
     for name, record in {
         **expected["public_files"],
+        **expected.get("private_files", {}),
         ".env": {"sha256": expected["environment_sha256"], "mode": 0o600},
     }.items():
         path = node.absolute(str(workspace / name))
@@ -137,6 +183,7 @@ def verify(workspace: Path, expected: dict[str, Any]) -> dict[str, Any]:
         node.require(
             stat.S_ISREG(info.st_mode)
             and info.st_uid == os.getuid()
+            and ("gid" not in record or info.st_gid == record["gid"])
             and stat.S_IMODE(info.st_mode) == record["mode"]
             and owner.digest(path.read_bytes()) == record["sha256"],
             "OWNER_PREPARE_WORKSPACE_DRIFT",
@@ -200,6 +247,26 @@ def publish(
         stream.flush()
         os.fsync(stream.fileno())
     (pending / ".env").chmod(0o600)
+    for name, record in expected.get("private_files", {}).items():
+        source = node.absolute(value["private_files"][name]["source"])
+        node.private(source)
+        body = source.read_bytes()
+        node.require(
+            owner.digest(body) == record["sha256"],
+            "OWNER_PREPARE_PRIVATE_INPUT_CHANGED",
+        )
+        target = pending / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        for parent in target.parents:
+            if parent == pending:
+                break
+            parent.chmod(0o755)
+        with target.open("xb") as stream:
+            stream.write(body)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.chown(target, -1, record["gid"])
+        target.chmod(record["mode"])
     node.save(pending / RECEIPT, expected)
     sync_tree(pending)
     verify(pending, expected)
