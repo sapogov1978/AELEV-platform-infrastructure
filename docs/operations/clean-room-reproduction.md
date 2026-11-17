@@ -137,6 +137,8 @@ DRP_SPIRE_DOCKER_SOCKET_APPROVAL=operator-root-equivalent-v1 \
 
 Пароль передаётся только путём к локальному файлу и не попадает в аргументы subprocess, отчёты либо Git. Невыполненный, пропущенный или частично успешный этап создаёт `blocked-run.json`, возвращает код `2` и не создаёт PASS evidence. После каждого теста созданные ресурсы снимаются адресно; исходные containers, их состояния, volumes, networks, images, secrets и runtime должны сохраниться.
 
+Полный gate сохраняет metadata snapshots в `gate/docker-inventory/before.json`, после каждой завершённой стадии — в `<stage>.json`, перед итоговым сравнением — в `after.json`. Это те же read-only ID/state inventories, которые используются при сравнении, без env, команд, содержимого томов, logs или credentials. Итоговое равенство не ослаблено: лишний/пропавший ресурс или изменившийся persistent state по-прежнему дают `DOCKER_BASELINE_NOT_PRESERVED`; snapshots позволяют определить первую стадию расхождения. Docker [image ls](https://docs.docker.com/reference/cli/docker/image/ls/) различает полный `--all` список и обычные top-level images; отсутствие dangling image в частном owner report не доказывает полный исходный baseline. История `601ed2e` уже исправляла AutoRemove race и сохраняется без изменений. Перед этим диагностическим дополнением объявлены 20–30 минут на code/checks и 40–60 минут на новый полный прогон.
+
 Проверка готового evidence выполняется без доверия к названиям файлов:
 
 ```sh

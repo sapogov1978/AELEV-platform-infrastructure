@@ -661,6 +661,7 @@ def main() -> int:
         if arguments.diagnostic_stage:
             return run_diagnostics(arguments, output, bom_path)
         baseline = docker_inventory()
+        write_json(output / "docker-inventory" / "before.json", baseline)
         function_artifacts: dict[str, list[dict[str, str]]] = {}
         for stage in stage_plan(arguments, output):
             environment = dict(os.environ)
@@ -682,7 +683,12 @@ def main() -> int:
             ]
             for function in stage.functions:
                 function_artifacts[function] = rows
+            write_json(
+                output / "docker-inventory" / (stage.identity + ".json"),
+                docker_inventory(),
+            )
         final = docker_inventory()
+        write_json(output / "docker-inventory" / "after.json", final)
         cleanup_preserved = final == baseline
         if not cleanup_preserved:
             raise GateError("DOCKER_BASELINE_NOT_PRESERVED")

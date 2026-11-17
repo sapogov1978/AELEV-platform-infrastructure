@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import redirect_stderr, redirect_stdout
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -826,6 +828,155 @@ class BuildReferenceCollisionTests(unittest.TestCase):
                 ],
                 "BUILD_IMAGE_REFERENCE_COLLISION_CLEAN_ENGINE_REQUIRED",
             )
+
+
+class FullInventoryEvidenceTests(unittest.TestCase):
+    def run_case(self, final: dict, *, stage_failure: bool = False) -> dict:
+        before = {
+            "container": ["a" * 64],
+            "container_states": {"a" * 64: "running"},
+            "transient_container_policy": "engine-auto-remove-excluded",
+            "image": ["b" * 12],
+            "network": ["c" * 12],
+            "volume": ["existing-volume"],
+        }
+        manifest = json.loads((ROOT / "full-local.json").read_bytes())
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary).resolve()
+            output = directory / "evidence"
+            password = directory / "password"
+            password.write_text("private-fixture-password")
+            chromium = directory / "chromium"
+            chromium.touch()
+            stage = clean_room_gate.Stage(
+                "root-lifecycle",
+                tuple(manifest["acceptance"]["required_functions"]),
+                ("bounded-stage",),
+                (),
+            )
+
+            def logged(identity, arguments, destination, **kwargs):
+                if identity == stage.identity and stage_failure:
+                    raise clean_room_gate.GateError(
+                        "STAGE_COMMAND_FAILED:root-lifecycle"
+                    )
+                path = output / "logs" / (identity + ".log")
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("stage completed")
+                if identity == "release-bom":
+                    (output / "release-bom.json").write_text(
+                        json.dumps({"source_commit": "a" * 40})
+                    )
+                return path
+
+            def command(arguments, **kwargs):
+                return subprocess.CompletedProcess(
+                    arguments,
+                    0,
+                    "{}" if "test_infrastructure/clean_room.py" in arguments else "",
+                )
+
+            stream = io.StringIO()
+            with (
+                mock.patch.object(
+                    sys,
+                    "argv",
+                    [
+                        "gate",
+                        "--output",
+                        str(output),
+                        "--viewer-user",
+                        "fixture",
+                        "--viewer-password-file",
+                        str(password),
+                        "--chromium",
+                        str(chromium),
+                    ],
+                ),
+                mock.patch.object(
+                    clean_room_gate, "command", side_effect=command
+                ) as executed,
+                mock.patch.object(
+                    clean_room_gate, "rendered_root_model", return_value={}
+                ),
+                mock.patch.object(
+                    clean_room_gate, "assert_no_build_reference_collisions"
+                ),
+                mock.patch.object(clean_room_gate, "prepare_drivers"),
+                mock.patch.object(clean_room_gate, "run_logged", side_effect=logged),
+                mock.patch.object(clean_room_gate, "stage_plan", return_value=[stage]),
+                mock.patch.object(
+                    clean_room_gate,
+                    "docker_inventory",
+                    side_effect=[before, final, final],
+                ),
+                redirect_stdout(stream),
+                redirect_stderr(stream),
+            ):
+                status = clean_room_gate.main()
+            snapshots = {
+                p.stem: json.loads(p.read_bytes())
+                for p in (output / "docker-inventory").glob("*.json")
+            }
+            return {
+                "status": status,
+                "before": before,
+                "snapshots": snapshots,
+                "public": stream.getvalue(),
+                "pass_evidence": (output / "clean-room-evidence.json").exists(),
+                "verification_called": any(
+                    "test_infrastructure/clean_room.py" in call.args[0]
+                    for call in executed.call_args_list
+                ),
+            }
+
+    def baseline(self) -> dict:
+        return {
+            "container": ["a" * 64],
+            "container_states": {"a" * 64: "running"},
+            "transient_container_policy": "engine-auto-remove-excluded",
+            "image": ["b" * 12],
+            "network": ["c" * 12],
+            "volume": ["existing-volume"],
+        }
+
+    def test_preserved_full_inventory_gets_evidence_and_verifier(self) -> None:
+        result = self.run_case(self.baseline())
+        self.assertEqual(result["status"], 0)
+        self.assertEqual(
+            set(result["snapshots"]), {"before", "root-lifecycle", "after"}
+        )
+        self.assertTrue(
+            all(value == result["before"] for value in result["snapshots"].values())
+        )
+        self.assertTrue(result["pass_evidence"])
+        self.assertTrue(result["verification_called"])
+        self.assertNotIn("private-fixture-password", result["public"])
+
+    def test_differences_are_retained_and_still_block_admission(self) -> None:
+        for kind in ("image", "network", "volume", "container_states"):
+            with self.subTest(kind=kind):
+                changed = self.baseline()
+                if kind == "container_states":
+                    changed[kind]["a" * 64] = "exited"
+                else:
+                    changed[kind].append("d" * 12)
+                result = self.run_case(changed)
+                self.assertEqual(result["status"], 2)
+                self.assertEqual(result["snapshots"]["before"], result["before"])
+                self.assertEqual(result["snapshots"]["root-lifecycle"], changed)
+                self.assertEqual(result["snapshots"]["after"], changed)
+                self.assertIn("DOCKER_BASELINE_NOT_PRESERVED", result["public"])
+                self.assertFalse(result["pass_evidence"])
+                self.assertFalse(result["verification_called"])
+
+    def test_failed_stage_keeps_the_original_inventory_without_a_pass(self) -> None:
+        result = self.run_case(self.baseline(), stage_failure=True)
+        self.assertEqual(result["status"], 2)
+        self.assertEqual(result["snapshots"], {"before": result["before"]})
+        self.assertIn("STAGE_COMMAND_FAILED:root-lifecycle", result["public"])
+        self.assertFalse(result["pass_evidence"])
+        self.assertFalse(result["verification_called"])
 
 
 class PersistentContainerSnapshotTests(unittest.TestCase):
