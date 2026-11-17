@@ -49,6 +49,7 @@ def runtime_progress(raw: str | bytes | None, root: Path) -> dict[str, str]:
     """A marker announces a step before execution; it never proves completion."""
     text = raw.decode(errors="replace") if isinstance(raw, bytes) else raw or ""
     roles: set[str] = set()
+    owners: set[str] = set()
     try:
         catalog = json.loads(bounded_read(root / "deployment-catalog.json"))
         roles = {
@@ -57,8 +58,17 @@ def runtime_progress(raw: str | bytes | None, root: Path) -> dict[str, str]:
             if isinstance(row.get("id"), str)
             and re.fullmatch(r"[a-z0-9][a-z0-9-]{0,95}", row["id"])
         }
+        owners = {
+            row["owner"]
+            for row in catalog["roles"]
+            if isinstance(row.get("owner"), str)
+            and re.fullmatch(
+                r"(?:[a-z0-9][a-z0-9-]*/)*[a-z0-9][a-z0-9-]*", row["owner"]
+            )
+        }
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         roles = set()
+        owners = set()
     last: dict[str, str] = {}
     for line in text[-LIMIT:].splitlines():
         if not line.startswith("[full-runtime] "):
@@ -66,6 +76,11 @@ def runtime_progress(raw: str | bytes | None, root: Path) -> dict[str, str]:
         value = line.removeprefix("[full-runtime] ")
         if value in STEPS:
             last = {"step": STEPS[value]}
+        elif value.startswith("starting declared owner "):
+            owner = value.removeprefix("starting declared owner ")
+            last = {"step": "START_OWNER_ROLES"}
+            if owner in owners:
+                last["owner"] = owner
         elif value.startswith("provisioning "):
             task = value.removeprefix("provisioning ")
             last = {"step": "PROVISION_OWNER_TASK"}

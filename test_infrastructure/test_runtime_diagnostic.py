@@ -91,6 +91,18 @@ def test_reader_rejects_links_oversized_files_and_unknown_codes(tmp_path: Path) 
     assert command_failure_summaries(tmp_path)[0]["error_types"] == []
 
 
+def test_owner_progress_exposes_only_declared_public_owner(tmp_path: Path) -> None:
+    (tmp_path / "deployment-catalog.json").write_text(
+        json.dumps({"roles": [{"id": "one", "owner": "observability/backend"}]})
+    )
+    assert runtime_progress(
+        "[full-runtime] starting declared owner observability/backend", tmp_path
+    ) == {"step": "START_OWNER_ROLES", "owner": "observability/backend"}
+    assert runtime_progress(
+        "[full-runtime] starting declared owner privateCredential", tmp_path
+    ) == {"step": "START_OWNER_ROLES"}
+
+
 def test_reader_refuses_symlinked_runtime_root(tmp_path: Path) -> None:
     external = tmp_path / "external"
     external.mkdir()

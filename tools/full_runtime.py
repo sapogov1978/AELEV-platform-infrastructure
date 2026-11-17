@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import hashlib
+from graphlib import TopologicalSorter
 import os
 import re
 import subprocess
@@ -11,8 +13,8 @@ import time
 import tempfile
 from collections import Counter
 from collections.abc import Callable
-from pathlib import Path
-from typing import Any
+from pathlib import Path, PurePosixPath
+from typing import Any, cast
 
 from tools import full_local, spire_local, spire_renewal
 
@@ -103,7 +105,7 @@ def spire_binding(root: Path) -> dict[str, Any]:
         raise full_local.FullLocalError(
             "FULL_RUNTIME_SPIRE_PUBLIC_EXPORT_REQUIRED"
         ) from error
-    return receipt
+    return cast(dict[str, Any], receipt)
 
 
 def verify_spire_binding(
@@ -351,7 +353,10 @@ def containers(project: str, root: Path) -> list[dict[str, Any]]:
     ).splitlines()
     if not identifiers:
         return []
-    return json.loads(command(["docker", "inspect", *identifiers], root))
+    return cast(
+        list[dict[str, Any]],
+        json.loads(command(["docker", "inspect", *identifiers], root)),
+    )
 
 
 def guard_existing(
@@ -496,6 +501,86 @@ def start(prefix: list[str], names: list[str], root: Path) -> None:
         )
 
 
+def owner_startup_groups(
+    model: dict[str, Any], required: set[str], root: Path
+) -> list[tuple[str, list[str]]]:
+    """Keep quorum peers together; validate all ownership/dependency pins first."""
+    try:
+        catalog = full_local.load_json(root / "deployment-catalog.json", root)
+        if (
+            catalog["schema_version"] != 1
+            or catalog["product"] != "platform-infrastructure"
+        ):
+            raise ValueError
+        owners: dict[str, str] = {}
+        for role in catalog["roles"]:
+            if (
+                role["id"] in owners
+                or not isinstance(role["owner"], str)
+                or re.fullmatch(
+                    r"(?:[a-z0-9][a-z0-9-]*/)*[a-z0-9][a-z0-9-]*", role["owner"]
+                )
+                is None
+            ):
+                raise ValueError
+            owners[role["id"]] = role["owner"]
+        for name, checksum in catalog["sources"].items():
+            path = PurePosixPath(name)
+            if path.is_absolute() or ".." in path.parts or str(path) != name:
+                raise ValueError
+            source = root / name
+            if (
+                any(p.is_symlink() for p in (source, *source.parents))
+                or hashlib.sha256(source.read_bytes()).hexdigest() != checksum
+            ):
+                raise full_local.FullLocalError("FULL_RUNTIME_STARTUP_CATALOG_DRIFT")
+        groups: dict[str, list[str]] = {}
+        graph: dict[str, set[str]] = {}
+        service_graph: dict[str, set[str]] = {}
+        for name in sorted(required):
+            owner = owners[name]
+            groups.setdefault(owner, []).append(name)
+            graph.setdefault(owner, set())
+            dependencies = set(model["services"][name].get("depends_on", {}))
+            if not dependencies <= required:
+                raise ValueError
+            service_graph[name] = dependencies
+            graph[owner].update(
+                owners[dependency]
+                for dependency in dependencies
+                if owners[dependency] != owner
+            )
+        tuple(TopologicalSorter(service_graph).static_order())
+        order = tuple(TopologicalSorter(graph).static_order())
+        return [(owner, groups[owner]) for owner in order]
+    except full_local.FullLocalError:
+        raise
+    except (OSError, ValueError, KeyError, TypeError):
+        raise full_local.FullLocalError(
+            "FULL_RUNTIME_STARTUP_OWNER_GRAPH_INVALID"
+        ) from None
+
+
+def start_core_owners(
+    prefix: list[str],
+    model: dict[str, Any],
+    groups: list[tuple[str, list[str]]],
+    root: Path,
+) -> None:
+    for owner, names in groups:
+        pending = pending_services(model, set(names), root)
+        if pending:
+            print(
+                "[full-runtime] starting declared owner " + owner,
+                file=sys.stderr,
+                flush=True,
+            )
+            # All quorum peers of this owner remain in one canonical Compose up.
+            # Compose retains its own healthy/completed-successfully barriers.
+            start(prefix, pending, root)
+        wait_ready(model, set(names), root)
+
+
 def up(
     root: Path,
     manifest: dict[str, Any],
@@ -522,6 +607,7 @@ def up(
         required,
         delegated={name: row["Id"] for name, row in native.items()},
     )
+    owner_groups = owner_startup_groups(model, required - SPIRE_ROLES, root)
     print("[full-runtime] starting Kafka", file=sys.stderr, flush=True)
     start(prefix, ["kafka"], root)
     wait_ready(model, {"kafka"}, root, timeout=300)
@@ -574,7 +660,7 @@ def up(
         root,
     )
     print("[full-runtime] starting declared core roles", file=sys.stderr, flush=True)
-    start(prefix, sorted(required - SPIRE_ROLES), root)
+    start_core_owners(prefix, model, owner_groups, root)
     if fresh:
         wait_ready(model, required - SPIRE_ROLES, root)
         selected = spire_initial_input

@@ -176,9 +176,11 @@ class FullRuntimeTest(unittest.TestCase):
                 events.append(
                     "all-ready"
                     if names == required
-                    else "core-ready"
-                    if names == required - full_runtime.SPIRE_ROLES
-                    else "dependency-ready"
+                    else (
+                        "core-ready"
+                        if names == required - full_runtime.SPIRE_ROLES
+                        else "dependency-ready"
+                    )
                 )
 
             def prepare(_root: Path, _source: Path) -> Path:
@@ -201,6 +203,18 @@ class FullRuntimeTest(unittest.TestCase):
                     full_runtime, "initial_binding_required", return_value=True
                 ),
                 mock.patch.object(full_runtime, "guard_existing"),
+                mock.patch.object(
+                    full_runtime,
+                    "owner_startup_groups",
+                    return_value=[
+                        ("test-owner", sorted(required - full_runtime.SPIRE_ROLES))
+                    ],
+                ),
+                mock.patch.object(
+                    full_runtime,
+                    "pending_services",
+                    side_effect=lambda _model, names, _root: sorted(names),
+                ),
                 mock.patch.object(full_runtime, "start"),
                 mock.patch.object(full_runtime, "wait_ready", side_effect=ready),
                 mock.patch.object(
@@ -515,7 +529,9 @@ class FullRuntimeTest(unittest.TestCase):
             result = full_runtime.up(ROOT, manifest)
         starts = [args for args in commands if "up" in args]
         self.assertEqual(
-            set(starts[-1][starts[-1].index("--no-recreate") + 1 :]),
+            set().union(
+                *(set(args[args.index("--no-recreate") + 1 :]) for args in starts)
+            ),
             required - full_runtime.SPIRE_ROLES,
         )
         self.assertTrue(all("--no-recreate" in args for args in starts))
@@ -1094,6 +1110,130 @@ class FullRuntimeTest(unittest.TestCase):
         ):
             full_runtime.command(["docker", "compose", "up"], ROOT)
         run.assert_called_once()
+
+
+class OwnerStartupTest(unittest.TestCase):
+    def setUp(self) -> None:
+        import hashlib
+
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name).resolve()
+        self.model = {
+            "services": {
+                "peer-a": {},
+                "peer-b": {},
+                "consumer": {
+                    "depends_on": {"peer-a": {"condition": "service_healthy"}}
+                },
+            }
+        }
+        source = self.root / "compose.json"
+        source.write_text(json.dumps(self.model))
+        catalog = {
+            "schema_version": 1,
+            "product": "platform-infrastructure",
+            "sources": {
+                "compose.json": hashlib.sha256(source.read_bytes()).hexdigest()
+            },
+            "roles": [
+                {
+                    "id": name,
+                    "owner": "store" if name.startswith("peer-") else "consumer",
+                }
+                for name in self.model["services"]
+            ],
+        }
+        (self.root / "deployment-catalog.json").write_text(json.dumps(catalog))
+        self.required = set(self.model["services"])
+
+    def test_quorum_peers_stay_together_before_dependent_owner(self) -> None:
+        groups = full_runtime.owner_startup_groups(self.model, self.required, self.root)
+        self.assertEqual(
+            groups, [("store", ["peer-a", "peer-b"]), ("consumer", ["consumer"])]
+        )
+        events = []
+        with (
+            mock.patch.object(
+                full_runtime,
+                "pending_services",
+                side_effect=lambda _m, names, _r: sorted(names),
+            ),
+            mock.patch.object(
+                full_runtime,
+                "start",
+                side_effect=lambda _p, names, _r: events.append(("start", names)),
+            ),
+            mock.patch.object(
+                full_runtime,
+                "wait_ready",
+                side_effect=lambda _m, names, _r: events.append(
+                    ("ready", sorted(names))
+                ),
+            ),
+        ):
+            full_runtime.start_core_owners([], self.model, groups, self.root)
+        self.assertEqual(
+            events,
+            [
+                ("start", ["peer-a", "peer-b"]),
+                ("ready", ["peer-a", "peer-b"]),
+                ("start", ["consumer"]),
+                ("ready", ["consumer"]),
+            ],
+        )
+
+    def test_unknown_dependency_and_cycles_are_rejected_without_start(self) -> None:
+        with mock.patch.object(full_runtime, "start") as start:
+            self.model["services"]["peer-a"]["depends_on"] = {"undeclared": {}}
+            with self.assertRaisesRegex(
+                full_local.FullLocalError, "OWNER_GRAPH_INVALID"
+            ):
+                full_runtime.owner_startup_groups(self.model, self.required, self.root)
+            self.model["services"]["peer-a"]["depends_on"] = {"consumer": {}}
+            with self.assertRaisesRegex(
+                full_local.FullLocalError, "OWNER_GRAPH_INVALID"
+            ):
+                full_runtime.owner_startup_groups(self.model, self.required, self.root)
+        start.assert_not_called()
+
+    def test_catalog_recipe_hash_drift_blocks_owner_plan(self) -> None:
+        (self.root / "compose.json").write_text("changed after catalog\n")
+        with self.assertRaisesRegex(full_local.FullLocalError, "STARTUP_CATALOG_DRIFT"):
+            full_runtime.owner_startup_groups(self.model, self.required, self.root)
+
+    def test_healthy_groups_are_observed_without_start(self) -> None:
+        groups = full_runtime.owner_startup_groups(self.model, self.required, self.root)
+        with (
+            mock.patch.object(full_runtime, "pending_services", return_value=[]),
+            mock.patch.object(full_runtime, "start") as start,
+            mock.patch.object(full_runtime, "wait_ready") as observe,
+        ):
+            full_runtime.start_core_owners([], self.model, groups, self.root)
+        start.assert_not_called()
+        self.assertEqual(observe.call_count, len(groups))
+
+    def test_unknown_start_result_stops_following_groups_without_retry(self) -> None:
+        groups = full_runtime.owner_startup_groups(self.model, self.required, self.root)
+        with (
+            mock.patch.object(
+                full_runtime,
+                "pending_services",
+                side_effect=lambda _m, names, _r: sorted(names),
+            ),
+            mock.patch.object(
+                full_runtime,
+                "start",
+                side_effect=full_local.FullLocalError(
+                    "FULL_RUNTIME_COMMAND_RESULT_UNKNOWN"
+                ),
+            ) as start,
+            mock.patch.object(full_runtime, "wait_ready") as wait,
+        ):
+            with self.assertRaisesRegex(full_local.FullLocalError, "RESULT_UNKNOWN"):
+                full_runtime.start_core_owners([], self.model, groups, self.root)
+        start.assert_called_once()
+        wait.assert_not_called()
 
 
 if __name__ == "__main__":

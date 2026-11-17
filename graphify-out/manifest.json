@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794901063.8810275,
-    "seen": 1794901083.6365929,
-    "ast_hash": "5b26c8722bc54b6afac9b1a640775b23",
+    "mtime": 1794908055.3792505,
+    "seen": 1794908077.724726,
+    "ast_hash": "2b2d77e6f6b97c9b7475533f89505364",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -222,9 +222,9 @@
     "semantic_hash": ""
   },
   "docs/api/installation.md": {
-    "mtime": 1794837645.4636981,
-    "seen": 1794840099.141067,
-    "ast_hash": "d0b0612aef0c444c9f395d7da2306e54",
+    "mtime": 1794907623.4263635,
+    "seen": 1794908050.8775198,
+    "ast_hash": "80c1cde4fa3ffd596b86d153da010652",
     "semantic_hash": ""
   },
   "docs/api/internal-events.md": {
@@ -2418,9 +2418,9 @@
     "semantic_hash": ""
   },
   "test_infrastructure/lifecycle.py": {
-    "mtime": 1794837645.8585691,
-    "seen": 1794840099.140857,
-    "ast_hash": "07dc1bf7b0a16b26acdcad0c96bf8ecd",
+    "mtime": 1794907623.4249425,
+    "seen": 1794908050.873923,
+    "ast_hash": "48fbb11a818aec32ea299df149c1fa50",
     "semantic_hash": ""
   },
   "test_infrastructure/pyproject.toml": {
@@ -3078,9 +3078,9 @@
     "semantic_hash": ""
   },
   "SPEC.md": {
-    "mtime": 1794892459.8151336,
-    "seen": 1794892587.699604,
-    "ast_hash": "00f69095356726d68705dfb5633595d1",
+    "mtime": 1794907623.4271061,
+    "seen": 1794908050.876971,
+    "ast_hash": "2a0ee36db16ee4c4db52e677ef216676",
     "semantic_hash": ""
   },
   "STATS.md": {
@@ -5094,9 +5094,9 @@
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
-    "mtime": 1794899950.437861,
-    "seen": 1794900001.565186,
-    "ast_hash": "9d5254f056b4319d60156cc136000bcd",
+    "mtime": 1794907932.51357,
+    "seen": 1794908050.8807979,
+    "ast_hash": "b8d2802d80d01b5605376ce8f5955a03",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md": {
@@ -6354,21 +6354,21 @@
     "semantic_hash": ""
   },
   "tools/full_runtime.py": {
-    "mtime": 1794837645.8866837,
-    "seen": 1794840099.140915,
-    "ast_hash": "218e582586cd3a898da804e199086c0f",
+    "mtime": 1794908023.335906,
+    "seen": 1794908050.874758,
+    "ast_hash": "a0477fd0261767d94548a76ea865897a",
     "semantic_hash": ""
   },
   "tools/test_full_runtime.py": {
-    "mtime": 1794837645.8924673,
-    "seen": 1794840099.140933,
-    "ast_hash": "f286ac9833e1052f62a98700d9815265",
+    "mtime": 1794907414.1329172,
+    "seen": 1794908050.875052,
+    "ast_hash": "de91136f30d16e88a80ef96a3d7f575f",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261112-0017-full-runtime-startup.md": {
-    "mtime": 1794837645.4612577,
-    "seen": 1794840099.14106,
-    "ast_hash": "16fea0e9e5f9bddf93473e5071b19d95",
+    "mtime": 1794907623.4256349,
+    "seen": 1794908050.8773801,
+    "ast_hash": "93040a6edbddeaa42641e23cfaa75bdc",
     "semantic_hash": ""
   },
   "spire/test/test_export_entrypoints.py": {
@@ -6876,15 +6876,15 @@
     "semantic_hash": ""
   },
   "test_infrastructure/runtime_diagnostic.py": {
-    "mtime": 1794837645.8686326,
-    "seen": 1794840099.140867,
-    "ast_hash": "620453f5aed25118d59a374a394f70e1",
+    "mtime": 1794907933.147783,
+    "seen": 1794908050.8740559,
+    "ast_hash": "7931bf06904372c862f572e3fb556c71",
     "semantic_hash": ""
   },
   "test_infrastructure/test_runtime_diagnostic.py": {
-    "mtime": 1794837645.87853,
-    "seen": 1794840099.1408901,
-    "ast_hash": "9b36fbd77cb6f7eabf4a1d1c4510a528",
+    "mtime": 1794907933.1546957,
+    "seen": 1794908050.874408,
+    "ast_hash": "39fa0f7da12d0d66f8dcbb168d227ed4",
     "semantic_hash": ""
   },
   "docs/audit/owner-compose-20261116.json": {
