@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794882937.2097728,
-    "seen": 1794883126.631045,
-    "ast_hash": "5ebe6ccd01681bd64acdf0f5dc5bd0af",
+    "mtime": 1794883636.1112754,
+    "seen": 1794883699.831895,
+    "ast_hash": "51c25a940fd1eadd43d8eeed6c1af2a1",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -7014,15 +7014,15 @@
     "semantic_hash": ""
   },
   "tools/owner_build.py": {
-    "mtime": 1794882769.7373474,
-    "seen": 1794883126.625299,
-    "ast_hash": "7dcfa7a1f870029ebb5c430620c4d0dc",
+    "mtime": 1794883535.2439775,
+    "seen": 1794883606.574785,
+    "ast_hash": "1c4a47fa5c1b9ad446d5745de6b91ebd",
     "semantic_hash": ""
   },
   "tools/test_owner_build.py": {
-    "mtime": 1794882840.7196372,
-    "seen": 1794883126.6258602,
-    "ast_hash": "13d7df27cd63cd75638c0b45254357fd",
+    "mtime": 1794883535.8097334,
+    "seen": 1794883606.575163,
+    "ast_hash": "da8cd63ac739b1027a714302e0331ffd",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261117-0020-pinned-owner-source-build.md": {
@@ -7032,9 +7032,9 @@
     "semantic_hash": ""
   },
   "docs/api/owner-build.md": {
-    "mtime": 1794882937.2050028,
-    "seen": 1794883126.632354,
-    "ast_hash": "eac38d77560f760ab99ed71bcabc5ec2",
+    "mtime": 1794883535.2448776,
+    "seen": 1794883606.5787961,
+    "ast_hash": "26ec0d08f28df12da97e3f042e883d31",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

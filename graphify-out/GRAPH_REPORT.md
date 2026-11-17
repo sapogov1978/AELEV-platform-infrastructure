@@ -1,22 +1,22 @@
 # Graph Report - owner-compose-source  (2026-11-17)
 
 ## Corpus Check
-- 1142 files · ~777,640 words
+- 1142 files · ~777,911 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 206 file(s) not represented in the graph (top: .whl 64, (none) 46, .example 23)
 
 ## Summary
-- 13261 nodes · 28594 edges · 686 communities (628 shown, 58 thin omitted)
+- 13262 nodes · 28596 edges · 694 communities (630 shown, 64 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 1488 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f4580948`
+- Built from commit: `6556d659`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- re
+- ci_inventory.py
 - shutil
 - time
 - public-egress-gateway/renewal.py
@@ -41,10 +41,10 @@
 - sender
 - error
 - Store
-- public_state.py
+- atomic
 - compose.remote.yml
 - postgresql-fencer
-- os
+- pathlib
 - platform-ui/test/test_api.py
 - tempo.yml
 - loki.yml
@@ -57,16 +57,16 @@
 - environment
 - with
 - spire-agent
-- uuid
+- owner_compose_lifecycle.py
 - QueueServiceApp.tsx
 - upgrade
 - exports
-- json
+- test_experiment.py
 - keycloak/test/test_status_publisher.py
 - GatewayHandler
 - remote_write
 - platform-ui-injection.md
-- test_observation.py
+- plan
 - test_operator_translation.py
 - test_operator_api.py
 - with
@@ -81,7 +81,7 @@
 - test_authorization.py
 - with
 - local-publisher.py
-- fcntl
+- Наблюдение и восстановление
 - remote_write
 - platform-ui/package.json
 - re
@@ -111,7 +111,7 @@
 - remote_write
 - etcd-1
 - test_operator.py
-- spire/bootstrap.py
+- delivery/test/test_renewal.py
 - spire_renewal.py
 - blackbox-exporter
 - x-ui-status-environment
@@ -127,14 +127,13 @@
 - environment
 - x-role
 - Keycloak — руководство пользователя
-- Руководство translator-service
+- recover
 - api
 - args
 - x-status-environment
 - x-postgresql-environment
 - test_provider_transport.py
 - full_local.py
-- sys
 - Journal
 - keycloak/test/lifecycle.py
 - postgresql/test/test_status_publisher.py
@@ -147,7 +146,7 @@
 - environment
 - translation-provider
 - platform-ui/api.py
-- loki/USER_MANUAL.md
+- oidc_provision.py
 - http
 - Руководство SPIRE
 - x-status-runtime
@@ -171,7 +170,7 @@
 - translation-provider
 - kafka
 - environment
-- test_observation_liveness.py
+- run.py
 - keycloak/compose.yml
 - x-ui-status-environment
 - ADR-0141: Операторская разметка обучает модели только своего сервиса
@@ -226,7 +225,7 @@
 - certificate_lifecycle.py
 - interval
 - delivery
-- re
+- unittest
 - environment
 - keycloak/recovery.py
 - Руководство: метрики и панели нового владельца
@@ -234,16 +233,16 @@
 - otlp/tempo
 - platform-ui
 - tomllib
-- test_deployment.py
+- download
 - bind
 - translator-worker
 - test_observation_diagnostics.py
 - test_password_migration.py
-- pathlib
+- subprocess
 - cluster-lifecycle.py
 - ADR-0137: Имя второй стадии Discovery — advance-screening
 - clean_room_gate.py
-- aggregate
+- blackbox-exporter/status_publisher.py
 - kafka-status-provision
 - environment
 - minio-status-provision
@@ -260,7 +259,7 @@
 - local_publisher_e2e.py
 - Platform UI — эксплуатация поставщика
 - prometheus-operator-provision
-- FencingError
+- read_dcs
 - args
 - platform-ui-status-provision
 - ADR-0069: Пересмотр и отзыв положительных и отрицательных решений crawler
@@ -272,7 +271,7 @@
 - public-egress-gateway-status-publisher
 - x-runtime
 - spire-operator
-- unhealthy
+- test_local_health.py
 - prometheus/test/test_status_publisher.py
 - otel-collector/test/test_status_publisher.py
 - blackbox-exporter/test/test_status_publisher.py
@@ -304,7 +303,7 @@
 - target
 - environment
 - otel-collector-status-provision
-- backup.py
+- test_cold_backup_verify.py
 - prometheus-status-provision
 - x-operator-environment
 - ADR-0057: Только локально исполняемые и дообучаемые модели crawler
@@ -325,7 +324,7 @@
 - grafana/test/test_status_publisher.py
 - health_heartbeat.py
 - ADR-0087: Инфраструктурный translator-service
-- time
+- test_delivery_health.py
 - Sandbox
 - test_infrastructure/test_recovery.py
 - verify
@@ -368,7 +367,7 @@
 - x-postgresql
 - OwnerComposeTest
 - jobs
-- test_observation_commands_use_physical_coordinator
+- test_exact_durable_receipt_is_required_and_capacity_preserves_old
 - with
 - args
 - x-status-environment
@@ -404,7 +403,7 @@
 - main
 - driver_opts
 - volumes
-- spire_fixture.py
+- SSHDocker
 - Handler
 - pre_promote
 - main
@@ -480,8 +479,8 @@
 - x-telemetry-client
 - healthcheck
 - ADR-0153: Согласованная установка двух частей Advance Screening
-- translator-service/test/test_runtime.py
-- stat
+- platform-ui/test/test_configuration.py
+- publisher_authority.py
 - Loki — руководство пользователя
 - ADR-0174: Точный адрес является самостоятельной кандидатной точкой наблюдения
 - ADR-0036: Допуск внешних источников и операторская проверка
@@ -489,10 +488,10 @@
 - Observability — руководство по оркестрации
 - Handler
 - Clean-room воспроизведение полного локального профиля
-- canonical
-- translator-service/USER_MANUAL.md
+- worker.py
+- INDEX.md
 - ADR-0176: Физическая группа управления исследованием
-- create_app
+- operator_api.py
 - FencingReleaseGateTests
 - ADR-0042: Выбор хранилища по нагрузке и ограниченному контексту
 - include
@@ -506,7 +505,7 @@
 - volumes
 - runtime
 - test/test_recovery_history.py
-- Проверка исправления счётчиков и управления Prometheus
+- Delivery — руководство пользователя
 - HTTP endpoints Public Egress Gateway
 - Publisher
 - include
@@ -515,15 +514,15 @@
 - test_local_publisher.py
 - Outbox
 - inherited-adrs/INDEX.md
-- ADR-0090: Границы конфигурации инфраструктурных компонентов
-- Delivery — руководство пользователя
+- result.md
+- Blackbox Exporter — руководство пользователя
 - Connection
 - install
 - ADR-0005: Управление межсервисными контрактами
 - ADR-0062: Асимметричный classifier безопасного отсева отрицательных Web-источников
 - ADR-0061: Естественный поток операторских решений и адаптивная готовность корпуса crawler
 - postgresql/compose.yml
-- Руководство по оркестрации Platform Infrastructure
+- up
 - Prometheus — руководство пользователя
 - postgresql/test/test_runtime.py
 - ADR-0094: Файлы оркестрации непосредственно в корне инфраструктуры
@@ -534,7 +533,7 @@
 - ADR-0071: Постепенное применение локализации предметной политики
 - PersistentContainerSnapshotTests
 - ADR-0104: Все режимы Compose принадлежат сервисным поставкам
-- certificates
+- test_dependency_security.py
 - ADR-0091: Владение Kafka topics издателями контрактов
 - ADR-0131: Ручные маршрутные решения Base Screening
 - minio/status_publisher.py
@@ -544,12 +543,12 @@
 - test_client_health.py
 - run
 - ADR-0098: Кластерная инфраструктурная поставка PostgreSQL
-- test_infrastructure/test_recovery_history.py
-- ADR-0093: Многоплощадочная топология инфраструктурного MinIO
+- https_url
+- test_login_theme.py
 - keycloak-entrypoint.sh
-- 00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры
+- MinioConfigurationTest
 - ADR-0152: Самостоятельные владельцы вместо общего контура Discovery Registry
-- MinIO
+- minio/USER_MANUAL.md
 - ADR-0177: Точная цель исследования и кандидат логического источника
 - presentation.ts
 - include
@@ -568,7 +567,7 @@
 - client.sh
 - cleanup_resources
 - Спецификация Public Egress Gateway
-- test_gateway.py
+- GatewayMetrics
 - 00-INFRA-20261109-0016-opaque-provider-runtime-egress — Сеть внешнего непрозрачного провайдера
 - inventory
 - plistlib
@@ -583,10 +582,10 @@
 - sql-operator-result.md
 - ADR-0140: Очередь неопределённости Advance Screening принадлежит оператору
 - translator-service/test/status-labels-result.md
-- production-readiness.md
-- Диагностика listener и восстановление приёмника — 21 октября 2026
-- SPEC.md
-- loki/status_publisher.py
+- postgresql/USER_MANUAL.md
+- run
+- USER_MANUAL.md
+- aggregate
 - observability.py
 - compose.compute-worker.mtls.yml
 - telemetry.md
@@ -597,7 +596,7 @@
 - ADR-0060: Единое бинарное решение о предметной релевантности Web
 - Локальная квалификация owner-compose — 16 ноября 2026
 - 00-INFRA-20261106-0007-workload-and-operator-identity.md
-- Исправление прерванного fencing и попытка возврата реплик — 19 октября 2026 года
+- Publisher
 - 20261014-0128-base-screening-service-envelope.md
 - ADR-0147: Стендовая маршрутизация Qwen по собственной оценке уверенности
 - ADR-0078: Асинхронный каскад отбора и исследования источников
@@ -607,21 +606,21 @@
 - volumes
 - ADR-0143: Бинарная оценка сайта Qwen3-8B и собственные пакеты LoRA
 - x-provider-secret
-- main
-- Проверка восстановления формы входа — 2026-10-18
-- 00-INFRA-20261106-0006-technical-storage-boundaries — Границы технических хранилищ
+- ssl
+- index-validation-result.md
+- clean
 - 00-INFRA-20261106-0012-translator-technical-capability — Посредник перевода и непрозрачный провайдер
 - ADR-0048: Авторитетное происхождение доменных адресов Discovery
 - ADR-0079: Имя быстрой стадии Discovery — base-screening
 - ADR-0084: Эксперимент обеих моделей на всей операторской разметке
-- Обновление центрального приёмника, 21 октября 2026
+- prometheus/status_publisher.py
 - Handler
 - healthcheck
 - ADR-0118: Английская каноническая политика и повторяемые локализации
 - translator-service: результаты проверки
-- Сохраняющая остановка, очистка и запуск — 25 октября 2026
+- test_kubernetes_fencing.py
 - ADR-0122: Симметричная декларация темы без логики сопоставления
-- Локальные пробы инфраструктурных издателей — 18 октября 2026
+- 00-INFRA-20261105-0001-independent-infrastructure-product — Самостоятельный инфраструктурный продукт
 - FullLocalContractTests
 - ADR-0123: Стабильный операторский HTTP API по редакции политики
 - public-egress-gateway/INDEX.md
@@ -629,66 +628,73 @@
 - ADR-0127: Независимые целевые действия политики для Connector Builder
 - blackbox-exporter/USER_MANUAL.md
 - hashlib
-- kafka: спецификация
+- 00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources — Границы владельцев и ресурсы потребителей
 - payload
 - ADR-0129: Base Screening является буквальным фильтром политики
 - ADR-0136: Base Screening получает адреса только через Zone Ingestion
 - CONVENTIONS.md
-- Инфраструктурная оркестрация — спецификация
-- auth
-- ADR-0151: Физическая группа и совместная композиция Discovery Engine
+- 00-INFRA-20261106-0004-self-contained-service-delivery — Самодостаточная поставка и композиция сервисов
+- 00-INFRA-20261106-0008-platform-ui-owner-injection — Владельческая инъекция Platform UI
+- 00-INFRA-20261106-0010-bounded-recovery-and-process-control — Ограниченное восстановление и управление процессами
 - ADR-0145: MiniLM исключён из активного исполнения Discovery
 - ADR-0150: Готовность Advance Screening с отложенной реальной проверкой обучения
+- 00-INFRA-20261106-0013-owner-certificate-lifecycle — Владельческий жизненный цикл сертификатов
 - ADR-0157: Deep Screening начинается без наследования Source Research
 - ADR-0167: Владельческие заменяемые вычислительные модули моделей
 - ADR-0170: Единый владельческий вход вычислительной станции
-- NoRedirect
-- tempo/status_publisher.py
+- 00-INFRA-20261106-0014-product-readiness-and-site-admission — Готовность продукта и допуск площадки
+- 00-INFRA-20261106-0015-clean-room-full-local-reproduction — Clean-room воспроизведение полного локального профиля
 - local-http-validation-result.md
 - AGENTS.md
 - PostgreSQL — руководство пользователя
 - services
 - services
 - Развёртывание Platform Infrastructure
-- Независимое размещение Docker fencer: кандидат
-- Стоимость проб и приоритет CPU — 19 октября 2026 года
+- 00-INFRA-20261113-0018-independent-roles-and-translation-mtls — Независимое размещение ролей и mTLS Translator
+- 00-INFRA-20261117-0020-pinned-owner-source-build — Отдельная сборка владельческого образа
 - translator-service/test/status-validation-result.md
 - Восстановление потерянного ответа рестарта — 21 октября 2026
 - ADR-0085: Явное операторское включение экспериментального выпуска
 - ADR-0149: Единая шкала соответствия сайта политике в Advance Screening
-- Аудит документации, диаграмм и Production Readiness
-- Сопровождение TLS Advance — проверка 23 октября 2026 года
+- production-readiness.md
+- JournalStatus
 - Platform Infrastructure — композиция владельцев
 - healthcheck
 - suspend
-- Platform Infrastructure: карта каталога
-- Операторский возврат третьей реплики — 2026-10-21
+- SQLite: аудит технологических границ инфраструктуры
+- Локальные пробы модели и API переводчика
 - AELEV Platform Infrastructure
 - Логический владелец и Compose-координатор SPIRE — 23 октября 2026
-- Clean-room full-local: PASS исправленной версии, 11/11
-- Подключить наблюдение
-- Удостоверения рабочих нагрузок
-- Clean-room full-local: PASS, 11/11
+- test_observability.py
+- Владение Kafka-событиями инфраструктуры
+- Доставка закреплённого пакета на узел, версия 1
+- Официальные источники архитектурных и эксплуатационных решений
 - Первоначальная регистрация в существующем восстановлении
-- План завершения clean-room приёмки
+- Page
 - ADR-0068: Ограниченный TF-IDF-предфильтр перед MiniLM
 - prometheus/USER_MANUAL.md
 - ADR-0080: Каскад Discovery выполняет только тематическую фильтрацию
-- Kafka
+- Согласованный выпуск SPIRE — 22 октября 2026
 - runtime.py
-- PostgreSQL
+- HTTP endpoints translator-service
 - Нормативная спецификация PostgreSQL
-- Проверка выбираемого ограждения PostgreSQL
-- Ответ fencing и независимый возврат — 23 октября 2026
-- Проверки инфраструктурной композиции
+- translator-service: нормативная спецификация
+- translator-service — обновление безопасности зависимостей
+- Проверка проб, SQLite и телеметрии — 22 октября 2026
 - ADR-0075: Сравнение дообученной MiniLM с действующим выпуском и многоязычный TF-IDF
 - Аудит документации инфраструктуры
-- Повторная сверка и критерии допуска 1.0.0
-- Проверка и публикация исходного выпуска
+- Ключевые архитектурные решения Platform Infrastructure
+- render
 - safe_reason
 - steps
 - connect
+- Translator Service
+- Задачи translator-service
+- Конечные политики и запуск управляющих ролей — 22 октября 2026
+- translator-service — операторский перевод через Kafka
+- Согласованная выкладка translator-service 0005
 - Сохранение истории остановленных предшественников — 22 октября 2026
+- Сохранение возраста заданий при техническом повторе
 
 ## God Nodes (most connected - your core abstractions)
 1. `error()` - 94 edges
@@ -717,31 +723,31 @@
 ## Import Cycles
 - None detected.
 
-## Communities (686 total, 58 thin omitted)
+## Communities (694 total, 64 thin omitted)
 
-### Community 0 - "re"
-Cohesion: 0.04
-Nodes (28): main(), main(), operator_identity(), main(), target(), main(), render(), main() (+20 more)
+### Community 0 - "ci_inventory.py"
+Cohesion: 0.20
+Nodes (7): main(), load(), main(), validate(), prepare(), main(), run()
 
 ### Community 1 - "shutil"
-Cohesion: 0.08
-Nodes (36): atomic(), expires_at(), fingerprint(), main(), openssl(), prepare(), regular(), stage() (+28 more)
+Cohesion: 0.04
+Nodes (54): atomic(), expires_at(), fingerprint(), main(), openssl(), prepare(), regular(), stage() (+46 more)
 
 ### Community 2 - "time"
-Cohesion: 0.06
-Nodes (61): account_native(), automatic_block(), automatic_dispatch(), automatic_enable(), automatic_exit(), automatic_exit_records(), automatic_handoff(), automatic_reconcile() (+53 more)
+Cohesion: 0.08
+Nodes (47): account_native(), automatic_block(), automatic_dispatch(), automatic_enable(), automatic_exit(), automatic_exit_records(), automatic_handoff(), automatic_reconcile() (+39 more)
 
 ### Community 3 - "public-egress-gateway/renewal.py"
 Cohesion: 0.16
-Nodes (18): identity_filename(), atomic(), audit_guard(), describe(), load(), enroll(), enroll_server(), expiry() (+10 more)
+Nodes (17): atomic(), audit_guard(), describe(), load(), enroll(), enroll_server(), expiry(), grant_digest() (+9 more)
 
 ### Community 4 - "setting"
 Cohesion: 0.07
-Nodes (23): Устойчивость и управление, desired_cluster_config(), includes(), safety_config(), setting(), tls_context(), health(), mode() (+15 more)
+Nodes (27): Устойчивость и управление, desired_cluster_config(), includes(), safety_config(), setting(), tls_context(), health(), mode() (+19 more)
 
 ### Community 5 - "Repository"
-Cohesion: 0.14
-Nodes (24): Repository, opaque_request(), repo(), request(), success(), test_contract_accepts_an_independent_technical_client(), test_duplicate_computes_once_and_replays_exact_saved_result(), test_eligible_retry_retains_original_age_and_bytes() (+16 more)
+Cohesion: 0.11
+Nodes (33): digest(), event_name(), parse(), result_bytes(), validators(), Repository, verify(), delivered_result() (+25 more)
 
 ### Community 6 - "node_artifact.py"
 Cohesion: 0.12
@@ -752,23 +758,23 @@ Cohesion: 0.08
 Nodes (37): test_missing_setting_is_not_replaced(), atomic(), bind_delivery(), bound(), check(), delivery_operator(), enroll(), expiry() (+29 more)
 
 ### Community 8 - "ha_return_barrier.py"
-Cohesion: 0.22
-Nodes (11): arm(), discard(), hold(), main(), process_identity(), snapshot(), test_invalid_marker_refuses_process_control(), test_later_return_never_passes_claimed_barrier() (+3 more)
+Cohesion: 0.15
+Nodes (17): Контракт и владение, Контроллер, Независимое размещение Docker fencer: кандидат, Образы, Проверки и ограничения, Узловая операция, arm(), discard() (+9 more)
 
 ### Community 9 - "test_infrastructure/test_orchestration.py"
-Cohesion: 0.11
-Nodes (19): test_bounded_on_failure_role_is_ready_after_successful_exit(), test_grafana_failure_keeps_only_fixed_markers_and_no_message_values(), test_group_startup_diagnostic_has_only_bounded_state(), test_group_startup_diagnostic_keeps_bounded_health_state(), test_healthchecked_restart_no_role_fails_immediately_after_exit(), test_healthchecked_restart_no_role_is_not_treated_as_one_shot(), test_image_native_healthcheck_is_used_when_compose_model_omits_it(), test_inactive_optional_mount_does_not_block_combined_start() (+11 more)
+Cohesion: 0.07
+Nodes (28): status(), test_administrative_names_are_owned_without_root_overrides(), test_bounded_on_failure_role_is_ready_after_successful_exit(), test_grafana_failure_keeps_only_fixed_markers_and_no_message_values(), test_group_start_failure_is_reduced_to_fixed_code(), test_group_startup_diagnostic_has_only_bounded_state(), test_group_startup_diagnostic_keeps_bounded_health_state(), test_healthchecked_restart_no_role_fails_immediately_after_exit() (+20 more)
 
 ### Community 10 - "with"
 Cohesion: 0.05
 Nodes (43): concurrency, cancel-in-progress, group, DIGEST, jobs, publish, name, permissions (+35 more)
 
 ### Community 11 - "test_automatic_recovery.py"
-Cohesion: 0.07
-Nodes (53): atomic(), event_record(), automatic(), docker(), crash(), event(), step(), test_cancel_exact_hold_does_not_restore_native_loop() (+45 more)
+Cohesion: 0.10
+Nodes (40): automatic(), docker(), crash(), event(), step(), test_cancel_exact_hold_does_not_restore_native_loop(), test_compose_dependency_wait_does_not_spend_attempt(), test_compose_handoff_preserves_an_unrelated_protective_block() (+32 more)
 
 ### Community 12 - "Exporter"
-Cohesion: 0.15
+Cohesion: 0.18
 Nodes (10): Exporter, verify(), test_consumer_policy_is_preserved_across_delivery_and_repeat(), test_declared_public_configuration_mountpoints_preserve_consumer_bytes(), test_foreign_volume_is_not_adopted(), test_generation_is_atomic_and_repeated_material_does_not_rotate(), test_known_partial_is_resumed_without_new_keys(), test_nonregular_policy_mountpoint_is_rejected_without_following() (+2 more)
 
 ### Community 13 - "environment"
@@ -804,24 +810,24 @@ Cohesion: 0.04
 Nodes (48): AELEV_INFRASTRUCTURE_MINIO_BIND, AELEV_INFRASTRUCTURE_MINIO_COMPOSE_PROJECT, AELEV_INFRASTRUCTURE_MINIO_INGRESS_NETWORK, AELEV_INFRASTRUCTURE_MINIO_NETWORK, AELEV_INFRASTRUCTURE_MINIO_PARITY, AELEV_INFRASTRUCTURE_MINIO_PROVISION_ACCESS_KEY, AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET, AELEV_INFRASTRUCTURE_MINIO_PROVISION_POLICY (+40 more)
 
 ### Community 21 - "postgresql/test/test_renewal.py"
-Cohesion: 0.06
-Nodes (25): bundle(), native(), test_bound_material_drift_blocks_renewal(), test_current_sql_authorization_required_before_issuance(), test_delivery_is_public_only_and_revocation_sends_no_leaf(), test_duplicate_input_fields_rejected(), test_failed_candidate_not_published_and_retry_reuses_it(), test_failed_volume_delivery_marks_existing_host_report_negative() (+17 more)
+Cohesion: 0.15
+Nodes (14): bundle(), native(), test_bound_material_drift_blocks_renewal(), test_current_sql_authorization_required_before_issuance(), test_delivery_is_public_only_and_revocation_sends_no_leaf(), test_duplicate_input_fields_rejected(), test_failed_candidate_not_published_and_retry_reuses_it(), test_failed_volume_delivery_marks_existing_host_report_negative() (+6 more)
 
 ### Community 22 - "sender"
 Cohesion: 0.05
 Nodes (47): create_host_path, PYTHONDONTWRITEBYTECODE, PYTHONUNBUFFERED, cap_drop, entrypoint, environment, group_add, image (+39 more)
 
 ### Community 23 - "error"
-Cohesion: 0.07
-Nodes (19): IntentStore, main(), binding(), execute(), record(), return_record(), validate(), Returns (+11 more)
+Cohesion: 0.10
+Nodes (13): Docker, FencingError, IntentStore, main(), binding(), check_daemon(), exclusive(), execute() (+5 more)
 
 ### Community 24 - "Store"
-Cohesion: 0.17
-Nodes (22): Description, Status, Store, test_component_description_change_and_reactivation_need_new_reports(), test_component_freshness_does_not_inherit_parent(), test_connection_timeout_is_not_an_unsubscribe_or_observation(), test_graceful_withdrawal_and_return_preserve_identity(), test_legacy_database_migration_preserves_description_and_status() (+14 more)
+Cohesion: 0.15
+Nodes (25): canonical(), Description, Status, Store, test_component_description_change_and_reactivation_need_new_reports(), test_component_freshness_does_not_inherit_parent(), test_connection_timeout_is_not_an_unsubscribe_or_observation(), test_graceful_withdrawal_and_return_preserve_identity() (+17 more)
 
-### Community 25 - "public_state.py"
-Cohesion: 0.08
-Nodes (14): interrupt(), leaf_renewal(), material(), own_matches(), peer_matches(), PeerTLS, PublicHandler, PublicServer (+6 more)
+### Community 25 - "atomic"
+Cohesion: 0.14
+Nodes (21): atomic(), event_record(), main(), docker(), row(), wait(), main(), docker() (+13 more)
 
 ### Community 26 - "compose.remote.yml"
 Cohesion: 0.05
@@ -831,13 +837,13 @@ Nodes (44): create_host_path, name, x-background-health, interval, retries, test
 Cohesion: 0.04
 Nodes (48): create_host_path, context, dockerfile, target, AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER, AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER, AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_SSH_BINDINGS, AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_DOCKER_TRANSPORT (+40 more)
 
-### Community 28 - "os"
+### Community 28 - "pathlib"
 Cohesion: 0.02
-Nodes (52): main(), main(), _call(), exact_operator(), https_origin(), main(), provision(), _read_admin() (+44 more)
+Nodes (34): main(), main(), main(), clear(), process_start(), publish(), main(), operator_identity() (+26 more)
 
 ### Community 29 - "platform-ui/test/test_api.py"
 Cohesion: 0.17
-Nodes (34): canonical(), create_app(), modules(), publisher(), require(), Settings, cfg(), components() (+26 more)
+Nodes (33): create_app(), modules(), publisher(), require(), Settings, cfg(), components(), description() (+25 more)
 
 ### Community 30 - "tempo.yml"
 Cohesion: 0.05
@@ -852,8 +858,8 @@ Cohesion: 0.05
 Nodes (42): concurrency, cancel-in-progress, group, DIGEST, jobs, publish, name, permissions (+34 more)
 
 ### Community 33 - "observation.py"
-Cohesion: 0.09
-Nodes (29): Технические интерфейсы SPIRE, component_renewal(), Handler, main(), merge_receipts(), metrics(), Outgoing, packet() (+21 more)
+Cohesion: 0.05
+Nodes (42): Технические интерфейсы SPIRE, component_renewal(), Handler, main(), merge_receipts(), metrics(), Outgoing, packet() (+34 more)
 
 ### Community 34 - "minio/compose.yml"
 Cohesion: 0.06
@@ -868,8 +874,8 @@ Cohesion: 0.05
 Nodes (41): concurrency, cancel-in-progress, group, DIGEST, jobs, publish, name, permissions (+33 more)
 
 ### Community 37 - "delivery/USER_MANUAL.md"
-Cohesion: 0.05
-Nodes (42): 00-INFRA-20261106-0009-independent-observability-and-telemetry — Самостоятельная наблюдаемость и устойчивая телеметрия, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Архив и проекции, Передача между устойчивыми журналами (+34 more)
+Cohesion: 0.03
+Nodes (56): 00-INFRA-20261106-0009-independent-observability-and-telemetry — Самостоятельная наблюдаемость и устойчивая телеметрия, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Архив и проекции, Передача между устойчивыми журналами (+48 more)
 
 ### Community 38 - "environment"
 Cohesion: 0.18
@@ -883,52 +889,52 @@ Nodes (41): concurrency, cancel-in-progress, group, DIGEST, GH_TOKEN, jobs, publ
 Cohesion: 0.06
 Nodes (34): device, o, type, interval, retries, start_period, test, timeout (+26 more)
 
-### Community 41 - "uuid"
-Cohesion: 0.05
-Nodes (31): env(), LoginForm, main(), wait_for(), model(), modules(), operator_token(), render_swagger() (+23 more)
+### Community 41 - "owner_compose_lifecycle.py"
+Cohesion: 0.29
+Nodes (7): baseline(), call(), definition(), execute(), history(), inspect(), record()
 
 ### Community 42 - "QueueServiceApp.tsx"
 Cohesion: 0.09
 Nodes (40): Интерфейсы: Platform UI SDK, DeliveryStatusPanel(), DeliverySummary, operatorReceiptItems(), parseDeliverySummary(), ReceiptItem, EvidenceDialog(), useModuleLanguage() (+32 more)
 
 ### Community 43 - "upgrade"
-Cohesion: 0.12
-Nodes (11): upgrade(), main(), prove(), fixture(), test_completed_upgrade_does_not_enable_later_manually_stopped_timer(), test_upgrade_does_not_accept_changed_completed_plist(), test_upgrade_does_not_enable_manually_stopped_timer(), test_upgrade_keeps_state_interpreter_timer_and_old_artifacts() (+3 more)
+Cohesion: 0.11
+Nodes (12): timer_loaded(), upgrade(), main(), prove(), fixture(), test_completed_upgrade_does_not_enable_later_manually_stopped_timer(), test_upgrade_does_not_accept_changed_completed_plist(), test_upgrade_does_not_enable_manually_stopped_timer() (+4 more)
 
 ### Community 44 - "exports"
 Cohesion: 0.07
 Nodes (32): exports, ./dataRefresh, ./DataRefreshIndicator, ./DeliveryStatusPanel, ./deliverySummary, ./EvidenceDialog, ./moduleAuth, ./moduleRuntime (+24 more)
 
-### Community 45 - "json"
-Cohesion: 0.07
-Nodes (43): main(), benchmark(), cache_directory(), clean(), compute_state(), digest(), docker(), download() (+35 more)
+### Community 45 - "test_experiment.py"
+Cohesion: 0.11
+Nodes (19): compute_state(), memory_bytes(), released_compute(), remove_owned_container(), test_cleanup_refuses_other_owner(), test_cleanup_stops_only_exact_owned_container(), test_compute_snapshot_refuses_a_different_compose_owner(), test_corpus_is_identical_and_fits_the_existing_provider() (+11 more)
 
 ### Community 46 - "keycloak/test/test_status_publisher.py"
 Cohesion: 0.07
 Nodes (32): cfg(), test_administrative_password_requires_a_regular_nonempty_file(), test_components_have_independent_evidence(), test_cycle_repeats_exact_pending_after_lost_confirmation(), test_description_only_identifies_its_owner(), test_duplicate_database_check_is_not_false_success(), test_failed_token_does_not_clear_pending(), test_foreign_uuid_cannot_reset_volume() (+24 more)
 
 ### Community 47 - "GatewayHandler"
-Cohesion: 0.07
-Nodes (11): asset(), AttributeSpan, DocumentationHandler, FetchRequest, GatewayHandler, GatewayRejected, PinnedHTTPConnection, PinnedHTTPSConnection (+3 more)
+Cohesion: 0.08
+Nodes (8): AttributeSpan, DocumentationHandler, FetchRequest, GatewayHandler, GatewayRejected, PinnedHTTPConnection, PinnedHTTPSConnection, request_span()
 
 ### Community 48 - "remote_write"
 Cohesion: 0.07
 Nodes (29): owner_id, service, global, external_labels, scrape_interval, scrape_timeout, batch_send_deadline, capacity (+21 more)
 
 ### Community 49 - "platform-ui-injection.md"
-Cohesion: 0.03
-Nodes (62): 00-INFRA-20261106-0004-self-contained-service-delivery — Самодостаточная поставка и композиция сервисов, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, 00-INFRA-20261106-0008-platform-ui-owner-injection — Владельческая инъекция Platform UI, Ключевые решения (+54 more)
+Cohesion: 0.04
+Nodes (48): 00-INFRA-20261106-0007-workload-and-operator-identity — Удостоверения workloads и операторов, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Декларация владельца, Живость и отзыв (+40 more)
 
-### Community 50 - "test_observation.py"
-Cohesion: 0.08
-Nodes (26): bind_network(), dashboard(), call(), documents(), network_endpoints(), origin(), publish_dashboard(), plan() (+18 more)
+### Community 50 - "plan"
+Cohesion: 0.13
+Nodes (14): bind_network(), dashboard(), call(), documents(), gateway_aliases(), network_endpoints(), origin(), publish_dashboard() (+6 more)
 
 ### Community 51 - "test_operator_translation.py"
 Cohesion: 0.11
-Nodes (12): TranslationInput, configuration(), no_sleep(), test_busy_rejects_before_producer_or_storage(), test_enable_flag_is_required_and_explicit(), test_input_is_bounded_and_not_a_foreign_job_lookup(), test_invalid_enable_flag_never_falls_back(), test_operator_limits_are_validated() (+4 more)
+Nodes (13): TranslationInput, configuration(), no_sleep(), test_busy_rejects_before_producer_or_storage(), test_enable_flag_is_required_and_explicit(), test_event_uses_the_pinned_contract_and_preserves_exact_text(), test_input_is_bounded_and_not_a_foreign_job_lookup(), test_invalid_enable_flag_never_falls_back() (+5 more)
 
 ### Community 52 - "test_operator_api.py"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (18): client_for(), FakeServer, test_documentation_groups_have_explicit_order_and_membership(), test_documentation_is_local_and_protected_by_browser_headers(), test_explicit_local_documentation_address(), test_http_never_works_outside_local(), test_local_http_does_not_admit_remote_or_ambiguous_hosts(), test_local_operator_cannot_publish_on_wide_host_bind() (+10 more)
 
 ### Community 53 - "with"
@@ -936,16 +942,16 @@ Cohesion: 0.04
 Nodes (44): concurrency, cancel-in-progress, group, default, description, options, type, default (+36 more)
 
 ### Community 54 - "Installer"
-Cohesion: 0.08
-Nodes (27): deliver(), existing(), install(), render(), runtime_image(), validate(), read(), Installer (+19 more)
+Cohesion: 0.11
+Nodes (15): deliver(), existing(), install(), render(), runtime_image(), validate(), Installer, configure() (+7 more)
 
 ### Community 55 - "FullRuntimeTest"
 Cohesion: 0.07
-Nodes (23): Интерфейс локальной установки инфраструктуры, версия 1, Полный локальный профиль, SPIRE: подключение к восстановлению — 25 октября 2026, bootstrap_spire(), command(), completed_dependencies(), containers(), contract() (+15 more)
+Nodes (18): bootstrap_spire(), command(), completed_dependencies(), containers(), contract(), execute_full(), guard_existing(), initial_binding_required() (+10 more)
 
 ### Community 56 - "test_restart_intent.py"
-Cohesion: 0.10
-Nodes (19): Docker baseline полного gate — 17 ноября 2026, Сохранность root lifecycle и локальный clean-room — 17 ноября 2026, Исходное состояние, Подготовка, Проверки исходников, Согласованный выпуск SPIRE — 22 октября 2026, fixture(), stored() (+11 more)
+Cohesion: 0.15
+Nodes (12): fixture(), stored(), test_last_lost_ack_does_not_replenish_exhausted_budget(), lost(), test_late_new_process_is_observed_not_restarted(), test_legacy_policy_ambiguity_is_not_reinterpreted(), test_lost_ack_reconciles_exact_phase_without_spending_again(), test_native_retry_during_pending_policy_uses_same_budget() (+4 more)
 
 ### Community 57 - "socket"
 Cohesion: 0.17
@@ -964,12 +970,12 @@ Cohesion: 0.09
 Nodes (27): aliases, command, image, networks, ports, restart, networks, networks (+19 more)
 
 ### Community 61 - "recovery_host.py"
-Cohesion: 0.08
-Nodes (33): apply(), document(), preflight(), request(), require(), result(), transport(), completed_receipt() (+25 more)
+Cohesion: 0.07
+Nodes (34): apply(), document(), preflight(), request(), require(), result(), transport(), completed_receipt() (+26 more)
 
 ### Community 62 - "test_authorization.py"
-Cohesion: 0.17
-Nodes (14): GrantStore, IdentityApplications, grant(), install(), test_duplicate_json_and_external_symlinks_fail_closed(), test_failed_local_audit_prevents_admission_change(), test_foreign_trust_domain_cannot_use_an_approved_file(), test_grants_reject_invalid_or_self_expanding_input() (+6 more)
+Cohesion: 0.10
+Nodes (27): GrantStore, AddressPolicy, GatewayApplication, IdentityApplications, grant(), install(), test_failed_local_audit_prevents_admission_change(), test_foreign_trust_domain_cannot_use_an_approved_file() (+19 more)
 
 ### Community 63 - "with"
 Cohesion: 0.06
@@ -979,9 +985,9 @@ Nodes (35): SUBJECT_IMAGE, SUBJECT_SOURCE, description, required, type, image, s
 Cohesion: 0.14
 Nodes (12): issue(), mutate(), journal(), LoginForm, main(), Operator, origin(), private() (+4 more)
 
-### Community 65 - "fcntl"
-Cohesion: 0.09
-Nodes (21): История SPIRE, Агент и удостоверения, Владение и полномочия, Доверие и production, Наблюдение и восстановление, Публичная композиция установленного провайдера, Резервная копия и возврат, Собственное наблюдение (+13 more)
+### Community 65 - "Наблюдение и восстановление"
+Cohesion: 0.67
+Nodes (3): Наблюдение и восстановление, Резервная копия и возврат, Собственное наблюдение
 
 ### Community 66 - "remote_write"
 Cohesion: 0.07
@@ -992,16 +998,16 @@ Cohesion: 0.09
 Nodes (27): dependencies, keycloak-js@26.2.0, react@19.1.1, react-dom@19.1.1, devDependencies, @types/react@19.1.10, @types/react-dom@19.1.7, typescript@5.9.2 (+19 more)
 
 ### Community 68 - "re"
-Cohesion: 0.06
-Nodes (42): fixture_authority(), test_rotation_is_explicit_and_keeps_overlap(), test_transport_authority_uses_its_own_files(), _certificate(), _fingerprint(), main(), prepare(), stage_trust() (+34 more)
+Cohesion: 0.03
+Nodes (75): История SPIRE, Агент и удостоверения, Владение и полномочия, Доверие и production, Публичная композиция установленного провайдера, Спецификация поставки SPIRE, _certificate(), _fingerprint() (+67 more)
 
 ### Community 69 - "environment"
 Cohesion: 0.26
 Nodes (26): environment, environment, environment, environment, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL (+18 more)
 
 ### Community 70 - "operator_translation.py"
-Cohesion: 0.08
-Nodes (18): digest(), event_name(), parse(), result_bytes(), validators(), translate(), OperatorTranslationError, OperatorTranslations (+10 more)
+Cohesion: 0.10
+Nodes (7): translate(), OperatorTranslationError, OperatorTranslations, request_bytes(), service(), Settings, Первоначальная регистрация новой установки
 
 ### Community 71 - "environment"
 Cohesion: 0.26
@@ -1016,8 +1022,8 @@ Cohesion: 0.21
 Nodes (26): ETCD_ADVERTISE_CLIENT_URLS, ETCD_AUTO_COMPACTION_RETENTION, ETCD_CERT_FILE, ETCD_CLIENT_CERT_AUTH, ETCD_DATA_DIR, ETCD_ELECTION_TIMEOUT, ETCD_HEARTBEAT_INTERVAL, ETCD_INITIAL_ADVERTISE_PEER_URLS (+18 more)
 
 ### Community 74 - "test_operator_auth.py"
-Cohesion: 0.19
-Nodes (17): Verifier, jwks_client(), test_bad_rsa_key_does_not_block_the_valid_identity_key(), test_correct_own_read_token_is_accepted(), test_disabled_network_translation_has_no_identity_dependency(), test_disabled_translation_keeps_read_authorization(), test_hmac_token_is_rejected_before_identity_lookup(), test_identity_connection_failure_is_fail_closed() (+9 more)
+Cohesion: 0.15
+Nodes (20): Verifier, auth(), jwks_client(), reply(), test_bad_rsa_key_does_not_block_the_valid_identity_key(), test_correct_own_read_token_is_accepted(), test_disabled_network_translation_has_no_identity_dependency(), test_disabled_translation_keeps_read_authorization() (+12 more)
 
 ### Community 75 - "volumes"
 Cohesion: 0.08
@@ -1028,16 +1034,16 @@ Cohesion: 0.07
 Nodes (28): POSTGRES_DB, POSTGRES_INITDB_ARGS, POSTGRES_PASSWORD_FILE, POSTGRES_USER, translator-data, services, translator-database, translator-service-status-provision (+20 more)
 
 ### Community 77 - "json"
-Cohesion: 0.04
-Nodes (39): main(), description(), description(), check(), env(), query(), request(), model() (+31 more)
+Cohesion: 0.03
+Nodes (51): main(), description(), test_intent_diagnostic_cannot_echo_unknown_payloads(), test_runtime_diagnostic_excludes_configuration_and_raw_logs(), description(), compiled(), test_default_restarts_are_bounded_and_existing_budget_overrides_survive(), test_selected_sender_is_pinned_and_health_uses_both_trust_domains() (+43 more)
 
 ### Community 78 - "ADR-0109: Операторский перевод через штатную Kafka-очередь"
 Cohesion: 0.10
 Nodes (18): ADR-0109: Операторский перевод через штатную Kafka-очередь, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+10 more)
 
 ### Community 79 - "translator-service/test/test_runtime.py"
-Cohesion: 0.08
-Nodes (12): 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, Изменения translator-service, do_POST(), test_database_outage_never_commits_or_polls_next_message() (+4 more)
+Cohesion: 0.06
+Nodes (18): 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, Изменения translator-service, do_POST(), test_compute_sends_only_text_and_languages_to_opaque_provider() (+10 more)
 
 ### Community 80 - "modules.ts"
 Cohesion: 0.12
@@ -1048,12 +1054,12 @@ Cohesion: 0.17
 Nodes (15): Адресное обновление SPIRE Server — 22 октября 2026, Выкладка и результат, Разрешение и область, Резервирование, Следующий этап, installer(), plan(), test_component_cannot_silently_select_old_shared_file_mode() (+7 more)
 
 ### Community 82 - "Исходные тексты и полученные переводы"
-Cohesion: 0.08
-Nodes (25): climate-observatory-sentence (en → de), climate-observatory-term (en → de), de-en-negation (de → en), en-de-technical (en → de), en-ru-context (en → ru), en-ru-identifier (en → ru), en-ru-negation (en → ru), en-ru-newlines (en → ru) (+17 more)
+Cohesion: 0.10
+Nodes (21): climate-observatory-sentence (en → de), climate-observatory-term (en → de), de-en-negation (de → en), en-de-technical (en → de), en-ru-context (en → ru), en-ru-identifier (en → ru), en-ru-negation (en → ru), en-ru-newlines (en → ru) (+13 more)
 
 ### Community 83 - "recovery_host.py"
 Cohesion: 0.08
-Nodes (28): run(), state(), relocation_release_proof(), fixture(), relocation_request(), test_all_scope_checked_before_first_suspend(), test_container_protocol_reads_a_line_not_eof(), test_controller_and_reset_are_not_exposed() (+20 more)
+Nodes (29): main(), run(), state(), relocation_release_proof(), fixture(), relocation_request(), test_all_scope_checked_before_first_suspend(), test_container_protocol_reads_a_line_not_eof() (+21 more)
 
 ### Community 84 - "test_onboarding.py"
 Cohesion: 0.22
@@ -1064,8 +1070,8 @@ Cohesion: 0.13
 Nodes (4): _clean_environment(), _resolved_compose(), _resolved_compute(), TranslatorConfigurationTest
 
 ### Community 86 - "base64"
-Cohesion: 0.14
-Nodes (21): atomic(), certificate(), certificate_bundle(), encoded(), extensions(), list_value(), main(), marker() (+13 more)
+Cohesion: 0.10
+Nodes (27): atomic(), certificate(), certificate_bundle(), encoded(), extensions(), list_value(), main(), marker() (+19 more)
 
 ### Community 88 - "main"
 Cohesion: 0.31
@@ -1095,9 +1101,9 @@ Nodes (24): image, profiles, cpu_shares, entrypoint, image, mem_limit, networks,
 Cohesion: 0.15
 Nodes (18): setup(), native(), test_ambiguous_token_issue_does_not_mint_another_right(), lose_response(), test_declared_policy_mountpoints_survive_registration_and_export(), test_export_fails_closed_without_native_mutation(), test_export_preserves_unknown_or_changed_material(), test_export_reuses_exact_material_and_never_issues_another_right() (+10 more)
 
-### Community 95 - "spire/bootstrap.py"
-Cohesion: 0.29
-Nodes (7): BootstrapError, entrypoint(), install(), invoke(), main(), private_text(), validate_inputs()
+### Community 95 - "delivery/test/test_renewal.py"
+Cohesion: 0.19
+Nodes (13): bundle(), test_changed_key_blocks_issuance(), test_delivery_is_public_only_and_revocation_sends_no_leaf(), test_explicit_schema_three_normalizes_legacy_leaf_once(), test_explicit_schema_two_ca_transition_preserves_leaf_profile(), test_failed_delivery_is_not_reported_healthy(), test_fresh_receipt_is_a_fail_closed_installation_gate(), test_interrupted_publication_reconciles_without_reissuing() (+5 more)
 
 ### Community 96 - "spire_renewal.py"
 Cohesion: 0.17
@@ -1112,8 +1118,8 @@ Cohesion: 0.09
 Nodes (23): x-ui-status-environment, AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_REST_PORT, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_CLIENT_PORT, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_2_ETCD_HOST (+15 more)
 
 ### Community 99 - "test_native_health.py"
-Cohesion: 0.06
-Nodes (38): api_versions(), description(), probe(), receive(), binary(), metadata(), packet(), probe() (+30 more)
+Cohesion: 0.09
+Nodes (25): api_versions(), description(), probe(), receive(), binary(), metadata(), packet(), probe() (+17 more)
 
 ### Community 100 - "test_cancel_suspend.py"
 Cohesion: 0.21
@@ -1159,12 +1165,12 @@ Nodes (22): context, target, build, build, build, build, build, build (+14 more)
 Cohesion: 0.09
 Nodes (22): Keycloak — руководство пользователя, Восстановление давно открытой формы входа, Генерация TLS-ключа и сертификата, Лёгкая проба издателя, Назначение, Обновление журнала издателя, Остановка, обновление и резервная копия, Официальные руководства (+14 more)
 
-### Community 111 - "Руководство translator-service"
-Cohesion: 0.14
-Nodes (14): Группы и операции Swagger, Диагностика и восстановление, Ограниченное восстановление, Операторский перевод, Отдельный образ издателя, Официальные руководства, Порядок очереди и повторы, Руководство translator-service (+6 more)
+### Community 111 - "recover"
+Cohesion: 0.17
+Nodes (11): apply_override(), recover(), fixture(), docker(), test_explicit_sender_update_preserves_exhaustion_chain(), test_failed_replacement_requires_operator_not_a_second_start(), test_observer_reuses_exact_recovery_without_changing_sender_or_health(), test_old_installer_cannot_regenerate_a_fresh_restart_budget() (+3 more)
 
 ### Community 112 - "api"
-Cohesion: 0.08
+Cohesion: 0.07
 Nodes (27): Адресация, Готовность, Единый контракт живости и готовности HTTP, Живость, ADR-0128: Самостоятельная оболочка и неактивный запуск Base Screening, Контекст, Миграция и откат, Последствия (+19 more)
 
 ### Community 113 - "args"
@@ -1180,16 +1186,12 @@ Cohesion: 0.10
 Nodes (21): x-postgresql-environment, AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER, AELEV_INFRASTRUCTURE_POSTGRESQL_CLUSTER, AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_MODE, AELEV_INFRASTRUCTURE_POSTGRESQL_MAX_CONNECTIONS, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_CLIENT_PORT, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_ETCD_HOST, AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_1_HOST (+13 more)
 
 ### Community 116 - "test_provider_transport.py"
-Cohesion: 0.18
-Nodes (19): retry_code(), port(), Authority, delivered(), openssl(), server(), handle(), test_identity_renewal_during_handshake_requires_fresh_connection_before_text() (+11 more)
+Cohesion: 0.22
+Nodes (18): port(), Authority, delivered(), openssl(), server(), handle(), test_identity_renewal_during_handshake_requires_fresh_connection_before_text(), renewing() (+10 more)
 
 ### Community 117 - "full_local.py"
 Cohesion: 0.14
 Nodes (32): prepare(), adapt_created_env_identities(), build_bom(), build_profile(), build_service_sets(), command(), compose_prefix(), display_path() (+24 more)
-
-### Community 118 - "sys"
-Cohesion: 0.06
-Nodes (15): main(), main(), child(), docker(), main(), record(), operator(), shell_arguments() (+7 more)
 
 ### Community 119 - "Journal"
 Cohesion: 0.14
@@ -1236,20 +1238,20 @@ Cohesion: 0.06
 Nodes (30): create_host_path, networks, provider-routed, host_ip, protocol, published, target, external (+22 more)
 
 ### Community 130 - "platform-ui/api.py"
-Cohesion: 0.12
-Nodes (12): Component, ComponentStatus, publish(), ExternalLinks, Health, main(), origin(), Section (+4 more)
+Cohesion: 0.11
+Nodes (11): Authenticator, Component, ComponentStatus, publish(), ExternalLinks, Health, main(), origin() (+3 more)
 
-### Community 131 - "loki/USER_MANUAL.md"
-Cohesion: 0.09
-Nodes (17): История изменений, Loki: карта каталога, Loki, Запуск, Навигация, Основные возможности, loki: спецификация самостоятельной поставки, Локальная живость и восстановление (+9 more)
+### Community 131 - "oidc_provision.py"
+Cohesion: 0.17
+Nodes (8): _call(), exact_operator(), https_origin(), main(), provision(), _read_admin(), required(), _write_secret()
 
 ### Community 132 - "http"
 Cohesion: 0.11
 Nodes (18): fail_if_not_ssl, follow_redirects, method, preferred_ip_protocol, http, prober, timeout, tls_config (+10 more)
 
 ### Community 133 - "Руководство SPIRE"
-Cohesion: 0.14
-Nodes (14): Диагностика и восстановление, Исходные входы, Назначение и граница, Отзыв, Официальные руководства, Передать уже одобренное первоначальное разрешение, Подключить установленный SPIRE к общей композиции, Проверки (+6 more)
+Cohesion: 0.11
+Nodes (19): Автоматическое сопровождение локальных сертификатов, Адресно восстановить исчерпанный observer, Адресно восстановить исчерпанный sender, Диагностика и восстановление, Исходные входы, Назначение и граница, Отзыв, Официальные руководства (+11 more)
 
 ### Community 134 - "x-status-runtime"
 Cohesion: 0.11
@@ -1308,8 +1310,8 @@ Cohesion: 0.18
 Nodes (18): interval, retries, start_period, test, timeout, healthcheck, healthcheck, healthcheck (+10 more)
 
 ### Community 148 - "test_local_inputs.py"
-Cohesion: 0.21
-Nodes (17): configuration(), issued(), local(), network_configuration(), store(), test_a_leaf_cannot_smuggle_its_issuer_private_key_into_runtime(), test_external_ca_itself_cannot_be_delivered_as_a_client_identity(), test_external_issuer_keys_cannot_enter_the_input_contract() (+9 more)
+Cohesion: 0.15
+Nodes (22): test_bundle_rejects_path_traversal(), test_bundle_validation_checks_every_digest(), test_private_restore_never_overwrites_existing_file(), test_source_map_uses_only_declared_owner_files(), test_operator_leaf_supports_strict_client_auth_and_preserves_existing(), configuration(), issued(), local() (+14 more)
 
 ### Community 149 - "Changelog"
 Cohesion: 0.07
@@ -1335,9 +1337,9 @@ Nodes (16): aliases, image, init, internal, name, networks, ports, restart (+8 m
 Cohesion: 0.12
 Nodes (17): KAFKA_ADVERTISED_LISTENERS, KAFKA_AUTO_CREATE_TOPICS_ENABLE, KAFKA_CONTROLLER_LISTENER_NAMES, KAFKA_CONTROLLER_QUORUM_VOTERS, KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS, KAFKA_HEAP_OPTS, KAFKA_INTER_BROKER_LISTENER_NAME, KAFKA_LISTENER_SECURITY_PROTOCOL_MAP (+9 more)
 
-### Community 155 - "test_observation_liveness.py"
-Cohesion: 0.23
-Nodes (7): test_actual_stall_is_not_hidden_by_diagnostic_capture(), test_changed_failure_cannot_publish_positive_heartbeat(), test_dead_worker_is_failed_even_with_fresh_progress(), test_recovery_during_diagnostics_cancels_stale_exit(), record(), test_several_completed_bounded_steps_are_not_one_long_stall(), worker_state()
+### Community 155 - "run.py"
+Cohesion: 0.27
+Nodes (11): benchmark(), digest(), docker(), historical_madlad_lock(), inventory(), model_memory_limit(), report(), resource_preflight() (+3 more)
 
 ### Community 156 - "keycloak/compose.yml"
 Cohesion: 0.12
@@ -1352,8 +1354,8 @@ Cohesion: 0.25
 Nodes (8): ADR-0141: Операторская разметка обучает модели только своего сервиса, Контекст, Критерии выбора, Миграция и откат, Последствия и критерии проверки, Рассмотренные альтернативы, Решение, Связанные документы
 
 ### Community 159 - "test_presentation_client.py"
-Cohesion: 0.14
-Nodes (20): provision(), Publisher, cfg(), provision_files(), test_aggregate_requires_positive_evidence(), test_durable_exact_retry_and_monotonic_sequence(), test_exact_withdrawal_retry_is_not_replaced_by_new_presence(), test_failed_publication_keeps_exact_bytes() (+12 more)
+Cohesion: 0.16
+Nodes (18): provision(), cfg(), provision_files(), test_aggregate_requires_positive_evidence(), test_durable_exact_retry_and_monotonic_sequence(), test_exact_withdrawal_retry_is_not_replaced_by_new_presence(), test_failed_publication_keeps_exact_bytes(), test_foreign_identity_cannot_take_volume() (+10 more)
 
 ### Community 160 - "test_runtime_diagnostic.py"
 Cohesion: 0.16
@@ -1396,8 +1398,8 @@ Cohesion: 0.12
 Nodes (16): keycloak, condition, cap_drop, command, depends_on, image, networks, profiles (+8 more)
 
 ### Community 170 - "test_installation.py"
-Cohesion: 0.13
-Nodes (10): test_agent_adds_canonical_name_to_an_unchanged_existing_plan(), test_explicit_runtime_container_name_is_agent_only_and_canonical(), test_identity_accepts_pinned_installation_dots_but_not_dot_segments(), test_invalid_server_plan_is_rejected_before_persistence(), test_seed_is_repeatable_but_never_overwrites(), test_timed_out_helper_is_named_and_only_exact_owner_can_be_removed(), test_trust_domain_labels_are_strict(), test_volume_refuses_foreign_labels_or_persistent_credentials() (+2 more)
+Cohesion: 0.15
+Nodes (8): test_agent_adds_canonical_name_to_an_unchanged_existing_plan(), test_explicit_runtime_container_name_is_agent_only_and_canonical(), test_invalid_server_plan_is_rejected_before_persistence(), test_seed_is_repeatable_but_never_overwrites(), test_timed_out_helper_is_named_and_only_exact_owner_can_be_removed(), test_volume_refuses_foreign_labels_or_persistent_credentials(), docker(), test_windows_authority_uses_its_verified_engine_mount()
 
 ### Community 171 - "minio-status-publisher"
 Cohesion: 0.12
@@ -1417,7 +1419,7 @@ Nodes (15): AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_TIMEOUT_SECONDS, AELEV_INFRA
 
 ### Community 175 - "test/test_documentation.py"
 Cohesion: 0.14
-Nodes (9): Settings, schema(), test_browser_origin_is_explicit_and_safe(), test_fetch_schema_uses_the_runtime_contract_and_current_limit(), test_groups_are_ordered_and_have_only_real_operations(), test_missing_browser_origin_does_not_publish_a_fabricated_link(), test_publisher_owns_swagger_link_and_has_no_injected_ui(), test_read_only_listener_never_requests_a_workload_certificate() (+1 more)
+Nodes (11): Settings, asset(), schema(), test_browser_origin_is_explicit_and_safe(), test_documentation_uses_only_local_assets_and_closed_paths(), test_fetch_schema_uses_the_runtime_contract_and_current_limit(), test_groups_are_ordered_and_have_only_real_operations(), test_missing_browser_origin_does_not_publish_a_fabricated_link() (+3 more)
 
 ### Community 176 - "postgresql-status-publisher"
 Cohesion: 0.12
@@ -1428,8 +1430,8 @@ Cohesion: 0.12
 Nodes (15): name, networks, spire-observation-access, services, external, name, x-status, AELEV_INFRASTRUCTURE_SPIRE_UI_AUDIENCE (+7 more)
 
 ### Community 178 - "public-egress-gateway/provision.py"
-Cohesion: 0.16
-Nodes (19): finite_number(), Grant, GrantRejected, hostname(), positive_int(), strict_json(), constant(), pairs() (+11 more)
+Cohesion: 0.15
+Nodes (21): finite_number(), Grant, GrantRejected, hostname(), identity_filename(), positive_int(), strict_json(), constant() (+13 more)
 
 ### Community 179 - "translator-service-status-publisher"
 Cohesion: 0.12
@@ -1536,7 +1538,7 @@ Cohesion: 0.20
 Nodes (3): baseline(), LifecycleSafetyTest, model()
 
 ### Community 205 - "translator_service/__init__.py"
-Cohesion: 0.29
+Cohesion: 0.23
 Nodes (5): cfg(), test_address_and_revision_can_change_without_source_edits(), test_description_is_own_technical_composition(), test_failures_never_become_false_online(), test_invalid_description_revision_fails_closed()
 
 ### Community 206 - "environment"
@@ -1555,9 +1557,9 @@ Nodes (14): interval, retries, start_period, test, timeout, healthcheck, healthc
 Cohesion: 0.14
 Nodes (14): cap_drop, command, extra_hosts, group_add, image, mem_limit, networks, ports (+6 more)
 
-### Community 210 - "re"
-Cohesion: 0.05
-Nodes (29): check(), command(), main(), safe_runtime_state(), fingerprint(), main(), validate_report(), final_user() (+21 more)
+### Community 210 - "unittest"
+Cohesion: 0.06
+Nodes (11): _clean_environment(), _declared_variables(), KeycloakConfigurationTest, _resolved_compose(), documentation_boundary_errors(), main(), DocumentationBoundaryTest, AdmissionError (+3 more)
 
 ### Community 211 - "environment"
 Cohesion: 0.36
@@ -1584,12 +1586,12 @@ Cohesion: 0.14
 Nodes (14): platform-ui-api, condition, cap_drop, depends_on, group_add, image, mem_limit, networks (+6 more)
 
 ### Community 217 - "tomllib"
-Cohesion: 0.03
-Nodes (53): model(), test_all_settings_are_owned_and_no_compose_defaults(), test_complete_owner_model(), test_init_is_explicit_and_has_no_network_or_secrets(), test_own_build_context_and_immutable_artifact(), test_remote_peer_targets_are_explicit_when_configured(), test_templates_and_mounts_stay_in_owner(), model() (+45 more)
+Cohesion: 0.04
+Nodes (52): model(), test_all_settings_are_owned_and_no_compose_defaults(), test_complete_owner_model(), test_init_is_explicit_and_has_no_network_or_secrets(), test_own_build_context_and_immutable_artifact(), test_remote_peer_targets_are_explicit_when_configured(), test_templates_and_mounts_stay_in_owner(), model() (+44 more)
 
-### Community 218 - "test_deployment.py"
-Cohesion: 0.40
-Nodes (3): pair(), test_exact_additive_migration(), test_migration_rejects_unexpected_changes()
+### Community 218 - "download"
+Cohesion: 0.14
+Nodes (11): cache_directory(), download(), main(), prepare(), terminate(), test_authorized_pause_restores_same_containers_even_after_failure(), test_download_never_overwrites_an_unverified_artifact(), test_download_publishes_only_verified_bytes_after_container_cleanup() (+3 more)
 
 ### Community 219 - "bind"
 Cohesion: 0.45
@@ -1600,16 +1602,16 @@ Cohesion: 0.15
 Nodes (13): translator-worker, cap_drop, command, cpus, group_add, image, mem_limit, networks (+5 more)
 
 ### Community 221 - "test_observation_diagnostics.py"
-Cohesion: 0.10
-Nodes (8): Diagnostics, locations(), test_all_phase_markers_are_bounded_and_cannot_renew_health(), test_diagnostic_failure_cannot_escape_or_overwrite_original_reason(), test_report_preserves_pending_packets_and_excludes_private_data(), blocked(), test_reports_survive_subsequent_runs_without_overwriting_history(), test_supervisor_persists_the_real_stalled_worker_phase_before_exit()
+Cohesion: 0.06
+Nodes (16): Diagnostics, supervise_worker(), worker_failure(), test_all_phase_markers_are_bounded_and_cannot_renew_health(), test_diagnostic_failure_cannot_escape_or_overwrite_original_reason(), test_report_preserves_pending_packets_and_excludes_private_data(), blocked(), test_reports_survive_subsequent_runs_without_overwriting_history() (+8 more)
 
 ### Community 222 - "test_password_migration.py"
-Cohesion: 0.38
-Nodes (9): plan(), legacy(), test_apply_is_idempotent_and_does_not_rotate(), test_duplicate_and_shared_secret_paths_are_rejected(), test_empty_existing_file_settings_fail_before_writes(), test_existing_different_file_is_preserved(), test_external_or_symlink_secret_is_not_modified(), test_multiline_is_rejected_without_partial_rewrite() (+1 more)
+Cohesion: 0.23
+Nodes (12): migrate(), plan(), sync_directory(), values(), legacy(), test_apply_is_idempotent_and_does_not_rotate(), test_duplicate_and_shared_secret_paths_are_rejected(), test_empty_existing_file_settings_fail_before_writes() (+4 more)
 
-### Community 223 - "pathlib"
-Cohesion: 0.02
-Nodes (42): migrate(), sync_directory(), values(), _clean_environment(), _declared_variables(), KeycloakConfigurationTest, _resolved_compose(), _clean_environment() (+34 more)
+### Community 223 - "subprocess"
+Cohesion: 0.03
+Nodes (46): _clean_environment(), _resolved_compose(), check(), command(), check(), command(), check(), command() (+38 more)
 
 ### Community 224 - "cluster-lifecycle.py"
 Cohesion: 0.10
@@ -1620,12 +1622,12 @@ Cohesion: 0.22
 Nodes (9): ADR-0137: Имя второй стадии Discovery — advance-screening, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
 ### Community 226 - "clean_room_gate.py"
-Cohesion: 0.11
-Nodes (19): test_current_presentation_is_the_sdk_projection(), test_operator_identity_is_platform_wide(), test_previous_stylesheet_is_immutable(), test_required_settings(), command(), docker_inventory(), ensure_external_output(), exact_image() (+11 more)
+Cohesion: 0.23
+Nodes (15): command(), docker_inventory(), ensure_external_output(), exact_image(), GateError, main(), persistent_container_states(), prepare_drivers() (+7 more)
 
-### Community 227 - "aggregate"
-Cohesion: 0.13
-Nodes (14): description(), operator_state(), probe(), server_state(), description(), probe(), server_state(), description() (+6 more)
+### Community 227 - "blackbox-exporter/status_publisher.py"
+Cohesion: 0.43
+Nodes (4): description(), operator_state(), probe(), server_state()
 
 ### Community 228 - "kafka-status-provision"
 Cohesion: 0.15
@@ -1691,9 +1693,9 @@ Nodes (13): Platform UI — эксплуатация поставщика, Вс�
 Cohesion: 0.15
 Nodes (13): cap_drop, command, entrypoint, extra_hosts, image, networks, profiles, read_only (+5 more)
 
-### Community 244 - "FencingError"
-Cohesion: 0.07
-Nodes (14): FencingError, Kubernetes, NoKubernetesRedirect, peer(), request_json(), do_POST(), record(), setup() (+6 more)
+### Community 244 - "read_dcs"
+Cohesion: 0.09
+Nodes (10): Kubernetes, NoKubernetesRedirect, peer(), read_dcs(), request_json(), confirmed_claim(), record(), setup() (+2 more)
 
 ### Community 245 - "args"
 Cohesion: 0.33
@@ -1739,9 +1741,9 @@ Nodes (13): x-runtime, cap_drop, entrypoint, image, mem_limit, networks, pids_li
 Cohesion: 0.15
 Nodes (13): spire-operator, cap_drop, command, image, mem_limit, network_mode, pids_limit, profiles (+5 more)
 
-### Community 256 - "unhealthy"
-Cohesion: 0.11
-Nodes (20): ADR-0148: Ограниченное локальное восстановление инфраструктуры, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+12 more)
+### Community 256 - "test_local_health.py"
+Cohesion: 0.22
+Nodes (9): signal_root(), test_atomic_owned_signal(), test_invalid_frame(), test_loop_heartbeat_and_cancellation(), exercise(), test_process_death_invalidates_signal(), test_progress_expires_without_main_loop_refresh(), test_progress_is_opt_in_and_phase_is_not_arbitrary() (+1 more)
 
 ### Community 257 - "prometheus/test/test_status_publisher.py"
 Cohesion: 0.24
@@ -1812,8 +1814,8 @@ Cohesion: 0.17
 Nodes (12): x-operator-environment, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BACKCHANNEL, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_BIND, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_CLIENT_ID, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_IDENTITY_URL, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_MODE, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PORT, AELEV_INFRASTRUCTURE_BLACKBOX_EXPORTER_OPERATOR_PUBLIC_URL (+4 more)
 
 ### Community 274 - "sqlalchemy"
-Cohesion: 0.13
-Nodes (6): upgrade(), upgrade(), inspect_state(), main(), verify_extension(), main()
+Cohesion: 0.16
+Nodes (5): upgrade(), upgrade(), inspect_state(), main(), verify_extension()
 
 ### Community 275 - "environment"
 Cohesion: 0.41
@@ -1867,9 +1869,9 @@ Nodes (12): AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_UI_AUDIENCE, AELEV_INFRASTRUCTUR
 Cohesion: 0.17
 Nodes (12): cap_drop, command, extra_hosts, image, networks, profiles, read_only, restart (+4 more)
 
-### Community 288 - "backup.py"
-Cohesion: 0.20
-Nodes (12): check_owners(), create(), file_hash(), key_bytes(), main(), restore(), roots_at(), fixture() (+4 more)
+### Community 288 - "test_cold_backup_verify.py"
+Cohesion: 0.28
+Nodes (10): offsets(), verify(), sample(), test_actual_archive_content_is_restored_and_verified(), test_bad_offset_evidence_is_not_accepted(), test_changed_archive_is_rejected_before_extraction(), test_duplicate_archive_member_is_not_silently_overwritten(), test_offsets_accept_zero_and_preserve_exact_partition_keys() (+2 more)
 
 ### Community 289 - "prometheus-status-provision"
 Cohesion: 0.17
@@ -1916,8 +1918,8 @@ Cohesion: 0.17
 Nodes (12): cap_add, cap_drop, command, entrypoint, image, network_mode, profiles, restart (+4 more)
 
 ### Community 300 - "Подключение к Public Egress Gateway"
-Cohesion: 0.17
-Nodes (12): 1. Что предоставить провайдеру, 2. Декларация прав у владельца, 3. Одобрение, применение и отзыв, 4. Проверить защищённый вызов, 5. Подключение контейнера и удалённого узла, 6. Ошибки и наблюдение, Swagger и группы endpoints, Автоматическое локальное продление (+4 more)
+Cohesion: 0.15
+Nodes (13): 1. Что предоставить провайдеру, 2. Декларация прав у владельца, 3. Одобрение, применение и отзыв, 4. Проверить защищённый вызов, 5. Подключение контейнера и удалённого узла, 6. Ошибки и наблюдение, Swagger и группы endpoints, Автоматическое локальное продление (+5 more)
 
 ### Community 301 - "test_health.py"
 Cohesion: 0.15
@@ -1932,15 +1934,15 @@ Cohesion: 0.15
 Nodes (12): services, volumes, translation-provider-socket, x-provider-image, image, x-telemetry-identity, read_only, source (+4 more)
 
 ### Community 304 - "test_spire_fixture.py"
-Cohesion: 0.25
-Nodes (17): empty(), fixture(), test_binding_restore_preserves_original_bytes_and_refuses_unrelated_changes(), test_central_diagnostic_network_failure_does_not_publish_exception(), test_ci_routes_preserve_published_endpoints_and_refuse_any_operator_override(), test_complete_status_requires_every_role_and_both_coordinators(), test_core_restart_targets_exclude_delegated_spire(), test_fresh_preflight_rejects_existing_public_binding() (+9 more)
+Cohesion: 0.20
+Nodes (20): empty(), fixture(), test_binding_restore_preserves_original_bytes_and_refuses_unrelated_changes(), test_central_diagnostic_network_failure_does_not_publish_exception(), test_ci_routes_preserve_published_endpoints_and_refuse_any_operator_override(), test_complete_status_requires_every_role_and_both_coordinators(), test_core_restart_targets_exclude_delegated_spire(), test_fresh_preflight_rejects_existing_public_binding() (+12 more)
 
 ### Community 305 - "bind"
 Cohesion: 0.53
 Nodes (12): volumes, volumes, volumes, volumes, volumes, volumes, volumes, bind (+4 more)
 
 ### Community 306 - "grafana/test/test_status_publisher.py"
-Cohesion: 0.28
+Cohesion: 0.24
 Nodes (4): cfg(), test_only_owned_components(), test_own_https_readiness(), test_transport_failure_is_not_offline()
 
 ### Community 307 - "health_heartbeat.py"
@@ -1951,13 +1953,13 @@ Nodes (14): serve(), Server, enabled(), progress(), publish(), run(), withdraw()
 Cohesion: 0.22
 Nodes (9): ADR-0087: Инфраструктурный translator-service, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
-### Community 309 - "time"
-Cohesion: 0.06
-Nodes (31): main(), check(), module(), wait_component(), clear(), healthy(), process_start(), publish() (+23 more)
+### Community 309 - "test_delivery_health.py"
+Cohesion: 0.38
+Nodes (8): healthy(), fixture(), signal(), test_central_archive_uses_the_same_local_incarnation_signal(), test_invalid_signals_fail_closed(), test_probe_uses_only_standard_library_without_application(), test_publication_is_private_atomic_and_bound_to_current_process(), test_special_file_cannot_block_probe()
 
 ### Community 311 - "test_infrastructure/test_recovery.py"
 Cohesion: 0.10
-Nodes (40): adopt_stopped(), proof(), Исправление и проверки, Подтверждение аварийного выхода — 25 октября 2026, Причина, Установка и восстановление, enrolled(), docker() (+32 more)
+Nodes (44): adopt_stopped(), proof(), commit(), enroll(), main(), replace(), Исправление и проверки, Подтверждение аварийного выхода — 25 октября 2026 (+36 more)
 
 ### Community 312 - "verify"
 Cohesion: 0.25
@@ -2040,8 +2042,8 @@ Cohesion: 0.18
 Nodes (10): name, x-etcd, cpu_shares, entrypoint, image, mem_limit, networks, read_only (+2 more)
 
 ### Community 332 - "execute"
-Cohesion: 0.16
-Nodes (6): definition(), docker(), execute(), relative(), snapshot(), OwnerBuildTest
+Cohesion: 0.15
+Nodes (7): definition(), docker(), execute(), relative(), snapshot(), environment(), OwnerBuildTest
 
 ### Community 333 - "postgresql-2"
 Cohesion: 0.18
@@ -2080,11 +2082,11 @@ Cohesion: 0.18
 Nodes (10): summary, groups, name, rules, severity, alert, annotations, expr (+2 more)
 
 ### Community 344 - "public-egress-gateway/test/lifecycle.py"
-Cohesion: 0.18
-Nodes (13): Выполнение одной подготовленной Compose-роли, версия 1, applied(), call(), classify_command_failure(), context(), declaration(), fetch(), free_port() (+5 more)
+Cohesion: 0.10
+Nodes (16): Выполнение одной подготовленной Compose-роли, версия 1, probe(), applied(), call(), classify_command_failure(), context(), declaration(), fetch() (+8 more)
 
 ### Community 345 - "Fixture"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (6): invoke(), ensure_stopped(), main(), restore(), Fixture, refresh()
 
 ### Community 346 - "ADR-0017: Нулевое доверие и эксплуатационная безопасность"
@@ -2092,8 +2094,8 @@ Cohesion: 0.12
 Nodes (16): ADR-0017: Нулевое доверие и эксплуатационная безопасность, Артефакты и вычислительные модули, Аудит и телеметрия, Идентичность workload и Kafka, Инцидент и восстановление, Контекст, Критерии выбора, Критерии проверки (+8 more)
 
 ### Community 347 - "run"
-Cohesion: 0.14
-Nodes (24): cleanup_plan(), preflight(), snapshot(), verify_cleanup(), run(), check(), cleanup_step(), command() (+16 more)
+Cohesion: 0.13
+Nodes (25): cleanup_plan(), mounted_volumes(), preflight(), snapshot(), verify_cleanup(), run(), check(), cleanup_step() (+17 more)
 
 ### Community 348 - "environment"
 Cohesion: 0.36
@@ -2107,9 +2109,9 @@ Nodes (19): context, dockerfile, target, build, build, build, build, build (+11 
 Cohesion: 0.18
 Nodes (11): runs-on, jobs, boundary, quickstart-contract, recovery-coverage, ui-tests, runs-on, runs-on (+3 more)
 
-### Community 352 - "test_observation_commands_use_physical_coordinator"
-Cohesion: 0.20
-Nodes (9): docker(), test_observation_commands_use_physical_coordinator(), docker(), test_recovery_uses_physical_name_and_preserves_logical_state(), test_server_apply_scopes_foreign_shared_project_and_keeps_volume_names(), resolve(), volume(), getresponse() (+1 more)
+### Community 352 - "test_exact_durable_receipt_is_required_and_capacity_preserves_old"
+Cohesion: 0.09
+Nodes (11): gateway_routes(), test_node_ttl_is_explicit_and_does_not_extend_defaults(), test_desktop_route_is_not_the_linux_vm_gateway(), test_exact_durable_receipt_is_required_and_capacity_preserves_old(), context(), getresponse(), test_observation_updates_require_explicit_operator_intent(), test_publisher_facade_translates_only_its_own_cli() (+3 more)
 
 ### Community 353 - "with"
 Cohesion: 0.18
@@ -2156,7 +2158,7 @@ Cohesion: 0.36
 Nodes (10): AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_AUDIENCE, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_CLIENT_ID, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_IDENTITY_URL, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_INTERVAL_SECONDS, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_MODULE_ID, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_REALM, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_TIMEOUT_SECONDS, AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_URL (+2 more)
 
 ### Community 364 - "spire_local.py"
-Cohesion: 0.22
+Cohesion: 0.18
 Nodes (9): configuration(), configuration_receipt(), invoke(), operator_arguments(), prepare(), private(), retire(), save() (+1 more)
 
 ### Community 365 - "etcd-3"
@@ -2251,9 +2253,9 @@ Nodes (9): device, o, type, driver_opts, name, driver_opts, name, spire-observat
 Cohesion: 0.22
 Nodes (9): name, name, name, name, volumes, spire-bootstrap-output, spire-operator-data, spire-server-configuration (+1 more)
 
-### Community 388 - "spire_fixture.py"
+### Community 388 - "SSHDocker"
 Cohesion: 0.17
-Nodes (9): main(), probe(), read_status(), sanitize(), main(), test_non_object_status_is_refused(), test_origin_cannot_supply_credentials_or_another_api(), test_probe_uses_own_mtls_bounded_existing_api_and_closes() (+1 more)
+Nodes (4): exchange(), private_file(), SSHDocker, SSHReturns
 
 ### Community 389 - "Handler"
 Cohesion: 0.17
@@ -2261,11 +2263,11 @@ Nodes (4): Handler, renewal_material(), renewal_ready(), validate_renewal()
 
 ### Community 390 - "pre_promote"
 Cohesion: 0.07
-Nodes (33): ADR-0106: Выбираемое ограждение экземпляров PostgreSQL, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+25 more)
+Nodes (32): ADR-0106: Выбираемое ограждение экземпляров PostgreSQL, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+24 more)
 
 ### Community 391 - "main"
-Cohesion: 0.11
-Nodes (17): center_files(), command(), eventually(), inventory(), main(), cli(), compose(), container() (+9 more)
+Cohesion: 0.22
+Nodes (13): center_files(), command(), eventually(), inventory(), main(), cli(), compose(), container() (+5 more)
 
 ### Community 392 - "build"
 Cohesion: 0.43
@@ -2337,11 +2339,11 @@ Nodes (5): postgresql-fencer, depends_on, depends_on, depends_on, condition
 
 ### Community 410 - "request"
 Cohesion: 0.12
-Nodes (16): probe(), server_state(), probe(), server_state(), observe_many(), request(), tls(), component_state() (+8 more)
+Nodes (13): NoRedirect, observe_many(), request(), tls(), component_state(), description(), probe(), description() (+5 more)
 
 ### Community 411 - "test_fencing_launcher.py"
-Cohesion: 0.09
-Nodes (23): Blackbox Exporter — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Нативный процесс: подготовка и отдельный запуск, Обновление журнала издателя, Обслуживание, обновление и восстановление, Операторский вход: local-test и prod, Официальные руководства (+15 more)
+Cohesion: 0.28
+Nodes (7): test_credentials_volume_has_explicit_owner_and_purpose(), test_credentials_volume_must_be_distinct_and_named(), test_foreign_runtime_is_rejected(), inspect(), test_invalid_operator_input_is_rejected(), test_launcher_uses_only_preexisting_native_owner_resources(), test_world_readable_input_is_rejected()
 
 ### Community 412 - "healthcheck"
 Cohesion: 0.50
@@ -2416,8 +2418,8 @@ Cohesion: 0.29
 Nodes (6): tls_server_config, cert_file, client_auth_type, client_ca_file, key_file, min_version
 
 ### Community 432 - "owner_compose.py"
-Cohesion: 0.24
-Nodes (12): apply_model(), call(), CommandFailure, definition(), EffectUnknown, environment(), execute(), inspect_role() (+4 more)
+Cohesion: 0.22
+Nodes (11): apply_model(), call(), CommandFailure, definition(), EffectUnknown, execute(), inspect_role(), main() (+3 more)
 
 ### Community 434 - "healthcheck"
 Cohesion: 0.48
@@ -2444,8 +2446,8 @@ Cohesion: 0.29
 Nodes (7): create_host_path, volumes, bind, read_only, source, target, type
 
 ### Community 440 - "OpenTelemetry Collector — руководство пользователя"
-Cohesion: 0.15
-Nodes (13): OpenTelemetry Collector — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Назначение, Нативный процесс: подготовка и отдельный запуск, Обновление журнала издателя, Обслуживание, обновление и восстановление, Официальные руководства (+5 more)
+Cohesion: 0.17
+Nodes (12): OpenTelemetry Collector — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Назначение, Обновление журнала издателя, Обслуживание, обновление и восстановление, Официальные руководства, Проверка самостоятельной поставки (+4 more)
 
 ### Community 441 - ".test_fresh_start_waits_for_core_before_owner_bootstrap_and_checks_all_roles"
 Cohesion: 0.18
@@ -2484,8 +2486,8 @@ Cohesion: 0.27
 Nodes (7): lifecycle(), await_state(), checked(), login(), module(), modules(), visible()
 
 ### Community 454 - "test_infrastructure/test_orchestration.py"
-Cohesion: 0.08
-Nodes (31): preflight(), baseline(), empty(), execute_empty(), model(), row(), status(), test_administrative_names_are_owned_without_root_overrides() (+23 more)
+Cohesion: 0.16
+Nodes (22): preflight(), baseline(), empty(), execute_empty(), model(), row(), test_cleanup_anonymous_volume_requires_witnessed_ownership(), test_cleanup_never_selects_original_resources() (+14 more)
 
 ### Community 455 - "ADR-0119: Единая операторская учётная запись и SSO между интерфейсами"
 Cohesion: 0.20
@@ -2508,7 +2510,7 @@ Cohesion: 0.33
 Nodes (6): interval, retries, start_period, test, timeout, healthcheck
 
 ### Community 460 - "test_jwt.py"
-Cohesion: 0.28
+Cohesion: 0.26
 Nodes (9): OIDC, claims(), identity(), test_expired_trust_fails_closed(), test_signed_access_token(), test_wrong_claims(), test_wrong_signature(), token() (+1 more)
 
 ### Community 461 - "build"
@@ -2531,17 +2533,17 @@ Nodes (6): interval, retries, start_period, test, timeout, healthcheck
 Cohesion: 0.22
 Nodes (9): ADR-0153: Согласованная установка двух частей Advance Screening, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
-### Community 466 - "translator-service/test/test_runtime.py"
-Cohesion: 0.16
-Nodes (6): test_compute_sends_only_text_and_languages_to_opaque_provider(), test_execution_duration_measures_only_compute_and_preserves_v1(), test_long_translation_resumes_durable_segments(), test_production_repository_requires_verify_full(), test_repository_accepts_only_supported_environment_transport(), test_topic_retention_is_declared_by_translator_not_broker()
+### Community 466 - "platform-ui/test/test_configuration.py"
+Cohesion: 0.14
+Nodes (4): test_current_presentation_is_the_sdk_projection(), test_operator_identity_is_platform_wide(), test_previous_stylesheet_is_immutable(), test_required_settings()
 
-### Community 467 - "stat"
-Cohesion: 0.21
-Nodes (6): consume(), expiry(), export(), material(), plan(), timestamp()
+### Community 467 - "publisher_authority.py"
+Cohesion: 0.34
+Nodes (9): atomic(), fingerprint(), load(), main(), prepare(), stage(), fixture_authority(), test_rotation_is_explicit_and_keeps_overlap() (+1 more)
 
 ### Community 468 - "Loki — руководство пользователя"
-Cohesion: 0.15
-Nodes (13): Loki — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Назначение, Нативный процесс: подготовка и отдельный запуск, Обновление журнала издателя, Обслуживание, обновление и восстановление, Официальные руководства (+5 more)
+Cohesion: 0.17
+Nodes (12): Loki — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Назначение, Обновление журнала издателя, Обслуживание, обновление и восстановление, Официальные руководства, Проверка самостоятельной поставки (+4 more)
 
 ### Community 469 - "ADR-0174: Точный адрес является самостоятельной кандидатной точкой наблюдения"
 Cohesion: 0.22
@@ -2563,17 +2565,21 @@ Nodes (8): Observability — руководство по оркестрации,
 Cohesion: 0.20
 Nodes (10): 1. Зафиксировать исходники, 2. Инициализировать и собрать без запуска, 3. Подготовить owner inputs, 4. Выполнить исчерпывающий preflight, 5. Сформировать release BOM, 6. Функциональная приёмка, 7. Решение Production Ready, 8. Адресная диагностика без полного допуска (+2 more)
 
-### Community 476 - "translator-service/USER_MANUAL.md"
-Cohesion: 0.02
-Nodes (87): 00-INFRA-20261113-0018-independent-roles-and-translation-mtls — Независимое размещение ролей и mTLS Translator, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Непрозрачная граница исполнения перевода, Translator: сетевая очередь и ограниченный перевод — 17 ноября 2026 (+79 more)
+### Community 475 - "worker.py"
+Cohesion: 0.32
+Nodes (8): emit(), index_prompt(), literal_checks(), memory(), read_line(), request(), run(), translate()
+
+### Community 476 - "INDEX.md"
+Cohesion: 0.04
+Nodes (35): Видение Platform Infrastructure, Аксиомы Platform Infrastructure, Обзор Platform Infrastructure, Публичные технические контракты: карта каталога, Непрозрачная граница исполнения перевода, Продолжение приёмки пяти репозиториев — 16 ноября 2026, Совместимый путь прежнего решения, Translator: сетевая очередь и ограниченный перевод — 17 ноября 2026 (+27 more)
 
 ### Community 477 - "ADR-0176: Физическая группа управления исследованием"
 Cohesion: 0.22
 Nodes (9): ADR-0176: Физическая группа управления исследованием, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
-### Community 478 - "create_app"
-Cohesion: 0.17
-Nodes (4): create_app(), callback(), produce(), acknowledged()
+### Community 478 - "operator_api.py"
+Cohesion: 0.08
+Nodes (12): configurations(), instrument_api(), traced_request(), create_app(), callback(), local_app(), network_app(), Settings (+4 more)
 
 ### Community 480 - "ADR-0042: Выбор хранилища по нагрузке и ограниченному контексту"
 Cohesion: 0.29
@@ -2592,7 +2598,7 @@ Cohesion: 0.11
 Nodes (18): Kafka — руководство пользователя, Жизненный тест, Лёгкая проба издателя, Назначение, Обновление журнала издателя, Обновление нативной пробы, Остановка, обновление и восстановление, Официальные руководства (+10 more)
 
 ### Community 484 - "hashlib"
-Cohesion: 0.07
+Cohesion: 0.06
 Nodes (38): execute(), install(), install_scheduler(), lock(), powershell(), private(), ps_literal(), scheduler() (+30 more)
 
 ### Community 485 - "volumes"
@@ -2612,16 +2618,16 @@ Cohesion: 0.40
 Nodes (5): name, name, volumes, tempo-data, tempo-status-data
 
 ### Community 490 - "runtime"
-Cohesion: 0.14
-Nodes (18): Интерфейс и граница доказательства, Каталог ролей, Полная опись размещения, версия 1, Поля inventory, SPIRE, Запуск, Навигация, Основные возможности (+10 more)
+Cohesion: 0.08
+Nodes (31): Интерфейс и граница доказательства, Каталог ролей, Полная опись размещения, версия 1, Поля inventory, Живая проверка, Причина и исправление, Проверки и граница, Сопровождение TLS Advance — проверка 23 октября 2026 года (+23 more)
 
 ### Community 491 - "test/test_recovery_history.py"
-Cohesion: 0.26
-Nodes (5): historical_attempts(), record(), test_absent_history_does_not_invent_zero(), test_sum_unique_predecessors_not_exhausted_flags(), test_unconfirmed_history_fails_closed()
+Cohesion: 0.33
+Nodes (4): record(), test_absent_history_does_not_invent_zero(), test_sum_unique_predecessors_not_exhausted_flags(), test_unconfirmed_history_fails_closed()
 
-### Community 492 - "Проверка исправления счётчиков и управления Prometheus"
-Cohesion: 0.15
-Nodes (12): Адресная выкладка и живое состояние, Границы доказательства, Причина и регрессии, Проверка исправления счётчиков и управления Prometheus, Сохранность и восстановление, Обновление журнала и диагностика, PKI и границы сохранности, Подключение телеметрии gateway — 22 октября 2026 (+4 more)
+### Community 492 - "Delivery — руководство пользователя"
+Cohesion: 0.06
+Nodes (36): Доставка и отказ, Доставка конечных удостоверений операторскими задачами, Привязка, Существующий таймер, delivery: спецификация самостоятельной поставки, Приём, счётчики и восстановление, Продление локальных удостоверений, Читающий экспорт публичных issuer (+28 more)
 
 ### Community 493 - "HTTP endpoints Public Egress Gateway"
 Cohesion: 0.40
@@ -2644,20 +2650,20 @@ Cohesion: 0.13
 Nodes (6): _dns_failure_code(), GatewayStreamAborted, GatewayUpstreamError, _is_public_unicast(), upstream_failure_code(), test_upstream_failure_metric_code_never_uses_platform_error_text()
 
 ### Community 498 - "test_local_publisher.py"
-Cohesion: 0.07
-Nodes (26): test_custom_theme_is_not_overwritten(), test_rejected_configuration_does_not_report_success(), test_theme_activation_updates_only_its_own_setting(), test_bundle_rejects_path_traversal(), test_bundle_validation_checks_every_digest(), test_private_restore_never_overwrites_existing_file(), test_source_map_uses_only_declared_owner_files(), API (+18 more)
+Cohesion: 0.16
+Nodes (11): API, test_isolated_cleanup_rejects_a_neighbor_volume_even_without_its_process(), test_local_password_login_cannot_target_remote_or_untrusted_origin(), test_lost_one_time_token_response_preserves_intent_without_retry(), test_readiness_diagnostic_does_not_export_native_secrets(), test_redirect_cannot_forward_operator_request_to_another_origin(), test_retire_rejects_replaced_identity(), test_retire_removes_only_exact_temporary_identity_and_keeps_publisher() (+3 more)
 
 ### Community 500 - "inherited-adrs/INDEX.md"
 Cohesion: 0.08
 Nodes (7): ADR-0169: Нейтральный к движку вычислительный выпуск Deep Screening, Контекст, Последствия, Проверка, Решение, Связанные документы, Архив унаследованных решений
 
-### Community 501 - "ADR-0090: Границы конфигурации инфраструктурных компонентов"
-Cohesion: 0.29
-Nodes (7): ADR-0090: Границы конфигурации инфраструктурных компонентов, Контекст, Критерии проверки, Миграция и откат, Последствия, Решение, Связанные документы
+### Community 501 - "result.md"
+Cohesion: 0.17
+Nodes (9): Запуск и проверки, Навигация, Основные возможности, Сравнение моделей перевода, Воспроизводимость и очистка, Восстановление рабочей поставки, Смысловая оценка и вывод, Сравнение MADLAD и Index-Translate (+1 more)
 
-### Community 502 - "Delivery — руководство пользователя"
-Cohesion: 0.15
-Nodes (13): Delivery — руководство пользователя, Диагностика остановки критического цикла, Живость и готовность приёмника, Локальная проба издателя, Назначение, Обслуживание, обновление и восстановление, Отправитель на узле владельца телеметрии, Официальные руководства (+5 more)
+### Community 502 - "Blackbox Exporter — руководство пользователя"
+Cohesion: 0.17
+Nodes (12): Blackbox Exporter — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Обновление журнала издателя, Обслуживание, обновление и восстановление, Операторский вход: local-test и prod, Официальные руководства, Проверка самостоятельной поставки (+4 more)
 
 ### Community 503 - "Connection"
 Cohesion: 0.18
@@ -2679,13 +2685,13 @@ Nodes (9): ADR-0061: Естественный поток операторски�
 Cohesion: 0.50
 Nodes (3): include, path, name
 
-### Community 509 - "Руководство по оркестрации Platform Infrastructure"
-Cohesion: 0.18
-Nodes (11): Запуск и остановка всего комплекса, Одноразовая подготовка своих ресурсов, Официальные руководства, Подготовка, Проверка, Проверка всех локальных сертификатов, Разнесение по серверам, Руководство по оркестрации Platform Infrastructure (+3 more)
+### Community 509 - "up"
+Cohesion: 0.03
+Nodes (73): 00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Интерфейс локальной установки инфраструктуры, версия 1, Полный локальный профиль (+65 more)
 
 ### Community 510 - "Prometheus — руководство пользователя"
-Cohesion: 0.15
-Nodes (13): Prometheus — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Нативный процесс: подготовка и отдельный запуск, Обновление журнала издателя, Обслуживание, обновление и восстановление, Операторский вход: local-test и prod, Официальные руководства (+5 more)
+Cohesion: 0.17
+Nodes (12): Prometheus — руководство пользователя, Локальная проба живости, Лёгкая проба издателя, Обновление журнала издателя, Обслуживание, обновление и восстановление, Операторский вход: local-test и prod, Официальные руководства, Проверка самостоятельной поставки (+4 more)
 
 ### Community 511 - "postgresql/test/test_runtime.py"
 Cohesion: 0.27
@@ -2696,8 +2702,8 @@ Cohesion: 0.22
 Nodes (9): ADR-0094: Файлы оркестрации непосредственно в корне инфраструктуры, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
 ### Community 513 - "keycloak/USER_MANUAL.md"
-Cohesion: 0.06
-Nodes (25): Changelog, Keycloak: карта каталога, Keycloak, Запуск, Навигация, Основные возможности, Допуск конкретной площадки, Задачи Keycloak (+17 more)
+Cohesion: 0.05
+Nodes (35): Changelog, Keycloak: карта каталога, Keycloak, Запуск, Навигация, Основные возможности, Keycloak — нормативная спецификация, Восстановление формы входа (+27 more)
 
 ### Community 514 - "ReloadingTLS"
 Cohesion: 0.19
@@ -2718,10 +2724,6 @@ Nodes (9): ADR-0071: Постепенное применение локализ�
 ### Community 519 - "ADR-0104: Все режимы Compose принадлежат сервисным поставкам"
 Cohesion: 0.22
 Nodes (9): ADR-0104: Все режимы Compose принадлежат сервисным поставкам, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
-
-### Community 520 - "certificates"
-Cohesion: 0.20
-Nodes (11): Доставка и отказ, Доставка конечных удостоверений операторскими задачами, Привязка, Существующий таймер, delivery: спецификация самостоятельной поставки, Приём, счётчики и восстановление, Продление локальных удостоверений, Читающий экспорт публичных issuer (+3 more)
 
 ### Community 521 - "ADR-0091: Владение Kafka topics издателями контрактов"
 Cohesion: 0.20
@@ -2748,32 +2750,28 @@ Cohesion: 0.27
 Nodes (4): journal(), test_foreign_owner_is_rejected(), test_fresh_owned_heartbeat_needs_no_network(), test_stale_or_invalid_heartbeat_is_not_healthy()
 
 ### Community 528 - "run"
-Cohesion: 0.30
-Nodes (9): command(), run(), audit(), checksum(), compose(), execute(), healthy_writer(), roles() (+1 more)
+Cohesion: 0.28
+Nodes (10): command(), inventory(), run(), audit(), checksum(), compose(), execute(), healthy_writer() (+2 more)
 
 ### Community 529 - "ADR-0098: Кластерная инфраструктурная поставка PostgreSQL"
 Cohesion: 0.22
 Nodes (9): ADR-0098: Кластерная инфраструктурная поставка PostgreSQL, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
-### Community 530 - "test_infrastructure/test_recovery_history.py"
-Cohesion: 0.35
-Nodes (6): blocked(), receipt(), test_import_preserves_history_without_start(), test_invalid_import_never_changes_state(), test_release_refuses_any_other_scope(), test_release_then_enable_preserves_194_and_later_hold()
+### Community 530 - "https_url"
+Cohesion: 0.24
+Nodes (5): description(), probe(), server_state(), https_url(), test_only_internal_resource_url_allows_query()
 
-### Community 531 - "ADR-0093: Многоплощадочная топология инфраструктурного MinIO"
-Cohesion: 0.29
-Nodes (7): ADR-0093: Многоплощадочная топология инфраструктурного MinIO, Контекст, Критерии проверки, Миграция и откат, Последствия, Решение, Связанные документы
-
-### Community 533 - "00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры"
-Cohesion: 0.33
-Nodes (6): 00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
+### Community 531 - "test_login_theme.py"
+Cohesion: 0.22
+Nodes (3): test_custom_theme_is_not_overwritten(), test_rejected_configuration_does_not_report_success(), test_theme_activation_updates_only_its_own_setting()
 
 ### Community 534 - "ADR-0152: Самостоятельные владельцы вместо общего контура Discovery Registry"
 Cohesion: 0.22
 Nodes (9): ADR-0152: Самостоятельные владельцы вместо общего контура Discovery Registry, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
 
-### Community 535 - "MinIO"
-Cohesion: 0.50
-Nodes (4): MinIO, Запуск, Навигация, Основные возможности
+### Community 535 - "minio/USER_MANUAL.md"
+Cohesion: 0.11
+Nodes (15): История minio, MinIO: карта каталога, MinIO, Запуск, Навигация, Основные возможности, minio: спецификация, Лёгкая проба издателя (+7 more)
 
 ### Community 536 - "ADR-0177: Точная цель исследования и кандидат логического источника"
 Cohesion: 0.20
@@ -2807,17 +2805,13 @@ Nodes (8): ADR-0047: Раздельный конвейер сенсорных к
 Cohesion: 0.29
 Nodes (7): Авторизация, Контракт и состояние, Лимиты и отказ, Локальное операторское продление, Сетевой барьер, Спецификация Public Egress Gateway, Эксплуатационные допуски
 
-### Community 557 - "test_gateway.py"
-Cohesion: 0.14
-Nodes (16): AddressPolicy, GatewayApplication, GatewayMetrics, test_request_cannot_inject_identity_or_boolean_limits(), _config(), _fetch_document(), test_address_policy_allows_unknown_public_host(), test_address_policy_blocks_mixed_public_private_dns_answer() (+8 more)
-
 ### Community 558 - "00-INFRA-20261109-0016-opaque-provider-runtime-egress — Сеть внешнего непрозрачного провайдера"
 Cohesion: 0.33
 Nodes (6): 00-INFRA-20261109-0016-opaque-provider-runtime-egress — Сеть внешнего непрозрачного провайдера, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 559 - "inventory"
 Cohesion: 0.13
-Nodes (16): cleanup(), cleanup_plan(), container_listing(), inventory(), mounted_volumes(), owned(), owned_containers(), verify_preserved() (+8 more)
+Nodes (15): Docker baseline полного gate — 17 ноября 2026, Сохранность root lifecycle и локальный clean-room — 17 ноября 2026, cleanup(), cleanup_plan(), container_listing(), inventory(), mounted_volumes(), owned() (+7 more)
 
 ### Community 560 - "plistlib"
 Cohesion: 0.44
@@ -2839,33 +2833,33 @@ Nodes (8): ADR-0066: Допуск classifier только для провере�
 Cohesion: 0.25
 Nodes (8): ADR-0140: Очередь неопределённости Advance Screening принадлежит оператору, Контекст, Критерии выбора, Миграция и откат, Последствия и критерии проверки, Рассмотренные альтернативы, Решение, Связанные документы
 
-### Community 579 - "production-readiness.md"
+### Community 579 - "postgresql/USER_MANUAL.md"
 Cohesion: 0.04
-Nodes (48): Видение Platform Infrastructure, Аксиомы Platform Infrastructure, Обзор Platform Infrastructure, Встроенное техническое хранилище SQLite, Границы хранения инфраструктуры, Официальные основания, Продолжение приёмки пяти репозиториев — 16 ноября 2026, История kafka (+40 more)
+Nodes (55): 00-INFRA-20261106-0006-technical-storage-boundaries — Границы технических хранилищ, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Встроенное техническое хранилище SQLite, Границы хранения инфраструктуры (+47 more)
 
-### Community 580 - "Диагностика listener и восстановление приёмника — 21 октября 2026"
-Cohesion: 0.33
-Nodes (6): Границы результата, Диагностика listener и восстановление приёмника — 21 октября 2026, Полная копия и открытие новым выпуском, Проверенный кандидат, Согласованный объём, Установка и доставка
+### Community 580 - "run"
+Cohesion: 0.28
+Nodes (6): admin(), command(), inventory(), request(), run(), administrative()
 
-### Community 581 - "SPEC.md"
-Cohesion: 0.02
-Nodes (90): 00-INFRA-20261105-0001-independent-infrastructure-product — Самостоятельный инфраструктурный продукт, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, 00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources — Границы владельцев и ресурсы потребителей, Ключевые решения (+82 more)
+### Community 581 - "USER_MANUAL.md"
+Cohesion: 0.05
+Nodes (32): Повторная проверка supervisor и адресный возврат sender — 24 октября 2026, Выполнено, Граница результата, Сохранность и восстановление, Сохраняющий общий запуск — 23 октября 2026, Точная очистка, Лёгкие пробы и исходные политики — 23 октября 2026, Объём (+24 more)
 
-### Community 582 - "loki/status_publisher.py"
-Cohesion: 0.53
-Nodes (3): description(), probe(), server_state()
+### Community 582 - "aggregate"
+Cohesion: 0.11
+Nodes (14): probe(), server_state(), description(), probe(), server_state(), description(), probe(), server_state() (+6 more)
 
 ### Community 583 - "observability.py"
 Cohesion: 0.08
-Nodes (10): configure(), GatewayLogFilter, _regular_file(), test_local_mode_keeps_telemetry_optional(), test_production_requires_https_durable_sender(), configure(), _credential(), instrument_api() (+2 more)
+Nodes (8): configure(), GatewayLogFilter, _regular_file(), test_local_mode_keeps_telemetry_optional(), test_production_requires_https_durable_sender(), test_request_span_accepts_trace_context(), _credential(), TranslatorLogFilter
 
 ### Community 584 - "compose.compute-worker.mtls.yml"
 Cohesion: 0.25
 Nodes (7): networks, worker-routed, services, volumes, worker-svid, external, name
 
 ### Community 585 - "telemetry.md"
-Cohesion: 0.05
-Nodes (37): SPIRE: карта каталога, Задачи SPIRE, Граница доказательства, Область, Реальный Docker-прогон, Регрессия и отрицательные проверки, Экспорт первоначального разрешения SPIRE — 23 октября 2026, Привязка установленного SPIRE к общей композиции — 23 октября 2026 (+29 more)
+Cohesion: 0.04
+Nodes (43): Официальные источники, Технические gRPC и HTTPS-интерфейсы, Владение и совместимость, Операторская регистрация, Удостоверения рабочих нагрузок, Файловая доставка `spire-file-v1`, SPIRE: карта каталога, Задачи SPIRE (+35 more)
 
 ### Community 586 - "ADR-0112: Закреплённая Index-Translate 9B вместо MADLAD"
 Cohesion: 0.15
@@ -2892,12 +2886,8 @@ Cohesion: 0.29
 Nodes (5): Локальная квалификация owner-compose — 16 ноября 2026, Найденные расхождения, Проверенный scope, Результат и следующий gate, Bridge для prepared owner workflow — 16 ноября 2026
 
 ### Community 592 - "00-INFRA-20261106-0007-workload-and-operator-identity.md"
-Cohesion: 0.07
-Nodes (27): 00-INFRA-20261106-0007-workload-and-operator-identity — Удостоверения workloads и операторов, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, История изменений, Панели Grafana (+19 more)
-
-### Community 593 - "Исправление прерванного fencing и попытка возврата реплик — 19 октября 2026 года"
-Cohesion: 0.25
-Nodes (8): Граница результата, Заключительная проверка, Исправление прерванного fencing и попытка возврата реплик — 19 октября 2026 года, Отдельно согласованное восстановление копии, Отказ первой попытки, Подтверждённая причина, Проверки и установка, Сохранённые копии
+Cohesion: 0.08
+Nodes (23): История изменений, Панели Grafana, Grafana: карта каталога, Grafana, Запуск, Навигация, Основные возможности, Grafana: спецификация самостоятельной поставки (+15 more)
 
 ### Community 594 - "20261014-0128-base-screening-service-envelope.md"
 Cohesion: 0.06
@@ -2935,17 +2925,17 @@ Nodes (7): ADR-0143: Бинарная оценка сайта Qwen3-8B и соб
 Cohesion: 0.22
 Nodes (9): create_host_path, bind, x-provider-secret, bind, read_only, source, target, type (+1 more)
 
-### Community 603 - "main"
-Cohesion: 0.38
-Nodes (5): main(), capture(), health_response(), module_response(), URLMessage
+### Community 603 - "ssl"
+Cohesion: 0.04
+Nodes (35): main(), check(), module(), wait_component(), check(), env(), query(), request() (+27 more)
 
-### Community 604 - "Проверка восстановления формы входа — 2026-10-18"
-Cohesion: 0.40
-Nodes (5): Диагностические отказы и ограничения, Подтверждено, Проверка восстановления формы входа — 2026-10-18, Сохранность настроек и identities, Файловая доставка и выкладка
+### Community 604 - "index-validation-result.md"
+Cohesion: 0.25
+Nodes (4): translator-service — установленная Index-Translate 9B, translator-service — изолированные SQL-проверки, translator-service — локальный Swagger и собственный OIDC, translator-service — проверки перехода на Index-Translate 9B
 
-### Community 605 - "00-INFRA-20261106-0006-technical-storage-boundaries — Границы технических хранилищ"
-Cohesion: 0.33
-Nodes (6): 00-INFRA-20261106-0006-technical-storage-boundaries — Границы технических хранилищ, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
+### Community 605 - "clean"
+Cohesion: 0.25
+Nodes (7): clean(), Официальные руководства, Первоисточники, Подготовка и запуск, Результаты и очистка, Руководство: Сравнение моделей перевода, Что измеряется
 
 ### Community 606 - "00-INFRA-20261106-0012-translator-technical-capability — Посредник перевода и непрозрачный провайдер"
 Cohesion: 0.33
@@ -2963,9 +2953,9 @@ Nodes (6): ADR-0079: Имя быстрой стадии Discovery — base-scree
 Cohesion: 0.33
 Nodes (6): ADR-0084: Эксперимент обеих моделей на всей операторской разметке, Контекст, Критерии проверки, Миграция и откат, Решение, Связанные документы
 
-### Community 610 - "Обновление центрального приёмника, 21 октября 2026"
-Cohesion: 0.40
-Nodes (5): Область и сохранность, Обновление центрального приёмника, 21 октября 2026, Проверка новой SQLite, Проверки работы, Установленный выпуск
+### Community 610 - "prometheus/status_publisher.py"
+Cohesion: 0.52
+Nodes (4): description(), operator_state(), probe(), server_state()
 
 ### Community 612 - "healthcheck"
 Cohesion: 0.40
@@ -2979,25 +2969,25 @@ Nodes (6): ADR-0118: Английская каноническая полити�
 Cohesion: 0.25
 Nodes (8): translator-service: результаты проверки, Дополнительные проверки, Не проверено этим прогоном, Ограничение качества модели, Повторный запуск и сохранность, Предыдущие неуспешные попытки, Реальные компоненты, Что проверено
 
-### Community 615 - "Сохраняющая остановка, очистка и запуск — 25 октября 2026"
-Cohesion: 0.15
-Nodes (10): Квитанции и граница, Очистка, Проверки после запуска, Результат, Сохраняющая остановка, очистка и запуск — 25 октября 2026, Жизненный цикл вычислителя и давление памяти — 26 октября 2026, Исправление, Почему swap большой (+2 more)
+### Community 615 - "test_kubernetes_fencing.py"
+Cohesion: 0.43
+Nodes (4): test_duplicate_pod_names_are_rejected(), test_exact_pod_permissions_without_node_or_secret_access(), test_required_configuration_cannot_be_omitted(), values()
 
 ### Community 616 - "ADR-0122: Симметричная декларация темы без логики сопоставления"
 Cohesion: 0.33
 Nodes (6): ADR-0122: Симметричная декларация темы без логики сопоставления, Контекст, Критерии проверки, Последствия, Решение, Связанные документы
 
-### Community 617 - "Локальные пробы инфраструктурных издателей — 18 октября 2026"
-Cohesion: 0.40
-Nodes (5): Локальные пробы инфраструктурных издателей — 18 октября 2026, Незавершённые части запроса, Объём и результат, Проверки, Фактическая адресная выкладка
+### Community 617 - "00-INFRA-20261105-0001-independent-infrastructure-product — Самостоятельный инфраструктурный продукт"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261105-0001-independent-infrastructure-product — Самостоятельный инфраструктурный продукт, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 619 - "ADR-0123: Стабильный операторский HTTP API по редакции политики"
 Cohesion: 0.33
 Nodes (6): ADR-0123: Стабильный операторский HTTP API по редакции политики, Контекст, Критерии проверки, Последствия, Решение, Связанные документы
 
 ### Community 620 - "public-egress-gateway/INDEX.md"
-Cohesion: 0.07
-Nodes (26): 00-INFRA-20261106-0011-controlled-public-egress — Контролируемый публичный исходящий доступ, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Официальные источники, Технические gRPC и HTTPS-интерфейсы (+18 more)
+Cohesion: 0.08
+Nodes (24): 00-INFRA-20261106-0011-controlled-public-egress — Контролируемый публичный исходящий доступ, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Changelog, Public Egress Gateway: карта каталога (+16 more)
 
 ### Community 621 - "ADR-0126: Ограждение конвейера поколением авторитетной делегации"
 Cohesion: 0.33
@@ -3009,19 +2999,19 @@ Nodes (6): ADR-0127: Независимые целевые действия по
 
 ### Community 623 - "blackbox-exporter/USER_MANUAL.md"
 Cohesion: 0.06
-Nodes (26): История изменений, Blackbox Exporter: карта каталога, Blackbox Exporter, Запуск, Навигация, Основные возможности, blackbox-exporter: спецификация самостоятельной поставки, Локальная живость и восстановление (+18 more)
+Nodes (25): История изменений, Blackbox Exporter: карта каталога, Blackbox Exporter, Запуск, Навигация, Основные возможности, blackbox-exporter: спецификация самостоятельной поставки, Локальная живость и восстановление (+17 more)
 
 ### Community 624 - "hashlib"
-Cohesion: 0.04
-Nodes (27): main(), offsets(), verify(), sample(), test_actual_archive_content_is_restored_and_verified(), test_bad_offset_evidence_is_not_accepted(), test_changed_archive_is_rejected_before_extraction(), test_duplicate_archive_member_is_not_silently_overwritten() (+19 more)
+Cohesion: 0.02
+Nodes (48): main(), test_publisher_uses_pinned_standalone_probe(), test_publisher_uses_pinned_standalone_probe(), test_publisher_uses_pinned_standalone_probe(), test_publisher_uses_pinned_standalone_probe(), test_publisher_uses_pinned_standalone_probe(), test_publisher_uses_pinned_standalone_probe(), test_publisher_uses_pinned_standalone_probe() (+40 more)
 
-### Community 625 - "kafka: спецификация"
-Cohesion: 0.50
-Nodes (4): kafka: спецификация, Лёгкая проба издателя, Нативная проба broker/controller, Устойчивый журнал и конечное восстановление
+### Community 625 - "00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources — Границы владельцев и ресурсы потребителей"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0003-owner-boundaries-and-consumer-resources — Границы владельцев и ресурсы потребителей, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 626 - "payload"
 Cohesion: 0.50
-Nodes (4): reply(), test_valid_rotated_identity_key_is_loaded_after_refresh_cooldown(), reply(), payload()
+Nodes (3): worker(), reply(), payload()
 
 ### Community 627 - "ADR-0129: Base Screening является буквальным фильтром политики"
 Cohesion: 0.33
@@ -3031,13 +3021,17 @@ Nodes (6): ADR-0129: Base Screening является буквальным фил
 Cohesion: 0.33
 Nodes (6): ADR-0136: Base Screening получает адреса только через Zone Ingestion, Контекст, Миграция и откат, Последствия и проверка, Решение, Связанные документы
 
-### Community 630 - "Инфраструктурная оркестрация — спецификация"
-Cohesion: 0.67
-Nodes (3): Инфраструктурная оркестрация — спецификация, Общий gate жизненного цикла сертификатов, Самостоятельный выпуск и локальный установщик
+### Community 630 - "00-INFRA-20261106-0004-self-contained-service-delivery — Самодостаточная поставка и композиция сервисов"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0004-self-contained-service-delivery — Самодостаточная поставка и композиция сервисов, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
-### Community 632 - "ADR-0151: Физическая группа и совместная композиция Discovery Engine"
-Cohesion: 0.22
-Nodes (9): ADR-0151: Физическая группа и совместная композиция Discovery Engine, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+1 more)
+### Community 631 - "00-INFRA-20261106-0008-platform-ui-owner-injection — Владельческая инъекция Platform UI"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0008-platform-ui-owner-injection — Владельческая инъекция Platform UI, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
+
+### Community 632 - "00-INFRA-20261106-0010-bounded-recovery-and-process-control — Ограниченное восстановление и управление процессами"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0010-bounded-recovery-and-process-control — Ограниченное восстановление и управление процессами, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 633 - "ADR-0145: MiniLM исключён из активного исполнения Discovery"
 Cohesion: 0.33
@@ -3046,6 +3040,10 @@ Nodes (6): ADR-0145: MiniLM исключён из активного испол�
 ### Community 634 - "ADR-0150: Готовность Advance Screening с отложенной реальной проверкой обучения"
 Cohesion: 0.33
 Nodes (6): ADR-0150: Готовность Advance Screening с отложенной реальной проверкой обучения, Контекст, Миграция и откат, Проверка и последствия, Решение, Связанные документы
+
+### Community 635 - "00-INFRA-20261106-0013-owner-certificate-lifecycle — Владельческий жизненный цикл сертификатов"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0013-owner-certificate-lifecycle — Владельческий жизненный цикл сертификатов, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 636 - "ADR-0157: Deep Screening начинается без наследования Source Research"
 Cohesion: 0.33
@@ -3059,17 +3057,21 @@ Nodes (6): ADR-0167: Владельческие заменяемые вычис�
 Cohesion: 0.33
 Nodes (6): ADR-0170: Единый владельческий вход вычислительной станции, Контекст, Миграция и проверка, Последствия, Решение, Связанные документы
 
-### Community 640 - "tempo/status_publisher.py"
-Cohesion: 0.53
-Nodes (3): description(), probe(), server_state()
+### Community 639 - "00-INFRA-20261106-0014-product-readiness-and-site-admission — Готовность продукта и допуск площадки"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0014-product-readiness-and-site-admission — Готовность продукта и допуск площадки, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
+
+### Community 640 - "00-INFRA-20261106-0015-clean-room-full-local-reproduction — Clean-room воспроизведение полного локального профиля"
+Cohesion: 0.33
+Nodes (6): 00-INFRA-20261106-0015-clean-room-full-local-reproduction — Clean-room воспроизведение полного локального профиля, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 641 - "local-http-validation-result.md"
 Cohesion: 0.33
 Nodes (4): Platform UI — внешние локальные HTTP-ссылки, translator-service — проверка локального HTTP/OIDC, Пройденные проверки, Состояние и ограничения
 
 ### Community 643 - "PostgreSQL — руководство пользователя"
-Cohesion: 0.11
-Nodes (18): PostgreSQL — руководство пользователя, Автоматическое продление локального SQL-клиента, Каждая настройка .env, Назначение, Нативная проба узла, Официальные руководства, Подготовка инструментов и TLS, Приоритет CPU и проба исполнителя (+10 more)
+Cohesion: 0.09
+Nodes (22): authentication(), PostgreSQL — руководство пользователя, Автоматическое продление локального SQL-клиента, Каждая настройка .env, Локальная проба издателя, Назначение, Нативная проба узла, Официальные руководства (+14 more)
 
 ### Community 644 - "services"
 Cohesion: 0.50
@@ -3083,13 +3085,13 @@ Nodes (3): ports, services, platform-ui
 Cohesion: 0.40
 Nodes (5): Граница конфигурации инфраструктуры, Композиция, Официальные основания, Профили и приёмка, Развёртывание Platform Infrastructure
 
-### Community 647 - "Независимое размещение Docker fencer: кандидат"
+### Community 647 - "00-INFRA-20261113-0018-independent-roles-and-translation-mtls — Независимое размещение ролей и mTLS Translator"
 Cohesion: 0.33
-Nodes (6): Контракт и владение, Контроллер, Независимое размещение Docker fencer: кандидат, Образы, Проверки и ограничения, Узловая операция
+Nodes (6): 00-INFRA-20261113-0018-independent-roles-and-translation-mtls — Независимое размещение ролей и mTLS Translator, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
-### Community 648 - "Стоимость проб и приоритет CPU — 19 октября 2026 года"
+### Community 648 - "00-INFRA-20261117-0020-pinned-owner-source-build — Отдельная сборка владельческого образа"
 Cohesion: 0.33
-Nodes (6): Контроль после изменения, Объём и исходное состояние, Реализация и установка, Регрессии и границы, Сравнение стоимости пробы, Стоимость проб и приоритет CPU — 19 октября 2026 года
+Nodes (6): 00-INFRA-20261117-0020-pinned-owner-source-build — Отдельная сборка владельческого образа, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат
 
 ### Community 649 - "translator-service/test/status-validation-result.md"
 Cohesion: 0.33
@@ -3107,13 +3109,9 @@ Nodes (5): ADR-0085: Явное операторское включение эк
 Cohesion: 0.40
 Nodes (5): ADR-0149: Единая шкала соответствия сайта политике в Advance Screening, Контекст, Проверки и миграция, Решение, Связанные документы
 
-### Community 653 - "Аудит документации, диаграмм и Production Readiness"
-Cohesion: 0.40
-Nodes (5): Аудит документации, диаграмм и Production Readiness, Закрытые пробелы и остаточный риск, Матрица владельцев, Межвладельческие части, Метод
-
-### Community 654 - "Сопровождение TLS Advance — проверка 23 октября 2026 года"
-Cohesion: 0.40
-Nodes (5): Живая проверка, Причина и исправление, Проверки и граница, Сопровождение TLS Advance — проверка 23 октября 2026 года, Сохранность и установка
+### Community 653 - "production-readiness.md"
+Cohesion: 0.05
+Nodes (36): 00-INFRA-20261106-0005-kafka-cloudevents-contracts — Kafka и управление событийными контрактами, Ключевые решения, Контекст, Официальные основания, Последствия, Проверка и откат, Clean-room full-local: PASS исправленной версии, 11/11, Область вывода (+28 more)
 
 ### Community 655 - "Platform Infrastructure — композиция владельцев"
 Cohesion: 0.50
@@ -3124,16 +3122,16 @@ Cohesion: 0.40
 Nodes (5): interval, retries, test, timeout, healthcheck
 
 ### Community 657 - "suspend"
-Cohesion: 0.06
-Nodes (33): История инфраструктурной оркестрации, Изолированный жизненный тест, Нативная проба Kafka и адресная выкладка, Проверенный выпуск, Проверка реальной копии, Рабочая сохранность и выкладка, suspend(), watch() (+25 more)
+Cohesion: 0.03
+Nodes (81): ADR-0148: Ограниченное локальное восстановление инфраструктуры, Контекст, Критерии выбора, Критерии проверки, Миграция и откат, Последствия, Рассмотренные альтернативы, Решение (+73 more)
 
-### Community 658 - "Platform Infrastructure: карта каталога"
-Cohesion: 0.50
-Nodes (4): Platform Infrastructure: карта каталога, Наблюдаемость, Самостоятельные продукты, Совместная поставка
+### Community 658 - "SQLite: аудит технологических границ инфраструктуры"
+Cohesion: 0.33
+Nodes (6): SQLite: аудит технологических границ инфраструктуры, Исправленные расхождения, Область проверки, Открытый допуск движка, Проверки, Сохранность и границы результата
 
-### Community 659 - "Операторский возврат третьей реплики — 2026-10-21"
-Cohesion: 0.40
-Nodes (5): Объём и исходное состояние, Операторский возврат третьей реплики — 2026-10-21, Подтверждённый результат, Проверки и действие, Сохранность и ограничения
+### Community 659 - "Локальные пробы модели и API переводчика"
+Cohesion: 0.33
+Nodes (5): Границы, Локальные пробы модели и API переводчика, Объём, Проверки исходников и изолированного Linux, Реальная адресная выкладка
 
 ### Community 660 - "AELEV Platform Infrastructure"
 Cohesion: 0.50
@@ -3143,29 +3141,25 @@ Nodes (4): AELEV Platform Infrastructure, Документация и сопро
 Cohesion: 0.40
 Nodes (5): Автономные и хостовые проверки, Логический владелец и Compose-координатор SPIRE — 23 октября 2026, Настоящее изолированное испытание, Реализация, Читающая проверка рабочего стенда
 
-### Community 662 - "Clean-room full-local: PASS исправленной версии, 11/11"
+### Community 662 - "test_observability.py"
+Cohesion: 0.60
+Nodes (3): configure_environment(), test_local_mode_allows_telemetry_to_be_disabled(), test_production_requires_https_durable_sender()
+
+### Community 663 - "Владение Kafka-событиями инфраструктуры"
 Cohesion: 0.40
-Nodes (5): Clean-room full-local: PASS исправленной версии, 11/11, Область вывода, Причина прежнего цикла и адресная проверка, Проверяемый пакет, Функции
+Nodes (5): Envelope и устойчивость, Владение Kafka-событиями инфраструктуры, Канонические источники и история, Контракты, принадлежащие этому продукту, Официальные источники
 
-### Community 663 - "Подключить наблюдение"
+### Community 664 - "Доставка закреплённого пакета на узел, версия 1"
 Cohesion: 0.40
-Nodes (5): Автоматическое сопровождение локальных сертификатов, Адресно восстановить исчерпанный observer, Адресно восстановить исчерпанный sender, Подготовить локальный initial bundle, Подключить наблюдение
+Nodes (5): Request и автоматический workflow, Два вида пакетов, Доказательства, Доставка закреплённого пакета на узел, версия 1, Проверки и устойчивость
 
-### Community 664 - "Удостоверения рабочих нагрузок"
-Cohesion: 0.50
-Nodes (4): Владение и совместимость, Операторская регистрация, Удостоверения рабочих нагрузок, Файловая доставка `spire-file-v1`
-
-### Community 665 - "Clean-room full-local: PASS, 11/11"
-Cohesion: 0.50
-Nodes (4): Clean-room full-local: PASS, 11/11, Область вывода, Проверяемый пакет, Функции
+### Community 665 - "Официальные источники архитектурных и эксплуатационных решений"
+Cohesion: 0.40
+Nodes (5): Общие технические основания, Официальные источники архитектурных и эксплуатационных решений, Сервисные источники, Собственные инфраструктурные решения, Унаследованный архив
 
 ### Community 666 - "Первоначальная регистрация в существующем восстановлении"
 Cohesion: 0.50
 Nodes (4): Границы, Доказательства, Первоначальная регистрация в существующем восстановлении, Реализовано
-
-### Community 667 - "План завершения clean-room приёмки"
-Cohesion: 0.50
-Nodes (4): План завершения clean-room приёмки, Правила исследования, Проверенная матрица последних прогонов, Цепочка и контрольные сроки
 
 ### Community 668 - "ADR-0068: Ограниченный TF-IDF-предфильтр перед MiniLM"
 Cohesion: 0.50
@@ -3173,39 +3167,39 @@ Nodes (4): ADR-0068: Ограниченный TF-IDF-предфильтр пер
 
 ### Community 669 - "prometheus/USER_MANUAL.md"
 Cohesion: 0.05
-Nodes (26): Keycloak — собственная ссылка «Открыть», Blackbox Exporter — собственная ссылка «Открыть», Grafana — собственная ссылка «Открыть», История изменений, Prometheus: карта каталога, Prometheus, Запуск, Навигация (+18 more)
+Nodes (27): Keycloak — собственная ссылка «Открыть», Blackbox Exporter — собственная ссылка «Открыть», Grafana — собственная ссылка «Открыть», История изменений, Prometheus: карта каталога, Prometheus, Запуск, Навигация (+19 more)
 
 ### Community 670 - "ADR-0080: Каскад Discovery выполняет только тематическую фильтрацию"
 Cohesion: 0.50
 Nodes (4): ADR-0080: Каскад Discovery выполняет только тематическую фильтрацию, Проверки, Решение, Совместимость и переключение
 
-### Community 671 - "Kafka"
-Cohesion: 0.50
-Nodes (4): Kafka, Запуск, Навигация, Основные возможности
+### Community 671 - "Согласованный выпуск SPIRE — 22 октября 2026"
+Cohesion: 0.40
+Nodes (5): Исходное состояние, Подготовка, Проверки исходников, Согласованный выпуск SPIRE — 22 октября 2026, exited()
 
 ### Community 672 - "runtime.py"
-Cohesion: 0.09
-Nodes (17): database_sslmode(), database_url(), _secret_path(), event_span(), start(), loop(), compute(), execute_translation() (+9 more)
+Cohesion: 0.07
+Nodes (19): database_sslmode(), database_url(), _secret_path(), event_span(), start(), loop(), retry_code(), compute() (+11 more)
 
-### Community 673 - "PostgreSQL"
-Cohesion: 0.50
-Nodes (4): PostgreSQL, Запуск, Навигация, Основные возможности
+### Community 673 - "HTTP endpoints translator-service"
+Cohesion: 0.40
+Nodes (5): HTTP endpoints translator-service, Listener и авторизация, Диагностика, Операторский перевод, Служебные endpoints Swagger
 
 ### Community 674 - "Нормативная спецификация PostgreSQL"
 Cohesion: 0.50
 Nodes (4): Безопасность и ресурсная изоляция, Нормативная спецификация PostgreSQL, Операторское продление локального SQL-клиента, Сохранность и проверка
 
-### Community 675 - "Проверка выбираемого ограждения PostgreSQL"
-Cohesion: 0.50
-Nodes (4): Команды PostgreSQL, Проверка выбираемого ограждения PostgreSQL, Текущее состояние, Что не проверено
+### Community 675 - "translator-service: нормативная спецификация"
+Cohesion: 0.40
+Nodes (5): translator-service: нормативная спецификация, Вход и вычисления, Поставка и безопасность, Управление и восстановление, Устойчивый результат
 
-### Community 676 - "Ответ fencing и независимый возврат — 23 октября 2026"
-Cohesion: 0.50
-Nodes (4): Исправление, Ответ fencing и независимый возврат — 23 октября 2026, Проверки, Установка на стенд
+### Community 676 - "translator-service — обновление безопасности зависимостей"
+Cohesion: 0.40
+Nodes (4): translator-service — обновление безопасности зависимостей, Изменение, Повторение, Результаты
 
-### Community 677 - "Проверки инфраструктурной композиции"
-Cohesion: 0.50
-Nodes (4): Запуск и проверки, Навигация, Основные возможности, Проверки инфраструктурной композиции
+### Community 677 - "Проверка проб, SQLite и телеметрии — 22 октября 2026"
+Cohesion: 0.40
+Nodes (5): Проверка проб, SQLite и телеметрии — 22 октября 2026, Проверки и статус, Реализация и установка, Собственная защищённая доставка, Сохранность и границы
 
 ### Community 678 - "ADR-0075: Сравнение дообученной MiniLM с действующим выпуском и многоязычный TF-IDF"
 Cohesion: 0.67
@@ -3215,41 +3209,61 @@ Nodes (3): ADR-0075: Сравнение дообученной MiniLM с дей�
 Cohesion: 0.50
 Nodes (4): Аудит документации инфраструктуры, Выполненные проверки, Выявленные реализационные ограничения, Последовательная сверка владельцев
 
-### Community 680 - "Повторная сверка и критерии допуска 1.0.0"
+### Community 680 - "Ключевые архитектурные решения Platform Infrastructure"
 Cohesion: 0.50
-Nodes (4): Доказательства опубликованного выпуска, Несоответствия и исправления, Повторная сверка и критерии допуска 1.0.0, Пределы вывода
-
-### Community 681 - "Проверка и публикация исходного выпуска"
-Cohesion: 0.50
-Nodes (4): Область Production Ready, Проверка и публикация исходного выпуска, Сборка и передача, Условия публикации
+Nodes (4): Действующие решения, Ключевые архитектурные решения Platform Infrastructure, Правило нового ADR, Унаследованные решения
 
 ### Community 683 - "steps"
 Cohesion: 0.67
 Nodes (3): sast, runs-on, steps
 
+### Community 685 - "Translator Service"
+Cohesion: 0.50
+Nodes (4): Translator Service, Запуск, Навигация, Основные возможности
+
+### Community 686 - "Задачи translator-service"
+Cohesion: 0.50
+Nodes (4): Допуск конкретной площадки, Задачи translator-service, Обязательные исправления, Эксплуатационная оценка
+
+### Community 687 - "Конечные политики и запуск управляющих ролей — 22 октября 2026"
+Cohesion: 0.50
+Nodes (4): Конечные политики и запуск управляющих ролей — 22 октября 2026, Подтверждённые незавершённые части, Согласованный объём и установленные изменения, Сохранность и проверки
+
+### Community 688 - "translator-service — операторский перевод через Kafka"
+Cohesion: 0.50
+Nodes (4): translator-service — операторский перевод через Kafka, Очистка и ограничения проверки, Реальный перевод, Регрессии и эксплуатация
+
+### Community 689 - "Согласованная выкладка translator-service 0005"
+Cohesion: 0.50
+Nodes (4): Заморозка, восстановление и сохранность, Исходный рассинхрон и выбранный выпуск, Проверки исходников и интеграции, Согласованная выкладка translator-service 0005
+
 ### Community 690 - "Сохранение истории остановленных предшественников — 22 октября 2026"
 Cohesion: 0.50
 Nodes (3): Объём и результат, Проверка, Сохранение истории остановленных предшественников — 22 октября 2026
 
+### Community 691 - "Сохранение возраста заданий при техническом повторе"
+Cohesion: 0.50
+Nodes (4): Выкладка и сохранность, Подтверждённая причина и исправление, Проверки, Сохранение возраста заданий при техническом повторе
+
 ## Knowledge Gaps
 - **76 isolated node(s):** `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND`, `AELEV_INFRASTRUCTURE_KAFKA_PORT`, `AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS` (+71 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 6316 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **58 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **64 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `up()` connect `FullRuntimeTest` to `PostgreSQL — руководство пользователя`, `Руководство SPIRE`, `ADR-0093: Многоплощадочная топология инфраструктурного MinIO`, `00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры`, `Changelog`, `Подключить наблюдение`, `test_fencing_launcher.py`, `Tempo — руководство пользователя`, `delivery/USER_MANUAL.md`, `Проверки инфраструктурной композиции`, `ADR-0107: Самостоятельные продукты и слой оркестрации наблюдения`, `Подключение к Public Egress Gateway`, `00-INFRA-20261116-0019-pinned-owner-compose-execution — Выполнение выбранного владельческого рецепта`, `OpenTelemetry Collector — руководство пользователя`, `.test_fresh_start_waits_for_core_before_owner_bootstrap_and_checks_all_roles`, `fcntl`, `Диагностика listener и восстановление приёмника — 21 октября 2026`, `json`, `Loki — руководство пользователя`, `Руководство: метрики и панели нового владельца`, `Observability — руководство по оркестрации`, `spire_renewal.py`, `Обновление центрального приёмника, 21 октября 2026`, `Kafka — руководство пользователя`, `runtime`, `public-egress-gateway/INDEX.md`, `spire_local.py`, `Keycloak — руководство пользователя`, `kafka: спецификация`, `Platform UI — эксплуатация поставщика`, `ADR-0090: Границы конфигурации инфраструктурных компонентов`, `Создание и подключение UI нового сервиса`, `Инфраструктурная оркестрация — спецификация`, `ADR-0151: Физическая группа и совместная композиция Discovery Engine`, `full_local.py`, `MinIO — руководство пользователя`, `Руководство по оркестрации Platform Infrastructure`, `Prometheus — руководство пользователя`?**
-  _High betweenness centrality (0.089) - this node is a cross-community bridge._
+- **Why does `up()` connect `up` to `PostgreSQL — руководство пользователя`, `Руководство SPIRE`, `Changelog`, `Tempo — руководство пользователя`, `delivery/USER_MANUAL.md`, `ADR-0107: Самостоятельные продукты и слой оркестрации наблюдения`, `Подключение к Public Egress Gateway`, `00-INFRA-20261116-0019-pinned-owner-compose-execution — Выполнение выбранного владельческого рецепта`, `FullRuntimeTest`, `OpenTelemetry Collector — руководство пользователя`, `.test_fresh_start_waits_for_core_before_owner_bootstrap_and_checks_all_roles`, `re`, `json`, `Loki — руководство пользователя`, `Руководство: метрики и панели нового владельца`, `Observability — руководство по оркестрации`, `spire_renewal.py`, `Kafka — руководство пользователя`, `runtime`, `public-egress-gateway/INDEX.md`, `spire_local.py`, `Keycloak — руководство пользователя`, `Platform UI — эксплуатация поставщика`, `Создание и подключение UI нового сервиса`, `Blackbox Exporter — руководство пользователя`, `full_local.py`, `MinIO — руководство пользователя`, `Prometheus — руководство пользователя`?**
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `re` be split into smaller, more focused modules?**
-  _Cohesion score 0.039644565960355434 - nodes in this community are weakly interconnected._
-- **Why does `Platform UI — эксплуатация поставщика` connect `Platform UI — эксплуатация поставщика` to `api`, `platform-ui-injection.md`, `Техническая инъекция разделов и состояния`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Should `shutil` be split into smaller, more focused modules?**
-  _Cohesion score 0.07731694828469023 - nodes in this community are weakly interconnected._
-- **Why does `Спецификация поставки SPIRE` connect `fcntl` to `telemetry.md`, `re`, `observation.py`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+  _Cohesion score 0.041933605125218404 - nodes in this community are weakly interconnected._
+- **Why does `Спецификация поставки SPIRE` connect `re` to `Наблюдение и восстановление`, `telemetry.md`, `observation.py`?**
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Should `time` be split into smaller, more focused modules?**
-  _Cohesion score 0.06320197982105463 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07588075880758807 - nodes in this community are weakly interconnected._
+- **Why does `Platform UI — эксплуатация поставщика` connect `Platform UI — эксплуатация поставщика` to `api`, `platform-ui-injection.md`, `Техническая инъекция разделов и состояния`?**
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
+- **Should `setting` be split into smaller, more focused modules?**
+  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._

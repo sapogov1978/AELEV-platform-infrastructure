@@ -33,6 +33,8 @@ class OwnerBuildTest(unittest.TestCase):
         )
         (application / "app").write_text("public executable\n")
         (application / "app").chmod(0o755)
+        (application / "package").mkdir()
+        (application / "package/module.py").write_text("public_value = 1\n")
         catalog = {
             "product": "qualification",
             "roles": [
@@ -89,6 +91,8 @@ class OwnerBuildTest(unittest.TestCase):
         context = Path(command[-1])
         self.assertFalse((context / ".env").exists())
         self.assertEqual((context / "app").stat().st_mode & 0o777, 0o755)
+        self.assertEqual(context.stat().st_mode & 0o777, 0o755)
+        self.assertEqual((context / "package").stat().st_mode & 0o777, 0o755)
         Path(command[command.index("--iidfile") + 1]).write_text(self.identity)
         Path(command[command.index("--metadata-file") + 1]).write_text(
             '{"buildx.build.provenance":{"materials":[]}}'
@@ -173,6 +177,22 @@ class OwnerBuildTest(unittest.TestCase):
             subject.snapshot(
                 self.owner, self.value["owner_files"], "application", self.directory
             )
+
+    def test_private_operator_umask_does_not_make_public_source_unreadable(
+        self,
+    ) -> None:
+        output = self.directory / "snapshot"
+        output.mkdir(mode=0o700)
+        previous = subject.os.umask(0o077)
+        try:
+            subject.snapshot(
+                self.owner, self.value["owner_files"], "application", output
+            )
+        finally:
+            subject.os.umask(previous)
+        self.assertEqual(self.directory.stat().st_mode & 0o777, 0o700)
+        self.assertEqual((output / "package").stat().st_mode & 0o777, 0o755)
+        self.assertEqual((output / "package/module.py").stat().st_mode & 0o777, 0o644)
 
     def test_known_failure_and_unknown_effect_remain_distinct(self) -> None:
         with (

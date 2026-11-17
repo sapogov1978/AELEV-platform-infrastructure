@@ -136,6 +136,9 @@ def snapshot(root: Path, files: dict[str, Any], context: str, output: Path) -> s
     records: dict[str, Any] = {}
     total = 0
     prefix = PurePosixPath(context)
+    # The operation ancestor stays 0700. Public source directories must remain
+    # traversable after Docker COPY into an unprivileged runtime image.
+    output.chmod(0o755)
     for name, expected in sorted(files.items()):
         source_name = PurePosixPath(name)
         if not source_name.is_relative_to(prefix):
@@ -153,13 +156,17 @@ def snapshot(root: Path, files: dict[str, Any], context: str, output: Path) -> s
         relative_name = str(source_name.relative_to(prefix))
         destination = output / relative_name
         destination.parent.mkdir(parents=True, exist_ok=True)
+        for parent in destination.parents:
+            if parent == output:
+                break
+            parent.chmod(0o755)
         mode = 0o755 if source.stat().st_mode & 0o111 else 0o644
         with destination.open("xb") as stream:
             stream.write(data)
         destination.chmod(mode)
         records[relative_name] = {"sha256": expected, "mode": mode}
     node.require(bool(records), "OWNER_BUILD_CONTEXT_EMPTY")
-    return owner.digest(node.encode(records))
+    return owner.digest(node.encode({"files": records, "directory_mode": 0o755}))
 
 
 def docker(arguments: list[str]) -> bytes:
