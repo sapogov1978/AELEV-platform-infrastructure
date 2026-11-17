@@ -37,6 +37,8 @@ provider как собственный компонент Translator в Platform
 
 ## Навигация
 
+Сквозной сетевой сценарий очереди описан в [network queue qualification](test/network-queue-qualification.md): настоящие consumer/SQL/released worker/HTTPS/outbox, crash после Kafka ACK и повтор без нового вычисления. [Две финальные проверки](../docs/audit/translator-network-queue-20261117.md) отделяют normal fixture от priority live и полного deployment admission.
+
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.
 - [src/](src), [alembic/](alembic) — реализация и миграции.
 - [compute-runtime/](compute-runtime/README.md) — самостоятельный lifecycle той же provider/worker-ячейки, которую root/full-local включает канонически.

@@ -1,0 +1,228 @@
+{
+  "cases": {
+    "normal_fixture": {
+      "evidence_sha256": {
+        "request.bin": "969e5987c4745b0b5b294d4cbfa1e7c98b1ae902dbc174562b52818ead788d40",
+        "result-first.bin": "008a4f169fb7f66d955b05025a75b11c1c2574f4fdf75e70b95c819798756c78",
+        "result-replayed.bin": "008a4f169fb7f66d955b05025a75b11c1c2574f4fdf75e70b95c819798756c78",
+        "verification.json": "89046f732743f92d772cbce898ce63904093d7d0548600fa17b8bcb7dfe0ab24"
+      },
+      "private_evidence_path": "/Users/ksap/.local/share/aelev/evidence/translator-network-queue-20261117/translator-network-queue-t2tf2zuu",
+      "receipt": {
+        "baseline_persistent_containers": 207,
+        "checkpoint_segments": 1,
+        "cleanup_preserved": true,
+        "completed_state_before_outbox": {
+          "attempt_count": 1,
+          "control": {
+            "desired_state": "PAUSED",
+            "priority_streak": 0,
+            "revision": 2
+          },
+          "error_code": null,
+          "lease_token": null,
+          "outbox_state": "PENDING",
+          "postgres_tls": {
+            "client_dn": "/CN=queue-owner",
+            "ssl": true
+          },
+          "request_digest": "sha256:969e5987c4745b0b5b294d4cbfa1e7c98b1ae902dbc174562b52818ead788d40",
+          "result_sha256": "008a4f169fb7f66d955b05025a75b11c1c2574f4fdf75e70b95c819798756c78",
+          "segment_count": 1,
+          "state": "SUCCEEDED"
+        },
+        "compute_attempts": 1,
+        "control_paused_after_first_test_lease": true,
+        "crash_after_broker_ack_exit": 73,
+        "duplicate_input_did_not_recompute": true,
+        "images": {
+          "core": "sha256:17be5093a6ece4137e2a20dc65e48995cb808ee2809420b2940da98a1b316de6",
+          "database": "sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3",
+          "kafka": "apache/kafka:3.9.1@sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed",
+          "worker": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:03191fa5d88e855e370f21cf4fc785f9f035d460449375566e480681ad01958d"
+        },
+        "inference_requested": false,
+        "kafka_tls_and_runtime_acls": true,
+        "live_provider_selected": false,
+        "local_images": {
+          "core": "sha256:17be5093a6ece4137e2a20dc65e48995cb808ee2809420b2940da98a1b316de6",
+          "database": "sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3",
+          "kafka": "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed",
+          "worker": "sha256:03191fa5d88e855e370f21cf4fc785f9f035d460449375566e480681ad01958d"
+        },
+        "native_platform": "linux/arm64",
+        "physical_distribution_verified": false,
+        "post_crash_result_republished": true,
+        "postgres_verify_full_and_client_identity": true,
+        "production_identity_admitted": false,
+        "provider_worker_shared_volume": false,
+        "published_endpoints_used": true,
+        "published_ports": {
+          "broker": 50844,
+          "provider": 50845,
+          "sql": 50843
+        },
+        "queue_resume_issued": false,
+        "real_translation_quality_reviewed": false,
+        "release_admitted": false,
+        "request_topic": "translation.requests.v2",
+        "result_bytes_preserved": true,
+        "result_wire_records": 3,
+        "runtime_source_sha256": {
+          "contracts.py": "7891a6afdd921acf4ff111babeb77eeaca0ec2b97b60edc744a477438f06bed9",
+          "environment.py": "a9ef5e25af4ad6ecdd0fb159e530eb88fa02c2fceeef26e5a9ea07b4417b8285",
+          "provider_identity.py": "19d4fd5bb1a00446bbbeb744edb212de1f69990f5a0ec37248e22d32858c87cf",
+          "provider_transport.py": "04386fd96f84b2d29e15ac6b6ad94c04b8594c222bb571239502a0205d68bc2f",
+          "repository.py": "993f47db69bf3be3df4838d434eefd9d7b436c5d2f29d7d1aa76dd912404700f",
+          "runtime.py": "81e8f8bad17f43cc00e3de92e6b5be6c9cb2b13e298ef523611c32c751a7ced0"
+        },
+        "schema_version": 1,
+        "status": "PASS",
+        "test_pki": true,
+        "test_source_sha256": {
+          "network_queue_fixture.py": "d47ed2ec22b03340af12be6a2b06e7fc307400e71bebcc6f2306a97bf6981c6e",
+          "network_queue_lifecycle.py": "4898f1d60cefbb8021c1b8b53ec77dc7bd03e0bafc96dba4803b3de38095b4d7",
+          "network_queue_probe.py": "4cc217221eed2af4026e9c9f55bb782940323216147916489743b74c71e446ec",
+          "provider_tls_fixtures.py": "7be645ec587db0ecdb37e5a02d007c3cf9d170d8b86cdb02d3c339f9bac89ecd"
+        },
+        "working_runtime_switched": false
+      }
+    },
+    "priority_live": {
+      "evidence_sha256": {
+        "request.bin": "d79f668790bdd20ab884df8c1cf264db0bc019dae52c17591df20d10bf7e9318",
+        "result-first.bin": "44036ed920a09b7f02c3d09cebfe8410e3149d31ad42a38d8d4e51eae595a7cf",
+        "result-replayed.bin": "44036ed920a09b7f02c3d09cebfe8410e3149d31ad42a38d8d4e51eae595a7cf",
+        "verification.json": "af1fb5ccc1c2f89542f31ffa984ab109e0d61ae315dde8e6fba0da52f38d742f"
+      },
+      "private_evidence_path": "/Users/ksap/.local/share/aelev/evidence/translator-network-queue-20261117/translator-network-queue-vnrp2b11",
+      "receipt": {
+        "baseline_persistent_containers": 207,
+        "checkpoint_segments": 1,
+        "cleanup_preserved": true,
+        "completed_state_before_outbox": {
+          "attempt_count": 1,
+          "control": {
+            "desired_state": "PAUSED",
+            "priority_streak": 1,
+            "revision": 2
+          },
+          "error_code": null,
+          "lease_token": null,
+          "outbox_state": "PENDING",
+          "postgres_tls": {
+            "client_dn": "/CN=queue-owner",
+            "ssl": true
+          },
+          "request_digest": "sha256:d79f668790bdd20ab884df8c1cf264db0bc019dae52c17591df20d10bf7e9318",
+          "result_sha256": "44036ed920a09b7f02c3d09cebfe8410e3149d31ad42a38d8d4e51eae595a7cf",
+          "segment_count": 1,
+          "state": "SUCCEEDED"
+        },
+        "compute_attempts": 1,
+        "control_paused_after_first_test_lease": true,
+        "crash_after_broker_ack_exit": 73,
+        "duplicate_input_did_not_recompute": true,
+        "images": {
+          "core": "sha256:17be5093a6ece4137e2a20dc65e48995cb808ee2809420b2940da98a1b316de6",
+          "database": "sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3",
+          "kafka": "apache/kafka:3.9.1@sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed",
+          "provider": "ghcr.io/sapogov1978/aelev-translation-provider@sha256:9d1929bbf30c510f902b3ff2a80a905025ffe42ec915102d316385c02a9bcd9a",
+          "worker": "ghcr.io/sapogov1978/aelev-platform-infrastructure-translator-worker@sha256:03191fa5d88e855e370f21cf4fc785f9f035d460449375566e480681ad01958d"
+        },
+        "inference_requested": true,
+        "kafka_tls_and_runtime_acls": true,
+        "live_provider_selected": true,
+        "local_images": {
+          "core": "sha256:17be5093a6ece4137e2a20dc65e48995cb808ee2809420b2940da98a1b316de6",
+          "database": "sha256:f3bd19c606e442c3d7bdfa8002e03fe260a1023351e0ea4598032022b68dd6e3",
+          "kafka": "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed",
+          "provider": "sha256:9d1929bbf30c510f902b3ff2a80a905025ffe42ec915102d316385c02a9bcd9a",
+          "worker": "sha256:03191fa5d88e855e370f21cf4fc785f9f035d460449375566e480681ad01958d"
+        },
+        "native_platform": "linux/arm64",
+        "physical_distribution_verified": false,
+        "post_crash_result_republished": true,
+        "postgres_verify_full_and_client_identity": true,
+        "production_identity_admitted": false,
+        "provider_worker_shared_volume": false,
+        "published_endpoints_used": true,
+        "published_ports": {
+          "broker": 49735,
+          "provider": 49736,
+          "sql": 49734
+        },
+        "queue_resume_issued": false,
+        "real_translation_quality_reviewed": false,
+        "release_admitted": false,
+        "request_file_sha256": "9b2acb7b7fc93bfc8b18bc97400bc6f0028f7838f1c670389d0040ddb9fa5386",
+        "request_topic": "translation.requests.priority.v2",
+        "result_bytes_preserved": true,
+        "result_wire_records": 3,
+        "runtime_source_sha256": {
+          "contracts.py": "7891a6afdd921acf4ff111babeb77eeaca0ec2b97b60edc744a477438f06bed9",
+          "environment.py": "a9ef5e25af4ad6ecdd0fb159e530eb88fa02c2fceeef26e5a9ea07b4417b8285",
+          "provider_identity.py": "19d4fd5bb1a00446bbbeb744edb212de1f69990f5a0ec37248e22d32858c87cf",
+          "provider_transport.py": "04386fd96f84b2d29e15ac6b6ad94c04b8594c222bb571239502a0205d68bc2f",
+          "repository.py": "993f47db69bf3be3df4838d434eefd9d7b436c5d2f29d7d1aa76dd912404700f",
+          "runtime.py": "81e8f8bad17f43cc00e3de92e6b5be6c9cb2b13e298ef523611c32c751a7ced0"
+        },
+        "schema_version": 1,
+        "status": "PASS",
+        "test_pki": true,
+        "test_source_sha256": {
+          "network_queue_fixture.py": "d47ed2ec22b03340af12be6a2b06e7fc307400e71bebcc6f2306a97bf6981c6e",
+          "network_queue_lifecycle.py": "4898f1d60cefbb8021c1b8b53ec77dc7bd03e0bafc96dba4803b3de38095b4d7",
+          "network_queue_probe.py": "4cc217221eed2af4026e9c9f55bb782940323216147916489743b74c71e446ec",
+          "provider_tls_fixtures.py": "7be645ec587db0ecdb37e5a02d007c3cf9d170d8b86cdb02d3c339f9bac89ecd"
+        },
+        "working_runtime_switched": false
+      }
+    }
+  },
+  "checks": {
+    "black": "PASS",
+    "native_product_runtime": "Python 3.13.7, SQLite 3.53.4, Psycopg 3.3.9, linux/arm64",
+    "provider_transport_regressions": {
+      "passed": 23,
+      "test_runtime": "host Python 3.13.16; ancillary TLS fixture regression, not product runtime admission"
+    },
+    "ruff": "PASS",
+    "strict_mypy_files": 4
+  },
+  "current_policy_owner_flow_verified": false,
+  "full_platform_e2e_verified": false,
+  "historical_harness_failures_retained": [
+    "initial AutoRemove snapshot race before side effects",
+    "fixture controller PLAINTEXT identity rejected by ACL",
+    "test source_digest missing sha256 prefix",
+    "incorrect Confluent resource enum name",
+    "PostgreSQL DN expected without slash",
+    "unsupported target language in first live input rejected before model dispatch"
+  ],
+  "physical_distribution_verified": false,
+  "production_identity_admitted": false,
+  "quality_review": {
+    "case_count": 1,
+    "private_evidence_path": "/Users/ksap/.local/share/aelev/evidence/translator-network-queue-20261117/translator-network-queue-vnrp2b11/quality-review.json",
+    "scope": "One whole retained policy field, 286 characters, en to ru, actual priority Kafka queue; not a current-policy owner localization flow or independent linguistic benchmark.",
+    "sha256": "4196a560d588a0feace81b4645d095f818e6c68a80617f5e7c360cfce4f29fae",
+    "status": "BOUNDED_PAIR_SEMANTIC_REVIEW_PASS"
+  },
+  "queue_resume_issued": false,
+  "recorded_at": "2026-11-16T23:58:28.812474+00:00",
+  "release_admitted": false,
+  "remaining_software_gates": [
+    "CANONICAL_NETWORK_DEPLOYMENT_WORKFLOW_AND_CONFIGURATION",
+    "REMAINING_RUNTIME_IMAGE_ROLE_SECURITY_AND_SIGNATURE_ADMISSION",
+    "OWNER_IDENTITY_GRANT_TELEMETRY_UI_METRICS_ADMISSION",
+    "EXACT_SOURCE_FULL_CLEAN_ROOM_AND_INDEPENDENT_VERIFIER",
+    "REMOTE_CI_AND_RELEASE_PUBLICATION_WHEN_ALLOWED",
+    "DRP_CURRENT_POLICY_REAL_MATERIAL_CASCADE_AND_RECOVERY"
+  ],
+  "runtime_modified": false,
+  "schema_version": 1,
+  "source_base_commit": "10757f9645d8a88fe67c9fe0c3acb7e6ccc89f04",
+  "status": "LOCAL_NETWORK_QUEUE_AND_BOUNDED_PAIR_VERIFIED",
+  "working_runtime_switched": false
+}

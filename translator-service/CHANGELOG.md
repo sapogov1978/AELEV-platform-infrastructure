@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-17: добавлен изолированный native Kafka/SQL/HTTPS queue driver с отдельными test identities, runtime ACL, crash после broker ACK и проверкой byte-identical replay без recompute. Финальные normal fixture и priority live получили PASS на одной оснастке; результат и ограничения закреплены в `../docs/audit/translator-network-queue-20261117.md`. Прогноз — 60–90 минут и ещё 20–30 на live; corrective scopes сохранены. Рабочий runtime, Process Control и canonical recipes не меняются.
+
 - 2026-11-14: в самостоятельных network templates закреплены квалифицированный main worker 03191fa и выпущенный provider 9d1929b. Новые слои main worker проверены повторно; результаты кандидата не перенесены автоматически. Полный installation workflow, canonical queue/quality и production site admission остаются отдельными gates.
 
 - 2026-11-14: проверенный Psycopg 3.3.9 принят в main с изменением только driver dependency pair; сохранены Python 3.13.7, Bookworm и PostgreSQL server profile. Допуск candidate image не переносится автоматически на новый main-ref artifact; runtime pins и рабочий контур ещё не переключены.

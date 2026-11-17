@@ -58,6 +58,7 @@ class Authority:
         expired: bool = False,
         is_ca: bool = False,
         dns_names: tuple[str, ...] = ("localhost",),
+        common_name: str = "ephemeral-leaf",
     ) -> tuple[Path, Path]:
         self.sequence += 1
         stem = self.root / f"leaf-{self.sequence}"
@@ -75,7 +76,7 @@ class Authority:
             "ec_paramgen_curve:prime256v1",
             "-nodes",
             "-subj",
-            "/CN=ephemeral-leaf",
+            "/CN=" + common_name,
             "-keyout",
             str(key),
             "-out",

@@ -20,5 +20,6 @@
 | Compute-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml` для совместимости; независимые `compose.compute-provider.mtls.yml` / `compose.compute-worker.mtls.yml` выбираются через `--role` и не требуют общего socket-тома |
 | Реализация, модель и версия провайдера | В этом репозитории отсутствуют; принадлежат выбранному поставщику |
 | Проверки совместимости провайдера | [актуальная проверка готовности](test/production-readiness-result.md), `test/` |
+| Сквозной сетевой queue/replay proof | [network queue qualification](test/network-queue-qualification.md), `test/network_queue_lifecycle.py` |
 
 Kafka-контракт находится в [docs/api/translation.md](../docs/api/translation.md), инфраструктурная классификация — в [00-INFRA-20261106-0012-translator-technical-capability](../docs/adr/00-INFRA-20261106-0012-translator-technical-capability.md).

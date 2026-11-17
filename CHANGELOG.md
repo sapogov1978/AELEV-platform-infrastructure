@@ -1,6 +1,12 @@
 # Changelog
 
+## 2026-11-17
+
+- Закрыт локальный Translator network queue proof: normal fixture и priority live с exact signed provider/worker, реальными Kafka/SQL consumer/worker/outbox, crash после broker ACK и тремя byte-identical результатами без recompute. Одно целое поле реальной сохранённой политики переведено `en → ru` и проверено по смыслу. Прогноз блока был 60–90 + 20–30 минут; corrective scopes и FAIL history сохранены в `docs/audit/translator-network-queue-20261117.md`. 23 transport regressions, Black/Ruff и strict mypy прошли, обе финальные проверки сохранили baseline 207. Runtime/stack, canonical profiles, работающие очереди и identities не меняются; полные deployment/CI/release и DRP E2E gates остаются открытыми.
+
 ## 2026-11-16
+
+- По подтверждению владельца продолжается остаток приёмки пяти repositories без головного AELEV; суточный review 16 ноября пропущен, local-only ограничение сохраняется. Первый scope — реальная Translator Kafka/PostgreSQL/HTTPS worker/outbox цепочка, replay и bounded отдельный live request. План с официальными основаниями и прогнозом 60–90 + 20–30 минут закреплён в `docs/audit/continuation-20261116.md`; существующие releases, runtime, очереди и RESUME сохраняются. Генератор fixture PKI принимает явный CN для SQL/Kafka identities без изменения default.
 
 - Для общего workflow лимит одного явно выбранного owner-input file повышен до 1 MiB: два настоящих manifests требуют 340 590 bytes; общий archive/header/reply limits, 128-file bound, SHA/mode/owner/symlink и exact inventory checks сохраняются. Добавлены large-metadata roundtrip/replay и oversize rejection sender/receiver. Прогноз — 10 минут.
 - Node receipt owner-compose возвращает только типизированную allowlist projection configuration hash/IDs/status, без raw stdout/credentials. Неверная projection после exit 0 сохраняет RESULT_UNKNOWN и не становится успешным deployment step. Это bridge к prepared workflow, не owner readiness; прогноз до правки — 15 минут, основание — OWASP exclusion of sensitive data.
