@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794900803.4488442,
-    "seen": 1794900821.940104,
-    "ast_hash": "d69dda5175390587ef0a61040bbdad5b",
+    "mtime": 1794901063.8810275,
+    "seen": 1794901083.6365929,
+    "ast_hash": "5b26c8722bc54b6afac9b1a640775b23",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -6528,9 +6528,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1794839386.7377248,
-    "seen": 1794840099.14044,
-    "ast_hash": "9666afc40e58ac161abc2f3d5ebfa0f4",
+    "mtime": 1794901030.813662,
+    "seen": 1794901083.619006,
+    "ast_hash": "91b5e7b86cc6c47a2eccca30407d36df",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {

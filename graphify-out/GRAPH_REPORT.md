@@ -1,7 +1,7 @@
 # Graph Report - owner-compose-source  (2026-11-17)
 
 ## Corpus Check
-- 1150 files · ~783,192 words
+- 1150 files · ~783,231 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 206 file(s) not represented in the graph (top: .whl 64, (none) 46, .example 23)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0ba36b2c`
+- Built from commit: `fef255df`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -3368,16 +3368,16 @@ Nodes (3): ADR-0075: Сравнение дообученной MiniLM с дей�
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `up()` connect `FullRuntimeTest` to `Диагностика listener и восстановление приёмника — 21 октября 2026`, `PostgreSQL — руководство пользователя`, `Обновление центрального приёмника, 21 октября 2026`, `Changelog`, `test_fencing_launcher.py`, `Tempo — руководство пользователя`, `kafka: спецификация`, `ADR-0107: Самостоятельные продукты и слой оркестрации наблюдения`, `Подключение к Public Egress Gateway`, `observability/USER_MANUAL.md`, `00-INFRA-20261116-0019-pinned-owner-compose-execution — Выполнение выбранного владельческого рецепта`, `.test_fresh_start_waits_for_core_before_owner_bootstrap_and_checks_all_roles`, `SPIRE`, `Инфраструктурная оркестрация — спецификация`, `telemetry.md`, `ADR-0090: Границы конфигурации инфраструктурных компонентов`, `Спецификация поставки SPIRE`, `ADR-0093: Многоплощадочная топология инфраструктурного MinIO`, `ADR-0151: Физическая группа и совместная композиция Discovery Engine`, `00-INFRA-20261112-0017-full-runtime-startup — Полный штатный запуск инфраструктуры`, `Руководство: метрики и панели нового владельца`, `Loki — руководство пользователя`, `Observability — руководство по оркестрации`, `Руководство SPIRE`, `json`, `spire_renewal.py`, `Kafka — руководство пользователя`, `OpenTelemetry Collector — руководство пользователя`, `public-egress-gateway/INDEX.md`, `Проверки инфраструктурной композиции`, `Keycloak — руководство пользователя`, `spire_local.py`, `Platform UI — эксплуатация поставщика`, `Создание и подключение UI нового сервиса`, `Blackbox Exporter — руководство пользователя`, `full_local.py`, `MinIO — руководство пользователя`, `Руководство по оркестрации Platform Infrastructure`, `Prometheus — руководство пользователя`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
 - **What connects `aelev-kafka-operations`, `AELEV_INFRASTRUCTURE_KAFKA_COMPOSE_PROJECT`, `AELEV_INFRASTRUCTURE_KAFKA_BIND` to the rest of the system?**
   _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `check_bandit.py` be split into smaller, more focused modules?**
   _Cohesion score 0.080338266384778 - nodes in this community are weakly interconnected._
 - **Why does `Спецификация поставки SPIRE` connect `Спецификация поставки SPIRE` to `snapshot`, `USER_MANUAL.md`, `typing`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Should `shutil` be split into smaller, more focused modules?**
   _Cohesion score 0.051462904911180773 - nodes in this community are weakly interconnected._
-- **Why does `PlatformPage()` connect `Техническая инъекция разделов и состояния` to `Changelog`, `QueueServiceApp.tsx`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `suspend()` connect `suspend` to `time`, `time`, `PostgreSQL — руководство пользователя`, `Kafka — руководство пользователя`, `Контейнерный CLI ограниченного восстановления — 21 октября 2026`, `test_cancel_suspend.py`, `ADR-0155: Автоматическое восстановление после временной паузы`, `test_automatic_recovery.py`, `test_infrastructure/test_recovery_history.py`, `recovery_host.py`, `test_restart_intent.py`, `os`, `recovery_host.py`, `json`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Should `time` be split into smaller, more focused modules?**
   _Cohesion score 0.07374847374847375 - nodes in this community are weakly interconnected._

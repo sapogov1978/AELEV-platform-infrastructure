@@ -9,7 +9,7 @@
     "minio/compose.yml": "0808ec3235dfa9e64aab6d18e787368c161217420cd2afa410dc0f52b6eea269",
     "observability/blackbox-exporter/compose.yml": "06b2d4f3afc1ff3c59bb61370f7a7650b6b3d26ff4bcf94fe64d7884a42d81d3",
     "observability/delivery/compose.yml": "8c2f1abb7e22828070e3a6a172ebe0cdad56ae603b01594921ec6dc35883291f",
-    "observability/grafana/compose.yml": "7bbb226c0741e3cbf2766cb171366eae1eb3e41751876864628437de523ca057",
+    "observability/grafana/compose.yml": "11d465704ef8b8d7fd1a2b4e5f6b2468866682d4998c73837353d4d85aa0fa47",
     "observability/loki/compose.yml": "4b539103fb60fafe43f658e9e566844517828ce1b71586068770ed6c3948fd30",
     "observability/otel-collector/compose.yml": "38cbd3813f96c3ca96056cfaf5843ab9baedf18e78e1a68aa3bb4e8aa1584a6b",
     "observability/prometheus/compose.yml": "a56034d5ca9c59a3feff3116e9c457ff87ee18939efccd02f45db7e07429db01",
