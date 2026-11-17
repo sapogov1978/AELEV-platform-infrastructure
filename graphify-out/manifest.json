@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794882105.082194,
-    "seen": 1794882427.49399,
-    "ast_hash": "cca131f2fe6ff16c61d217704c4cca64",
+    "mtime": 1794882937.2097728,
+    "seen": 1794883126.631045,
+    "ast_hash": "5ebe6ccd01681bd64acdf0f5dc5bd0af",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794840078.0279536,
-    "seen": 1794840099.141036,
-    "ast_hash": "2e272d8790dabf73962283cb6d6a28dc",
+    "mtime": 1794882937.2082212,
+    "seen": 1794883126.6311429,
+    "ast_hash": "893c44ef610ee5c9147b5396fec849be",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -204,9 +204,9 @@
     "semantic_hash": ""
   },
   "docs/adr/INDEX.md": {
-    "mtime": 1794838208.6907308,
-    "seen": 1794840099.141063,
-    "ast_hash": "26657d5f42252165c63b02e9c11de2a8",
+    "mtime": 1794882937.2056468,
+    "seen": 1794883126.632122,
+    "ast_hash": "2f445bbed0caf63f639e2a3ba2fb17a9",
     "semantic_hash": ""
   },
   "docs/api/grpc.md": {
@@ -3078,9 +3078,9 @@
     "semantic_hash": ""
   },
   "SPEC.md": {
-    "mtime": 1794838208.6930974,
-    "seen": 1794840099.141037,
-    "ast_hash": "05d5778e40bc77ba65661769c3ea7bd7",
+    "mtime": 1794882937.207721,
+    "seen": 1794883126.631145,
+    "ast_hash": "96b6fb3bedea607cf015f732e2996fd7",
     "semantic_hash": ""
   },
   "STATS.md": {
@@ -5094,9 +5094,9 @@
     "semantic_hash": ""
   },
   "docs/references/official-sources.md": {
-    "mtime": 1794838398.7407153,
-    "seen": 1794840099.141231,
-    "ast_hash": "fd6e153e2b135aed018569ea5ff7bbb1",
+    "mtime": 1794883101.9459546,
+    "seen": 1794883126.6396952,
+    "ast_hash": "5824dd94e70aa2b979b2dbed22977dca",
     "semantic_hash": ""
   },
   "docs/adr/00-INFRA-20261105-0001-independent-infrastructure-product.md": {
@@ -6000,9 +6000,9 @@
     "semantic_hash": ""
   },
   "INDEX.md": {
-    "mtime": 1794873584.964289,
-    "seen": 1794873639.404091,
-    "ast_hash": "45249f2224f6aeda7447486a41a39329",
+    "mtime": 1794882937.2069423,
+    "seen": 1794883126.63114,
+    "ast_hash": "d02631168bbebc91d8d20c5ccc215458",
     "semantic_hash": ""
   },
   "kafka/INDEX.md": {
@@ -6264,9 +6264,9 @@
     "semantic_hash": ""
   },
   "docs/api/INDEX.md": {
-    "mtime": 1794838208.6914191,
-    "seen": 1794840099.141064,
-    "ast_hash": "8f967dd3399f306f30de52e3146ca25d",
+    "mtime": 1794882937.206311,
+    "seen": 1794883126.632125,
+    "ast_hash": "753a3c24a541e35cf8cc54ee82f16fe1",
     "semantic_hash": ""
   },
   "docs/architecture/deployment.md": {
@@ -6660,9 +6660,9 @@
     "semantic_hash": ""
   },
   "tools/node_execution.py": {
-    "mtime": 1794844654.9709496,
-    "seen": 1794847193.483043,
-    "ast_hash": "233447a3ef1441ad48a6f6bd40eeb356",
+    "mtime": 1794882769.9483695,
+    "seen": 1794883126.6252952,
+    "ast_hash": "3cb4cbeac76d4489d1a5918b6caad45c",
     "semantic_hash": ""
   },
   "tools/test_node_execution.py": {
@@ -6672,9 +6672,9 @@
     "semantic_hash": ""
   },
   "docs/api/node-execution.md": {
-    "mtime": 1794844653.502603,
-    "seen": 1794847193.487893,
-    "ast_hash": "e553ab596d80e324d031c1827e1eb4a2",
+    "mtime": 1794882937.2087533,
+    "seen": 1794883126.632351,
+    "ast_hash": "aaec37d18b83cfc748441ccdcaa964fa",
     "semantic_hash": ""
   },
   "docs/audit/node-artifact-20261114.json": {
@@ -7011,6 +7011,30 @@
     "mtime": 1794882406.8186226,
     "seen": 1794882427.499082,
     "ast_hash": "ab5df8c1bd5443a42d2444681ef324a3",
+    "semantic_hash": ""
+  },
+  "tools/owner_build.py": {
+    "mtime": 1794882769.7373474,
+    "seen": 1794883126.625299,
+    "ast_hash": "7dcfa7a1f870029ebb5c430620c4d0dc",
+    "semantic_hash": ""
+  },
+  "tools/test_owner_build.py": {
+    "mtime": 1794882840.7196372,
+    "seen": 1794883126.6258602,
+    "ast_hash": "13d7df27cd63cd75638c0b45254357fd",
+    "semantic_hash": ""
+  },
+  "docs/adr/00-INFRA-20261117-0020-pinned-owner-source-build.md": {
+    "mtime": 1794882937.2045891,
+    "seen": 1794883126.6321201,
+    "ast_hash": "709ee8768e05ebcb278124d46e95f20b",
+    "semantic_hash": ""
+  },
+  "docs/api/owner-build.md": {
+    "mtime": 1794882937.2050028,
+    "seen": 1794883126.632354,
+    "ast_hash": "eac38d77560f760ab99ed71bcabc5ec2",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

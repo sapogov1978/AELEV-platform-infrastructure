@@ -6,6 +6,7 @@
 
 | Решение | Зафиксированный выбор |
 |---|---|
+| [00-INFRA-20261117-0020-pinned-owner-source-build](00-INFRA-20261117-0020-pinned-owner-source-build.md) | Отдельная native source build из manifest-only context возвращает image/source receipt через прежний node journal; opaque providers, workload start и admission не смешиваются со сборкой. |
 | [00-INFRA-20261116-0019-pinned-owner-compose-execution](00-INFRA-20261116-0019-pinned-owner-compose-execution.md) | Общий узловой исполнитель запускает одну явно подготовленную владельческую роль из pinned recipes без dependencies/build/replacement или implicit RESUME. |
 | [00-INFRA-20261113-0018-independent-roles-and-translation-mtls](00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md) | Все самостоятельные роли/реплики допускают разнесённое размещение; Translator получает отдельные HTTPS/mTLS provider/worker placements без общего socket-тома. |
 | [00-INFRA-20261112-0017-full-runtime-startup](00-INFRA-20261112-0017-full-runtime-startup.md) | Полный штатный runtime сохраняет инкарнации и отделён от acceptance-сценариев и quality admission. |

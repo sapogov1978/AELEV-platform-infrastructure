@@ -36,6 +36,8 @@
 
 ## Независимые выпуски
 
+Отдельный [owner-build API](docs/api/owner-build.md) готовит native image из проверенных source files на назначенном узле без startup и изменения рабочих тегов. Он возвращает technical source/image receipt; security admission и готовность workload проверяются отдельно. Кандидат capability локальный, до нового exact-source допуска не заменяет опубликованный SDK.
+
 Последний опубликованный stable source — [1.1.7](https://github.com/sapogov1978/AELEV-platform-infrastructure/releases/tag/v1.1.7), commit `9e915e3d833b46677bfc3e4ed84778f046816805`: audit 26/26, clean-room 12/12 и signed SSH-fencer admission обеих CPU. Текущий source готовит 1.1.8 с owner-compose capability; до собственных exact-source audit/clean-room и публикации он остаётся кандидатом и не переключает работающую установку.
 
 Общий [owner Compose executor](docs/api/owner-compose.md) выполняет одну заранее подготовленную роль на local/SSH узле через прежний node intent/receipt. Он сохраняет source/image/config pins и не заменяет полный inventory workflow или владельческие readiness gates. По решению владельца испытание на разных физических компьютерах вынесено в [TODO-MVP](TODO-MVP.md); архитектурная независимость каждой роли/реплики сохраняется.

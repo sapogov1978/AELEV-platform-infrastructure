@@ -1,5 +1,7 @@
 # Выполнение владельческой процедуры на узле, версия 1
 
+Отдельная `owner-build` procedure описана в [source-build API](owner-build.md). Она использует тот же source/input binding, durable node journal и typed owner result; module исполняется из infrastructure root. `build` не является действием owner-compose start и не получает права на runtime. Публичный результат допускает только её fixed status/hashes/image IDs/platform; malformed успешный ответ сохраняет RESULT_UNKNOWN.
+
 `tools/node_execution.py execute|status --binding PRIVATE_JSON --request PRIVATE_JSON` вызывает закреплённую публичную процедуру владельца локально либо по SSH. Основание — [00-INFRA-0018](../adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md). Файлы controller binding/request принадлежат оператору и имеют mode `0600`. Unix-узлы требуют Python 3.13, собственный Docker Linux Engine для соответствующих владельческих процедур и материализованный проверенный выпуск через [node artifact delivery](node-artifact.md). Установка ОС/Python, admission release, выдача PKI approvals и полная orchestration всех ролей остаются входами следующего уровня.
 
 ## Область интерфейса

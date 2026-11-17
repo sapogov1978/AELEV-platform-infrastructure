@@ -4,6 +4,7 @@
 
 | Что искать | Где находится |
 |---|---|
+| Отдельная native image build из закреплённых source files без старта | [owner-build.md](owner-build.md), [node-execution.md](node-execution.md) |
 | Выполнение одной выбранной роли из pinned owner Compose | [owner-compose.md](owner-compose.md), [node-execution.md](node-execution.md) |
 | Локальная установка, full-local и BOM | [installation.md](installation.md) |
 | Kafka envelope и владельческие event families | [internal-events.md](internal-events.md) |

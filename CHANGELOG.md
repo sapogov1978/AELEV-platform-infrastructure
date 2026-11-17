@@ -2,6 +2,8 @@
 
 ## 2026-11-17
 
+- Добавляется отдельная public `owner-build` procedure по 00-INFRA-0020: native source build из manifest-only snapshot, private BuildKit metadata и typed image/context/parameters receipt через прежний node journal. Opaque roles и секретные/неизвестные ARG закрыто отклоняются; workload startup, retag/push, admission и RESUME не выполняются. Прогноз первого code/регрессии/реальной owner build — 60–90 минут; canonical Dockerfiles, стек и работающие images не меняются.
+
 - Внутренний root lifecycle теперь отдельно отмечает Engine AutoRemove в общей inventory. Такие контейнеры сохраняются для проверки чужих писателей и адресного cleanup; только сравнение прежнего baseline допускает их естественное завершение. Batch lifetime projection получает три ограниченных read-only refresh; malformed/incomplete response закрыто отклоняется. Постоянные контейнеры, сети, тома и образы по-прежнему должны совпадать. Прогноз коррекции и регрессий — 25–35 минут; runtime/stack/Process Control не меняются.
 - Полный локальный gate `601ed2e` прошёл build/preflight/BOM 37 images, но root Kafka startup получил от Engine `all predefined address pools have been fully subnetted` до создания Kafka. Это сохранённый BLOCKED, не функциональный PASS и не ошибка Kafka. Рабочие endpoints, Docker daemon и прежние сети ради повтора не изменяются; независимый local network queue proof сохраняет собственную область.
 
