@@ -3,7 +3,6 @@ set -Eeuo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 minio_dir=$(cd "$script_dir/.." && pwd)
-server_image=aelev/minio-server:RELEASE.2025-04-22T22-12-26Z
 load_balancer_image=nginx:1.29.1-alpine
 file_mib=${AELEV_MINIO_TEST_FILE_MIB:-2048}
 upload_limit=${AELEV_MINIO_TEST_UPLOAD_LIMIT:-8Mi}
@@ -37,6 +36,10 @@ case "$replication_attempts" in
 esac
 
 run_id=$(date -u +%Y%m%d%H%M%S)-$$
+server_image="aelev/minio-lifecycle:$run_id"
+if docker image inspect "$server_image" >/dev/null 2>&1; then
+  fail "test image name is already in use: $server_image"
+fi
 test_parent=${TMPDIR:-/tmp}
 test_parent=${test_parent%/}
 test_work_dir=$(mktemp -d "$test_parent/aelev-minio-test.XXXXXX")
@@ -46,6 +49,7 @@ case "$test_work_dir" in
 esac
 
 export AELEV_INFRASTRUCTURE_MINIO_COMPOSE_PROJECT="aelev-minio-test-$run_id"
+export AELEV_MINIO_TEST_SERVER_IMAGE="$server_image"
 export AELEV_INFRASTRUCTURE_MINIO_UI_STATE_VOLUME="$AELEV_INFRASTRUCTURE_MINIO_COMPOSE_PROJECT-status"
 export AELEV_INFRASTRUCTURE_MINIO_SITE_A_ENDPOINT=https://minio-site-a-lb:9000
 export AELEV_INFRASTRUCTURE_MINIO_SITE_B_ENDPOINT=https://minio-site-b-lb:9000
@@ -101,8 +105,6 @@ compose=(
   -f "$script_dir/compose.test.yml"
 )
 
-server_image_preexisting=0
-docker image inspect "$server_image" >/dev/null 2>&1 && server_image_preexisting=1
 load_balancer_image_preexisting=0
 docker image inspect "$load_balancer_image" >/dev/null 2>&1 && load_balancer_image_preexisting=1
 cleanup_done=0
@@ -111,7 +113,7 @@ cleanup_resources() {
   local cleanup_status=0
   set +e
   "${compose[@]}" --profile provision --profile test down --volumes --remove-orphans --timeout 10 >/dev/null 2>&1 || cleanup_status=1
-  if [ "$server_image_preexisting" -eq 0 ] && docker image inspect "$server_image" >/dev/null 2>&1; then
+  if docker image inspect "$server_image" >/dev/null 2>&1; then
     docker image rm "$server_image" >/dev/null 2>&1 || cleanup_status=1
   fi
   if [ "$load_balancer_image_preexisting" -eq 0 ] && docker image inspect "$load_balancer_image" >/dev/null 2>&1; then
@@ -362,11 +364,9 @@ done
 docker network inspect "$AELEV_INFRASTRUCTURE_MINIO_NETWORK" >/dev/null 2>&1 && fail "test network remains after cleanup: $AELEV_INFRASTRUCTURE_MINIO_NETWORK"
 docker network inspect "$AELEV_INFRASTRUCTURE_MINIO_INGRESS_NETWORK" >/dev/null 2>&1 && fail "test network remains after cleanup: $AELEV_INFRASTRUCTURE_MINIO_INGRESS_NETWORK"
 [ ! -e "$test_work_dir" ] || fail "temporary test directory remains after cleanup"
-if [ "$server_image_preexisting" -eq 0 ]; then
-  docker image inspect "$server_image" >/dev/null 2>&1 && fail "test-pulled MinIO image remains after cleanup"
-fi
+docker image inspect "$server_image" >/dev/null 2>&1 && fail "test-built MinIO image remains after cleanup"
 if [ "$load_balancer_image_preexisting" -eq 0 ]; then
   docker image inspect "$load_balancer_image" >/dev/null 2>&1 && fail "test-pulled load-balancer image remains after cleanup"
 fi
-echo "PASS: containers, networks, volumes, temporary files, and test-pulled images were removed"
+echo "PASS: containers, networks, volumes, temporary files, test-built and test-pulled images were removed"
 echo "RESULT: MinIO multi-site lifecycle test passed"

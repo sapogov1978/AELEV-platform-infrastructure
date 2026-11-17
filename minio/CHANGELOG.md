@@ -1,5 +1,7 @@
 # История minio
 
+- 2026-11-17: native lifecycle воспроизвёл переназначение общего server tag с новыми Compose project/service labels при одинаковых rootfs layers. Test override теперь использует отдельный `aelev/minio-lifecycle:<run_id>` для всех восьми узлов, provisioners и client, отклоняет занятое имя до effects и удаляет только свой build. История обеих веток и прежнего полного AELEV не содержала такого исправления. Runtime recipe, версии, TLS, erasure topology и 2-ГиБ испытание сохранены. До правки объявлены 25–35 минут на код/проверки; официальный Compose build и границы квалификации приведены в USER_MANUAL.
+
 - 2026-11-15: сборка закрепляет canonical pseudo-versions прежних MinIO/mc commits, официальный Go proxy и checksum database. Полный commit сверяется до сборки, поэтому label не может указывать другую ревизию. Устранён путь динамического hash lookup к отсутствующему Git в builder; Go/OS/runtime, версии, исходники и лицензии сохраняются. Proxy metadata обоих canonical pins проверены; native cold build проверяется отдельным gate.
 
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.

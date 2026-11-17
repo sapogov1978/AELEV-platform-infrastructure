@@ -55,6 +55,7 @@ x-test-site-b-key-mount: &test-site-b-key-mount
     create_host_path: false
 
 x-test-node: &test-node
+  image: ${AELEV_MINIO_TEST_SERVER_IMAGE:?set the isolated test image}
   healthcheck:
     test: ["CMD", "minio-healthcheck"]
     interval: 2s
@@ -196,6 +197,7 @@ services:
       - *test-sites-ca-node-mount
 
   site-replication-applier:
+    image: ${AELEV_MINIO_TEST_SERVER_IMAGE:?set the isolated test image}
     volumes:
       - *test-root-user-mount
       - *test-root-password-mount
@@ -207,6 +209,7 @@ services:
           create_host_path: false
 
   bucket-provisioner:
+    image: ${AELEV_MINIO_TEST_SERVER_IMAGE:?set the isolated test image}
     volumes:
       - *test-root-user-mount
       - *test-root-password-mount
@@ -218,7 +221,7 @@ services:
           create_host_path: false
 
   test-client:
-    image: aelev/minio-server:RELEASE.2025-04-22T22-12-26Z
+    image: ${AELEV_MINIO_TEST_SERVER_IMAGE:?set the isolated test image}
     profiles: [test]
     entrypoint: ["/bin/sh", "/opt/aelev/test-client.sh"]
     environment:
