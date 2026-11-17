@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-17: initial root clean-room `6ac574e` завершился SQLite lock при подготовке datasource/data key, без OOM. Candidate recipe включает штатный конечный query retry 5 вместо upstream default 0; transaction retry, image, journal mode, endpoints, healthcheck и recovery budget сохраняются. Официальные configuration/source ссылки и прогноз 10–15 минут плюс 20–40 минут root qualification приведены в SPEC; до реального прогона устранение отказа не заявлено.
+
 - 2026-11-14: isolated OIDC E2E сохраняет перед cleanup безопасный readiness snapshot: process state, OOM, exit/restart counters и фиксированные причины healthcheck. CI публикует только этот JSON либо успешный result; private native logs, env, пароли и токены остаются закрытыми. Прежний отказ готовности и его deadline сохраняются.
 
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.

@@ -40,6 +40,7 @@ services:
     image: ${AELEV_INFRASTRUCTURE_GRAFANA_IMAGE:?set in the grafana env file}
     mem_limit: ${AELEV_INFRASTRUCTURE_GRAFANA_MEMORY_LIMIT:?set in the grafana env file}
     environment:
+      GF_DATABASE_QUERY_RETRIES: "5"
       GF_SERVER_PROTOCOL: https
       GF_SERVER_CERT_FILE: /run/secrets/observability/server.crt
       GF_SERVER_CERT_KEY: /run/secrets/observability/server.key

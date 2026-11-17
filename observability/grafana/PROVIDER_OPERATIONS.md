@@ -2,6 +2,8 @@
 
 ## Структура поставки
 
+Нативный процесс использует конечный `GF_DATABASE_QUERY_RETRIES=5` для временных SQLite locks по [upstream configuration](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#query_retries). Это не restart/recovery budget и не разрешение пересоздать volume. При отказе initial provisioning сначала сохраните закрытый native log и проверьте источник блокировки; изменение healthcheck timeout или WAL без допуска движка не является процедурой восстановления.
+
 ```text
 grafana/
 ├── README.md, USER_MANUAL.md, SPEC.md, TASKS.md, CHANGELOG.md

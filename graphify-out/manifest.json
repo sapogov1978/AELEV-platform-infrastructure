@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794899862.7372,
-    "seen": 1794900001.558563,
-    "ast_hash": "8fd90d8a89befd257ff59be3ef89c2fb",
+    "mtime": 1794900803.4488442,
+    "seen": 1794900821.940104,
+    "ast_hash": "d69dda5175390587ef0a61040bbdad5b",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -798,9 +798,9 @@
     "semantic_hash": ""
   },
   "observability/grafana/compose.yml": {
-    "mtime": 1794837645.6463363,
-    "seen": 1794840099.140547,
-    "ast_hash": "c5084a8314cba4d904052ac0c45e42c5",
+    "mtime": 1794900803.4459214,
+    "seen": 1794900821.928789,
+    "ast_hash": "ed00a61b09271aeadae698e3ed36cbc3",
     "semantic_hash": ""
   },
   "observability/grafana/config/grafana-dashboards.yml": {
@@ -3540,15 +3540,15 @@
     "semantic_hash": ""
   },
   "observability/grafana/CHANGELOG.md": {
-    "mtime": 1794837645.642342,
-    "seen": 1794840099.14131,
-    "ast_hash": "28e9c94c33b90c4f1336ebad926a390f",
+    "mtime": 1794900803.447761,
+    "seen": 1794900821.9469938,
+    "ast_hash": "e088ab3efdf13517b1ec90103ac5d9d3",
     "semantic_hash": ""
   },
   "observability/grafana/PROVIDER_OPERATIONS.md": {
-    "mtime": 1794837645.6434045,
-    "seen": 1794840099.141312,
-    "ast_hash": "ac68e570493fd5a3b9e93fc9e4ec0197",
+    "mtime": 1794900803.4474654,
+    "seen": 1794900821.947018,
+    "ast_hash": "7bf44558e2fdaa90c37dfa7f50243920",
     "semantic_hash": ""
   },
   "observability/grafana/README.md": {
@@ -3558,9 +3558,9 @@
     "semantic_hash": ""
   },
   "observability/grafana/SPEC.md": {
-    "mtime": 1794837645.6441796,
-    "seen": 1794840099.141314,
-    "ast_hash": "5a12fcd94101eeaf0ff245ab7f434d75",
+    "mtime": 1794900803.4465947,
+    "seen": 1794900821.947042,
+    "ast_hash": "16c4e72943de0135855f30a3b8aadcc1",
     "semantic_hash": ""
   },
   "observability/grafana/TASKS.md": {
@@ -7077,6 +7077,12 @@
     "mtime": 1794899950.4370599,
     "seen": 1794900001.559859,
     "ast_hash": "3560d8ffe3479e4dfc69ae34fab26217",
+    "semantic_hash": ""
+  },
+  "docs/audit/clean-engine-grafana-lock-20261117.md": {
+    "mtime": 1794900803.449165,
+    "seen": 1794900821.941313,
+    "ast_hash": "6ef41c21f45a452ff9df7f23ebbbff67",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
