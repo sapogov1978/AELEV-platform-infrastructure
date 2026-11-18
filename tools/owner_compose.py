@@ -253,7 +253,9 @@ def apply_model(
     value: dict[str, Any], action: str, command: list[str], role: dict[str, Any]
 ) -> dict[str, Any]:
     service = role["id"]
-    parts = call([*command, "config", "--hash", service]).decode().split()
+    parts = (
+        call([*command, "--profile", "*", "config", "--hash", service]).decode().split()
+    )
     require(
         len(parts) == 2
         and parts[0] == service
@@ -355,7 +357,7 @@ def execute(value: dict[str, Any], action: str) -> dict[str, Any]:
         action != "start" or role["kind"] in {"runtime", "node"},
         "OWNER_COMPOSE_ACTION_KIND_MISMATCH",
     )
-    model = json.loads(call([*command, "config", "--format", "json"]))
+    model = json.loads(call([*command, "--profile", "*", "config", "--format", "json"]))
     require(role["id"] in model.get("services", {}), "OWNER_COMPOSE_SERVICE_MISSING")
     selected = model["services"][role["id"]]
     require(selected.get("image") == value["image"], "OWNER_COMPOSE_IMAGE_MISMATCH")

@@ -1,5 +1,9 @@
 # История PostgreSQL
 
+- 2026-11-18: Docker-fencer явно объявляет `compose.runtime.yml` companion для существующего каталога/owner SDK. Это разрешает рендер полноценной базовой модели при выборе роли из overlay; `--no-deps` и single-role execution сохраняются. Команды, образы и HA не меняются; прогноз общей metadata-поправки — 15–25 минут.
+
+- 2026-11-18: после проверки текущей и исходной истории два несекретных селектора `PROVISION_DATABASE`/`PROVISION_ROLE` явно передаются только одноразовому provisioner из закреплённого private env. Это устраняет зависимость подготовки ресурсов от ручного `run -e`, сохраняя file password, пустой отказ, CLI precedence и неизменные остальные service models. Прогноз до правок — 15–20 минут; общий SDK SQL-этап потребителей проверяется отдельно. Runtime images, SQL-права и HA не меняются.
+
 - 2026-11-16: Test-only barrier снимает запрет только после доказанного уничтожения held request, чтобы новая инкарнация первой копии могла пройти прежнюю readiness. История marker/hash и канонический PostgreSQL журнал сохраняются. Отдельные real Linux tests проверяют запрет до discard и отсутствие release после SIGCONT.
 
 - 2026-11-16: В native SSH test добавлен доэффектный барьер только первого controller key: первый return RPC удерживается SIGSTOP, повторные не вызывают dispatcher, SIGCONT заканчивается отказом. Snapshot проверяет PID/start ticks/kernel `T`; перед запуском второй копии held request удаляется SIGKILL через pidfd. Новые tests проверяют настоящие Linux stop/discard/resume-refusal и подмену marker/incarnation; owner runtime не изменён.

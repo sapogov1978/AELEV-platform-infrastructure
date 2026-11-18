@@ -16,6 +16,8 @@ services:
   postgresql-2: *fenced-node
   postgresql-3: *fenced-node
   postgresql-fencer:
+    labels:
+      io.aelev.deployment.recipe-inputs: '["compose.runtime.yml"]'
     image: ${AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_IMAGE:?set AELEV_INFRASTRUCTURE_POSTGRESQL_FENCING_IMAGE}
     build: {context: ., dockerfile: Dockerfile}
     command: [fencing-serve]

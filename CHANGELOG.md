@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-18 — Resource selection through pinned owner workflows
+
+- Native Linux/Python 3.13.7 tools suite — 262 passed, PostgreSQL configuration — 11 passed; реальный внешний потребитель подтвердил canonical resource tasks, повтор durable receipts и отказ на drift. Каталог воспроизводится с прежними 94 ролями; Bandit 1.8.6 — 185 файлов без расширения baseline, style/types/links/secrets PASS. Это компонентное подтверждение изменённых interfaces, не повтор полного runtime clean-room и не новый release admission; прежнее полное доказательство остаётся привязано к своей исходной generation.
+
+- Нативный SQL workflow выявил прежний `OWNER_COMPOSE_SERVICE_MISSING` для operation с неактивным профилем. Owner-compose включает `--profile '*'` только при read-only render/config hash; effectful snapshot-команда сохраняет точный service и `--no-deps` без включения соседних ролей. Регрессия сначала воспроизведена на прежнем коде; основание и scope приведены в owner-compose API. Прогноз — 15–20 минут с проверкой.
+
+- При сборке фактического DAG подтверждено: каталог overlay-only ролей не разрешал необходимый base file, а overlay отдельно не рендерился. Явная owner label `io.aelev.deployment.recipe-inputs` добавляет только перечисленные публичные Compose files того же owner; unlisted/traversal/template/duplicate inputs запрещены. Обычная membership и схема каталога/SDK сохраняются. Docker-fencer объявляет свой статический runtime companion; полный потребительский граф проверяется отдельно. Прогноз до поправки — 15–25 минут; официальные основания и совместный scope зафиксированы в placement API.
+
+- PostgreSQL `database-provisioner` получает два несекретных селектора ресурса из закреплённого env. Прежняя поставка передавала их только через ручной `run -e`; MinIO уже поддерживал declared environment и не меняется. Password остаётся file-backed, пустые селекторы закрыто запрещают задачу, постоянные service models сохраняются. Scope согласован с существующим owner-compose API без расширения его command/environment allowlist; source history и changelogs проверены до исправления. Прогноз — 15–20 минут плюс отдельный native SDK SQL-этап и проверки; официальные Docker основания приведены в руководстве PostgreSQL.
+
 ## 2026-11-18 — Full catalogue and limited quickstart
 
 - Проверены 7 новых scope-тестов и полный tools suite: 258 passed на Linux/Python 3.13.7 с PyYAML 6.0.3 и native `/tmp`. Прежний полный каталог инфраструктуры побайтно совпал: 94 роли (57 runtime, 1 node, 36 operations). Type/style, ссылки и secret checks прошли; runtime/source release admission остаётся отдельным gate. Диагностический host-bind прогон не подтвердил два старых lock-теста; корректный native filesystem прогон сохранён отдельно, код блокировок не менялся.

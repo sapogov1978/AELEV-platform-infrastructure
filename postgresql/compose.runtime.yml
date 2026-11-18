@@ -292,7 +292,10 @@ services:
     image: ${AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE:?set AELEV_INFRASTRUCTURE_POSTGRESQL_IMAGE}
     profiles: [provision]
     command: [provision]
-    environment: *postgresql-environment
+    environment:
+      <<: *postgresql-environment
+      AELEV_INFRASTRUCTURE_POSTGRESQL_PROVISION_DATABASE: ${AELEV_INFRASTRUCTURE_POSTGRESQL_PROVISION_DATABASE}
+      AELEV_INFRASTRUCTURE_POSTGRESQL_PROVISION_ROLE: ${AELEV_INFRASTRUCTURE_POSTGRESQL_PROVISION_ROLE}
     volumes:
       - type: bind
         source: ./secrets/admin

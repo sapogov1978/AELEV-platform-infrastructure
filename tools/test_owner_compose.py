@@ -156,6 +156,32 @@ class OwnerComposeTest(unittest.TestCase):
         self.assertEqual(self.mutations, [])
         self.assertEqual(len(self.commands), 2)
 
+    def test_profiled_role_is_rendered_before_selected_role_execution(self):
+        self.model["services"]["worker"]["profiles"] = ["provision"]
+
+        def profiled_docker(command, **kwargs):
+            if (
+                "config" in command
+                and "--hash" in command
+                and "--profile" not in command
+            ):
+                return b""
+            if "config" in command and "--format" in command:
+                if (
+                    "--profile" not in command
+                    or command[command.index("--profile") + 1] != "*"
+                ):
+                    return b'{"services":{}}'
+            return self.docker(command, **kwargs)
+
+        with mock.patch.object(subject, "call", side_effect=profiled_docker):
+            result = subject.execute(self.value, "start")
+        self.assertEqual(result["status"], "OWNER_ROLE_RUNNING")
+        self.assertEqual(len(self.mutations), 1)
+        self.assertEqual(self.mutations[0][-1], "worker")
+        self.assertIn("--no-deps", self.mutations[0])
+        self.assertNotIn("--profile", self.mutations[0])
+
     def test_executor_and_owner_have_independent_source_generations(self):
         command, role = subject.definition(self.value)
         self.assertNotEqual(self.value["executor_root"], self.value["owner_root"])

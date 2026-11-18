@@ -17,10 +17,10 @@
     "platform-ui/compose.local-bridge.yml": "21e08f5283eb0bedc7dc11ddb470f5364e6a949b6cc05574e1676592d777efbc",
     "platform-ui/compose.local-keycloak.yml": "04d17b74570696726e8a7e1b7855fcfbeb8392a363f7ad3534894272611531f6",
     "platform-ui/compose.yml": "9c0604bb99403f486ab051b8a855319bac52e7c8b6b5ec4c1ba2e5359f7f0711",
-    "postgresql/compose.docker.yml": "43e9bbbcdcdd39b602d625709986151e3e25d36db78129cc9b9a96319b0fea90",
+    "postgresql/compose.docker.yml": "e98a390424878b61da99f0aa0ef734631ae558a4bc89c7579d0a819ecef6356a",
     "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
     "postgresql/compose.kubernetes.yml": "bf60a6be265060f775a050e879e7c1481b92a406b964835846cca61c056b436d",
-    "postgresql/compose.runtime.yml": "156f12e7dfde7f6019d329451d12568866c0dedf2aef874f670e671ac3857614",
+    "postgresql/compose.runtime.yml": "c13e7538f2fdb6983da78c81a9f8342cd74f8d5367a66b6bb15b43f1bfe9b5e0",
     "postgresql/compose.watchdog.yml": "031b3ec799081c9cd242d526bf1f7748ec6e52718fe21a4ae1cedadad7d08e50",
     "postgresql/compose.yml": "55786804ad47768474345fff39cd28d4be26c33f8cfa187b8d7cc0cbc04fa2cb",
     "public-egress-gateway/compose.yml": "190744fc9e750edd858d2cb80190319248d07b1f2290702d648f7299f163b85e",
@@ -264,6 +264,8 @@
         "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_HOST",
         "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_PORT",
         "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_REST_PORT",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_PROVISION_DATABASE",
+        "AELEV_INFRASTRUCTURE_POSTGRESQL_PROVISION_ROLE",
         "AELEV_INFRASTRUCTURE_POSTGRESQL_SHARED_BUFFERS"
       ],
       "compose_profiles": [
@@ -1522,7 +1524,8 @@
       "credentials_required": true,
       "recipes": [
         "postgresql/compose.docker.yml",
-        "postgresql/compose.fencing-ssh.yml"
+        "postgresql/compose.fencing-ssh.yml",
+        "postgresql/compose.runtime.yml"
       ],
       "configuration_variables": [
         "AELEV_INFRASTRUCTURE_POSTGRESQL_ADMIN_USER",

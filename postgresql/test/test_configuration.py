@@ -15,6 +15,67 @@ ENV_PATH = COMPONENT_ROOT / ".env.example"
 
 
 class PostgresqlConfigurationTest(unittest.TestCase):
+    def test_resource_selection_reaches_only_the_provisioner(self) -> None:
+        environment = {
+            key: value
+            for key, value in os.environ.items()
+            if not key.startswith(("AELEV_", "COMPOSE_", "VITE_"))
+        }
+        prefix = "AELEV_INFRASTRUCTURE_POSTGRESQL_"
+
+        def model(selection: dict[str, str]) -> dict:
+            result = subprocess.run(
+                [
+                    "docker",
+                    "compose",
+                    "--env-file",
+                    str(ENV_PATH),
+                    "-f",
+                    str(COMPOSE_PATH),
+                    "--profile",
+                    "*",
+                    "config",
+                    "--format",
+                    "json",
+                ],
+                cwd=COMPONENT_ROOT,
+                env={**environment, **selection},
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return json.loads(result.stdout)["services"]
+
+        baseline = model({})
+        for selection in (
+            {},
+            {"PROVISION_DATABASE": "isolated_db", "PROVISION_ROLE": "isolated_role"},
+        ):
+            with self.subTest(selection=selection):
+                services = model(
+                    {
+                        **{prefix + key: value for key, value in selection.items()},
+                        prefix + "PROVISION_PASSWORD": "do-not-inherit",
+                    }
+                )
+                provisioner = services.pop("database-provisioner")
+                for name in ("PROVISION_DATABASE", "PROVISION_ROLE"):
+                    self.assertEqual(
+                        provisioner["environment"].get(prefix + name),
+                        selection.get(name, ""),
+                    )
+                self.assertNotIn(
+                    prefix + "PROVISION_PASSWORD", provisioner["environment"]
+                )
+                self.assertEqual(
+                    services,
+                    {
+                        key: value
+                        for key, value in baseline.items()
+                        if key != "database-provisioner"
+                    },
+                )
+
     def test_operator_entrypoints_are_owned_by_the_component(self) -> None:
         for name in (
             "compose.yml",

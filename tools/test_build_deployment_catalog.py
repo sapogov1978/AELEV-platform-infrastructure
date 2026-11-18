@@ -19,6 +19,56 @@ except ModuleNotFoundError as error:
 
 @unittest.skipIf(build is None, "requires pinned tools/requirements-catalog.txt")
 class BuildDeploymentCatalogTest(unittest.TestCase):
+    def test_overlay_role_can_declare_its_static_owner_base_recipe(self) -> None:
+        result = self.catalog(
+            "services:\n  api: {image: example}\n",
+            "services:\n  identity-preparer:\n    image: example\n    labels:\n"
+            "      io.aelev.deployment.recipe-inputs: '[\"compose.yml\"]'\n",
+        )
+        role = next(row for row in result["roles"] if row["id"] == "identity-preparer")
+        self.assertEqual(
+            role["recipes"],
+            ["technical-owner/compose.client.yml", "technical-owner/compose.yml"],
+        )
+        for name in role["recipes"]:
+            self.assertEqual(
+                result["sources"][name],
+                hashlib.sha256((self.root / name).read_bytes()).hexdigest(),
+            )
+
+    def test_list_label_recipe_inputs_are_bounded_to_owner_sources(self) -> None:
+        result = self.catalog(
+            "services:\n  api: {image: example}\n",
+            "services:\n  identity-preparer:\n    image: example\n    labels:\n"
+            "      - 'io.aelev.deployment.recipe-inputs=[\"compose.yml\"]'\n",
+        )
+        role = next(row for row in result["roles"] if row["id"] == "identity-preparer")
+        self.assertIn("technical-owner/compose.yml", role["recipes"])
+
+    def test_invalid_or_unlisted_companion_recipe_is_rejected(self) -> None:
+        (self.owner / "compose.unlisted.yml").write_text("services: {}\n")
+        for names in (
+            [],
+            {},
+            ["../other/compose.yml"],
+            ["/compose.yml"],
+            ["./compose.yml"],
+            ["compose.${MODE}.yml"],
+            ["compose.unlisted.yml"],
+            ["compose.yml", "compose.yml"],
+            [1],
+        ):
+            with self.subTest(names=names), self.assertRaisesRegex(
+                ValueError, "recipe inputs"
+            ):
+                self.catalog(
+                    "services:\n  api: {image: example}\n",
+                    "services:\n  identity-preparer:\n    image: example\n    labels:\n"
+                    "      io.aelev.deployment.recipe-inputs: '"
+                    + json.dumps(names)
+                    + "'\n",
+                )
+
     def setUp(self) -> None:
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

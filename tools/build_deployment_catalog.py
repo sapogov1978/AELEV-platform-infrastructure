@@ -8,7 +8,7 @@ import hashlib
 import json
 import re
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
@@ -28,6 +28,35 @@ OPERATION = re.compile(
     r"(?:-provision|-provisioner|-configuration-init|-data-init|-migrator|-identity-preparer|-dashboard-publisher)$"
 )
 SCOPE_LABEL = "io.aelev.deployment.scope"
+RECIPE_INPUTS_LABEL = "io.aelev.deployment.recipe-inputs"
+
+
+def recipe_inputs(value: Any, directory: Path, files: set[Path]) -> set[Path]:
+    """Only the owner may authorize additional tracked Compose inputs."""
+    if not isinstance(value, str):
+        raise ValueError("invalid owner recipe inputs")
+    try:
+        names = json.loads(value)
+    except ValueError as error:
+        raise ValueError("invalid owner recipe inputs") from error
+    if not isinstance(names, list) or not 0 < len(names) <= 32:
+        raise ValueError("invalid owner recipe inputs")
+    selected = set()
+    for name in names:
+        if (
+            not isinstance(name, str)
+            or not name
+            or "\\" in name
+            or "$" in name
+            or PurePosixPath(name).is_absolute()
+            or ".." in PurePosixPath(name).parts
+            or str(PurePosixPath(name)) != name
+            or directory / name not in files
+            or directory / name in selected
+        ):
+            raise ValueError("invalid owner recipe inputs")
+        selected.add(directory / name)
+    return selected
 
 
 def compose_tag(loader: Any, node: Any) -> Any:
@@ -57,28 +86,28 @@ def build(
     )
     files = sorted({root / path.decode() for path in public_files.split(b"\0") if path})
     sources = {
-        manifest.relative_to(root).as_posix(): hashlib.sha256(
-            manifest.read_bytes()
-        ).hexdigest()
+        manifest.relative_to(root)
+        .as_posix(): hashlib.sha256(manifest.read_bytes())
+        .hexdigest()
     }
     roles: list[dict[str, Any]] = []
     for owner in owners:
         directory = root / owner
         found: dict[str, dict[str, Any]] = {}
         scopes: dict[str, set[str]] = {}
-        for path in files:
-            if (
-                not path.is_file()
-                or not path.is_relative_to(directory)
-                or set(path.relative_to(directory).parts) & EXCLUDED
-            ):
-                continue
-            if not (
+        recipes = {
+            path
+            for path in files
+            if path.is_file()
+            and path.is_relative_to(directory)
+            and not set(path.relative_to(directory).parts) & EXCLUDED
+            and (
                 path.name == "compose.yml"
                 or path.name.startswith("compose.")
                 and path.suffix == ".yml"
-            ):
-                continue
+            )
+        }
+        for path in sorted(recipes):
             if path.is_symlink():
                 raise ValueError("catalogue source must be a regular file")
             source = path.relative_to(root).as_posix()
@@ -109,11 +138,15 @@ def build(
                     {
                         "id": name,
                         "owner": owner,
-                        "kind": "node"
-                        if name in node_roles
-                        else "operation"
-                        if name in operations or OPERATION.search(name)
-                        else "runtime",
+                        "kind": (
+                            "node"
+                            if name in node_roles
+                            else (
+                                "operation"
+                                if name in operations or OPERATION.search(name)
+                                else "runtime"
+                            )
+                        ),
                         "opaque": name in opaque_roles,
                         "local_state": False,
                         "credentials_required": False,
@@ -123,6 +156,24 @@ def build(
                     },
                 )
                 record["recipes"].append(source)
+                if isinstance(labels, list):
+                    companions = [
+                        label.split("=", 1)[1]
+                        for label in labels
+                        if isinstance(label, str)
+                        and label.startswith(RECIPE_INPUTS_LABEL + "=")
+                    ]
+                else:
+                    companions = (
+                        [labels[RECIPE_INPUTS_LABEL]]
+                        if RECIPE_INPUTS_LABEL in labels
+                        else []
+                    )
+                for declaration in companions:
+                    record["recipes"].extend(
+                        candidate.relative_to(root).as_posix()
+                        for candidate in recipe_inputs(declaration, directory, recipes)
+                    )
                 for mount in definition.get("volumes") or []:
                     if isinstance(mount, str):
                         read_only = "ro" in mount.rsplit(":", 1)[-1].split(",")
@@ -148,7 +199,7 @@ def build(
                     raise ValueError("opaque and node roles cannot be quickstart-only")
                 continue
             for key in ("recipes", "configuration_variables", "compose_profiles"):
-                record[key] = sorted(record[key])
+                record[key] = sorted(set(record[key]))
             roles.append(record)
     known = {role["id"] for role in roles}
     if not (node_roles | operations | opaque_roles) <= known:

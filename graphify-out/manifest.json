@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795010226.737171,
-    "seen": 1795010241.579469,
-    "ast_hash": "f1f6e24cd038ad12fbffa85fedc90fc6",
+    "mtime": 1795037554.8606036,
+    "seen": 1795037568.001544,
+    "ast_hash": "d63c7a9e9bef275a5a0410e18dbae1ee",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1686,9 +1686,9 @@
     "semantic_hash": ""
   },
   "postgresql/compose.docker.yml": {
-    "mtime": 1794837645.765285,
-    "seen": 1794840099.140697,
-    "ast_hash": "e676f39d2b9598dd7429ad24bca74da2",
+    "mtime": 1795033910.3411498,
+    "seen": 1795036608.533021,
+    "ast_hash": "fe4e00d13353abe16a9dd2e894ea797d",
     "semantic_hash": ""
   },
   "postgresql/compose.kubernetes.yml": {
@@ -1698,9 +1698,9 @@
     "semantic_hash": ""
   },
   "postgresql/compose.runtime.yml": {
-    "mtime": 1794837645.766283,
-    "seen": 1794840099.1406999,
-    "ast_hash": "ae51d0639143c4b03eb53e14fa40842a",
+    "mtime": 1795032325.5154805,
+    "seen": 1795036608.533086,
+    "ast_hash": "50560c2c93c0099d894eb570b6d051a8",
     "semantic_hash": ""
   },
   "postgresql/compose.watchdog.yml": {
@@ -1836,9 +1836,9 @@
     "semantic_hash": ""
   },
   "postgresql/test/test_configuration.py": {
-    "mtime": 1794837645.7853067,
-    "seen": 1794840099.1407301,
-    "ast_hash": "d5332b6bfa2afb8f77ecd2a739193b3f",
+    "mtime": 1795034112.7792888,
+    "seen": 1795036608.535882,
+    "ast_hash": "3ea63d6baf30e0ed1c16414ec1bb03e2",
     "semantic_hash": ""
   },
   "postgresql/test/test_fencing.py": {
@@ -4116,9 +4116,9 @@
     "semantic_hash": ""
   },
   "postgresql/CHANGELOG.md": {
-    "mtime": 1794837645.7603533,
-    "seen": 1794840099.141417,
-    "ast_hash": "6e539536b2bbbd07a6e5f4c9dff0902c",
+    "mtime": 1795034112.2366354,
+    "seen": 1795036608.57821,
+    "ast_hash": "276c85290ce31092b45be00d5f53c417",
     "semantic_hash": ""
   },
   "postgresql/FENCING.md": {
@@ -4134,9 +4134,9 @@
     "semantic_hash": ""
   },
   "postgresql/SPEC.md": {
-    "mtime": 1794837645.7627916,
-    "seen": 1794840099.141422,
-    "ast_hash": "ee9b324a5b139487952136198e984e6e",
+    "mtime": 1795032137.7286615,
+    "seen": 1795036608.57856,
+    "ast_hash": "f791770c334a9c094bd46ac7261233b8",
     "semantic_hash": ""
   },
   "postgresql/TASKS.md": {
@@ -4146,9 +4146,9 @@
     "semantic_hash": ""
   },
   "postgresql/USER_MANUAL.md": {
-    "mtime": 1794837645.7641945,
-    "seen": 1794840099.1414242,
-    "ast_hash": "02cab79a6be59693d5919ee9928640fc",
+    "mtime": 1795032137.7293034,
+    "seen": 1795036608.578593,
+    "ast_hash": "6cb96a57d380137bf4c898fa26f71835",
     "semantic_hash": ""
   },
   "postgresql/test/client-renewal-result-20261023.md": {
@@ -6528,9 +6528,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1794901030.813662,
-    "seen": 1794901083.619006,
-    "ast_hash": "91b5e7b86cc6c47a2eccca30407d36df",
+    "mtime": 1795034113.399343,
+    "seen": 1795036608.517361,
+    "ast_hash": "20d7921c86489c595834ee5ea336eb6f",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
@@ -6576,9 +6576,9 @@
     "semantic_hash": ""
   },
   "tools/build_deployment_catalog.py": {
-    "mtime": 1795009722.0366986,
-    "seen": 1795010241.575068,
-    "ast_hash": "7a32713b9285eb47cd8b506f0a594717",
+    "mtime": 1795034112.7773204,
+    "seen": 1795036608.545079,
+    "ast_hash": "6da1bb5d9d3949ab1ed82c4458cb75ac",
     "semantic_hash": ""
   },
   "tools/placement.py": {
@@ -6594,9 +6594,9 @@
     "semantic_hash": ""
   },
   "docs/api/placement.md": {
-    "mtime": 1795005915.6773841,
-    "seen": 1795010241.580451,
-    "ast_hash": "647b639d82033c9b526081b6139bccc1",
+    "mtime": 1795034112.2347722,
+    "seen": 1795036608.55886,
+    "ast_hash": "199edc6e0b88932fc7fc6e6b6df5e0b7",
     "semantic_hash": ""
   },
   "tools/requirements-catalog.txt": {
@@ -6900,15 +6900,15 @@
     "semantic_hash": ""
   },
   "tools/owner_compose.py": {
-    "mtime": 1794843196.7341187,
-    "seen": 1794843503.229491,
-    "ast_hash": "6969ecf639ad64384cf7971f7a0fae47",
+    "mtime": 1795034940.0530844,
+    "seen": 1795036608.547371,
+    "ast_hash": "33a0dd31cbf852ee5d8b5b55038aea7f",
     "semantic_hash": ""
   },
   "tools/test_owner_compose.py": {
-    "mtime": 1794844654.8848207,
-    "seen": 1794847193.483496,
-    "ast_hash": "f92ee0bcb234de6fcb13f2d1642724af",
+    "mtime": 1795034940.0735083,
+    "seen": 1795036608.548388,
+    "ast_hash": "e1587c45642396024274aba21af988a8",
     "semantic_hash": ""
   },
   "TODO-MVP.md": {
@@ -6924,9 +6924,9 @@
     "semantic_hash": ""
   },
   "docs/api/owner-compose.md": {
-    "mtime": 1794843196.735827,
-    "seen": 1794843503.233792,
-    "ast_hash": "76a22681317126f88f2b8abde33ae63c",
+    "mtime": 1795035414.297278,
+    "seen": 1795036608.558806,
+    "ast_hash": "07ea04e124103d8312aa0994a8a752d4",
     "semantic_hash": ""
   },
   "docs/audit/owner-compose-20261116.md": {
@@ -7098,9 +7098,9 @@
     "semantic_hash": ""
   },
   "tools/test_build_deployment_catalog.py": {
-    "mtime": 1795009722.037628,
-    "seen": 1795010241.5761018,
-    "ast_hash": "64be37091dc9509fe1159537971fdbe8",
+    "mtime": 1795034112.7493029,
+    "seen": 1795036608.547723,
+    "ast_hash": "c8bf7b37e9a084fab06eae2e1749d6f8",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
