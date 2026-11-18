@@ -10,6 +10,7 @@
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
 | Настройки и запуск | `.env.example`, `compose.yml` |
+| Защищённые клиенты с независимых узлов | `compose.network.yml`, [руководство](USER_MANUAL.md#защищённое-сетевое-подключение), `test/network_lifecycle.py` |
 | Проверки и результаты | `test/` |
 | Минимальная нативная проба, точный прежний runtime и сборка | `health.c`, `Dockerfile`, [спецификация](SPEC.md#нативная-проба-brokercontroller) |
 | Изолированный жизненный тест, рабочая выкладка и проверка реальной копии | [Результат 21 октября](test/native-health-result-20261021.md), `test/native_health_docker.py`, `test/cold_backup_verify.py` |

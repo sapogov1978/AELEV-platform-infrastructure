@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "source_release_admission_exercised": false,
+  "raw_result_sha256": "2eef07c714bcfc12287ee4df6888a4ffed368cba9fbae7a6d7e81f6ca6a47755",
+  "exact_qualified_files": {
+    "kafka/compose.yml": "8548022add6e9ffb9c59576152612025a5578a66da17330b242e01b7fd397d22",
+    "kafka/compose.network.yml": "2231043cede91757d40cb1717509b77d167a40178e34bf4bb46965808a2bf639",
+    "kafka/Dockerfile": "3f99831c3f9294fc8a04f5c963def646c91c602899155f2f4c4c11f8fe744503",
+    "kafka/Dockerfile.status": "f1a65f3300b8fde5179bf6263d43e629aa0476049ad23d82ee8d0cee12168e4b",
+    "kafka/health.c": "162d892d549787af257d5d850c34373333a782e6c621bc77f20532c399c7abd5",
+    "kafka/status_publisher.py": "96d80043ede341550e3da985611bd556741c918e1aaf9d83c62464ccd554ae97",
+    "kafka/.env.example": "e33e29ca55ad85000361bc11ad8600132fe4d112220120a2792babf30c866521",
+    "tools/owner_prepare.py": "ad1cdcafaa373d917ea209e8b22f62b1c230bc50e4f8bc2697084904cb749f40",
+    "tools/owner_compose.py": "5cdb00f6f45ee15f96dba1970ee9c5200d885569395299100b8e0bfaee9d9477",
+    "tools/node_execution.py": "29edf82b58966b7133e28e942964cd186308ef25e4c040be4b6aff7c765831a3"
+  },
+  "qualification_source_base": "3792fcdeae1c47e3b01e888073607d516ceb27eb",
+  "qualifier_sha256": "ad8820d949190fa46feb9afc0b2febc3d501e710695d1222304c69523cda7353",
+  "catalog_sha256": "c01900feaa1feec4072a063b7eb6697373609aca06cdf4e1b390559d881acc11",
+  "publisher_runtime_fingerprint": {
+    "python": "3.13.7",
+    "sqlite": "3.53.4",
+    "publisher_source_sha256": "96d80043ede341550e3da985611bd556741c918e1aaf9d83c62464ccd554ae97"
+  },
+  "publisher_native_regression": [
+    {
+      "phase": "before",
+      "image": "sha256:80cc42eff776586a0907d1bcccb266282b175bf3a53c0d91feeab3ad3c5d62a7",
+      "exit_code": 1,
+      "summary": "1 failed, 11 deselected in 0.22s",
+      "source_overlay": false
+    },
+    {
+      "phase": "after",
+      "image": "sha256:53d245b463e958ec6cd5bf847a2163dd67e7d88721c9d8126d67d58e9fe21897",
+      "exit_code": 0,
+      "summary": "12 passed in 0.19s",
+      "source_overlay": false
+    }
+  ],
+  "native_configuration_tests": 11,
+  "native_infrastructure_tools_tests": 262,
+  "operational_cleanup": {
+    "other_outer_containers_preserved": 159,
+    "original_container_set_preserved": true,
+    "own_engine_stopped": true,
+    "private_native_fixtures_exported_and_removed": 4,
+    "inner_disposable_resources_removed": true,
+    "canonical_resume": false,
+    "inference_requested": false
+  },
+  "bandit": {
+    "version": "1.8.6",
+    "scanned_files": 185,
+    "baseline_unchanged": true
+  }
+}

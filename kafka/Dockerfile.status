@@ -14,7 +14,7 @@ FROM builder AS checks
 COPY Dockerfile.status ./
 RUN apk add --no-cache docker-cli docker-cli-compose
 RUN poetry install --with dev --no-interaction --no-ansi
-COPY status_publisher.py compose.yml .env.example README.md .dockerignore ./
+COPY status_publisher.py compose.yml compose.network.yml .env.example README.md .dockerignore ./
 COPY --from=tests / ./test/
 
 FROM ${PYTHON_IMAGE} AS runtime

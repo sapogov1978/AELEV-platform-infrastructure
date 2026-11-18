@@ -1,5 +1,9 @@
 # История kafka
 
+- 2026-11-18: native qualification защищённого профиля прошла за 53.826 с: owner prepare/start/replay/status, advertised route из другой сети, реальные mTLS/ACL positive/negative, запрет mutation через loopback health, restart и cold restore с сохранением сообщений/ACL, отказ чужого cluster ID без записи. Исправлены hardcoded route/PLAINTEXT у издателя; пересобранный образ прошёл 12 native tests без source overlay, старый воспроизвёл regression. Новая C-проба/библиотеки/issuer продукту не добавлялись. Source/release/site admission и полный publisher runtime остаются отдельными.
+
+- 2026-11-18: после проверки полной истории и прежней native TLS fixture добавлен явный `compose.network.yml` на том же образе Kafka 3.9.1. Клиентский listener требует mTLS; KRaft StandardAuthorizer закрывает операции без ACL, controller и technical health слушают только loopback. Образ, C-probe, local recipe, data volume, single-node topology и restart budget сохраняются. Настройки/keys отдельной инкарнации доставляются из private env/directory; прикладные ресурсы не появляются в брокере. Прогноз — 45–60 минут с native проверкой; release/site admission этим описанием не выдаётся.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-10-23: собственный издатель использует SQLite 3.53.4 при прежних Python/ОС/SDK и явную конечную restart-политику. Полный журнал проверяется до замены; UUID, последовательность и прежний бюджет сохраняются. Проверка сборки не подменяет фактическую установку.

@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795037554.8606036,
-    "seen": 1795037568.001544,
-    "ast_hash": "d63c7a9e9bef275a5a0410e18dbae1ee",
+    "mtime": 1795043394.0659804,
+    "seen": 1795043404.314032,
+    "ast_hash": "de289b4d562860d72d198e0dae14a71e",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -318,9 +318,9 @@
     "semantic_hash": ""
   },
   "kafka/status_publisher.py": {
-    "mtime": 1794837645.5713813,
-    "seen": 1794840099.14047,
-    "ast_hash": "e89f94d560d2bc6965513e0bbb827ffc",
+    "mtime": 1795041986.0349479,
+    "seen": 1795043119.532649,
+    "ast_hash": "dd9bfda9d4f739c53a8b267dcc5db4c5",
     "semantic_hash": ""
   },
   "kafka/test/cold_backup_verify.py": {
@@ -354,9 +354,9 @@
     "semantic_hash": ""
   },
   "kafka/test/test_configuration.py": {
-    "mtime": 1794837645.575866,
-    "seen": 1794840099.140476,
-    "ast_hash": "0b8508ce56713badcdf9cfa35f647a75",
+    "mtime": 1795042790.1134465,
+    "seen": 1795043119.5327392,
+    "ast_hash": "bfec52763de882649ae9872232dede51",
     "semantic_hash": ""
   },
   "kafka/test/test_native_health.py": {
@@ -372,9 +372,9 @@
     "semantic_hash": ""
   },
   "kafka/test/test_status_publisher.py": {
-    "mtime": 1794837645.576504,
-    "seen": 1794840099.140479,
-    "ast_hash": "c2e62dc1a289554c747d81e38dfdac4a",
+    "mtime": 1795041986.0539918,
+    "seen": 1795043119.532773,
+    "ast_hash": "13701ac5d8366258285bd81b5e5229d9",
     "semantic_hash": ""
   },
   "keycloak/compose.yml": {
@@ -3114,33 +3114,33 @@
     "semantic_hash": ""
   },
   "kafka/CHANGELOG.md": {
-    "mtime": 1794837645.5650728,
-    "seen": 1794840099.141232,
-    "ast_hash": "d3a680a2306bc827f56911e169d35cc9",
+    "mtime": 1795042564.9395523,
+    "seen": 1795043119.545917,
+    "ast_hash": "33da80b8b916f450e714597a28257159",
     "semantic_hash": ""
   },
   "kafka/README.md": {
-    "mtime": 1794837645.5674808,
-    "seen": 1794840099.1412349,
-    "ast_hash": "39e58553c4599a686bc478ee3bcddd92",
+    "mtime": 1795040755.6119106,
+    "seen": 1795043119.545919,
+    "ast_hash": "27f0ce4872c70dbeea95c67112c8344d",
     "semantic_hash": ""
   },
   "kafka/SPEC.md": {
-    "mtime": 1794837645.5680807,
-    "seen": 1794840099.1412349,
-    "ast_hash": "e83c845ca66e3469c8c690c757718f99",
+    "mtime": 1795042564.9377995,
+    "seen": 1795043119.545919,
+    "ast_hash": "791f02039c88fd80244b3657b96596a0",
     "semantic_hash": ""
   },
   "kafka/TASKS.md": {
-    "mtime": 1794837645.5684843,
-    "seen": 1794840099.141236,
-    "ast_hash": "9ea98606a0bea60be8784a6bb49dbacf",
+    "mtime": 1795042564.940079,
+    "seen": 1795043119.54592,
+    "ast_hash": "3b688c41e65ab38c511b7bd31558059c",
     "semantic_hash": ""
   },
   "kafka/USER_MANUAL.md": {
-    "mtime": 1794837645.5691144,
-    "seen": 1794840099.141237,
-    "ast_hash": "86ece51a2f83fb57275c97017a869d41",
+    "mtime": 1795042564.938719,
+    "seen": 1795043119.545921,
+    "ast_hash": "fcb3ad49d07047d168159cde5cddee7b",
     "semantic_hash": ""
   },
   "kafka/test/native-health-result-20261021.md": {
@@ -6006,9 +6006,9 @@
     "semantic_hash": ""
   },
   "kafka/INDEX.md": {
-    "mtime": 1794837645.5667672,
-    "seen": 1794840099.141234,
-    "ast_hash": "cecf9c6dc18aded000cba2dbab540cca",
+    "mtime": 1795042564.9405112,
+    "seen": 1795043119.545918,
+    "ast_hash": "12acf8f4c6667fec291e5548fe53ee36",
     "semantic_hash": ""
   },
   "keycloak/INDEX.md": {
@@ -6528,9 +6528,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1795034113.399343,
-    "seen": 1795036608.517361,
-    "ast_hash": "20d7921c86489c595834ee5ea336eb6f",
+    "mtime": 1795042285.6927927,
+    "seen": 1795043119.532109,
+    "ast_hash": "45e857804c5d12a38e2fadc549925592",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
@@ -7101,6 +7101,36 @@
     "mtime": 1795034112.7493029,
     "seen": 1795036608.547723,
     "ast_hash": "c8bf7b37e9a084fab06eae2e1749d6f8",
+    "semantic_hash": ""
+  },
+  "kafka/compose.network.yml": {
+    "mtime": 1795041900.529215,
+    "seen": 1795043119.532601,
+    "ast_hash": "4b07ac7c5cfacae1ee3b02942a12abcc",
+    "semantic_hash": ""
+  },
+  "kafka/test/network-profile-bindings-20261118.json": {
+    "mtime": 1795043394.0649734,
+    "seen": 1795043404.304096,
+    "ast_hash": "968972ccac84f3764161c95e2aa8fb82",
+    "semantic_hash": ""
+  },
+  "kafka/test/network-profile-result-20261118.json": {
+    "mtime": 1795042790.2129152,
+    "seen": 1795043119.532685,
+    "ast_hash": "8c47d66eee55bd2c418d6b82c4216527",
+    "semantic_hash": ""
+  },
+  "kafka/test/network_lifecycle.py": {
+    "mtime": 1795042208.165618,
+    "seen": 1795043119.532686,
+    "ast_hash": "cd8a12ec667db06a5b0abc13d23afab1",
+    "semantic_hash": ""
+  },
+  "kafka/test/network-profile-result-20261118.md": {
+    "mtime": 1795043394.065169,
+    "seen": 1795043404.317887,
+    "ast_hash": "b6bcfe219dccf02b3acb529d846f0292",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

@@ -1,9 +1,9 @@
 flowchart LR
     Owners["Владельцы сервисов"] -->|owner-declared topics| Provisioner["Topic provisioner"]
     Provisioner --> Broker["Kafka KRaft broker/controller"]
-    Producers["Производители"] -->|Kafka| Broker
-    Broker -->|read_committed| Consumers["Потребители"]
+    Producers["Производители"] -->|Kafka mTLS + ACL, network profile| Broker
+    Broker -->|mTLS + read_committed, network profile| Consumers["Потребители"]
     Broker --> Log[("Журнал сообщений и offsets")]
-    Broker --> Probe["Native broker/controller probe"]
+    Broker --> Probe["Native probe: loopback HEALTH, no data/ACL grants"]
     Probe --> Status["Platform UI status publisher"]
     Probe --> Telemetry["Telemetry sender"]

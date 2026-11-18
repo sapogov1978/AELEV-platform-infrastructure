@@ -1,0 +1,39 @@
+# Native single-node Kafka, with routable client mTLS and default-deny ACLs.
+# Select explicitly together with compose.yml and this instance's private env.
+services:
+  kafka:
+    group_add:
+      - "${AELEV_INFRASTRUCTURE_KAFKA_TLS_SECRET_GID:?set broker identity group in own env}"
+    environment:
+      CLUSTER_ID: ${AELEV_INFRASTRUCTURE_KAFKA_CLUSTER_ID:?set persistent Kafka cluster ID in own env}
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:SSL,CONTROLLER:SSL,HEALTH:PLAINTEXT
+      KAFKA_LISTENERS: CLIENT://:9092,CONTROLLER://127.0.0.1:9093,HEALTH://127.0.0.1:9094
+      KAFKA_ADVERTISED_LISTENERS: "${AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS:?set CLIENT listener with routable host and published port},HEALTH://127.0.0.1:9094"
+      KAFKA_INTER_BROKER_LISTENER_NAME: CLIENT
+      KAFKA_SSL_KEYSTORE_TYPE: PEM
+      KAFKA_SSL_KEYSTORE_LOCATION: /run/secrets/kafka/broker.pem
+      KAFKA_SSL_TRUSTSTORE_TYPE: PEM
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /run/secrets/kafka/client-ca.crt
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: HTTPS
+      KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_SUPER_USERS: ${AELEV_INFRASTRUCTURE_KAFKA_TLS_SUPER_USERS:?set exact broker and operator certificate principals}
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "false"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KAFKA_TLS_SECRET_ROOT:?set this broker's identity directory}
+        target: /run/secrets/kafka
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck:
+      test: [CMD, /opt/aelev/kafka-health, "9094"]
+
+  kafka-status-publisher:
+    environment:
+      AELEV_INFRASTRUCTURE_KAFKA_UI_BROKER_ENDPOINT: ${AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS:?set CLIENT listener with routable host and published port}
+      AELEV_INFRASTRUCTURE_KAFKA_UI_BROKER_PROTOCOL: SSL
+
+networks:
+  kafka:
+    internal: false

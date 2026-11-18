@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-18 — Native Kafka network profile
+
+- Native component qualification прошла за 53.826 с: owner prepare/start/replay/status, routable advertised endpoint, реальные mTLS/ACL positive/negative, publisher ONLINE/UNKNOWN, restart и cold restore, отказ чужого cluster ID без записи. 262 tools/11 configuration/12 native publisher tests passed, Bandit baseline неизменен. [Отчёт с точными bindings, официальными основаниями и прогнозами](kafka/test/network-profile-result-20261118.md) сохраняет release/full-platform/physical flags false; состав каталога прежний (94 роли). Обычный full-local profile и существующие установки не переключались.
+
+- После проверки экспортированы private evidence и удалены четыре временных workspace, внутренние контейнеры/volumes и временные сети; собственный тестовый Engine остановлен. Все 159 остальных внешних контейнеров сохранили Image, Name и рабочее состояние, исходная опись контейнеров совпала. Общий Docker и канонические очереди не переключались; prune/RESUME/OpenAI отсутствуют.
+
+- Проверка совместного scope выявила прежний hardcoded PLAINTEXT probe издателя и изолированную internal network без фактически опубликованного port. Только network profile выбирает routable network и передаёт издателю явный advertised endpoint/mTLS; издатель использует прежний pinned SDK TLS helper с hostname verification, а TLS/config errors остаются UNKNOWN без plaintext fallback. Своя клиентская identity хранится в его secret root. Прогноз дополнения — 15–20 минут с отдельной native сборкой прежнего Python/OS/SQLite состава; остальные параметры UI-роли и local profile сохраняются.
+
+- После проверки полной истории Kafka и прежней защищённой fixture обнаружен недостающий владельческий рецепт: основной Kafka оставался локальным PLAINTEXT. Явный `compose.network.yml` использует тот же образ Kafka 3.9.1, нативные PEM/mTLS, KRaft StandardAuthorizer и default-deny ACL; отдельные TLS controller и plaintext technical health слушают только loopback. C-проба и прежний local recipe сохраняются, публикуется только client port. До правки объявлено 45–60 минут на recipe/native verification; реальные results и admission фиксируются отдельно. Прикладные topics, principals и ACL остаются у потребителей.
+
 ## 2026-11-18 — Resource selection through pinned owner workflows
 
 - Native Linux/Python 3.13.7 tools suite — 262 passed, PostgreSQL configuration — 11 passed; реальный внешний потребитель подтвердил canonical resource tasks, повтор durable receipts и отказ на drift. Каталог воспроизводится с прежними 94 ролями; Bandit 1.8.6 — 185 файлов без расширения baseline, style/types/links/secrets PASS. Это компонентное подтверждение изменённых interfaces, не повтор полного runtime clean-room и не новый release admission; прежнее полное доказательство остаётся привязано к своей исходной generation.

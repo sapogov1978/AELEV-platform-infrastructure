@@ -3,6 +3,7 @@
   "product": "platform-infrastructure",
   "sources": {
     "full-local.json": "8a2f9d6d10bc80689a76cd5cb07ac80703b974cec46b07c6cd32f63486a1bd5a",
+    "kafka/compose.network.yml": "2231043cede91757d40cb1717509b77d167a40178e34bf4bb46965808a2bf639",
     "kafka/compose.yml": "8548022add6e9ffb9c59576152612025a5578a66da17330b242e01b7fd397d22",
     "keycloak/compose.local-bridge.yml": "3f3c2cb97a0bbb0fcdfeb6f39ad245ef2db727eb149fd3004c112b10535f89dd",
     "keycloak/compose.yml": "855e69900f650148a63dc479e87c263c90f5cf2ef11a1119296bd1e7f4dfcb05",
@@ -604,17 +605,22 @@
       "kind": "runtime",
       "opaque": false,
       "local_state": true,
-      "credentials_required": false,
+      "credentials_required": true,
       "recipes": [
+        "kafka/compose.network.yml",
         "kafka/compose.yml"
       ],
       "configuration_variables": [
         "AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS",
         "AELEV_INFRASTRUCTURE_KAFKA_BIND",
+        "AELEV_INFRASTRUCTURE_KAFKA_CLUSTER_ID",
         "AELEV_INFRASTRUCTURE_KAFKA_HEAP_OPTS",
         "AELEV_INFRASTRUCTURE_KAFKA_IMAGE",
         "AELEV_INFRASTRUCTURE_KAFKA_MESSAGE_MAX_BYTES",
-        "AELEV_INFRASTRUCTURE_KAFKA_PORT"
+        "AELEV_INFRASTRUCTURE_KAFKA_PORT",
+        "AELEV_INFRASTRUCTURE_KAFKA_TLS_SECRET_GID",
+        "AELEV_INFRASTRUCTURE_KAFKA_TLS_SECRET_ROOT",
+        "AELEV_INFRASTRUCTURE_KAFKA_TLS_SUPER_USERS"
       ],
       "compose_profiles": []
     },
@@ -656,9 +662,11 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "kafka/compose.network.yml",
         "kafka/compose.yml"
       ],
       "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KAFKA_ADVERTISED_LISTENERS",
         "AELEV_INFRASTRUCTURE_KAFKA_UI_AUDIENCE",
         "AELEV_INFRASTRUCTURE_KAFKA_UI_CLIENT_ID",
         "AELEV_INFRASTRUCTURE_KAFKA_UI_IDENTITY_URL",

@@ -30,7 +30,7 @@ kafka/
 
 ## Секреты: получение и подготовка
 
-Сам брокер в текущем одноузловом PLAINTEXT-рецепте не читает паролей, TLS-ключей или ACL-секретов. Это не означает защищённый доступ: данная поставка ограничена локальным профилем. Не создавайте фиктивные Kafka TLS-файлы и не открывайте текущий listener в интернет; защищённый удалённый broker требует отдельного реализованного рецепта. Следующий материал нужен только собственной UI-роли.
+Брокер в локальном `compose.yml` не читает TLS-ключей и не считается защищённым удалённым endpoint. Сетевой `compose.network.yml` явно подключает собственный broker PEM и client trust bundle по описанной ниже процедуре. Фиктивные TLS-файлы не создаются. Материал раздела «Секреты издателя состояния» относится только к UI-роли, а не к брокеру.
 
 ### Секреты издателя состояния
 
@@ -192,7 +192,26 @@ python3 test/test_configuration.py
 
 Последний фактический результат хранится рядом с тестом в `test/single-node-lifecycle-result.md`.
 
-Для географически удалённого Kafka этот Compose не используется. Каждый потребитель или издатель получает собственные bootstrap servers, TLS-материал, workload identity и минимальные ACL через свой `.env` или утверждённое хранилище секретов.
+### Защищённое сетевое подключение
+
+Используйте `compose.yml` вместе с `compose.network.yml`. У каждого экземпляра собственные неизменный cluster ID, state volume, private `.env` и broker identity directory. В `.env` задайте прежние `BIND`/`PORT`, `ADVERTISED_LISTENERS=CLIENT://<достижимое-имя>:<PORT>` и обязательные `AELEV_INFRASTRUCTURE_KAFKA_CLUSTER_ID`, `AELEV_INFRASTRUCTURE_KAFKA_TLS_SECRET_ROOT`, `AELEV_INFRASTRUCTURE_KAFKA_TLS_SECRET_GID`, `AELEV_INFRASTRUCTURE_KAFKA_TLS_SUPER_USERS`. Последнее содержит точные `User:<certificate-subject-DN>` только собственного broker и оператора, разделённые `;`. Пример DN — `User:CN=kafka-broker;User:CN=kafka-admin`; сертификаты фактически должны иметь эти Subject. Идентификаторы приложений и их grants не переносятся сюда.
+
+Доставьте в закрытый `TLS_SECRET_ROOT` два файла: `broker.pem` с PKCS#8 private key и полной серверной цепочкой и `client-ca.crt` с доверенными client issuers. Issuer private key в брокер не передаётся. Broker certificate требует serverAuth/clientAuth и SAN своего достижимого имени/адреса, `localhost` и `127.0.0.1` для собственного TLS controller. Ключевую пару и доверие выдаёт согласованная PKI; локальная тестовая CA не является продукционным issuer. Для нативного UID 1000 обеспечьте чтение через собственный GID, закрыв directory от остальных (`0750`, файлы `0640` либо более строгий совместимый режим); bind read-only и не создаёт отсутствующий путь.
+
+```sh
+docker compose --env-file .env -f compose.yml -f compose.network.yml config --quiet
+docker compose --env-file .env -f compose.yml -f compose.network.yml up -d --no-build --pull never kafka
+```
+
+Listener `CLIENT` использует SSL по native protocol map; это позволяет штатному image entrypoint Kafka 3.9.1 принять PEM properties без старого специального JKS filename/password path для listener с буквальным именем `SSL`. [Закреплённый image configure](https://github.com/apache/kafka/blob/3.9.1/docker/resources/common-scripts/configure#L62-L90) и [официальный PEM contract](https://kafka.apache.org/39/security/encryption-and-authentication-using-ssl/#ssl-key-and-certificates-in-pem-format) описывают оба интерфейса. TLS не отключается: client certificate обязателен, SSL hostname verification включена, операции без ACL запрещены. Простое сохранение старого `PLAINTEXT://...` в `.env` не даёт рабочего сетевого listener.
+
+Controller 9093 и technical HEALTH 9094 слушают только loopback внутри этого процесса; host port для них не создаётся. C-проба проверяет только ApiVersions и пустой Metadata через 9094, без JVM, TLS identity или доступа к предметным topics. Доступ внешнего клиента, его SAN, ACL и advertised route проверяются отдельно. Каждый потребитель получает собственные bootstrap servers, identity и минимальные ACL через свою конфигурацию; его административные права не передаются runtime. Повторное создание брокера с другим cluster ID не является процедурой восстановления. Для существующей установки обязательны остановленная копия, сохранение offsets/ACL/cluster ID и явный handoff; `RESUME` эта инструкция не выполняет.
+
+Прогноз перед реализацией профиля — 45–60 минут вместе с native positive/negative/restart проверками. Полная многосерверная площадка, PKI renewal и допуск выпуска остаются отдельными gates; этот single-node profile не заявляет Kafka HA.
+
+При включении UI с network profile используйте пересобранный и отдельно допущенный publisher image. Помимо его прежних UI/IdP credentials доставьте в собственный `UI_SECRET_ROOT` `kafka-ca.crt`, `kafka-client.crt`, `kafka-client.key`: это отдельное удостоверение издателя, без broker/operator private keys или прав создавать topics/ACL. Endpoint берётся из `ADVERTISED_LISTENERS`, соединение выполняется с проверкой SAN через прежний SDK TLS helper. Старый образ с hardcoded `kafka:9092` не поддерживает этот профиль. Недостоверный TLS даёт UNKNOWN; plaintext fallback отсутствует. Поведение стандартного [Python TLS client](https://docs.python.org/3.13/library/ssl.html#ssl.create_default_context) и [Docker internal network](https://docs.docker.com/reference/compose-file/networks/#internal) обосновывают настройку. Дополнительный прогноз этой согласованной поправки — 15–20 минут на код/проверки/сборку прежнего состава.
+
+Воспроизводимая ограниченная проверка: `python3.13 test/network_lifecycle.py --source /exact/immutable/source --image sha256:EXACT_BROKER_IMAGE --publisher-image sha256:EXACT_PUBLISHER_IMAGE --expected-engine-id EXACT_EMPTY_DISPOSABLE_ENGINE --output /run/private-native-evidence`. Нужен root operator Python 3.13.7, Docker/Compose/OpenSSL и native source/output paths, видимые тому же daemon. Скрипт сам проверяет пустую fixture, source/image pins, owner prepare/start/replay/status; тестовые issuer и topics создаются только внутри неё. Он проверяет разрешённую запись/чтение и отрицательные TLS/ACL случаи, mTLS probe реального publisher image, restart и cold restore. Все created resources проверяются по ownership до удаления; исходные images сохраняются. Raw credentials/команды остаются private. Эта component qualification не запускает publisher runtime с Platform UI, прикладных workers или очереди.
 
 ## Собственное состояние в platform-ui
 
