@@ -23,7 +23,7 @@
 | Ограниченное операторское восстановление | [recovery.py](recovery.py), [инструкции](USER_MANUAL.md#ограниченное-восстановление-по-unhealthy) |
 | Первоначальная opt-in регистрация точного контейнера | [Публичный вход](USER_MANUAL.md#первоначальная-регистрация-новой-установки), [проверка](test_infrastructure/registration-result-20261024.md) |
 | Проверки общей оркестрации | [test_infrastructure/README.md](test_infrastructure/README.md) |
-| Полный clean-room профиль, preflight, BOM и функциональная приёмка | [full-local.json](full-local.json), [tools/full_local.py](tools/full_local.py), [runbook](docs/operations/clean-room-reproduction.md) |
+| Полный clean-room профиль, preflight, BOM и функциональная приёмка | [full-local.json](full-local.json), [tools/full_local.py](tools/full_local.py), [runbook](docs/operations/clean-room-reproduction.md), [локальный допуск source 2d597d8](docs/audit/full-local-2d597d8-20261118.md) |
 
 ## Самостоятельные продукты
 

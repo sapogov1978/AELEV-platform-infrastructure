@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "result": "LOCAL_FULL_LOCAL_QUALIFIED",
+  "profile": "full-local",
+  "candidate_release": "1.1.8",
+  "functional_source_commit": "2d597d875cc868dfd3adee91dcaf9a177a2e96d8",
+  "source_dirty": false,
+  "native_platform": "linux/arm64",
+  "docker_version": "29.6.1",
+  "started_at": "2026-11-18T00:26:30.005034+00:00",
+  "finished_at": "2026-11-18T01:10:05.061109+00:00",
+  "elapsed_seconds": 2615,
+  "bom_sha256": "374b296f78b540a31577db68fe7287eb355f7c8712ca7c95a3e5857b986fc5fc",
+  "evidence_sha256": "3c29a17a211a019ab4cda1cc4af4f5db7b5ef60a51d6581f91c7c9679fca638b",
+  "bom_image_references": 37,
+  "strict_baseline": {
+    "containers": 0,
+    "networks": 3,
+    "volumes": 0,
+    "images": 57,
+    "before_equals_after": true
+  },
+  "independent_verifier": {
+    "status": "PASS",
+    "required_functions": 12,
+    "verified_functions": 12,
+    "blocking_codes": []
+  },
+  "functions": [
+    "identity-login",
+    "platform-ui-owner-status",
+    "kafka-round-trip",
+    "postgresql-transaction",
+    "object-storage-round-trip",
+    "public-egress-default-deny-and-exact-allow",
+    "telemetry-delivery-query",
+    "translator-queue-preserves-work-without-provider",
+    "translation-provider-uds-health",
+    "workload-identity-issue-rotate-revoke",
+    "workload-identity-observation-delivery-recovery",
+    "bounded-recovery-preserves-state"
+  ],
+  "minio_targeted": {
+    "status": "PASS",
+    "elapsed_seconds": 425.947,
+    "object_mib": 2048,
+    "cycled_nodes": 8,
+    "cleanup_preserved": true,
+    "log_sha256": "73613d33265f8fb3331d10bfe6521ff608029a424d3e9d3cfcfa60d34dbf3c4c"
+  },
+  "outer_existing_resources_preserved": {
+    "containers": 158,
+    "volumes": 759,
+    "images": 196,
+    "container_identity_state_start_and_mounts_unchanged": true
+  },
+  "remote_ci_run": false,
+  "release_published": false,
+  "working_runtime_switched": false,
+  "resume_performed": false,
+  "inference_requested": false,
+  "physical_multi_host_proof": "TODO-MVP",
+  "production_site_admitted": false,
+  "documentation_carrier_rebinds_source": false
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-18
+
+- Функциональный source `2d597d8` прошёл native ARM64 MinIO lifecycle с объектом 2048 MiB, отказами всех восьми узлов, потерей write quorum, полным restart и точной cleanup. Следующий полный clean-room завершил 12/12 функций за 2615 секунд; независимый verifier подтвердил BOM/evidence, source cleanliness и исходный Docker baseline. [Публичный отчёт](docs/audit/full-local-2d597d8-20261118.md) сохраняет hashes, первые setup failures и границу local-only допуска. Документальный carrier не меняет проверенный source SHA; новые remote CI, publication, рабочее переключение и RESUME не выполнялись. Прогноз до фиксации отчёта и статуса — 15–20 минут.
+
 ## 2026-11-17
 
 - MinIO lifecycle повторно собирал общий server tag, несмотря на отдельный test project: native snapshots подтвердили другой image ID/Compose labels при равных rootfs layers. Только test override/script переведены на отдельный run image для восьми узлов, обеих provision-задач и client; занятое имя отклоняется до effects, cleanup удаляет свой build. Истории текущего/прежнего полного AELEV проверены, runtime/stack/endpoints и строгий baseline gate сохраняются. Официальные Compose основания, совместный scope и прогноз 25–35 минут code/checks закреплены в руководстве MinIO; новый native proof требуется отдельно.

@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794947593.8743052,
-    "seen": 1794947790.410841,
-    "ast_hash": "843cb3e6bb665f6f1be84dc9d6ca8e16",
+    "mtime": 1794991042.0325215,
+    "seen": 1794991142.162795,
+    "ast_hash": "b8f733cd1f44f18ddf334c531b025c46",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794892459.816771,
-    "seen": 1794892587.699602,
-    "ast_hash": "9b7453553668d98b186dfd88e9727d92",
+    "mtime": 1794991042.0340922,
+    "seen": 1794991142.162812,
+    "ast_hash": "bb684f81825080d3f3aaf7ae747f38ca",
     "semantic_hash": ""
   },
   "docs/00-vision.md": {
@@ -3090,9 +3090,9 @@
     "semantic_hash": ""
   },
   "TASKS.md": {
-    "mtime": 1794837645.448984,
-    "seen": 1794840099.1410391,
-    "ast_hash": "b07bee5dca3a6c4a85302ec5d39fd874",
+    "mtime": 1794991042.0345747,
+    "seen": 1794991142.162847,
+    "ast_hash": "30cfcbb03fe8a231bc9c3d9854231fc3",
     "semantic_hash": ""
   },
   "USER_MANUAL.md": {
@@ -6000,9 +6000,9 @@
     "semantic_hash": ""
   },
   "INDEX.md": {
-    "mtime": 1794882937.2069423,
-    "seen": 1794883126.63114,
-    "ast_hash": "d02631168bbebc91d8d20c5ccc215458",
+    "mtime": 1794991042.034947,
+    "seen": 1794991142.1628108,
+    "ast_hash": "743d30de8c24462b1df796634ea21caa",
     "semantic_hash": ""
   },
   "kafka/INDEX.md": {
@@ -7083,6 +7083,18 @@
     "mtime": 1794900803.449165,
     "seen": 1794900821.941313,
     "ast_hash": "6ef41c21f45a452ff9df7f23ebbbff67",
+    "semantic_hash": ""
+  },
+  "docs/audit/full-local-2d597d8-20261118.json": {
+    "mtime": 1794991042.0355093,
+    "seen": 1794991142.152277,
+    "ast_hash": "afe2fa58d118898e6835059a709054c2",
+    "semantic_hash": ""
+  },
+  "docs/audit/full-local-2d597d8-20261118.md": {
+    "mtime": 1794991391.883873,
+    "seen": 1794991400.5846798,
+    "ast_hash": "1e0587457518c9262b4e3e23e507f701",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

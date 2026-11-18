@@ -1,5 +1,11 @@
 # Задачи инфраструктурной оркестрации
 
+## Локальный кандидат 1.1.8 — 18 ноября 2026
+
+- [x] Проверить MinIO lifecycle source `2d597d8` с сохранением прежнего image tag и точного Docker baseline.
+- [x] Выполнить полный clean-room того же функционального source: [12/12 функций, независимый verifier PASS](docs/audit/full-local-2d597d8-20261118.md).
+- [ ] Выполнить новый exact-source remote audit и публикацию после снятия ограничения local-only; текущий отчёт не заменяет эти gates и не допускает production-площадку.
+
 ## Clean-room full-local
 
 - [x] Зафиксировать полный состав, внешние входы и функции приёмки в `full-local.json`.
