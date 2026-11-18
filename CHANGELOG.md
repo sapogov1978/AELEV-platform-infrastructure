@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-18 — Full catalogue and limited quickstart
+
+- Проверены 7 новых scope-тестов и полный tools suite: 258 passed на Linux/Python 3.13.7 с PyYAML 6.0.3 и native `/tmp`. Прежний полный каталог инфраструктуры побайтно совпал: 94 роли (57 runtime, 1 node, 36 operations). Type/style, ссылки и secret checks прошли; runtime/source release admission остаётся отдельным gate. Диагностический host-bind прогон не подтвердил два старых lock-теста; корректный native filesystem прогон сохранён отдельно, код блокировок не менялся.
+
+- После проверки истории генератора и placement API добавлена явная owner label `io.aelev.deployment.scope` для отделения quickstart-only процессов от полного состава. Необозначенные роли остаются обязательными, конфликты и неизвестные scopes отклоняются, source hashes сохраняются; opaque/node скрыть нельзя. Формат каталога и runtime validator не меняются. Прогноз до реализации — 15–25 минут; официальное основание metadata и граница локальной политики описаны в placement API. Это изменение build-инструмента, не новый допуск runtime/source release; прежняя native qualification относится к прежнему exact source.
+
 ## 2026-11-18
 
 - Функциональный source `2d597d8` прошёл native ARM64 MinIO lifecycle с объектом 2048 MiB, отказами всех восьми узлов, потерей write quorum, полным restart и точной cleanup. Следующий полный clean-room завершил 12/12 функций за 2615 секунд; независимый verifier подтвердил BOM/evidence, source cleanliness и исходный Docker baseline. [Публичный отчёт](docs/audit/full-local-2d597d8-20261118.md) сохраняет hashes, первые setup failures и границу local-only допуска. Документальный carrier не меняет проверенный source SHA; новые remote CI, publication, рабочее переключение и RESUME не выполнялись. Прогноз до фиксации отчёта и статуса — 15–20 минут.

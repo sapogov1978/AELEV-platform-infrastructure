@@ -6,9 +6,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from pathlib import Path
 import re
 import subprocess
+from pathlib import Path
 from typing import Any
 
 import yaml
@@ -27,6 +27,7 @@ VARIABLE = re.compile(r"\$\{([A-Z][A-Z0-9_]*)")
 OPERATION = re.compile(
     r"(?:-provision|-provisioner|-configuration-init|-data-init|-migrator|-identity-preparer|-dashboard-publisher)$"
 )
+SCOPE_LABEL = "io.aelev.deployment.scope"
 
 
 def compose_tag(loader: Any, node: Any) -> Any:
@@ -64,6 +65,7 @@ def build(
     for owner in owners:
         directory = root / owner
         found: dict[str, dict[str, Any]] = {}
+        scopes: dict[str, set[str]] = {}
         for path in files:
             if (
                 not path.is_file()
@@ -85,6 +87,23 @@ def build(
             for name, definition in (document.get("services") or {}).items():
                 if not isinstance(definition, dict):
                     continue
+                labels = definition.get("labels") or {}
+                if isinstance(labels, list):
+                    values = [
+                        label.split("=", 1)[1]
+                        for label in labels
+                        if isinstance(label, str)
+                        and label.startswith(SCOPE_LABEL + "=")
+                    ]
+                else:
+                    values = [labels[SCOPE_LABEL]] if SCOPE_LABEL in labels else []
+                for scope in values:
+                    if not isinstance(scope, str) or scope not in {
+                        "full",
+                        "quickstart",
+                    }:
+                        raise ValueError("invalid deployment scope")
+                    scopes.setdefault(name, set()).add(scope)
                 record = found.setdefault(
                     name,
                     {
@@ -121,6 +140,13 @@ def build(
                 )
                 record["compose_profiles"].update(definition.get("profiles") or [])
         for record in found.values():
+            scope = scopes.get(record["id"], set())
+            if len(scope) > 1:
+                raise ValueError("conflicting deployment scopes for one role")
+            if scope == {"quickstart"}:
+                if record["opaque"] or record["kind"] == "node":
+                    raise ValueError("opaque and node roles cannot be quickstart-only")
+                continue
             for key in ("recipes", "configuration_variables", "compose_profiles"):
                 record[key] = sorted(record[key])
             roles.append(record)
@@ -129,6 +155,8 @@ def build(
         raise ValueError("unknown explicit role classification")
     if len(known) != len(roles):
         raise ValueError("role identifiers must be unique within a catalogue")
+    if not roles:
+        raise ValueError("full deployment catalogue requires roles")
     return {
         "schema_version": 1,
         "product": product,
