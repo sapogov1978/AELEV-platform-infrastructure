@@ -63,7 +63,6 @@ def settings(path: Path) -> dict[str, str]:
         raise ValueError("OPERATOR_USER must be platform-operator")
     for key in (
         "PORT",
-        "SECRET_GID",
         "STATUS_TTL_SECONDS",
         "POLL_SECONDS",
         "JWKS_CACHE_SECONDS",
@@ -72,6 +71,11 @@ def settings(path: Path) -> dict[str, str]:
     ):
         if not result[key].isdecimal() or int(result[key]) <= 0:
             raise ValueError(f"positive integer required: {key}")
+    if (
+        not result["SECRET_GID"].isdecimal()
+        or not 0 <= int(result["SECRET_GID"]) < 2**32 - 1
+    ):
+        raise ValueError("non-negative POSIX GID required: SECRET_GID")
     return result
 
 

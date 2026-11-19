@@ -26,6 +26,7 @@ COPY client ./client
 RUN apk add --no-cache docker-cli docker-cli-compose openssl
 RUN poetry install --with dev --no-interaction --no-ansi
 COPY api.py prepare.py provision.py health.py publisher_authority.py .env.example nginx.conf compose.yml *.md ./
+COPY tls_peer.py compose.local-keycloak.yml compose.local-bridge.yml ./
 COPY status_publisher.py ./
 COPY public ./public
 COPY operator-ui-kit ./operator-ui-kit
@@ -38,7 +39,7 @@ COPY --from=python-build /opt/venv /opt/venv
 COPY --from=python-build /opt/venv/lib/python3.13/site-packages/aelev_platform_ui_client/health.py /opt/platform-ui/publisher-health.py
 ENV PATH=/opt/venv/bin:$PATH PYTHONDONTWRITEBYTECODE=1
 RUN mkdir -p /var/lib/platform-ui && chown 101:101 /var/lib/platform-ui
-COPY api.py provision.py health.py /opt/platform-ui/
+COPY api.py provision.py health.py tls_peer.py /opt/platform-ui/
 COPY status_publisher.py /opt/platform-ui/status_publisher.py
 RUN mkdir -p /var/lib/aelev-status && chown 101:101 /var/lib/aelev-status
 USER 101:101

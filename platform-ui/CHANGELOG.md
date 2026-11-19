@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-19: первая фаза независимого operator transport добавляет точную TLS proxy identity в API settings и per-connection ASGI TLS adapter для прежнего Uvicorn 0.35.0. Metadata защищены от probe/foreign URI/поддельного publisher-header, собственные mTLS health probes сохраняются; legacy settings совместимы, опубликованный network mode без proxy identity закрыто запрещён до старта. 17 новых реальных TLS/конфигурационных cases PASS; Linux/Python 3.13.7 checks — 266 passed, 1 skipped. Исправлен прежний отказ operator GID 0, первые fixture/import и native GID failures сохранены отдельно. [План и официальные основания](test/network-profile-plan-20261119.md). Canonical OIDC/UI publication, runtime image admission и весь network profile проверяются следующими фазами.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-14: кандидат Python client SDK 1.1.2 явно задаёт SKI/AKI для client-auth leaf. Регрессия воспроизвела error 85 с системным LibreSSL 3.3.6 при успешном неявном добавлении extensions на Bookworm/OpenSSL. Новый wheel сохраняет runtime API, состояние и прежние сертификаты; 1.1.1 не переупаковывается.

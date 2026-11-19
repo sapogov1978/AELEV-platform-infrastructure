@@ -26,6 +26,8 @@ Affected inputs: `api.py`, new `tls_peer.py`, `prepare.py`, `status_publisher.py
 
 Three incompatible approaches without a selected solution require an interview. Current selected approach preserves the accepted stack and trust boundaries; implementation still needs green proof.
 
+Native preflight found a prior root-operator incompatibility: `prepare.settings` rejected GID 0 although `init`/PKI use the operator's `os.getgid()`. All new TLS checks passed; the existing PKI test failed before creating credentials. Before correction, a 5–10 minute estimate was announced. Accept the non-negative POSIX GID range while retaining positive ports/timeouts and invalid/negative GID refusal. [Compose group_add](https://docs.docker.com/reference/compose-file/services/#group_add) and [Python getgid](https://docs.python.org/3.13/library/os.html#os.getgid) are the official grounds. Preserve the initial packaged FAIL; no image pin or runtime identity is changed by validation.
+
 ## Official and internal grounds
 
 - [RFC 9440 section 4](https://www.rfc-editor.org/rfc/rfc9440.html#section-4): trust and sanitation of proxy TLS assertions. The existing custom header stays; RFC wire-format conformance is not claimed.

@@ -48,6 +48,27 @@ def test_required_settings(tmp_path: Path) -> None:
         settings(cfg)
 
 
+@pytest.mark.parametrize("gid", ["0", "20", "10000"])
+def test_runtime_secret_group_accepts_root_and_nonroot_operator(
+    tmp_path: Path, gid: str
+) -> None:
+    path = tmp_path / ".env"
+    values = env(ROOT / ".env.example")
+    values["AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID"] = gid
+    path.write_text("".join(key + "=" + value + "\n" for key, value in values.items()))
+    assert settings(path)["SECRET_GID"] == gid
+
+
+@pytest.mark.parametrize("gid", ["-1", "4294967295", "1.5", "root"])
+def test_runtime_secret_group_rejects_invalid_gid(tmp_path: Path, gid: str) -> None:
+    path = tmp_path / ".env"
+    values = env(ROOT / ".env.example")
+    values["AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_GID"] = gid
+    path.write_text("".join(key + "=" + value + "\n" for key, value in values.items()))
+    with pytest.raises(ValueError, match="POSIX GID"):
+        settings(path)
+
+
 def test_operator_identity_is_platform_wide(tmp_path: Path) -> None:
     cfg = tmp_path / ".env"
     data = env(ROOT / ".env.example")

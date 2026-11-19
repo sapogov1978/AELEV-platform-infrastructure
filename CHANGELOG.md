@@ -2,6 +2,10 @@
 
 ## 2026-11-19 — Platform UI network plan
 
+- Первая TLS-фаза прошла host suite и нативный checks image `701a367b6efb9eedfc05f5680aee916b22fb9e4a40a457ef90a3ba1185724475`: 266 passed, 1 skipped на Linux/Python 3.13.7, включая 17 новых peer/header/keepalive/config cases. Профиль требует exact proxy SPIFFE identity, actual TLS peer попадает в per-connection ASGI scope, probe identity не даёт metadata-доступ. Старые JSON и default backend совместимы; transport/API pins прежние. Это checks-stage proof с unit authenticator, не настоящий OIDC/runtime/full-platform admission; canonical проверка остаётся следующей фазой.
+
+- Первый native checks run подтвердил новые TLS cases, но выявил прежний запрет GID 0 в operator render/PKI: 258 passed, 1 skipped, 1 failed. Валидация допускает неотрицательный POSIX GID, сохраняя отказ отрицательных/некорректных значений и положительность остальных числовых настроек. Scope/официальные основания и объявленные 5–10 минут записаны в плане; первый FAIL сохраняется, image pins и работающие credentials не меняются.
+
 - После подтверждения суточного review проверены прежние UI TLS/OIDC, routing, source history и owner contracts. До source edits выбран [план](platform-ui/test/network-profile-plan-20261119.md) на 4–6 часов: authenticated TLS proxy identity, добавочные explicit API/SNI/probe inputs и role-scoped render без чужих private keys на узле. Версии, metadata protocol, SQLite serialization и local compatibility сохраняются; три green-фазы включают реальные TLS refusals и canonical native OIDC/publication. Общая приёмка/replicas/release остаются открытыми.
 
 ## 2026-11-19 — Native Keycloak network profile

@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import ssl
@@ -25,6 +26,8 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+from tls_peer import TLSH11Protocol, spiffe_id, trusted_proxy
 
 
 def origin(url: str, *, loopback_http: bool = False) -> str:
@@ -188,12 +191,16 @@ class Settings:
     jwks_cache_seconds: int
     max_modules: int
     max_body_bytes: int
+    trusted_proxy_spiffe_id: str | None = None
 
     @classmethod
     def read(cls, path: Path) -> Settings:
         data = json.loads(path.read_text())
-        if set(data) != set(cls.__dataclass_fields__):
+        required = set(cls.__dataclass_fields__) - {"trusted_proxy_spiffe_id"}
+        if not required <= set(data) <= set(cls.__dataclass_fields__):
             raise ValueError("exact Settings fields required")
+        if "trusted_proxy_spiffe_id" in data:
+            spiffe_id(data["trusted_proxy_spiffe_id"])
         for name in ("public_url", "issuer", "jwks_url"):
             origin(data[name])
         for name in (
@@ -537,6 +544,14 @@ def create_app(
 
     @app.middleware("http")
     async def limits(request: Request, call_next: Any) -> Any:
+        if (
+            settings.trusted_proxy_spiffe_id is not None
+            and request.url.path not in {"/api/healthz", "/api/readyz"}
+            and not trusted_proxy(request.scope, settings.trusted_proxy_spiffe_id)
+        ):
+            return JSONResponse(
+                {"detail": "trusted proxy mTLS required"}, status_code=403
+            )
         if request.method in ("PUT", "POST"):
             length = request.headers.get("content-length", "")
             if not length.isdecimal() or int(length) > settings.max_body_bytes:
@@ -628,6 +643,11 @@ def create_app(
 
 def main() -> None:
     settings = Settings.read(Path(sys.argv[1]))
+    profile = os.environ.get("AELEV_INFRASTRUCTURE_PLATFORM_UI_TRANSPORT_PROFILE")
+    if profile not in {None, "network-mtls"}:
+        raise ValueError("unknown Platform UI transport profile")
+    if profile == "network-mtls" and settings.trusted_proxy_spiffe_id is None:
+        raise ValueError("network profile requires trusted proxy SPIFFE ID")
     uvicorn.run(
         create_app(settings),
         host="0.0.0.0",
@@ -638,6 +658,7 @@ def main() -> None:
         ssl_cert_reqs=ssl.CERT_REQUIRED,
         access_log=False,
         proxy_headers=False,
+        http=TLSH11Protocol if settings.trusted_proxy_spiffe_id else "auto",
     )
 
 
