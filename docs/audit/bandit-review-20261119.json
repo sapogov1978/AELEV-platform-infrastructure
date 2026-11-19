@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "source": "infrastructure",
+  "source_commit": "3d8b24280b9e192454cc45d42288d978c24d5535",
+  "bandit_version": "1.8.6",
+  "scope_files": 188,
+  "analyzed_lines": 45964,
+  "status": "SAST_PASS",
+  "duration_seconds": 3.54,
+  "severity_counts": {
+    "LOW": 229,
+    "MEDIUM": 28
+  },
+  "rule_medium_counts": {
+    "B103": 1,
+    "B608": 3,
+    "B108": 5,
+    "B104": 11,
+    "B310": 5,
+    "B314": 3
+  },
+  "raw_report_sha256": "c19704207ce1e7810660e2fbcf64822e4bd33e6dcd90b0ae42b8000e280ea7af",
+  "baseline_sha256": "936807822408c763c1a7f0bdcf5a33c579118ff03c96b8d906b35f3c8d2b9dcd",
+  "removed_fingerprints": [],
+  "reviewed_fingerprints": [
+    "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf"
+  ],
+  "original_baseline_refuses_current_scan": [
+    "new or duplicated medium finding: keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf"
+  ],
+  "negative_checks": [
+    {
+      "finding": "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf",
+      "mutation": "duplicate",
+      "rejected": true
+    },
+    {
+      "finding": "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf",
+      "mutation": "high",
+      "rejected": true
+    },
+    {
+      "finding": "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf",
+      "mutation": "context",
+      "rejected": true
+    },
+    {
+      "finding": "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf",
+      "mutation": "path",
+      "rejected": true
+    },
+    {
+      "finding": "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf",
+      "mutation": "analyzer",
+      "rejected": true
+    },
+    {
+      "finding": "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf",
+      "mutation": "empty",
+      "rejected": true
+    }
+  ],
+  "runtime_files_unchanged_sha256": {
+    "keycloak/recovery.py": "c5ee2845fd9aaaccde8ae95e1e1bdfdd9e61e97817ea75d3253df5296f43810d"
+  },
+  "scanner_scope_or_rule_changes": false,
+  "runtime_or_dependency_changes": false,
+  "full_security_admission": false,
+  "production_ready": false
+}

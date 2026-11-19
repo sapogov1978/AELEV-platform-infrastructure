@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-19 — Exact SAST review after native workflow
+
+- Both canonical and retained pinned scans PASS: 188 files, zero High, 28 reviewed Medium. Six exact-finding mutations rejected; 15 Keycloak recovery tests and six consumer audit tests passed. Raw report/baseline hashes are retained in the linked JSON; historical failure reports and all runtime bytes preserved.
+
+- History-first review reuses the existing Keycloak restore/DAC proof and admits one exact B103 directory-search fingerprint, count 1; runtime permissions, images and recovery are unchanged. Scanner 1.8.6, full scope, duplicate/new Medium and all High rejection remain mandatory. [Pre-edit plan, official/internal grounds and conflict review](docs/audit/bandit-review-20261119.md); estimate 15–20 minutes for both repositories and verification. Broader security/admission remains open.
+
 ## 2026-11-19 — SPIRE native workflow adapter scope
 
 - [Actual native Server → Agent qualification](docs/audit/spire-native-workflow-20261119.md) PASS: real SVID, original target start receipt, unchanged replay/status and stopped-Server refusal; 84 Infrastructure/131 consumer host/native tests and strict types/style pass. Private pack/deliver resolves existing nested-directory modes without changing owner-prepare, templates or budgets. Own 2 containers/13 volumes/2 networks cleaned, exact inner baseline/source preserved, Engine/watch stopped, 161 other containers unchanged. Full runtime/UI/security/release and three unchanged-HEAD SAST findings stay open; this component proof does not claim all four roles live or production-ready admission.

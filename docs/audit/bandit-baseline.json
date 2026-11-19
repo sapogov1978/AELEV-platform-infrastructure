@@ -3,6 +3,7 @@
   "bandit_version": "1.8.6",
   "scope": "canonical non-test Python; generated runtime copies and test fixtures excluded",
   "known_medium_findings": {
+    "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf": 1,
     "observability/delivery/delivery.py|B608|cb821a815b19ef0a3c2a903f81a0ca07b54a321c8063fb55f782d5dd62c5fed1": 1,
     "observability/delivery/delivery.py|B608|f5643d20bb5cbf203ed2bcadde5231394ccae53d70fb2ec06df540391b85cb4d": 1,
     "observability/delivery/delivery_health.py|B108|bb6018c8ff9f53996b41ee3b5427885515fd41d06bf2d738b0207a1755613f79": 1,
@@ -29,6 +30,9 @@
     "translator-service/src/translator_service/api_server.py|B104|70ea8e387eafb6bff8f2e50d588667e711531fd1ef7a263cbb4aa16d6f757a4b": 2,
     "translator-service/src/translator_service/api_server.py|B104|f922fb360c422b1deef55c11ec2c0d2cfeac2136b26e3aee22e2168c836f55a4": 1,
     "translator-service/src/translator_service/local_health.py|B108|0a8df619b93ee50d25f779054dcb78a649e34176034260cc9ab41c68cf2383f2": 1
+  },
+  "fingerprint_reviews_20261119": {
+    "keycloak/recovery.py|B103|c6f6f2af41818f718f43f15e9bbe5f2ab8799c5028000cec9370c24c41fadddf": "Necessary search/read permission on a newly created directory: O_DIRECTORY/O_NOFOLLOW, operator UID, exact runtime GID and mode 0750; no group write or other-user access. Existing incompatible roots are refused, archive remains 0700/0600. Prior native DAC proof verifies runtime access and foreign-group/archive denial. Scope and official grounds: docs/audit/bandit-review-20261119.md."
   },
   "fingerprint_reviews_20261114": {
     "spire/src/aelev_spire/observation_setup.py|B104|bf4b109b1b6b23c6a9c803c69d9f7ad5053798ae957bbb2cb7663474481b0f8f": "Existing owner sender ingestion listener; only surrounding source context changed. RequireAndVerifyClientCert and purpose-specific issuer trust remain mandatory. Published address belongs to the explicit owner placement. Supersedes observation_setup B104 fingerprint 0a63d63c301c22ebd2fa7b5dde9babb7b259683acda4a1464084a1da5acf9615.",

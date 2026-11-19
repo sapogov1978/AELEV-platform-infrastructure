@@ -18,9 +18,9 @@
     "semantic_hash": "67224e04366e6ffb90dccda594e19bb3"
   },
   "docs/audit/bandit-baseline.json": {
-    "mtime": 1794837645.4699948,
-    "seen": 1794840099.1404412,
-    "ast_hash": "b5eaee920bfb157bfc61a3bf91d44e81",
+    "mtime": 1795121578.5095625,
+    "seen": 1795121678.8232908,
+    "ast_hash": "95449400bc919faa5278cd947d203c43",
     "semantic_hash": ""
   },
   "docs/audit/container-security-exceptions.json": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795120781.3739824,
-    "seen": 1795120883.863301,
-    "ast_hash": "73c80a1a1baad2c106334ecc5c25aad5",
+    "mtime": 1795121696.5298238,
+    "seen": 1795121719.321884,
+    "ast_hash": "de30b2d095400f26aca89a387593cfd0",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -7269,6 +7269,18 @@
     "mtime": 1795120781.3725746,
     "seen": 1795120883.871531,
     "ast_hash": "042e5c8950bf7083c297219e9a2e7d5c",
+    "semantic_hash": ""
+  },
+  "docs/audit/bandit-review-20261119.json": {
+    "mtime": 1795121662.4197974,
+    "seen": 1795121678.823294,
+    "ast_hash": "638da10ca7beed892702be540f4be440",
+    "semantic_hash": ""
+  },
+  "docs/audit/bandit-review-20261119.md": {
+    "mtime": 1795121662.419945,
+    "seen": 1795121678.842401,
+    "ast_hash": "dbd5664002bf8119cc8cd47abb35f80a",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {
