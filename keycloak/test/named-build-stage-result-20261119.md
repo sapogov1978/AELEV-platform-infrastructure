@@ -1,0 +1,7 @@
+# Explicit final target: native comparison
+
+History `09ebda2` and accepted [owner-build ADR](../../docs/adr/00-INFRA-20261117-0020-pinned-owner-source-build.md) were reviewed before this edit. The only Dockerfile change is naming its existing last stage `runtime`; all prior instructions, base version, USER and entrypoint remain byte-identical after removing that alias. Estimate announced: 15–20 minutes across the small shared build-selection check; this comparison completed within that range.
+
+Two real ARM64 builds with identical source/context and `--pull=false` produced the same image ID for default and explicit `--target runtime`: `sha256:e39a45144a2a4a02b58fe22d510a795960c3dd9a14b8580d29bd2ae4df124611`. Catalogue source hashes remain valid, no runtime role started and no image tag changed. [Docker stage naming/target semantics](https://docs.docker.com/build/building/multi-stage/#name-your-build-stages) explains the mechanism; the [owner-build API](../../docs/api/owner-build.md) requires the named selector.
+
+This is a build-target compatibility check, not a new runtime/security/release admission. Previous [network/OIDC/restore evidence](network-profile-result-20261119.md) retains its exact-source boundary. Raw build logs and bindings stay outside Git in `infrastructure-acceptance-20261118-ibjg5ysk/named-stages-20261119`. The isolated Engine/watch is stopped after comparison and baseline preservation is recorded; existing service/data/recovery state is untouched. Final source archives must use the new commit; old candidates are not rewritten.

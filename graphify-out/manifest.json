@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795096984.6072676,
-    "seen": 1795097023.221635,
-    "ast_hash": "94087b0db677e1978f32ab3256fd31a7",
+    "mtime": 1795109115.8276262,
+    "seen": 1795109157.332843,
+    "ast_hash": "b8c1bfe8b2a7027739f96956f2de4b5e",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -3174,9 +3174,9 @@
     "semantic_hash": ""
   },
   "keycloak/CHANGELOG.md": {
-    "mtime": 1795086610.1229975,
-    "seen": 1795086692.2312782,
-    "ast_hash": "587e400f336040731b420a6e7e039cc2",
+    "mtime": 1795108961.463054,
+    "seen": 1795109157.3383439,
+    "ast_hash": "2160cab15bd39e38f49be7004543a563",
     "semantic_hash": ""
   },
   "keycloak/README.md": {
@@ -7233,6 +7233,12 @@
     "mtime": 1795097035.6217225,
     "seen": 1795097082.5312681,
     "ast_hash": "9a2473484abd61868aae01aa95e66477",
+    "semantic_hash": ""
+  },
+  "keycloak/test/named-build-stage-result-20261119.md": {
+    "mtime": 1795109115.826539,
+    "seen": 1795109157.3385532,
+    "ast_hash": "6300fe96c28b56ffe77443952d6f880a",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

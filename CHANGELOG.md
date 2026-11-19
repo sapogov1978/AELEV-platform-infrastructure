@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-19 — Explicit Keycloak source-build target
+
+- [Native default/target comparison PASS](keycloak/test/named-build-stage-result-20261119.md): both ARM64 builds produce `e39a45144a2a4a02b58fe22d510a795960c3dd9a14b8580d29bd2ae4df124611`; catalogue source hashes remain valid. The check starts no workload and changes no image tag. Existing runtime/security/release evidence is not promoted by a stage alias.
+
+- Full-runtime recipe review found an unnamed final stage in canonical Keycloak Dockerfile. It is named `runtime` for the existing owner-build target contract; base version, instructions, UID, entrypoint and default final stage are preserved. History `09ebda2` and ADR-0020 checked before edit. Estimate announced: 15–20 minutes for the three-owner naming scope and native default/target identity comparison. Official [Docker stage naming/target semantics](https://docs.docker.com/build/building/multi-stage/#name-your-build-stages); internal [owner-build API](docs/api/owner-build.md). No runtime switch or admission is implied.
+
 ## 2026-11-19 — Platform UI network plan
 
 - Canonical network profile прошёл 29 actual runtime/OIDC/TLS/fault checks в пяти непересекающихся сетях; pending sequence 2 и точный digest пережили publisher SIGKILL/API restart. 294 Linux tests + один macOS-only skip, 295 host, 10 catalogue и native Linux DAC PASS; 95 ролей сохранены. [Отчёт](platform-ui/test/network-profile-result-20261119.md) и 18 exact-source bindings различают runtime/checks, сохраняют первые fixture/observation failures и открытые security/installer/browser/release gates. 106 private files byte-verified/archived/removed; свой Engine/watch остановлены, 159 остальных контейнеров неизменны. Следующий согласованный блок — Scope/Deep ASGI, общая приёмка не закрыта.

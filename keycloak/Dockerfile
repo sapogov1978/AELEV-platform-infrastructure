@@ -6,7 +6,7 @@ ENV KC_DB=postgres \
 
 RUN /opt/keycloak/bin/kc.sh build
 
-FROM quay.io/keycloak/keycloak:26.3.2
+FROM quay.io/keycloak/keycloak:26.3.2 AS runtime
 
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --chown=1000:0 themes/ /opt/keycloak/themes/
