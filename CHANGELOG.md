@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-19 — Native Keycloak network profile
+
+- Компонентный сетевой профиль прошёл native disjoint-network SQL/JDBC/OIDC/readiness/admin-token и fresh SQL/publisher-journal/identity restore; пять libpq negative cases и два actual JDBC trust/name refusals подтверждены. 83 host и 83 packaged tests, style/types/shell PASS; добавлена одна operation при прежних 57 runtime ролях. [Отчёт и 30 bindings](keycloak/test/network-profile-result-20261119.md) различает cached runtime и label-only manual-build identity, сохраняет два setup FAIL и открытые installer/distributed-recovery/replica/release gates. 228 private fixture files byte-verified/archived/removed, свой Engine/watch остановлены, все 159 остальных контейнеров неизменны; минимум места 22.85 GiB. Canonical switch/RESUME/OpenAI отсутствуют.
+
+- История и прежний full-local proof проверены: независимого SQL/JDBC TLS recipe нет. Перед реализацией выбран scope с прежними Keycloak 26.3.2/PostgreSQL 17.6/pgJDBC 42.7.7, published SQL/management endpoints, mTLS + verify-full, отдельным owner identity-preparer и учётом новых TLS inputs в recovery. Прогноз — 60–90 минут с native positive/negative и fresh-target rehearsal; существующий срок суточного review не переносится. [Официальные и внутренние основания, совместный конфликтный анализ](keycloak/test/network-profile-plan-20261119.md). Полный установщик, remote recovery и выпуск остаются отдельными gates.
+
 ## 2026-11-19 — Keycloak recovery directory compatibility
 
 - 78 host tests и 13 native Linux/Python 3.13.7 permission checks PASS: восстановленные TLS/status-каталоги и runtime-пароли доступны необходимым UID/GID, чужим группам и runtime-доступу к архиву отказано. Ruff, формат изменённых файлов и их strict typing PASS; генерация сохраняет 94 роли. Все 160 исходных Docker-контейнеров сохранены. [Результат с bindings и границами](keycloak/test/recovery-directory-result-20261119.md) отдельно фиксирует недоступный pytest в общем operator image и прежние typing errors импортируемого неизменённого теста. SQL restore/login, полный сетевой профиль и admission остаются открытыми.

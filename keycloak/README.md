@@ -23,6 +23,8 @@ docker compose up -d --no-build --pull never
 
 Корневая локальная композиция предоставляет самостоятельным владельцам с `host-gateway` тот же TLS endpoint без общей backend-сети. Bootstrap выбирает private IPv4 gateway Docker bridge на Linux и loopback-публикацию на Docker Desktop. На Linux основной listener остаётся отдельным; CA/SAN обязательны, wildcard `0.0.0.0` и LAN-доступ этим overlay не создаются.
 
+Для независимого размещения Keycloak, его PostgreSQL и издателя выбирайте владельческий [сетевой профиль](USER_MANUAL.md#независимое-размещение-ролей), `compose.yml` вместе с `compose.network.yml` и собственный env каждого экземпляра. Профиль использует опубликованные SQL mTLS и management HTTPS endpoints; базовый рецепт выше сохраняет прежнюю локальную топологию. Включение профиля во весь установщик и общий release admission проверяются отдельно.
+
 ## Навигация
 
 - [architecture.mmd](architecture.mmd) — диаграмма границы, компонентов и основных потоков владельца.

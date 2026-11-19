@@ -6,6 +6,7 @@
     "kafka/compose.network.yml": "2231043cede91757d40cb1717509b77d167a40178e34bf4bb46965808a2bf639",
     "kafka/compose.yml": "8548022add6e9ffb9c59576152612025a5578a66da17330b242e01b7fd397d22",
     "keycloak/compose.local-bridge.yml": "3f3c2cb97a0bbb0fcdfeb6f39ad245ef2db727eb149fd3004c112b10535f89dd",
+    "keycloak/compose.network.yml": "28c709c84ed1af3c0b7117e6130b7c206f7c9bc58fe55501a35da80350cbb5bd",
     "keycloak/compose.yml": "472903dcae0e7374f6946219029c749dd7c60730d54d75a87fc3270ca28ad015",
     "minio/compose.yml": "0808ec3235dfa9e64aab6d18e787368c161217420cd2afa410dc0f52b6eea269",
     "observability/blackbox-exporter/compose.yml": "06b2d4f3afc1ff3c59bb61370f7a7650b6b3d26ff4bcf94fe64d7884a42d81d3",
@@ -695,16 +696,22 @@
       "credentials_required": true,
       "recipes": [
         "keycloak/compose.local-bridge.yml",
+        "keycloak/compose.network.yml",
         "keycloak/compose.yml"
       ],
       "configuration_variables": [
         "AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_BIND",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_CLIENT_TLS_ROOT",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_HOST",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PORT",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_HTTPS_PORT",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_IMAGE",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_LOCAL_BRIDGE_BIND",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_MANAGEMENT_BIND",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_MANAGEMENT_PORT",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_MEMORY_LIMIT",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_PUBLIC_URL",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID"
@@ -719,17 +726,39 @@
       "local_state": true,
       "credentials_required": false,
       "recipes": [
+        "keycloak/compose.network.yml",
         "keycloak/compose.yml"
       ],
       "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_BIND",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_MEMORY_LIMIT",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PORT",
         "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_USER",
         "POSTGRES_DB",
         "POSTGRES_USER"
       ],
       "compose_profiles": []
+    },
+    {
+      "id": "keycloak-database-identity-preparer",
+      "owner": "keycloak",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "keycloak/compose.network.yml",
+        "keycloak/compose.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_SERVER_TLS_ROOT"
+      ],
+      "compose_profiles": [
+        "provision"
+      ]
     },
     {
       "id": "keycloak-status-provision",

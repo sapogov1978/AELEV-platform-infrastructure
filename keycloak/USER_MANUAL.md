@@ -507,11 +507,36 @@ docker run --rm aelev/keycloak-status-checks:local mypy status_publisher.py reco
 
 При остановке самого Keycloak его строка получает `UNKNOWN`: удалённый издатель не может доказать, что именно произошло — остановка процесса, недоступность сети или ошибка TLS. При работающем Keycloak и остановке собственной БД её readiness-проверка подтверждает `DOWN`, и строка получает `OFFLINE`. При штатной остановке издатель подтверждает отписку, и строка исчезает; без отписки после срока свежести строка остаётся с «Нет связи». Возврат каждого компонента должен восстановить `ONLINE`; отсутствие связи нельзя представлять как доказанный отказ или сохранять зелёным бессрочно. HTTPS-адреса и доверие задаются владельцем, общая Docker-сеть с оболочкой не требуется; локальная проверка через маршрутизируемый адрес не доказывает работу настоящего WAN, DNS и внешней PKI.
 
+## Независимое размещение ролей
+
+Для полного локального или распределённого плана выбирается `compose.yml` вместе с `compose.network.yml`. Профиль добавляет сетевой контракт, сохраняя PostgreSQL 17.6, Keycloak 26.3.2 и встроенный pgJDBC 42.7.7. Вводы приведены в `network.env.example` в дополнение к прежним `.env.example`; реальные секреты остаются вне Git. Каждый экземпляр runtime-роли получает отдельные `COMPOSE_PROJECT`, network names/subnets и state volumes. Одинаковый каталог рецептов не означает общие volumes или Docker bridge между узлами.
+
+На узле SQL PKI доставляет только его `server.crt`, `server.key`, `client-ca.crt` в `DATABASE_SERVER_TLS_ROOT`. Операция `keycloak-database-identity-preparer` копирует их в private volume SQL с UID/GID `70:70` и режимом `0600`; входные файлы и прежнее состояние не перезаписываются. Повтор сравнивает байты/владельцев/права; drift, concurrent/interrupted prepare или неполный набор требуют отдельного handoff. Сначала выполняются prepare и старт SQL на его узле:
+
+```sh
+docker compose --env-file database.instance.env -f compose.yml -f compose.network.yml --profile provision run --rm --no-deps keycloak-database-identity-preparer
+docker compose --env-file database.instance.env -f compose.yml -f compose.network.yml up -d --no-deps --no-build --pull never --wait keycloak-database
+```
+
+На узле Keycloak доставляются собственные `DATABASE_CLIENT_TLS_ROOT/ca.crt` и `client.p12`; private key SQL-сервера туда не копируется. Client PKCS12 содержит alias `user`, полный client chain и явно пустой пароль PKCS12; файл защищается `0640` в дополнительной группе Keycloak, каталог — `0750`. Client certificate имеет CN настроенного SQL-пользователя. SQL password остаётся отдельным secret file. `DATABASE_HOST` и `DATABASE_PORT` указывают реальный published endpoint с точным DNS/IP SAN серверного сертификата. JDBC использует фиксированный `sslmode=verify-full`; plaintext/fallback не предусмотрены. Public SQL bind открывается только нужным адресам через firewall.
+
+После готовности SQL на своём узле запускается только Keycloak:
+
+```sh
+docker compose --env-file keycloak.instance.env -f compose.yml -f compose.network.yml up -d --no-deps --no-build --pull never --wait keycloak
+```
+
+TCP health контейнера не заменяет HTTPS `/health/ready`: проверьте published `MANAGEMENT_BIND`/`MANAGEMENT_PORT` с доверенной CA и именем. `UI_HEALTH_URL` издателя должен указывать этот достижимый endpoint, а `ADMIN_ENDPOINT` — опубликованный основной HTTPS endpoint. Management TLS наследует основную серверную identity. Затем на соответствующих placements выполняются прежний `keycloak-status-provision` и запуск `keycloak-status-publisher` с `--no-deps`, собственными журналом/credentials и прежним Process Control. Рабочее `RESUME` этим не выдаётся. Локальный sample bind `127.0.0.1` заменяется явным достижимым bind для разных узлов; `host.docker.internal` является только именем технической локальной fixture, production задаёт свой DNS/IP.
+
+Owner recovery с выбранным профилем получает тот же env и `COMPOSE_FILE`, например `COMPOSE_FILE=compose.yml:compose.network.yml python3.13 recovery.py backup PRIVATE_BACKUP_DIRECTORY`. Transport profile и все SQL server/client TLS inputs фиксируются в schema-1 manifest. Для restore нужны свежие private SQL TLS/data и publisher volumes, пустые пути credentials и тот же выбранный профиль; переход network → legacy отклоняется. Инструмент создаёт SQL TLS material перед запуском новой БД. Прежние archive schema 1 без profile field читаются как `legacy-local`. Локальная полная копия требует доступа оператора к собственным inputs/SQL-процедурам; общий установщик должен отдельно оркестрировать сбор/restore на удалённых placements. Этот распределённый gate не закрывается одним локальным rehearsal.
+
+Официальные основания: [Keycloak 26.3.2 driver/PostgreSQL версии](https://github.com/keycloak/keycloak/blob/26.3.2/pom.xml), [management HTTPS](https://github.com/keycloak/keycloak/blob/26.3.2/docs/guides/server/management-interface.adoc), [pgJDBC verify-full/PKCS12](https://jdbc.postgresql.org/documentation/ssl/), [PostgreSQL 17 TLS/client identity](https://www.postgresql.org/docs/17/ssl-tcp.html). Внутренние правила: [ADR 0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md), [план и конфликтный анализ](test/network-profile-plan-20261119.md).
+
 ## Перенос на другой узел
 
 Для новой установки переносятся этот каталог, закрытые настройки, TLS-материал и проверенная резервная копия PostgreSQL, если должны сохраниться пользователи, clients, роли и ключи realm. Работающий каталог PostgreSQL нельзя копировать как обычные файлы: используйте согласованную резервную копию и отдельную проверку восстановления. Сохраняются также журнал, UUID и identity издателя. Затем меняются `BIND`, `HTTPS_PORT`, `PUBLIC_URL` и сертификат, после чего выполняются те же команды запуска. Проверьте OIDC discovery и реальный вход до переключения потребителей. Потребители получают новый issuer/JWKS endpoint через собственные настройки и перезапускаются. Если меняется `PUBLIC_URL`, ранее выпущенные токены содержат старый issuer и должны быть перевыпущены; если база не перенесена, новая установка является новым пустым доменом идентичности.
 
-Эта поставка одноузловая: Keycloak и его PostgreSQL находятся в одном failure domain и не обеспечивают высокой доступности. Это ограничение топологии, а не признак dev-конфигурации: runtime уже использует production-команду, TLS и поддерживаемую внешнюю относительно процесса Keycloak БД.
+Базовый рецепт одноузловой: Keycloak и его PostgreSQL находятся в одном failure domain и не обеспечивают высокой доступности. Это ограничение топологии, а не признак dev-конфигурации: runtime использует production-команду, TLS и поддерживаемую внешнюю относительно процесса Keycloak БД. Сетевой профиль выше снимает обязательное совместное размещение; сам по себе он не добавляет PostgreSQL HA или межузловой recovery coordinator.
 
 ## Остановка, обновление и резервная копия
 

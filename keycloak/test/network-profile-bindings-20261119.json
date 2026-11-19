@@ -1,0 +1,279 @@
+{
+  "artifact_sha256": {
+    "host-results.json": "4a5e754a9354f46899b1fd535f79a3b7d235ae35f5b25cdbc5612e3c7cb7a841",
+    "identity-state-guards.json": "960dfb2f464c59bb7264dfed0daeb772797563a903fe0455b3611951a9d9f8f9",
+    "jdbc-negative-result.json": "f7b3038b98ee13c5dc01051d1247e1a9aa192aad7bd1f8b5735f57ca8ce89e46",
+    "jdbc-negative.py": "e0207e8d22a5b2a0f7ef75fb02b8f672ec40c00b2fdfdf1c0e4beddbe347fe9c",
+    "packaged-suite-final.txt": "411702133a063f772f6a7075b3c129fa18322c17cabfd3697ed1cca1cc0c423e",
+    "packaged-suite.txt": "d67c7b20af11bcc02a4a10c16bad6769c6d858e9d43f56382fec6723fe5f1fdc",
+    "post-restore-result.json": "f0665ae54410daeb1e7ea8cf9c509d5d2fd3b9cf15f4c9b170094d58e05b1032",
+    "post-restore.py": "c055c2629effaefa80758eededd36a9ca93a6e73b9a22c4bb649cb06d4069d0a",
+    "progress.json": "f95aca1e9005e60ca091fa7e150b3571bd2ef75cf24f8a26d59adcd9e1685c3a",
+    "run-native.py": "b8faf94a187d184e367d68efef58fddcd759bfb2775689f10909d5ebd6913138",
+    "runtime-build-comparison.json": "02f5a6637800d4ad0dcdbc3cc5e86ac78ae23a52cadad95c8b072316e84e3d1d",
+    "runtime-versions.json": "ae9f85ecca3f007d1b761d7a452d5c3c217ffc689a8a6602628fcdf7e7a14304"
+  },
+  "base_source": "1ae41034fd26ddd83b513aea5f940a0e65dd5d10",
+  "canonical_resume": false,
+  "catalogue": {
+    "node": 1,
+    "operation": 37,
+    "roles": 95,
+    "runtime": 57,
+    "sha256": "931473f2973b026a10027b572cb18ee818d0bbe0c012e8b1115fbcfdbc807c07"
+  },
+  "cleanup": {
+    "disk_abort_occurred": false,
+    "inner_containers": 0,
+    "inner_networks": [
+      "bridge",
+      "host",
+      "none"
+    ],
+    "inner_volumes": 0,
+    "minimum_free_gib": 22.85,
+    "new_temporary_images_removed": 3,
+    "original_container_ids_preserved": 160,
+    "outside_containers_unchanged": 159,
+    "own_engine_stopped": true,
+    "status": "PASS"
+  },
+  "component": "keycloak-network-profile",
+  "distributed_recovery_admitted": false,
+  "full_installer_admitted": false,
+  "full_platform_ui_publication_admitted": false,
+  "host_results": {
+    "format": {
+      "exit_code": 0,
+      "output_sha256": "26a5fd9505f2b5608a20c4fed4b4c4795e0783d03b72ade02a6af34dae8ad086"
+    },
+    "host-suite": {
+      "exit_code": 0,
+      "output_sha256": "58be55c422262f369068aa55ab90299598fe368a9f8508bf79843dfb9f987580"
+    },
+    "ruff": {
+      "exit_code": 0,
+      "output_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "shell": {
+      "exit_code": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "types": {
+      "exit_code": 0,
+      "output_sha256": "71144743c83babea384888a735db0c4daba3d4d7b7942b6839984bd5c21b52bb"
+    }
+  },
+  "identity_state_guards": {
+    "incomplete_state_refused_without_key_write": true,
+    "lock_refused_without_removal": true,
+    "synthetic_file_fixture_only": true
+  },
+  "jdbc_negative": {
+    "foreign-ca": {
+      "exit_code": 1,
+      "expected_refusal_observed": true,
+      "image": "sha256:61274d7ec92ff904154124d66cc4c865007a152258614074057ccff593958d38",
+      "networks": [
+        "aelev-kc-network-negative-foreign-ca-client",
+        "aelev-kc-network-negative-foreign-ca-ingress"
+      ]
+    },
+    "wrong-hostname": {
+      "exit_code": 1,
+      "expected_refusal_observed": true,
+      "image": "sha256:61274d7ec92ff904154124d66cc4c865007a152258614074057ccff593958d38",
+      "networks": [
+        "aelev-kc-network-negative-wrong-hostname-client",
+        "aelev-kc-network-negative-wrong-hostname-ingress"
+      ]
+    }
+  },
+  "native": {
+    "checks": {
+      "actual_jdbc_tls_connections": "t|2|/CN=keycloak",
+      "backup_files": 13,
+      "disjoint_runtime_networks": [
+        [
+          "aelev-kc-network-sql-client"
+        ],
+        [
+          "aelev-kc-network-api-client",
+          "aelev-kc-network-api-ingress"
+        ]
+      ],
+      "fresh_restore_identity_bytes": true,
+      "fresh_restore_sql_publisher_and_oidc": true,
+      "identity_drift_refused": true,
+      "identity_prepare_replay": true,
+      "oidc_discovery": true,
+      "readiness_with_sql": {
+        "checks": [
+          {
+            "name": "Keycloak database connections async health check",
+            "status": "UP"
+          }
+        ],
+        "status": "UP"
+      },
+      "real_admin_token": true,
+      "sql_foreign-ca": {
+        "exit_code": 2,
+        "output_sha256": "fe44589f4415225be98e6cb57747af7da2f16589e029a77c537d79947634165c"
+      },
+      "sql_missing-certificate": {
+        "exit_code": 2,
+        "output_sha256": "5cd8fde2ee56784d9be648291756c80f70ce745161bc6fd299408c917efb3d91"
+      },
+      "sql_plaintext": {
+        "exit_code": 2,
+        "output_sha256": "ead35a6b925fd0bf2c947a43ac0e62146e368d8fe489ff2ae12c6d9f8211e1a3"
+      },
+      "sql_valid": {
+        "exit_code": 0,
+        "output_sha256": "db734d1e10b875f2a4824a4462eff010234c8d49fcb2b4d86857417456d3e24b"
+      },
+      "sql_wrong-client-cn": {
+        "exit_code": 2,
+        "output_sha256": "b93245392d773412a0ed677f8ca24af05870bb646437be7b79a5b939ea99b462"
+      },
+      "sql_wrong-server-name": {
+        "exit_code": 2,
+        "output_sha256": "ac7c63b73a12b85e5cfc1eaf2df46c45bd655e339da293cc6078906b3db20ebc"
+      }
+    },
+    "containers": {
+      "keycloak": "da84bd3035f83c2f6bb9767a53257d0a477393ee0fdc86ab62a0331ad086ad8a",
+      "sql": "d11a2b6a1c3ffc5848ec95facad01f5f54325d684e14ef7d2e6baba923fa89f0"
+    },
+    "events": [
+      {
+        "name": "KEYCLOAK_AND_SQL_NETWORK_READY",
+        "runtime_networks": [
+          [
+            "aelev-kc-network-sql-client"
+          ],
+          [
+            "aelev-kc-network-api-client",
+            "aelev-kc-network-api-ingress"
+          ]
+        ],
+        "unix": 1795085797.996036
+      },
+      {
+        "name": "TLS_NEGATIVE_CHECKS_PASSED",
+        "unix": 1795085799.3966906
+      },
+      {
+        "checks": 16,
+        "name": "NETWORK_RESTORE_QUALIFIED",
+        "unix": 1795085834.694741
+      }
+    ],
+    "full_installer_proved": false,
+    "images": {
+      "keycloak": "sha256:61274d7ec92ff904154124d66cc4c865007a152258614074057ccff593958d38",
+      "publisher": "sha256:65106e0ed789f81230b47e9ab184617a7abf143349db7ba235e9377e09ef4246",
+      "sql": "postgres@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+    },
+    "physical_distribution_proved": false,
+    "projects": [
+      "aelev-kc-network-sql",
+      "aelev-kc-network-api",
+      "aelev-kc-network-restored"
+    ],
+    "status": "PASS"
+  },
+  "openai_requested": false,
+  "packaged_suite": {
+    "failed": 0,
+    "image": "sha256:49475814d27bb87d7442465deea2e780dbf0d31cabff66e8f5ce72b37304993d",
+    "passed": 83,
+    "test_stage_packaging_only_changed_after_functional_run": true
+  },
+  "post_restore": {
+    "bundled_postgresql_driver": "/opt/keycloak/lib/lib/main/org.postgresql.postgresql-42.7.7.jar",
+    "keycloak_runtime_theme_bindings": {
+      "themes/aelev/login/resources/js/login-refresh.js": "8552f2111210ffcc4b2584e3851f36799e82064e33887f14ff3564fefb844825",
+      "themes/aelev/login/theme.properties": "41ef4cc8ebc3950dfaa4314689990a34e3225333d86893041f7935d2dd2961ff"
+    },
+    "restored_admin_token_http": 200,
+    "runtime_uids": {
+      "keycloak": [
+        "1000",
+        "1000",
+        "1000",
+        "1000"
+      ],
+      "postgresql": [
+        "70",
+        "70",
+        "70",
+        "70"
+      ]
+    },
+    "wrapper_sha256": "ad2dcc00565394968221f875185496b1ae85940c20055c1af518c5932d09fd6e"
+  },
+  "private_cleanup": {
+    "archive_mode": "0o600",
+    "archive_sha256": "65fff64f540323a925e309699534323625a71982e0c9d0ac8d67b69a2c6730f2",
+    "private_files_archived_verified_removed": 228,
+    "status": "PASS",
+    "synthetic_fixture_only": true
+  },
+  "release_admitted": false,
+  "replica_admitted": false,
+  "runtime_build_comparison": {
+    "candidate_admitted": false,
+    "labels_after": null,
+    "labels_before": {
+      "com.docker.compose.project": "aelev-infrastructure",
+      "com.docker.compose.service": "keycloak-status-publisher",
+      "com.docker.compose.version": "2.40.3"
+    },
+    "manual_build_candidate": "sha256:154a46c68a0f9deef7f898ce0fb0afd91314c6832cedc4908cf5e284e77cd57f",
+    "qualified_image": "sha256:65106e0ed789f81230b47e9ab184617a7abf143349db7ba235e9377e09ef4246",
+    "rootfs_layers_identical": true,
+    "runtime_config_without_labels_identical": true
+  },
+  "runtime_versions": {
+    "python": "3.13.7",
+    "sqlite": "3.53.4",
+    "ui_sdk": "1.1.2"
+  },
+  "schema_version": 1,
+  "source_bindings": {
+    "keycloak/.env.example": "042dea693319d4dcbcd43c2181932a0ff621424ca18ed4843c73efb887c737f8",
+    "keycloak/Dockerfile": "73fb8ac9555d0f53286577b57cafc4dd61119c2c611d346664c9d2b5d3e38b2d",
+    "keycloak/Dockerfile.status": "d0d2f4fc4c6aeda685e2df5ad95f96bf38f0260ea4e5f1ac0966d5e5faa4ed20",
+    "keycloak/compose.local-bridge.yml": "3f3c2cb97a0bbb0fcdfeb6f39ad245ef2db727eb149fd3004c112b10535f89dd",
+    "keycloak/compose.network.yml": "28c709c84ed1af3c0b7117e6130b7c206f7c9bc58fe55501a35da80350cbb5bd",
+    "keycloak/compose.yml": "472903dcae0e7374f6946219029c749dd7c60730d54d75a87fc3270ca28ad015",
+    "keycloak/database-identity-prepare.sh": "1f87ad7ae3354a9cb0ce10d9807db1975a077e40e43ed65eab3a84c691a0f7ee",
+    "keycloak/database-pg_hba.conf": "884948b1cf5138858ece3df14609b954953f33c78ec552874167efec197cbf05",
+    "keycloak/keycloak-entrypoint.sh": "ad2dcc00565394968221f875185496b1ae85940c20055c1af518c5932d09fd6e",
+    "keycloak/migrate_password_files.py": "a0e6abff3daf1e48cd5f99d432aac7a4ce400d0fae794fa9d4630b2b5960dbfe",
+    "keycloak/network.env.example": "fe563df9f6bba32b7d799a02aa75a8e4475f068cb9eda9e1a49ab3aa094d8fd4",
+    "keycloak/poetry.lock": "c89cdd42274da8f6ec9071903124213b9f29d2eb9d8b1ba2a433645a298bfc8f",
+    "keycloak/publisher_health_probe.py": "6979e9cbf1d42d8601b5f09d9b4f1020f44c3189cbc045be32c4204b3782e253",
+    "keycloak/pyproject.toml": "4003f71ee9837ef185e2c09562e53cfd6dce900c26b4dbce2e9f0d171ba0236b",
+    "keycloak/realm.json": "3312accb9ae0c3392fbfb388640bd7506770eab8a201a7c31dbfe1b616de1858",
+    "keycloak/recovery.py": "c5ee2845fd9aaaccde8ae95e1e1bdfdd9e61e97817ea75d3253df5296f43810d",
+    "keycloak/status_publisher.py": "3e84d7a5efd504fb6a17fa8091c238fe2ff3bc97338ea40b8e45b37e8eb89ca7",
+    "keycloak/test/lifecycle.py": "9ef2f7e959818e07359c584cddf6d758c0b36784faea8887b182048c5be3e19d",
+    "keycloak/test/recovery_permissions.py": "7d7bc3540a39c4122af917a1ca93eaf2f51659953e15214f715a900559a9d019",
+    "keycloak/test/status_publication.py": "24eccfd5197c43d4b5e2f41c451440603a62034455a85597648db48e36649b48",
+    "keycloak/test/test_configuration.py": "bfa5c369d09981cc1ab098afc40f373dd3df4c4e0f60ce51d9b2a11a08fca2d9",
+    "keycloak/test/test_lifecycle.py": "143837b4604afde69264832deb5a8bc9e327287c1ed2c752f5e30d148f62c9d4",
+    "keycloak/test/test_login_theme.py": "2958f15d00bfe8a3a8736a53fbf6c037cd85353c7b055771f74807a0692d62d4",
+    "keycloak/test/test_network_configuration.py": "ffdf640f83105e176a532f680bfe415a9b23974622a3a6d4a015c8fbbbe3f5e8",
+    "keycloak/test/test_password_migration.py": "baa509d2acb1432208e15039a38768fbb355a9bc3f3b47fdc6a91e4e49b67823",
+    "keycloak/test/test_publisher_health.py": "e974d5e6fad4cc020257e80f0f262ae13752041ff12f8c8f5334eadd92c3817b",
+    "keycloak/test/test_recovery.py": "1c46e6f0455aa43bdfa51d07cac394f39d4acdd2aa7f280b05f32431c0c4b57e",
+    "keycloak/test/test_status_publisher.py": "dd8fff1b8685d260d50740eb1a427b055394e690f5c5e5de026aa43176e7ab9f",
+    "keycloak/vendor/aelev_platform_ui_client-1.1.1-py3-none-any.whl": "6137c8f99afcbf317f9313b4ea739490564c8fe3a68892a811d323b0e29fb61b",
+    "keycloak/vendor/aelev_platform_ui_client-1.1.2-py3-none-any.whl": "d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86"
+  },
+  "source_bindings_count": 30,
+  "raw_qualification_sha256": "eb26695c1e8243cc70e5363efa694bc7fcb562ece408e0472b32a27e1045b726"
+}

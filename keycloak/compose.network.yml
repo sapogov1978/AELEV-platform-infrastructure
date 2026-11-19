@@ -1,0 +1,79 @@
+# Select with compose.yml and this instance's own private env.
+# Start each independently placed role with --no-deps after its workflow prerequisites.
+services:
+  keycloak-database-identity-preparer:
+    image: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_IMAGE:?set the pinned owner SQL image}
+    labels:
+      io.aelev.deployment.recipe-inputs: '["compose.yml"]'
+    profiles: [provision]
+    user: "0:0"
+    entrypoint: [/bin/sh, /opt/keycloak/database-identity-prepare.sh]
+    volumes:
+      - type: bind
+        source: ./database-identity-prepare.sh
+        target: /opt/keycloak/database-identity-prepare.sh
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_SERVER_TLS_ROOT:?set this SQL instance's server identity inputs}
+        target: /run/secrets/keycloak-database-server
+        read_only: true
+        bind: {create_host_path: false}
+      - keycloak-database-tls:/var/lib/keycloak-database-tls
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+    mem_limit: 64m
+
+  keycloak-database:
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_min_protocol_version=TLSv1.2
+      - -c
+      - ssl_cert_file=/var/lib/keycloak-database-tls/server.crt
+      - -c
+      - ssl_key_file=/var/lib/keycloak-database-tls/server.key
+      - -c
+      - ssl_ca_file=/var/lib/keycloak-database-tls/client-ca.crt
+      - -c
+      - hba_file=/etc/keycloak-database/pg_hba.conf
+    ports:
+      - "${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_BIND:?set the SQL listener bind}:${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PORT:?set the published SQL port}:5432"
+    volumes:
+      - keycloak-database-tls:/var/lib/keycloak-database-tls:ro
+      - type: bind
+        source: ./database-pg_hba.conf
+        target: /etc/keycloak-database/pg_hba.conf
+        read_only: true
+        bind: {create_host_path: false}
+
+  keycloak:
+    labels:
+      io.aelev.keycloak.transport: network-mtls
+    environment:
+      KC_DB_URL: "jdbc:postgresql://${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_HOST:?set the reachable SQL hostname}:${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_PORT:?set the published SQL port}/${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_NAME:?set the owner database}?sslmode=verify-full&sslrootcert=/run/secrets/keycloak-database-client/ca.crt&sslkey=/run/secrets/keycloak-database-client/client.p12&sslpassword="
+    ports:
+      - "${AELEV_INFRASTRUCTURE_KEYCLOAK_MANAGEMENT_BIND:?set the restricted management bind}:${AELEV_INFRASTRUCTURE_KEYCLOAK_MANAGEMENT_PORT:?set the published HTTPS management port}:9000"
+    volumes:
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_CLIENT_TLS_ROOT:?set this Keycloak instance's SQL client identity}
+        target: /run/secrets/keycloak-database-client
+        read_only: true
+        bind: {create_host_path: false}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+
+# Each role instance supplies distinct owner network/volume names through its env.
+# Only reachable endpoint + TLS identities connect different instances/nodes.
+networks:
+  keycloak:
+    internal: false
+
+volumes:
+  keycloak-database-tls:
+    name: ${AELEV_INFRASTRUCTURE_KEYCLOAK_DATABASE_TLS_VOLUME:?set this SQL instance's private TLS volume}

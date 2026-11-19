@@ -1,0 +1,26 @@
+# Keycloak/SQL network profile: component result — 2026-11-19
+
+Result: **PASS for the component scope** in [the plan](network-profile-plan-20261119.md). Full installer, distributed recovery, replica admission, full Platform UI publication and release admission remain open. All six platform outcomes remain open.
+
+## Confirmed behavior
+
+The unchanged Keycloak 26.3.2 runtime connected to its own pinned PostgreSQL 17.6 through the **published hostname/port**, with **disjoint runtime networks**. Actual JDBC sessions in `pg_stat_ssl` reported TLS and client DN `/CN=keycloak`. Main HTTPS OIDC discovery, management HTTPS readiness with the database check, and a real admin token request succeeded. The running image contains bundled pgJDBC **42.7.7**; process UIDs were **1000** for Keycloak and **70** for PostgreSQL. The entrypoint and both theme files matched the frozen source bytes.
+
+The SQL server rejected plaintext, a missing client certificate and a client with the wrong CN. Libpq independently rejected a foreign CA and wrong server name. Two additional **actual Keycloak/JDBC startups** failed with exit 1 for a foreign CA and wrong hostname; expected driver validation errors were observed, with no fallback. The identity-preparer replay preserved bytes/metadata, and changed server-key input was rejected. Separate Linux file-state probes confirmed refusal of a held/interrupted lock and incomplete target without changing the remaining key; those probes use synthetic file bytes and do not represent TLS or SQL functional tests.
+
+The owner CLI created a **13-file schema-1 backup** containing a real custom-format SQL dump, its own consistent publisher journal, realm/passwords, HTTPS trust and both SQL identities. Fresh-target restore prepared a new SQL TLS volume, restored SQL and the publisher journal into new volumes, and verified exact runtime identity bytes. Restored readiness, OIDC discovery and a new admin token request succeeded. The publisher journal was initialized through its real owner CLI; active publication/delivery and a populated outbox were not exercised by this rehearsal. The source and restored single-instance volumes do not establish distributed recovery or replica qualification.
+
+## Checks and evidence boundaries
+
+- **83 host tests** passed on Python 3.13.16; whole-owner Ruff, four changed Python files' strict types (`--follow-imports=silent`), their format and shell syntax passed.
+- **83 packaged tests** passed on Linux/Python 3.13.7 in checks image `sha256:49475814d27bb87d7442465deea2e780dbf0d31cabff66e8f5ce72b37304993d` without network. The first packaged run passed 81 and failed two old configuration tests because `compose.local-bridge.yml` was not copied. This red result is preserved; the only subsequent functional-packaging change adds that missing file to checks. SQL/JDBC/recovery source stayed byte-identical.
+- The first catalogue check rejected the new recipe-input label's plain string. It was corrected to the API's JSON array; the final recipe then completed a new native functional/restore run. This changes the new declaration, not the established owner-compose API.
+- **95 catalogue roles: 57 runtime, 1 node, 37 operations**. Exactly one owner operation was added; ordinary full-local selection and permanent runtime composition remain unchanged.
+- **30 input bindings** and raw hashes are in [the machine-readable result](network-profile-bindings-20261119.json). Raw qualification SHA-256: `eb26695c1e8243cc70e5363efa694bc7fcb562ece408e0472b32a27e1045b726`. Documentary carrier changes do not relabel older full-local `2d597d8` evidence.
+- Cached publisher runtime `sha256:65106e0ed789f81230b47e9ab184617a7abf143349db7ba235e9377e09ef4246` was used for its real backup/restore CLI. A direct runtime build produced `sha256:154a46c68a0f9deef7f898ce0fb0afd91314c6832cedc4908cf5e284e77cd57f`: all filesystem layers and configuration excluding Compose build labels match. It is a **different image identity**, not a newly admitted release. Runtime remains Python **3.13.7**, SQLite **3.53.4**, UI SDK **1.1.2**.
+
+After byte-verified private archival, **228 synthetic private fixture files** were removed. Both functional runs' projects and volumes, the two negative JDBC projects and three temporary images were removed. The isolated Engine and watcher stopped; inner state is **0 containers / 0 volumes / 3 standard networks**. All **159 other outer containers** retained IDs, images, names, Running/Paused/StartedAt; all original 160 IDs remain. Minimum host free space was **22.85 GiB**, above the 15 GiB floor. No canonical switch, queue activity, RESUME or OpenAI request occurred.
+
+## Contract and grounds
+
+[SPEC](../SPEC.md), [manual](../USER_MANUAL.md#независимое-размещение-ролей), [ADR 0018](../../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md), and the [pre-edit plan with official version-specific documentation and time estimate](network-profile-plan-20261119.md) define the scope. The lock uses the local filesystem's exclusive directory creation and existing-path refusal described in [Linux mkdir](https://man7.org/linux/man-pages/man2/mkdir.2.html); automatic stale-lock takeover is not implemented.

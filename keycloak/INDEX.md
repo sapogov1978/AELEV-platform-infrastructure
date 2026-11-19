@@ -15,6 +15,7 @@
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
 | Настройки и запуск | `.env.example`, `compose.yml`, `compose.local-bridge.yml`, `realm.json` |
+| Раздельные SQL/Keycloak placements, mTLS/JDBC и management HTTPS | `compose.network.yml`, `network.env.example`, `database-identity-prepare.sh`, `database-pg_hba.conf`; [руководство](USER_MANUAL.md#независимое-размещение-ролей), [план](test/network-profile-plan-20261119.md), [результат/bindings](test/network-profile-result-20261119.md) |
 | Наследуемая тема входа | `themes/aelev/login/`; поведение — [SPEC.md](SPEC.md#восстановление-формы-входа) |
 | Проверки исправления формы и результат выкладки | [test/login-recovery-result.md](test/login-recovery-result.md) |
 | Проверки и результаты | `test/` |

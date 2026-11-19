@@ -14,6 +14,18 @@ from typing import Any, cast
 ROOT = Path(__file__).resolve().parent
 SCHEMA_VERSION = 1
 MAX_STATE_BYTES = 64 * 1024 * 1024
+TLS_DIRECTORY = "/run/secrets/keycloak-https"
+DATABASE_CLIENT_DIRECTORY = "/run/secrets/keycloak-database-client"
+DATABASE_SERVER_DIRECTORY = "/run/secrets/keycloak-database-server"
+
+
+def transport_profile(model: dict[str, Any]) -> str:
+    labels = model["services"]["keycloak"].get("labels", {})
+    return (
+        "network-mtls"
+        if labels.get("io.aelev.keycloak.transport") == "network-mtls"
+        else "legacy-local"
+    )
 
 
 def execute(arguments: list[str], payload: bytes | None = None) -> bytes:
@@ -71,29 +83,61 @@ def source_map(model: dict[str, Any]) -> tuple[dict[str, Path], Path]:
             additions["tls.crt"] = Path(mount["source"])
         elif target == "/opt/keycloak/conf/tls/tls.key":
             additions["tls.key"] = Path(mount["source"])
-        elif target == "/run/secrets/keycloak-https":
+        elif target == TLS_DIRECTORY:
             if mount.get("type", "bind") != "bind":
                 raise ValueError("Keycloak TLS recovery requires a directory bind")
             additions = {
                 name: Path(mount["source"]) / name for name in ("tls.crt", "tls.key")
+            }
+            additions["tls.ca.crt"] = Path(mount["source"]) / "ca.crt"
+        elif target == DATABASE_CLIENT_DIRECTORY:
+            additions = {
+                "database-client/" + name: Path(mount["source"]) / name
+                for name in ("ca.crt", "client.p12")
             }
         elif target == "/opt/keycloak/data/import/aelev-realm.json":
             additions["realm.json"] = Path(mount["source"])
         if sources.keys() & additions.keys():
             raise ValueError("ambiguous Keycloak recovery source map")
         sources.update(additions)
+    if transport_profile(model) == "network-mtls":
+        preparer = services["keycloak-database-identity-preparer"]
+        server_roots = [
+            Path(mount["source"])
+            for mount in preparer["volumes"]
+            if mount["target"] == DATABASE_SERVER_DIRECTORY and mount["type"] == "bind"
+        ]
+        if len(server_roots) != 1:
+            raise ValueError("ambiguous Keycloak database server identity")
+        sources.update(
+            {
+                "database-server/" + name: server_roots[0] / name
+                for name in ("server.crt", "server.key", "client-ca.crt")
+            }
+        )
     status_root = next(
         Path(mount["source"])
         for mount in provision["volumes"]
         if mount["target"] == "/run/secrets/status"
     )
-    if set(sources) != {
+    expected = {
         "admin-password",
         "database-password",
         "tls.crt",
         "tls.key",
         "realm.json",
-    }:
+    }
+    if transport_profile(model) == "network-mtls":
+        expected.update(
+            {
+                "database-client/ca.crt",
+                "database-client/client.p12",
+                "database-server/server.crt",
+                "database-server/server.key",
+                "database-server/client-ca.crt",
+            }
+        )
+    if set(sources) - {"tls.ca.crt"} != expected:
         raise ValueError("incomplete Keycloak recovery source map")
     return sources, status_root
 
@@ -198,6 +242,8 @@ def backup(directory: Path) -> None:
     ):
         raise RuntimeError("empty or oversized Keycloak state backup")
     for name, source in sources.items():
+        if name == "tls.ca.crt" and not source.exists() and not source.is_symlink():
+            continue
         files["files/" + name] = regular_file(source)
     for source in sorted(status_root.iterdir()):
         if source.name.startswith("."):
@@ -205,6 +251,7 @@ def backup(directory: Path) -> None:
         files["files/status/" + source.name] = regular_file(source)
     manifest = {
         "schema_version": SCHEMA_VERSION,
+        "transport_profile": transport_profile(model),
         "module_id": model["services"]["keycloak-status-publisher"]["environment"][
             "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MODULE_ID"
         ],
@@ -227,6 +274,15 @@ def restore(directory: Path, *, data_only: bool = False) -> None:
         raise RuntimeError("stop the target Keycloak installation before restore")
     model = configuration()
     sources, status_root = source_map(model)
+    if manifest.get("transport_profile", "legacy-local") != transport_profile(model):
+        raise ValueError("Keycloak recovery transport profile mismatch")
+    sources = {
+        name: source
+        for name, source in sources.items()
+        if name != "tls.ca.crt" or "files/tls.ca.crt" in payloads
+    }
+    if any("files/" + name not in payloads for name in sources):
+        raise ValueError("Keycloak backup is missing required identity files")
     module_id = model["services"]["keycloak-status-publisher"]["environment"][
         "AELEV_INFRASTRUCTURE_KEYCLOAK_UI_MODULE_ID"
     ]
@@ -240,8 +296,10 @@ def restore(directory: Path, *, data_only: bool = False) -> None:
     roots.extend(
         (Path(mount["source"]), secret_gid)
         for mount in model["services"]["keycloak"]["volumes"]
-        if mount["target"] == "/run/secrets/keycloak-https"
+        if mount["target"] in (TLS_DIRECTORY, DATABASE_CLIENT_DIRECTORY)
     )
+    if transport_profile(model) == "network-mtls":
+        roots.append((sources["database-server/server.key"].parent, secret_gid))
     targets = [target for name, target in sources.items() if name != "realm.json"]
     targets.extend(
         status_root / Path(name).name
@@ -276,6 +334,8 @@ def restore(directory: Path, *, data_only: bool = False) -> None:
                 mode=0o640,
                 group=status_gid,
             )
+    if transport_profile(model) == "network-mtls":
+        compose("run", "--rm", "--no-deps", "-T", "keycloak-database-identity-preparer")
     compose("up", "-d", "--wait", "keycloak-database")
     database = model["services"]["keycloak-database"]["environment"]
     tables = compose(
@@ -325,8 +385,10 @@ def restore(directory: Path, *, data_only: bool = False) -> None:
 
 
 def verify(directory: Path, *, data_only: bool = False) -> None:
-    validated_bundle(directory)
+    manifest, _ = validated_bundle(directory)
     model = configuration()
+    if manifest.get("transport_profile", "legacy-local") != transport_profile(model):
+        raise ValueError("Keycloak recovery transport profile mismatch")
     database = model["services"]["keycloak-database"]["environment"]
     count = compose(
         "exec",

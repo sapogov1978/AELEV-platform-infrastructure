@@ -18,6 +18,7 @@ COPY status_publisher.py recovery.py migrate_password_files.py ./
 COPY publisher_health_probe.py ./
 COPY --from=builder /opt/venv/lib/python3.13/site-packages/aelev_platform_ui_client/health.py ./publisher_health.py
 COPY compose.yml .env.example README.md Dockerfile .dockerignore keycloak-entrypoint.sh ./
+COPY compose.local-bridge.yml compose.network.yml network.env.example database-identity-prepare.sh database-pg_hba.conf ./
 COPY test ./test/
 COPY themes ./themes/
 COPY realm.json ./realm.json
