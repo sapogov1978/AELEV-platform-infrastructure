@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795043394.0659804,
-    "seen": 1795043404.314032,
-    "ast_hash": "de289b4d562860d72d198e0dae14a71e",
+    "mtime": 1795084568.5626445,
+    "seen": 1795084596.796221,
+    "ast_hash": "102f5d294d003ccf0babca6ed2b66b41",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -378,9 +378,9 @@
     "semantic_hash": ""
   },
   "keycloak/compose.yml": {
-    "mtime": 1794837645.582291,
-    "seen": 1794840099.140481,
-    "ast_hash": "fe4a735ba14b65fe8723d4ed8fde0bb7",
+    "mtime": 1795084410.507875,
+    "seen": 1795084596.777343,
+    "ast_hash": "5944f67700e573ee231e1e098907b381",
     "semantic_hash": ""
   },
   "keycloak/keycloak-entrypoint.sh": {
@@ -414,9 +414,9 @@
     "semantic_hash": ""
   },
   "keycloak/recovery.py": {
-    "mtime": 1794837645.583612,
-    "seen": 1794840099.140487,
-    "ast_hash": "5a2643722219c75c39c111f58a3e98d8",
+    "mtime": 1795084410.5070465,
+    "seen": 1795084596.777536,
+    "ast_hash": "a0464003d21c18301a6958132fbe23dd",
     "semantic_hash": ""
   },
   "keycloak/status_publisher.py": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "keycloak/test/test_recovery.py": {
-    "mtime": 1794837645.5916238,
-    "seen": 1794840099.140497,
-    "ast_hash": "fe163e89a2982e3460d6c20a3681e5e0",
+    "mtime": 1795084410.9882407,
+    "seen": 1795084596.7779589,
+    "ast_hash": "15465482c7e02ba786043b56ce35fc81",
     "semantic_hash": ""
   },
   "keycloak/test/test_status_publisher.py": {
@@ -3174,9 +3174,9 @@
     "semantic_hash": ""
   },
   "keycloak/CHANGELOG.md": {
-    "mtime": 1794837645.578941,
-    "seen": 1794840099.141243,
-    "ast_hash": "764f3dafc5324d969c0e087feed72fec",
+    "mtime": 1795084568.5605206,
+    "seen": 1795084596.8012428,
+    "ast_hash": "51f5734fa095e982f35e48824922efb1",
     "semantic_hash": ""
   },
   "keycloak/README.md": {
@@ -3192,15 +3192,15 @@
     "semantic_hash": ""
   },
   "keycloak/TASKS.md": {
-    "mtime": 1794837645.5804884,
-    "seen": 1794840099.141247,
-    "ast_hash": "4f093510ceae61ce4f5154eb4dbbebf2",
+    "mtime": 1795084568.56162,
+    "seen": 1795084596.801284,
+    "ast_hash": "0db969707f22486dc1be2f46d6b43b27",
     "semantic_hash": ""
   },
   "keycloak/USER_MANUAL.md": {
-    "mtime": 1794837645.5810828,
-    "seen": 1794840099.141248,
-    "ast_hash": "ef34d1a4ebbed46077dd5ec8c3f04893",
+    "mtime": 1795084410.5100331,
+    "seen": 1795084596.801285,
+    "ast_hash": "8f71f18367ada216bd77dbf302ff5ffa",
     "semantic_hash": ""
   },
   "keycloak/test/composition-validation-result.md": {
@@ -6012,9 +6012,9 @@
     "semantic_hash": ""
   },
   "keycloak/INDEX.md": {
-    "mtime": 1794837645.579745,
-    "seen": 1794840099.141244,
-    "ast_hash": "57bb3a676fb0f117918fa973bfaf3a5b",
+    "mtime": 1795084568.5613017,
+    "seen": 1795084596.801245,
+    "ast_hash": "b0d57dbcb70bb59ca5e1b62dd256f6c1",
     "semantic_hash": ""
   },
   "minio/INDEX.md": {
@@ -6528,9 +6528,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1795042285.6927927,
-    "seen": 1795043119.532109,
-    "ast_hash": "45e857804c5d12a38e2fadc549925592",
+    "mtime": 1795084438.6137888,
+    "seen": 1795084596.7753558,
+    "ast_hash": "2c898fac1242c3f875515e839af6bc31",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
@@ -7131,6 +7131,30 @@
     "mtime": 1795043394.065169,
     "seen": 1795043404.317887,
     "ast_hash": "b6bcfe219dccf02b3acb529d846f0292",
+    "semantic_hash": ""
+  },
+  "keycloak/test/recovery-directory-bindings-20261119.json": {
+    "mtime": 1795084568.5474284,
+    "seen": 1795084596.7777028,
+    "ast_hash": "514807df04deddafbb4c41f9c96912ce",
+    "semantic_hash": ""
+  },
+  "keycloak/test/recovery_permissions.py": {
+    "mtime": 1795084410.9495745,
+    "seen": 1795084596.777706,
+    "ast_hash": "bd68c1a4bcc68ded0bc9211db4dfe471",
+    "semantic_hash": ""
+  },
+  "keycloak/test/recovery-directory-plan-20261119.md": {
+    "mtime": 1795084410.5061247,
+    "seen": 1795084596.8014011,
+    "ast_hash": "2dc3ca5d3cf0e19e13648017b73dcd81",
+    "semantic_hash": ""
+  },
+  "keycloak/test/recovery-directory-result-20261119.md": {
+    "mtime": 1795084568.5595312,
+    "seen": 1795084596.8014028,
+    "ast_hash": "bb834a93eddb6a903a1201cfe4a07f7e",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

@@ -1,6 +1,11 @@
 # Задачи Keycloak
 
-Статус продукта: `PRODUCTION_READY`. Завершённая реализация, recovery и публикация состояния находятся в [CHANGELOG.md](CHANGELOG.md) и [отчёте восстановления](test/recovery-result.md).
+Статус полной поставки с независимым размещением ролей: `IN_PROGRESS`. Прежняя одноузловая поставка прошла свою приёмку; её реализация, recovery и публикация состояния находятся в [CHANGELOG.md](CHANGELOG.md) и [отчёте восстановления](test/recovery-result.md). [Исправление текущего directory-mount recovery](test/recovery-directory-result-20261119.md) не является допуском нового сетевого профиля.
+
+## Независимое размещение по ADR 0018
+
+- [ ] предоставить и проверить владельческий TLS PostgreSQL/JDBC-профиль без обязательной общей сети Keycloak и его SQL-роли;
+- [ ] включить его в полный установщик и проверить readiness, backup/restore и OIDC без изменения рабочих очередей или recovery budgets.
 
 ## Допуск конкретной площадки
 

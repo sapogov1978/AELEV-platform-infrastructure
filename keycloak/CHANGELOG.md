@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-19: recovery поддерживает текущий TLS directory mount и legacy file mounts с прежней schema 1, проверяет коллизии/небезопасные каталоги до записи credentials и восстанавливает runtime права `0750/0640` с объявленными GID. Одноразовый provisioner получает дополнительную группу собственных административных секретов; архив остаётся `0700/0600`. Это завершает прежний контракт bootstrap от 2026-11-07 для restore. 78 host tests, 13 native Linux/Python 3.13.7 DAC checks, Ruff/изменённые strict types PASS; полного SQL restore, нового образа и допуска платформы этот прогон не доказывает. [План, источники и прогноз](test/recovery-directory-plan-20261119.md), [точный результат](test/recovery-directory-result-20261119.md).
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-12: документация корневого TLS маршрута учитывает Docker Desktop loopback и отдельный Linux bridge listener. Bootstrap сохраняет явные операторские назначения и не открывает wildcard/LAN bind.

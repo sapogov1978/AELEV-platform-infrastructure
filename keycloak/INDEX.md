@@ -9,6 +9,7 @@
 | Создание, восстановление и проверка полной резервной копии | [recovery.py](recovery.py) |
 | Перенос прежних env-паролей без ротации | [migrate_password_files.py](migrate_password_files.py), процедура в [руководстве](USER_MANUAL.md#перенос-прежних-паролей-из-env-без-ротации) |
 | Фактический результат восстановления | [test/recovery-result.md](test/recovery-result.md) |
+| Совместимость recovery с текущим TLS directory mount и Linux runtime GID | [План](test/recovery-directory-plan-20261119.md), [результат](test/recovery-directory-result-20261119.md), [bindings](test/recovery-directory-bindings-20261119.json) |
 | Нормативные гарантии | [SPEC.md](SPEC.md) |
 | Происхождение секретов | [secrets/README.md](secrets/README.md) |
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |

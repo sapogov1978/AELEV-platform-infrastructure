@@ -56,6 +56,7 @@ services:
     profiles: [provision]
     command: [provision]
     user: "${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_PROVISION_UID:?set in the Keycloak .env file}:${AELEV_INFRASTRUCTURE_KEYCLOAK_UI_SECRET_GID:?set in the Keycloak .env file}"
+    group_add: ["${AELEV_INFRASTRUCTURE_KEYCLOAK_SECRET_GID:?set in the Keycloak .env file}"]
     environment:
       <<: *status-environment
       AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER: ${AELEV_INFRASTRUCTURE_KEYCLOAK_ADMIN_USER:?set in the Keycloak .env file}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-19 — Keycloak recovery directory compatibility
+
+- 78 host tests и 13 native Linux/Python 3.13.7 permission checks PASS: восстановленные TLS/status-каталоги и runtime-пароли доступны необходимым UID/GID, чужим группам и runtime-доступу к архиву отказано. Ruff, формат изменённых файлов и их strict typing PASS; генерация сохраняет 94 роли. Все 160 исходных Docker-контейнеров сохранены. [Результат с bindings и границами](keycloak/test/recovery-directory-result-20261119.md) отдельно фиксирует недоступный pytest в общем operator image и прежние typing errors импортируемого неизменённого теста. SQL restore/login, полный сетевой профиль и admission остаются открытыми.
+
+- Перед сетевым SQL-профилем воспроизведён отказ текущего backup на каноническом TLS directory mount; история `recovery.py` содержит только исходный перенос, прежние тесты покрывают file mounts. План — сохранить schema 1 и legacy mapping, восстановить доступ runtime к новым TLS/status-каталогам и проверить отказ неоднозначных/небезопасных targets до записи секретов. Прогноз до реализации: 35–50 минут с host и native Linux non-root проверками. [Scope, официальные основания и конфликтный анализ](keycloak/test/recovery-directory-plan-20261119.md). Образы, зависимости, рабочие установки и очереди не переключаются.
+
 ## 2026-11-18 — Native Kafka network profile
 
 - Native component qualification прошла за 53.826 с: owner prepare/start/replay/status, routable advertised endpoint, реальные mTLS/ACL positive/negative, publisher ONLINE/UNKNOWN, restart и cold restore, отказ чужого cluster ID без записи. 262 tools/11 configuration/12 native publisher tests passed, Bandit baseline неизменен. [Отчёт с точными bindings, официальными основаниями и прогнозами](kafka/test/network-profile-result-20261118.md) сохраняет release/full-platform/physical flags false; состав каталога прежний (94 роли). Обычный full-local profile и существующие установки не переключались.

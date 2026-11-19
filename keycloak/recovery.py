@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import stat
 import subprocess
 from pathlib import Path
 from typing import Any, cast
@@ -65,12 +66,22 @@ def source_map(model: dict[str, Any]) -> tuple[dict[str, Path], Path]:
     }
     for mount in keycloak["volumes"]:
         target = mount["target"]
+        additions: dict[str, Path] = {}
         if target == "/opt/keycloak/conf/tls/tls.crt":
-            sources["tls.crt"] = Path(mount["source"])
+            additions["tls.crt"] = Path(mount["source"])
         elif target == "/opt/keycloak/conf/tls/tls.key":
-            sources["tls.key"] = Path(mount["source"])
+            additions["tls.key"] = Path(mount["source"])
+        elif target == "/run/secrets/keycloak-https":
+            if mount.get("type", "bind") != "bind":
+                raise ValueError("Keycloak TLS recovery requires a directory bind")
+            additions = {
+                name: Path(mount["source"]) / name for name in ("tls.crt", "tls.key")
+            }
         elif target == "/opt/keycloak/data/import/aelev-realm.json":
-            sources["realm.json"] = Path(mount["source"])
+            additions["realm.json"] = Path(mount["source"])
+        if sources.keys() & additions.keys():
+            raise ValueError("ambiguous Keycloak recovery source map")
+        sources.update(additions)
     status_root = next(
         Path(mount["source"])
         for mount in provision["volumes"]
@@ -87,6 +98,29 @@ def source_map(model: dict[str, Any]) -> tuple[dict[str, Path], Path]:
     return sources, status_root
 
 
+def runtime_directory(path: Path, group: int, *, create: bool) -> None:
+    """Prepare only a new mount root; never repair an existing owner's directory."""
+    if not path.exists() and not path.is_symlink():
+        if not create:
+            return
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        path.mkdir(mode=0o700)
+        descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            os.fchown(descriptor, -1, group)
+            os.fchmod(descriptor, 0o750)
+        finally:
+            os.close(descriptor)
+    metadata = path.lstat()
+    if (
+        not stat.S_ISDIR(metadata.st_mode)
+        or metadata.st_uid != os.geteuid()
+        or metadata.st_gid != group
+        or stat.S_IMODE(metadata.st_mode) != 0o750
+    ):
+        raise ValueError("unsafe Keycloak runtime directory: " + path.name)
+
+
 def write_private(
     path: Path, payload: bytes, *, mode: int = 0o600, group: int | None = None
 ) -> None:
@@ -94,11 +128,12 @@ def write_private(
     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, mode)
     try:
         with os.fdopen(descriptor, "wb") as output:
+            os.fchmod(output.fileno(), mode)
+            if group is not None:
+                os.fchown(output.fileno(), -1, group)
             output.write(payload)
             output.flush()
             os.fsync(output.fileno())
-        if group is not None:
-            os.chown(path, -1, group)
     except Exception:
         path.unlink(missing_ok=True)
         raise
@@ -201,16 +236,38 @@ def restore(directory: Path, *, data_only: bool = False) -> None:
         raise ValueError("realm artifact differs from the backup")
     secret_gid = int(model["services"]["keycloak"]["group_add"][0])
     status_gid = int(model["services"]["keycloak-status-publisher"]["group_add"][0])
+    roots = [(status_root, status_gid)]
+    roots.extend(
+        (Path(mount["source"]), secret_gid)
+        for mount in model["services"]["keycloak"]["volumes"]
+        if mount["target"] == "/run/secrets/keycloak-https"
+    )
+    targets = [target for name, target in sources.items() if name != "realm.json"]
+    targets.extend(
+        status_root / Path(name).name
+        for name in payloads
+        if name.startswith("files/status/")
+    )
+    if len(set(targets)) != len(targets):
+        raise ValueError("ambiguous Keycloak restore destination")
+    for target in targets:
+        if target.exists() or target.is_symlink():
+            raise FileExistsError(
+                "Keycloak restore target already exists: " + target.name
+            )
+    for root, group in roots:
+        runtime_directory(root, group, create=False)
+    for root, group in roots:
+        runtime_directory(root, group, create=True)
     for name, target in sources.items():
         if name == "realm.json":
             continue
         write_private(
             target,
             payloads["files/" + name],
-            mode=0o640 if name.startswith("tls.") else 0o600,
-            group=secret_gid if name.startswith("tls.") else None,
+            mode=0o640,
+            group=secret_gid,
         )
-    status_root.mkdir(parents=True, exist_ok=True, mode=0o750)
     for name, payload in payloads.items():
         if name.startswith("files/status/"):
             write_private(

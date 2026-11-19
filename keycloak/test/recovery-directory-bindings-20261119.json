@@ -1,0 +1,81 @@
+{
+  "backup_schema": 1,
+  "base_source": "9ae915f22f8da12d0146fa05747d0efd439ea14f",
+  "canonical_resume": false,
+  "containers_after": 160,
+  "containers_before": 160,
+  "created_utc": "2026-11-19T10:34:59.653202+00:00",
+  "docker_baseline_unchanged": true,
+  "full_platform_admission": false,
+  "full_sql_restore_exercised": false,
+  "host_results": {
+    "changed-strict-types": {
+      "exit_code": 0,
+      "output_sha256": "8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8"
+    },
+    "format": {
+      "exit_code": 0,
+      "output_sha256": "45a468fa6205768496f23f1716ebb7575e9b723449d2099b88bf2afef60b721f"
+    },
+    "host-suite": {
+      "exit_code": 0,
+      "output_sha256": "4c33bb52696635581a483fb40ce128a3f65af126d848523d277baf1a1fe8502d"
+    },
+    "ruff": {
+      "exit_code": 0,
+      "output_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  },
+  "native": {
+    "checks": {
+      "archive_denied_runtime_uid": true,
+      "archive_directory_private": true,
+      "archive_file_private": true,
+      "old_password_denied_runtime_uid": true,
+      "old_status_directory_denies_uid_101": true,
+      "old_tls_directory_denies_uid_1000": true,
+      "password_denied_provisioner_without_secret_group": true,
+      "password_readable_provisioner_different_primary_group": true,
+      "passwords_readable_runtime_uid": true,
+      "restored_status_readable_uid_101": true,
+      "restored_tls_readable_uid_1000": true,
+      "status_denied_without_additional_group": true,
+      "tls_denied_foreign_group": true
+    },
+    "live_credentials_used": false,
+    "network_used": false,
+    "python": "3.13.7",
+    "runtime_directories": {
+      "https": {
+        "gid": 1000,
+        "mode": "0o750"
+      },
+      "status": {
+        "gid": 1000,
+        "mode": "0o750"
+      }
+    },
+    "system": "Linux",
+    "umask_during_restore": "0077"
+  },
+  "native_image": "sha256:2a5245fe24f67e4241a0411702f519c10c616518a2fa52fd85381862a6c844fa",
+  "runtime_image_changed": false,
+  "source_bindings": {
+    "deployment-catalog.json": "5727b74c053c6d24fef10dc5a17fca13d1b487efbf7a8ee4b045276cbc860ff4",
+    "keycloak/.env.example": "042dea693319d4dcbcd43c2181932a0ff621424ca18ed4843c73efb887c737f8",
+    "keycloak/Dockerfile": "73fb8ac9555d0f53286577b57cafc4dd61119c2c611d346664c9d2b5d3e38b2d",
+    "keycloak/Dockerfile.status": "fd81058ece24ec41585ce535025f4b85817c1472253ec60a8144137c594e4967",
+    "keycloak/README.md": "38d1f2cc7ea27cc8868a0af709be1c95ea637c477b57c01f1eb6fd5f1104c98e",
+    "keycloak/SPEC.md": "e1faac363f24c3238137868d318b30ba45a729b9fd72c1ce05ee2b36176768b2",
+    "keycloak/compose.yml": "472903dcae0e7374f6946219029c749dd7c60730d54d75a87fc3270ca28ad015",
+    "keycloak/keycloak-entrypoint.sh": "ad2dcc00565394968221f875185496b1ae85940c20055c1af518c5932d09fd6e",
+    "keycloak/poetry.lock": "c89cdd42274da8f6ec9071903124213b9f29d2eb9d8b1ba2a433645a298bfc8f",
+    "keycloak/pyproject.toml": "4003f71ee9837ef185e2c09562e53cfd6dce900c26b4dbce2e9f0d171ba0236b",
+    "keycloak/realm.json": "3312accb9ae0c3392fbfb388640bd7506770eab8a201a7c31dbfe1b616de1858",
+    "keycloak/recovery.py": "a5045afa982c11bf545b32cc6881071dfd5217d01e3f9903ca9e315e426cc42b",
+    "keycloak/test/recovery_permissions.py": "7d7bc3540a39c4122af917a1ca93eaf2f51659953e15214f715a900559a9d019",
+    "keycloak/test/test_configuration.py": "bfa5c369d09981cc1ab098afc40f373dd3df4c4e0f60ce51d9b2a11a08fca2d9",
+    "keycloak/test/test_recovery.py": "1c46e6f0455aa43bdfa51d07cac394f39d4acdd2aa7f280b05f32431c0c4b57e"
+  },
+  "evidence_qualification_sha256": "5d1a4b38f9d5d42c153ae1f0173aab7f64bec4b17395c5439c7bd8c61184393b"
+}
