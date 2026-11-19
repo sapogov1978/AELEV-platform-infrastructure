@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from functools import partial
 
 from aelev_platform_ui_client import (
@@ -14,13 +15,19 @@ from aelev_platform_ui_client import (
     tls,
 )
 
+from transport_settings import api_probe_url
+
 PREFIX = "AELEV_INFRASTRUCTURE_PLATFORM_UI_"
 
 
 def component_state(cfg: Settings, component: str) -> str:
     if component == "api":
         context = tls(cfg.secret_root, "probe-ca.crt", "probe.crt", "probe.key")
-        url = "https://platform-ui-api:8444/api/readyz"
+        url = api_probe_url(
+            os.environ.get(
+                PREFIX + "UI_API_PROBE_URL", "https://platform-ui-api:8444/api/readyz"
+            )
+        )
         expected = {"status": "ready"}
     else:
         context = tls(cfg.secret_root, "shell-ca.crt")

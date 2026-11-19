@@ -25,7 +25,8 @@ from cryptography.x509.oid import ExtendedKeyUsageOID, NameOID
 from fastapi.testclient import TestClient
 
 from api import Settings, create_app, main
-from tls_peer import TLSH11Protocol, spiffe_id
+from tls_peer import TLSH11Protocol
+from transport_settings import spiffe_id
 
 PROXY = "spiffe://qualification.test/platform-ui/nginx"
 
@@ -270,6 +271,22 @@ def test_probe_can_read_readiness_but_cannot_read_metadata(
         response = client.getresponse()
         response.read()
         assert response.status == 403
+    finally:
+        client.close()
+
+
+@pytest.mark.parametrize(
+    "identity,expected", [("proxy", 200), ("probe", 403), ("foreign", 403)]
+)
+def test_proxy_readiness_requires_the_proxy_identity(
+    identities: dict[str, Any], listener: int, identity: str, expected: int
+) -> None:
+    client = connection(identities, listener, identity)
+    try:
+        client.request("GET", "/api/proxy-readyz")
+        response = client.getresponse()
+        response.read()
+        assert response.status == expected
     finally:
         client.close()
 

@@ -18,6 +18,7 @@
     "observability/tempo/compose.yml": "6d4b50f6d063138cd8c8259b45cac1d90c46e630da2ca31a918bee482ac92f93",
     "platform-ui/compose.local-bridge.yml": "21e08f5283eb0bedc7dc11ddb470f5364e6a949b6cc05574e1676592d777efbc",
     "platform-ui/compose.local-keycloak.yml": "04d17b74570696726e8a7e1b7855fcfbeb8392a363f7ad3534894272611531f6",
+    "platform-ui/compose.network.yml": "9fe0400d36ea3cfafbf4243adc99c2300c80bf21d50d88df4d042a878fb3cd93",
     "platform-ui/compose.yml": "9c0604bb99403f486ab051b8a855319bac52e7c8b6b5ec4c1ba2e5359f7f0711",
     "postgresql/compose.docker.yml": "e98a390424878b61da99f0aa0ef734631ae558a4bc89c7579d0a819ecef6356a",
     "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
@@ -1287,6 +1288,7 @@
       "credentials_required": true,
       "recipes": [
         "platform-ui/compose.local-bridge.yml",
+        "platform-ui/compose.network.yml",
         "platform-ui/compose.yml"
       ],
       "configuration_variables": [
@@ -1313,11 +1315,14 @@
       "credentials_required": true,
       "recipes": [
         "platform-ui/compose.local-keycloak.yml",
+        "platform-ui/compose.network.yml",
         "platform-ui/compose.yml"
       ],
       "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_BIND",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_IMAGE",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_MEMORY_LIMIT",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_API_PORT",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_NGINX_IMAGE",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
@@ -1336,6 +1341,7 @@
       "credentials_required": true,
       "recipes": [
         "platform-ui/compose.local-keycloak.yml",
+        "platform-ui/compose.network.yml",
         "platform-ui/compose.yml"
       ],
       "configuration_variables": [
@@ -1359,6 +1365,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "platform-ui/compose.network.yml",
         "platform-ui/compose.yml"
       ],
       "configuration_variables": [
@@ -1391,6 +1398,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "platform-ui/compose.network.yml",
         "platform-ui/compose.yml"
       ],
       "configuration_variables": [
@@ -1398,6 +1406,7 @@
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_NODE_IMAGE",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_PYTHON_IMAGE",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_STATUS_IMAGE",
+        "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_API_PROBE_URL",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_AUDIENCE",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_CLIENT_ID",
         "AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_IDENTITY_URL",

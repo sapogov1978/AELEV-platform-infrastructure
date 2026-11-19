@@ -27,7 +27,8 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from tls_peer import TLSH11Protocol, spiffe_id, trusted_proxy
+from tls_peer import TLSH11Protocol, trusted_proxy
+from transport_settings import spiffe_id
 
 
 def origin(url: str, *, loopback_http: bool = False) -> str:
@@ -593,6 +594,7 @@ def create_app(
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    @app.get("/api/proxy-readyz")
     @app.get("/api/readyz")
     def ready() -> dict[str, str]:
         with store.connect() as db:

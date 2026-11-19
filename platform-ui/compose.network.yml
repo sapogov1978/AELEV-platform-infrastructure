@@ -1,0 +1,57 @@
+# Explicit independent placements; select together with compose.yml.
+# Each instance supplies separate network names/subnets and state/secret roots.
+services:
+  platform-ui:
+    depends_on: !reset {}
+    volumes: !override
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT:?set this role's secret root}/nginx
+        target: /run/secrets/nginx
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_RUNTIME_ROOT:?set this role's rendered runtime directory}
+        target: /etc/nginx/conf.d
+        read_only: true
+        bind: {create_host_path: false}
+
+  platform-ui-api:
+    environment:
+      AELEV_INFRASTRUCTURE_PLATFORM_UI_TRANSPORT_PROFILE: network-mtls
+    extra_hosts: !override ["host.docker.internal:host-gateway"]
+    ports:
+      - "${AELEV_INFRASTRUCTURE_PLATFORM_UI_API_BIND:?set published API bind}:${AELEV_INFRASTRUCTURE_PLATFORM_UI_API_PORT:?set published API port}:8444"
+    volumes: !override
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT:?set this role's secret root}/api
+        target: /run/secrets/api
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_RUNTIME_ROOT:?set this role's rendered runtime directory}
+        target: /etc/platform-ui
+        read_only: true
+        bind: {create_host_path: false}
+      - platform-ui-data:/var/lib/platform-ui
+
+  platform-ui-status-publisher:
+    environment:
+      AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_API_PROBE_URL: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_UI_API_PROBE_URL:?set reachable published API readiness URL}
+    extra_hosts: !override ["host.docker.internal:host-gateway"]
+
+  platform-ui-status-provision:
+    extra_hosts: !override ["host.docker.internal:host-gateway"]
+
+  platform-ui-configuration-init:
+    extra_hosts: !override ["host.docker.internal:host-gateway"]
+    volumes: !override
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_SECRET_ROOT:?set this role's secret root}/provision
+        target: /run/secrets/provision
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_PLATFORM_UI_RUNTIME_ROOT:?set this role's rendered runtime directory}
+        target: /etc/platform-ui
+        read_only: true
+        bind: {create_host_path: false}

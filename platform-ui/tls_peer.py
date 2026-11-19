@@ -3,36 +3,13 @@
 from __future__ import annotations
 
 import asyncio
-import re
 import ssl
 from collections.abc import Awaitable, Callable, Mapping
 from typing import Any, cast
-from urllib.parse import urlsplit
 
 from cryptography import x509
 from uvicorn._types import ASGIReceiveEvent, ASGISendEvent, Scope
 from uvicorn.protocols.http.h11_impl import H11Protocol
-
-
-def spiffe_id(value: str) -> str:
-    if not isinstance(value, str):
-        raise ValueError("canonical proxy SPIFFE ID required")
-    parsed = urlsplit(value)
-    if (
-        parsed.scheme != "spiffe"
-        or not re.fullmatch(r"[a-z0-9._-]{1,255}", parsed.netloc)
-        or parsed.query
-        or parsed.fragment
-        or "?" in value
-        or "#" in value
-        or value != "spiffe://" + parsed.netloc + parsed.path
-        or any(
-            not re.fullmatch(r"[A-Za-z0-9._-]+", part) or part in {".", ".."}
-            for part in parsed.path.split("/")[1:]
-        )
-    ):
-        raise ValueError("canonical proxy SPIFFE ID required")
-    return value
 
 
 def trusted_proxy(scope: Mapping[str, Any], expected: str) -> bool:

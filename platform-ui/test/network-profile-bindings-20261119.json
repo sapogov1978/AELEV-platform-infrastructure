@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "source_parent": "7c60f7b",
+  "files": {
+    "platform-ui/Dockerfile": "72f5f43905eab1ff3155e64cb597200edc6ba24a147e11ea8403ff279e0e2bc7",
+    "platform-ui/.dockerignore": "c1a1f2e3b0a0b7e817cd3ac13f08412dcb645c3c465942de24b060d909b17586",
+    "platform-ui/api.py": "1b2b32b8f44ed477c22097423af299d4171ba656789655efc88d0ba003a57dce",
+    "platform-ui/tls_peer.py": "236a9e662bafe6d7977136a1570f5e4b8705353a52378adf356c2d819a393dec",
+    "platform-ui/transport_settings.py": "ef8435ec67786e4eef56b45d888262f5176b8b56132376c9ebb8c5fcd8d02293",
+    "platform-ui/prepare.py": "3feed214ec75cfe73056dec50f2ae5dfc9c3f58152c970c4484016a36086fa72",
+    "platform-ui/status_publisher.py": "0b9111ca81d074a7e16b65c865ef964091db83f4c44ff70c297cd1d9995658cb",
+    "platform-ui/compose.yml": "9c0604bb99403f486ab051b8a855319bac52e7c8b6b5ec4c1ba2e5359f7f0711",
+    "platform-ui/compose.network.yml": "9fe0400d36ea3cfafbf4243adc99c2300c80bf21d50d88df4d042a878fb3cd93",
+    "platform-ui/network.env.example": "42c38db6b0cc061648bb3d32d1cfb1071c2689118db0228da0ea516e6183d52f",
+    "platform-ui/.env.example": "fd27719edb65cf3853e43e2de3ddb80265ad1be51ed2cf8bcbf032fc23ed2dea",
+    "platform-ui/nginx.conf": "a51e04818f93076279e68e630789a92e829c312990e9c8e9fa39bdd7e55ba386",
+    "platform-ui/pyproject.toml": "24e2fbae66a7fbb21a4dc2cb125c603b7c3eb564574f5915f45f4edac1c80e07",
+    "platform-ui/poetry.lock": "f786a53d3c450f608f4a98bba28cfc380f497cb7c34352f21ba66a464d56d7ae",
+    "platform-ui/test/test_network_profile.py": "5be8a084a7823187502d71ba38dcb82cb6fb83d6826e97737216d155f14fbecd",
+    "platform-ui/test/test_tls_peer.py": "3f1f78d32b1ea035bde9d63aac285aff2309b2b79d016c0df249d98ae2f926f6",
+    "platform-ui/test/test_development_pki.py": "b94222395200aa0502a0f55573f3552e894cfe8bb6eb835c879e625d658d4c0f",
+    "platform-ui/test/test_status_publisher.py": "30360f9ca136915c5a2c548f44ec736b1a35790786e33d52f5b40d0014267bde"
+  },
+  "images": {
+    "checks": "sha256:968cbe9798c5fe99d94aba7a4df06057e090ca8cc5f27e355a4b9e928579b4c9",
+    "api": "sha256:5e4b6cfe00389ec38e853d8a708208a728ce0cba731acf3a52925b25d0e3af83",
+    "publisher": "sha256:217a92d400715a4227dc2254e8f073f4c9f533f4ac1ca4d00e63bc18f924cf8c",
+    "ui": "sha256:49a3ee9d2e76af761a87ed19e6ec1fd40bc99778d8c77229db930d061d52c264"
+  },
+  "runtime_versions": {
+    "api": {
+      "python": "3.13.7",
+      "sqlite": "3.49.2",
+      "openssl": "OpenSSL 3.5.1 1 Jul 2025"
+    },
+    "publisher": {
+      "python": "3.13.7",
+      "sqlite": "3.53.4",
+      "openssl": "OpenSSL 3.5.1 1 Jul 2025"
+    },
+    "sqlite_exports_sha256": {
+      "publisher.sqlite": "10edf7668245fa1d332cf6d8deaae54a5698bf4b4e187c1d9b077ac5e23cccb7",
+      "api.sqlite": "80866a390f86ceb4de10f8f345b6bf68953b3b06b5d379e1d45c7c4f3ad58191"
+    }
+  },
+  "native_checks": {
+    "checks": {
+      "real_owner_browser_pkce_configuration": true,
+      "anonymous_rejected": true,
+      "invalid_jwt_rejected": true,
+      "real_wrong_audience_rejected": true,
+      "real_publisher_without_viewer_role_rejected": true,
+      "real_viewer_allowed": true,
+      "real_canonical_publication_online": {
+        "nginx": "ONLINE",
+        "api": "ONLINE",
+        "publisher": "ONLINE"
+      },
+      "all_components_online": true,
+      "publisher_mtls_required_even_with_real_jwt": true,
+      "viewer_cannot_publish_with_publisher_certificate": true,
+      "frontend_assets_and_public_config": true,
+      "api_swagger_absent__docs": true,
+      "api_swagger_absent__openapi.json": true,
+      "five_roles_disjoint_networks": {
+        "api": [
+          "aelev-ui-net-api-backend",
+          "aelev-ui-net-api-egress"
+        ],
+        "nginx": [
+          "aelev-ui-net-nginx-backend",
+          "aelev-ui-net-nginx-egress"
+        ],
+        "publisher": [
+          "aelev-ui-net-publisher-backend",
+          "aelev-ui-net-publisher-egress"
+        ],
+        "sql": [
+          "aelev-ui-net-sql-app"
+        ],
+        "identity": [
+          "aelev-ui-net-identity-app",
+          "aelev-ui-net-identity-ingress"
+        ]
+      },
+      "exact_runtime_images": {
+        "api": "sha256:5e4b6cfe00389ec38e853d8a708208a728ce0cba731acf3a52925b25d0e3af83",
+        "nginx": "sha256:49a3ee9d2e76af761a87ed19e6ec1fd40bc99778d8c77229db930d061d52c264",
+        "publisher": "sha256:217a92d400715a4227dc2254e8f073f4c9f533f4ac1ca4d00e63bc18f924cf8c",
+        "sql": "sha256:29e645e20571728f22df398b9954bb6c1cefec390d99ed4e26308fc2f52d6a37",
+        "identity": "sha256:61274d7ec92ff904154124d66cc4c865007a152258614074057ccff593958d38"
+      },
+      "direct_own_probe_metadata_rejected": true,
+      "direct_own_probe_proxy_readiness_rejected": true,
+      "direct_foreign_proxy_metadata_rejected": true,
+      "direct_foreign_proxy_proxy_readiness_rejected": true,
+      "own_probe_readiness_allowed": true,
+      "missing_client_certificate_tls_refused": true,
+      "wrong_server_hostname_tls_refused": true,
+      "foreign_server_ca_tls_refused": true,
+      "wrong_proxy_ui_readiness_503_and_liveness_200": true,
+      "wrong_proxy_metadata_forbidden": true,
+      "proxy_identity_restored": true,
+      "api_outage_ui_readiness_503_and_liveness_200": true,
+      "publisher_crash_preserves_exact_pending": {
+        "sequence": 2,
+        "sha256": "209baf075f2d77cf5ce44d92b9e1f9b096b79334e0559a776ff51dbbad8fe4fb"
+      },
+      "api_restart_and_exact_pending_replay": {
+        "pending_sequence": 2,
+        "restored_sequence": 22,
+        "accepted_digest": "209baf075f2d77cf5ce44d92b9e1f9b096b79334e0559a776ff51dbbad8fe4fb"
+      }
+    },
+    "physical_distribution_proved": false,
+    "full_installer_proved": false,
+    "browser_login_proved": false,
+    "release_admitted": false,
+    "containers": {
+      "api": "110c24df40bd609d73b8e90cab91e82f30fd805a5e1dee710c15f480beeaf5de",
+      "nginx": "9dc25df0fa84cb41c987fbce8273439474faf6d737b0829e157af8913f22449a",
+      "publisher": "dc5386b2e2e1283c7bcd9f9667f1e529accbb0c10298f475f4b41e1feef7b09c",
+      "sql": "50d90c180cc98c1fe213d56d8594721e0fe3c6d5899d1c49c3b89b2269f3c96e",
+      "identity": "0e08a53db618555227c69b3abadcb93095154ca11a886687f6f7cb98bac5c358"
+    }
+  },
+  "private_cleanup": {
+    "status": "PASS",
+    "private_files_archived_verified_removed": 106,
+    "archive_sha256": "56a405e71877973c056e0f1b4864f557420e2380fc37c1b97a7712051e9eb906",
+    "archive_mode": "0600",
+    "synthetic_fixture_only": true
+  },
+  "outer_preservation": {
+    "status": "PASS",
+    "all_container_ids_preserved": 160,
+    "other_containers_unchanged": 159,
+    "own_engine_stopped": true
+  }
+}

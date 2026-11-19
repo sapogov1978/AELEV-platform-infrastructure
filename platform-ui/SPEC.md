@@ -1,5 +1,7 @@
 # Platform UI — нормативная спецификация
 
+Независимое размещение использует добавочный `compose.network.yml`, explicit опубликованный API endpoint/SNI/probe и role-scoped render, которому не нужны private files соседних ролей. Network startup требует exact proxy SPIFFE URI; UI readiness `/api/proxy-readyz` проверяет эту identity и storage, собственный API probe `/api/readyz` сохраняется. Metadata JWT/ownership и единственный SQLite writer неизменны. Legacy render побайтно совместим; профиль не допускает несколько писателей одного database file. [Операторские inputs и границы](PROVIDER_OPERATIONS.md#независимое-размещение-ui-api-и-издателя), [план и доказательства](test/network-profile-plan-20261119.md).
+
 Операторский prepare Python client SDK 1.1.2 явно задаёт SKI/AKI по RFC 5280, не полагаясь на неявное добавление расширений конкретной реализацией OpenSSL. Установленный leaf, issuer, private key, права и журналы не обновляются этим изменением. Новый wheel принимается владельцем отдельно; runtime API и transport совместимы с 1.1.1.
 
 Сборка Nginx UI устанавливает доступные security patches из принятой ветки Alpine 3.22, сохраняя прежний закреплённый базовый образ и приложение. Конечный пользователь — UID/GID 101; временный build-root не становится runtime user. Фактический image ID, состав пакетов и High/Critical gate подтверждаются [image evidence](../docs/security/supply-chain.md).

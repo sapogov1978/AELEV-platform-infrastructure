@@ -90,3 +90,28 @@ def test_api_probe_uses_readiness_endpoint(
 
     assert owner.component_state(cfg, "api") == "ONLINE"
     assert request.call_args.args[1] == "https://platform-ui-api:8444/api/readyz"
+
+
+def test_api_probe_uses_explicit_remote_endpoint_and_own_certificate(
+    cfg: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    endpoint = "https://api.node.example:19444/api/readyz"
+    monkeypatch.setenv(owner.PREFIX + "UI_API_PROBE_URL", endpoint)
+    request = Mock(return_value=(200, b'{"status":"ready"}'))
+    monkeypatch.setattr(owner, "request", request)
+    assert owner.component_state(cfg, "api") == "ONLINE"
+    assert request.call_args.args[1] == endpoint
+    owner.tls.assert_called_once_with(  # type: ignore[attr-defined]
+        cfg.secret_root, "probe-ca.crt", "probe.crt", "probe.key"
+    )
+
+
+def test_invalid_explicit_probe_does_not_fall_back(
+    cfg: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(owner.PREFIX + "UI_API_PROBE_URL", "")
+    request = Mock()
+    monkeypatch.setattr(owner, "request", request)
+    with pytest.raises(ValueError):
+        owner.component_state(cfg, "api")
+    request.assert_not_called()

@@ -48,6 +48,27 @@ platform-ui/
 
 Порядок создания и подключения нового UI с примерами описания, состояния, Python-издателя, страницы, оформления и общего индикатора находится в [USER_MANUAL](USER_MANUAL.md#создание-и-подключение-ui-нового-сервиса). Все файлы и полномочия такого UI принадлежат его сервису; правка каталога оболочки не требуется.
 
+## Независимое размещение UI, API и издателя
+
+Добавочный `compose.network.yml` выбирается вместе с `compose.yml`; локальные bridge/Keycloak overlays автоматически не добавляются. Base env сохраняет строгую схему. Только Compose получает новые bind/port/API-probe inputs из отдельного файла по образцу `network.env.example`. Loopback bind образца нужно явно заменить достижимым адресом для удалённых узлов. API требует mTLS и точную proxy identity; совместимость старого render не разрешает его публикацию.
+
+У каждой инстанции собственные env, secret/runtime roots, имена сетей/подсетей и томов. Запускайте выбранную роль через `--no-deps`. Пример render на узле Nginx:
+
+```sh
+python3.13 prepare.py render --env /operator/platform-ui.env --role nginx \
+  --api-url https://api.node.example:18444 \
+  --api-tls-name api.node.example \
+  --proxy-spiffe-id spiffe://platform.example/platform-ui/nginx
+```
+
+API использует `--role api`, provision — `--role provision` с согласованными URL/identity. Render проверяет только private files выбранной роли и не создаёт credentials. `--role` относится только к render; `development-pki` остаётся отдельной процедурой доверенного локального оператора. Для IP connect origin обязателен отдельный DNS `--api-tls-name`, совпадающий с сертификатом API; для DNS origin он по умолчанию равен имени origin. У probes endpoint должен совпадать с IP/DNS SAN сервера.
+
+Nginx получает clientAuth leaf с единственным URI SAN, равным `--proxy-spiffe-id`; API извлекает его из TLS connection после проверки цепочки. Издателю выдаётся отдельный clientAuth probe leaf/key и `UI_API_PROBE_URL` из network env: ключ Nginx или ключ собственного probe API ему не копируется. Доверие publisher→Nginx и transport Nginx→API раздельное; issuer private keys не входят в runtime. JWT issuer/audience/roles обязательны для metadata routes независимо от TLS.
+
+Whole-directory runtime mounts `/etc/nginx/conf.d` и `/etc/platform-ui` позволяют видеть атомарную замену config. Nginx resolver `127.0.0.11` — Docker embedded DNS. API/IdP routes задаются явно; фиксированный alias `keycloak` удалён только network overlay. `/healthz` остаётся живостью Nginx; UI `/readyz` проверяет `/api/proxy-readyz` с proxy identity и storage readiness, ошибки дают 503. Собственный API probe использует `/api/readyz`. Metadata HTTP-ответы этим mapping не изменяются.
+
+API остаётся единственным писателем своей SQLite: несколько API-писателей и database file через сеть не допускаются. Журнал издателя — в его отдельном томе. Restart/replacement/backup сохраняют историю по действующей recovery-процедуре. [План, конфликтный анализ и официальные основания](test/network-profile-plan-20261119.md) отделяют config/TLS checks от canonical native OIDC/publication и допуска общего установщика.
+
 ## Секреты: получение и подготовка
 
 Перечень всех обязательных файлов по ролям приведён в [HTTPS и файлах секретов](#https-и-файлы-секретов). Публичные цепочки CA получают у оператора соответствующего сервера и сверяют с утверждённым источником; имя файла не подтверждает доверие.
