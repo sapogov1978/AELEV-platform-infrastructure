@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-19 — Platform UI network plan
+
+- После подтверждения суточного review проверены прежние UI TLS/OIDC, routing, source history и owner contracts. До source edits выбран [план](platform-ui/test/network-profile-plan-20261119.md) на 4–6 часов: authenticated TLS proxy identity, добавочные explicit API/SNI/probe inputs и role-scoped render без чужих private keys на узле. Версии, metadata protocol, SQLite serialization и local compatibility сохраняются; три green-фазы включают реальные TLS refusals и canonical native OIDC/publication. Общая приёмка/replicas/release остаются открытыми.
+
 ## 2026-11-19 — Native Keycloak network profile
 
 - Компонентный сетевой профиль прошёл native disjoint-network SQL/JDBC/OIDC/readiness/admin-token и fresh SQL/publisher-journal/identity restore; пять libpq negative cases и два actual JDBC trust/name refusals подтверждены. 83 host и 83 packaged tests, style/types/shell PASS; добавлена одна operation при прежних 57 runtime ролях. [Отчёт и 30 bindings](keycloak/test/network-profile-result-20261119.md) различает cached runtime и label-only manual-build identity, сохраняет два setup FAIL и открытые installer/distributed-recovery/replica/release gates. 228 private fixture files byte-verified/archived/removed, свой Engine/watch остановлены, все 159 остальных контейнеров неизменны; минимум места 22.85 GiB. Canonical switch/RESUME/OpenAI отсутствуют.
