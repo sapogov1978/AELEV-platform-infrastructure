@@ -28,11 +28,13 @@ PROCEDURES = {
     "owner-compose": ("python", "tools/owner_compose.py"),
     "owner-build": ("python", "tools/owner_build.py"),
     "owner-prepare": ("python", "tools/owner_prepare.py"),
+    "spire-runtime": ("python", "tools/spire_runtime.py"),
 }
 OWNER_ACTIONS = {
     "owner-compose": {"plan", "start", "task", "status"},
     "owner-build": {"build"},
     "owner-prepare": {"prepare", "status"},
+    "spire-runtime": {"plan", "start", "status"},
 }
 ENVIRONMENT = {
     "DRP_SPIRE_DOCKER_SOCKET_APPROVAL",
@@ -138,7 +140,7 @@ def sync_directory(path: Path) -> None:
         os.close(descriptor)
 
 
-def owner_projection(path: Path) -> dict[str, Any] | None:
+def owner_projection(path: Path, *, native: bool = False) -> dict[str, Any] | None:
     """Expose only typed metadata from the pinned owner-compose procedure."""
     try:
         if path.stat().st_size > 65536:
@@ -146,6 +148,7 @@ def owner_projection(path: Path) -> dict[str, Any] | None:
         value = read(path)
         if value.get("status") not in {
             "OWNER_COMPOSE_PLANNED",
+            "OWNER_NATIVE_PLANNED",
             "OWNER_ROLE_RUNNING",
             "OWNER_ROLE_STOPPED",
             "OWNER_ROLE_ABSENT",
@@ -159,6 +162,7 @@ def owner_projection(path: Path) -> dict[str, Any] | None:
         projection = {"status": value["status"]}
         for name, pattern in {
             "configuration_sha256": r"[a-f0-9]{64}",
+            "incarnation_sha256": r"[a-f0-9]{64}",
             "container_id": r"[a-f0-9]{64}",
             "native_image_id": r"sha256:[a-f0-9]{64}",
             "build_output_id": r"sha256:[a-f0-9]{64}",
@@ -215,6 +219,24 @@ def owner_projection(path: Path) -> dict[str, Any] | None:
             ):
                 return None
             projection["owner_exit_code"] = value["owner_exit_code"]
+        if native:
+            required = (
+                {"configuration_sha256"}
+                if value["status"] == "OWNER_NATIVE_PLANNED"
+                else (
+                    {
+                        "configuration_sha256",
+                        "container_id",
+                        "native_image_id",
+                        "incarnation_sha256",
+                        "health",
+                    }
+                    if value["status"] in {"OWNER_ROLE_RUNNING", "OWNER_ROLE_STOPPED"}
+                    else set()
+                )
+            )
+            if not required <= projection.keys():
+                return None
         return projection
     except (OSError, ValueError, KeyError, TypeError):
         return None
@@ -548,7 +570,9 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
             if request["procedure"] in OWNER_ACTIONS and completed.returncode == 3:
                 result["status"] = "RESULT_UNKNOWN"
             if request["procedure"] in OWNER_ACTIONS:
-                projection = owner_projection(directory / "stdout")
+                projection = owner_projection(
+                    directory / "stdout", native=request["procedure"] == "spire-runtime"
+                )
                 if projection is not None:
                     result["owner_result"] = projection
                 elif completed.returncode == 0:

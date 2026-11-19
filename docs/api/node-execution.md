@@ -1,5 +1,7 @@
 # Выполнение владельческой процедуры на узле, версия 1
 
+Отдельный [spire-runtime adapter](spire-runtime.md) подключает существующие native install/export четырёх SPIRE runtime-ролей. Он использует прежние exact source/private inputs, target intent/receipt, private pack/deliver и local/SSH execution; `plan|start|status` не добавляют recovery или RESUME. Native projection дополнительно требует configuration/container/image/incarnation hashes и actual health. Для текущего status вызывающий workflow читает authoritative receipt точного исходного start через прежний node status и передаёт её typed projection новой observation.
+
 Отдельная [owner-prepare procedure](owner-prepare.md) подготавливает private workspace одного владельца из source manifest и exact env. Outer request связывает тот же executor, definition и private env input; действия только `prepare/status`. Typed projection требует workspace/public/environment hashes, без raw fields. Build/start/PKI/admission этим действием не выполняются.
 Отдельная `owner-build` procedure описана в [source-build API](owner-build.md). Она использует тот же source/input binding, durable node journal и typed owner result; module исполняется из infrastructure root. `build` не является действием owner-compose start и не получает права на runtime. Публичный результат допускает только её fixed status/hashes/image IDs/platform; malformed успешный ответ сохраняет RESULT_UNKNOWN.
 
@@ -30,7 +32,7 @@
 | `source_root` | Абсолютный путь точного выпуска на целевом узле |
 | `source_files` | Относительный file path → SHA-256; включены entrypoint, его зависимости и `tools/node_execution.py` |
 | `state_root` | Абсолютный собственный технический каталог `0700` вне source root |
-| `procedure` | `spire-install`, `spire-export`, `spire-bootstrap`, `translator-station`, `owner-compose` |
+| `procedure` | `spire-install`, `spire-export`, `spire-bootstrap`, `translator-station`, `owner-compose`, `owner-build`, `owner-prepare`, `spire-runtime` |
 | `arguments` | Массив буквальных аргументов публичного entrypoint |
 | `inputs` | Абсолютный target file path → SHA-256 всех закрытых подготовленных входов; файлы `0600` принадлежат target operator |
 | `environment` | Только явно выбранные node-local Docker config/socket и SPIRE initial-input/authority/socket approval |

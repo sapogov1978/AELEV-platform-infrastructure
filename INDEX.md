@@ -8,6 +8,7 @@
 |---|---|
 | Manifest-only source build и receipt native image без старта/retag | [owner-build API](docs/api/owner-build.md), [owner_build.py](tools/owner_build.py) |
 | Выполнение одной подготовленной роли без запуска соседей и замены существующей инкарнации | [owner-compose API](docs/api/owner-compose.md), [owner_compose.py](tools/owner_compose.py) |
+| Делегирование native SPIRE install/export с исходной start receipt | [spire-runtime API](docs/api/spire-runtime.md), [spire_runtime.py](tools/spire_runtime.py) |
 | Полная опись runtime/node/operator roles и проверка nodes/replicas | [deployment-catalog.json](deployment-catalog.json), [контракт](docs/api/placement.md), [placement.py](tools/placement.py) |
 | Выполнение подготовленного public owner step на local/SSH узле | [контракт](docs/api/node-execution.md), [node_execution.py](tools/node_execution.py); полный inventory workflow проверяется отдельно |
 | Доставка закреплённого source archive и отдельных закрытых owner inputs на узел | [контракт](docs/api/node-artifact.md), [node_artifact.py](tools/node_artifact.py) |

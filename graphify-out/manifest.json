@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795109115.8276262,
-    "seen": 1795109157.332843,
-    "ast_hash": "b8c1bfe8b2a7027739f96956f2de4b5e",
+    "mtime": 1795120781.3739824,
+    "seen": 1795120883.863301,
+    "ast_hash": "73c80a1a1baad2c106334ecc5c25aad5",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -4350,15 +4350,15 @@
     "semantic_hash": ""
   },
   "spire/README.md": {
-    "mtime": 1794837645.8199093,
-    "seen": 1794840099.141459,
-    "ast_hash": "7032c9540f52fb51523fc50517d61d87",
+    "mtime": 1795116086.2963374,
+    "seen": 1795120883.879505,
+    "ast_hash": "4d47290b2c31b6fb0b17d591279fbbc8",
     "semantic_hash": ""
   },
   "spire/SPEC.md": {
-    "mtime": 1794837645.8204165,
-    "seen": 1794840099.14146,
-    "ast_hash": "06c54e017b16b82dd26707fe63813e0e",
+    "mtime": 1795116086.297009,
+    "seen": 1795120883.8795068,
+    "ast_hash": "31465c9b13e6a370d1b017a5e52cd5b2",
     "semantic_hash": ""
   },
   "spire/TASKS.md": {
@@ -6000,9 +6000,9 @@
     "semantic_hash": ""
   },
   "INDEX.md": {
-    "mtime": 1794991042.034947,
-    "seen": 1794991142.1628108,
-    "ast_hash": "743d30de8c24462b1df796634ea21caa",
+    "mtime": 1795116086.2977116,
+    "seen": 1795120883.863343,
+    "ast_hash": "ba1f328ce291a20dd1279393abc47c0f",
     "semantic_hash": ""
   },
   "kafka/INDEX.md": {
@@ -6660,9 +6660,9 @@
     "semantic_hash": ""
   },
   "tools/node_execution.py": {
-    "mtime": 1794892113.4576807,
-    "seen": 1794892587.696492,
-    "ast_hash": "bb61b2c3b179ad87e17f9f452ee9788d",
+    "mtime": 1795115605.2185051,
+    "seen": 1795120883.858005,
+    "ast_hash": "cf3ad2915c39e4dddfcde31d377f05ac",
     "semantic_hash": ""
   },
   "tools/test_node_execution.py": {
@@ -6672,9 +6672,9 @@
     "semantic_hash": ""
   },
   "docs/api/node-execution.md": {
-    "mtime": 1794892494.8364415,
-    "seen": 1794892587.700421,
-    "ast_hash": "9194e37f65759e9738d5e05a9465a78c",
+    "mtime": 1795119702.0120711,
+    "seen": 1795120883.864964,
+    "ast_hash": "764317082db8099aa00271d188f79fd4",
     "semantic_hash": ""
   },
   "docs/audit/node-artifact-20261114.json": {
@@ -7239,6 +7239,36 @@
     "mtime": 1795109115.826539,
     "seen": 1795109157.3385532,
     "ast_hash": "6300fe96c28b56ffe77443952d6f880a",
+    "semantic_hash": ""
+  },
+  "docs/audit/spire-native-workflow-20261119.json": {
+    "mtime": 1795120781.4965918,
+    "seen": 1795120883.841408,
+    "ast_hash": "67124083136fc9b73febf777d8c43ad4",
+    "semantic_hash": ""
+  },
+  "tools/spire_runtime.py": {
+    "mtime": 1795118996.1642082,
+    "seen": 1795120883.858339,
+    "ast_hash": "591988537391af4c8a0eaa13693a86c6",
+    "semantic_hash": ""
+  },
+  "tools/test_spire_runtime.py": {
+    "mtime": 1795118996.1604922,
+    "seen": 1795120883.858814,
+    "ast_hash": "3bf33037eb9b1dcfb252cb9cbe7c6d7f",
+    "semantic_hash": ""
+  },
+  "docs/api/spire-runtime.md": {
+    "mtime": 1795118860.1127157,
+    "seen": 1795120883.865234,
+    "ast_hash": "1f9238b50079b6df57835fc2afaa129e",
+    "semantic_hash": ""
+  },
+  "docs/audit/spire-native-workflow-20261119.md": {
+    "mtime": 1795120781.3725746,
+    "seen": 1795120883.871531,
+    "ast_hash": "042e5c8950bf7083c297219e9a2e7d5c",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

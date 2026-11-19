@@ -15,6 +15,8 @@
 
 ## Запуск
 
+Подготовленный узловой workflow может использовать [spire-runtime API](../docs/api/spire-runtime.md): он вызывает прежние независимые install/export процедуры, связывает наблюдение с authoritative start receipt и проверяет фактическую инкарнацию. Это отдельный pinned adapter для четырёх runtime-ролей; текущие private inputs, native `no`, Process Control и Agent bootstrap сохраняют свои контракты. Успех адаптера не означает полного допуска платформы.
+
 Сетевой HTTPS источник проверяет и публикует только свежую квитанцию продления своего фактического сертификата. Observer, sender и publisher сопровождают свои сертификаты в собственных локальных томах; общий отчёт на сервере не заменяет готовность независимо размещённых ролей. Local/test prepare создаёт SAN по явным endpoints и пять раздельных renewal requests; первоначальная выдача и source checks не являются production admission либо подтверждением межузлового сопровождения.
 
 Самостоятельные `install.sh/ps1 observer|status-publisher|telemetry-sender` принимают закрытый `component.json` и только свои credential sets. Каждая установка имеет отдельные project/daemon/state и публичные HTTPS endpoints, не требует локального server либо общих проекционных томов. Формат — [руководство](USER_MANUAL.md#самостоятельные-роли-наблюдения); native сценарий четырёх ролей с ONLINE publication ACK, центральной доставкой и повтором без замены контейнеров — [отчёт](../docs/audit/spire-independent-source-20261114.json). Автоматическое межузловое сопровождение и физическая распределённая приёмка остаются отдельными воротами.

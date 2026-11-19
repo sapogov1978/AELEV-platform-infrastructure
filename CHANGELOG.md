@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-19 — SPIRE native workflow adapter scope
+
+- [Actual native Server → Agent qualification](docs/audit/spire-native-workflow-20261119.md) PASS: real SVID, original target start receipt, unchanged replay/status and stopped-Server refusal; 84 Infrastructure/131 consumer host/native tests and strict types/style pass. Private pack/deliver resolves existing nested-directory modes without changing owner-prepare, templates or budgets. Own 2 containers/13 volumes/2 networks cleaned, exact inner baseline/source preserved, Engine/watch stopped, 161 other containers unchanged. Full runtime/UI/security/release and three unchanged-HEAD SAST findings stay open; this component proof does not claim all four roles live or production-ready admission.
+
+- Native integration identified the nested-directory contract between owner-prepare (`0755` inside private `0700` workspace) and SPIRE initial inputs. [Selected refinement](docs/api/spire-runtime.md) reuses node-artifact private pack/deliver with pre-effect hash checks instead of rewriting permissions. Forecast before correction 15–25 minutes; failed plan affected no runtime resources and is retained separately.
+
+- Before edits, history confirmed the four independent SPIRE installation/export APIs and native restart `no` already exist. A [narrow node adapter](docs/api/spire-runtime.md) will connect them to prepared consumer workflows without changing legacy templates or recovery budgets. Exact source/private inputs, initial image selection and current incarnation/health stay mandatory; no update, recovery, replacement or RESUME. Forecast: implementation/regressions 90–120 minutes, bounded native integration 30–45; no green phase or full runtime admission yet.
+
 ## 2026-11-19 — Explicit Keycloak source-build target
 
 - [Native default/target comparison PASS](keycloak/test/named-build-stage-result-20261119.md): both ARM64 builds produce `e39a45144a2a4a02b58fe22d510a795960c3dd9a14b8580d29bd2ae4df124611`; catalogue source hashes remain valid. The check starts no workload and changes no image tag. Existing runtime/security/release evidence is not promoted by a stage alias.
