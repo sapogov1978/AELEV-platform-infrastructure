@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795210003.8445942,
-    "seen": 1795210013.3097768,
-    "ast_hash": "8de13c23775529278301605636cebd88",
+    "mtime": 1795213345.6266246,
+    "seen": 1795213356.565815,
+    "ast_hash": "2399ef7fad0aa7a37d5b710094d91c0b",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "observability/otel-collector/test/test_configuration.py": {
-    "mtime": 1794837645.680549,
-    "seen": 1794840099.140594,
-    "ast_hash": "15ed8e2d6bf28755cbb7c43fb8d5d5c5",
+    "mtime": 1795210309.8281338,
+    "seen": 1795213356.557788,
+    "ast_hash": "778959e1749a3fcfd017eef106454a4f",
     "semantic_hash": ""
   },
   "observability/otel-collector/test/test_publisher_health.py": {
@@ -3000,9 +3000,9 @@
     "semantic_hash": ""
   },
   "translator-service/test/test_configuration.py": {
-    "mtime": 1795207541.9981694,
-    "seen": 1795208307.566596,
-    "ast_hash": "a7096e461824cb983dd220cc4f199417",
+    "mtime": 1795210708.114362,
+    "seen": 1795213356.565525,
+    "ast_hash": "cb52606a7e8333ed5ace31cafab5b965",
     "semantic_hash": ""
   },
   "translator-service/test/test_deployment.py": {
@@ -3690,21 +3690,21 @@
     "semantic_hash": ""
   },
   "observability/otel-collector/CHANGELOG.md": {
-    "mtime": 1794837645.673465,
-    "seen": 1794840099.1413372,
-    "ast_hash": "6a10c7254af702af674e94fbe5c0cc55",
+    "mtime": 1795210257.204211,
+    "seen": 1795213356.571587,
+    "ast_hash": "28200cb8d4fabf47c5c3ad814c1cfbe2",
     "semantic_hash": ""
   },
   "observability/otel-collector/README.md": {
-    "mtime": 1794837645.67432,
-    "seen": 1794840099.1413388,
-    "ast_hash": "150406c813f27a11e95fb485dd51dfbf",
+    "mtime": 1795210301.2242136,
+    "seen": 1795213356.5715892,
+    "ast_hash": "cc59d1a592b65d01bfdb4f03970d5882",
     "semantic_hash": ""
   },
   "observability/otel-collector/SPEC.md": {
-    "mtime": 1794837645.6746356,
-    "seen": 1794840099.1413388,
-    "ast_hash": "2fe50c63f5fd6588e959f8377d16bb02",
+    "mtime": 1795210257.2033818,
+    "seen": 1795213356.57159,
+    "ast_hash": "8575fc41d72e814251286fc2a388802b",
     "semantic_hash": ""
   },
   "observability/otel-collector/TASKS.md": {
@@ -3714,9 +3714,9 @@
     "semantic_hash": ""
   },
   "observability/otel-collector/USER_MANUAL.md": {
-    "mtime": 1794837645.675488,
-    "seen": 1794840099.141342,
-    "ast_hash": "8996454ea32589be755a9cf41284ed9f",
+    "mtime": 1795210301.225244,
+    "seen": 1795213356.571609,
+    "ast_hash": "a5c3ceaf08fed393f2f15a76e3577613",
     "semantic_hash": ""
   },
   "observability/otel-collector/test/standalone-validation-result.md": {
@@ -4248,9 +4248,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/CHANGELOG.md": {
-    "mtime": 1794837645.793263,
-    "seen": 1794840099.14144,
-    "ast_hash": "cdb71a5db40252a788bec508563d5eb1",
+    "mtime": 1795211364.0088632,
+    "seen": 1795213356.573267,
+    "ast_hash": "08f9ad734d59b4bb93bffa1dcb55be12",
     "semantic_hash": ""
   },
   "public-egress-gateway/ENDPOINTS.md": {
@@ -4260,15 +4260,15 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/README.md": {
-    "mtime": 1794837645.7950509,
-    "seen": 1794840099.141443,
-    "ast_hash": "d3cbae467290f95ca64296beb3f861f3",
+    "mtime": 1795210807.4429677,
+    "seen": 1795213356.5732858,
+    "ast_hash": "2686b69bfd9c45582ff5ca0c4c862a15",
     "semantic_hash": ""
   },
   "public-egress-gateway/SPEC.md": {
-    "mtime": 1794837645.7955465,
-    "seen": 1794840099.1414442,
-    "ast_hash": "c53b1db668f4b3a7d165babdc67771b7",
+    "mtime": 1795211364.0083861,
+    "seen": 1795213356.573287,
+    "ast_hash": "dc2b7fed76310b80eaf2a55e6659e756",
     "semantic_hash": ""
   },
   "public-egress-gateway/TASKS.md": {
@@ -4626,9 +4626,9 @@
     "semantic_hash": ""
   },
   "translator-service/CHANGELOG.md": {
-    "mtime": 1795207542.000381,
-    "seen": 1795208307.575011,
-    "ast_hash": "16a0dab3b070cf4380b2b8fce357ba68",
+    "mtime": 1795211364.012105,
+    "seen": 1795213356.5743291,
+    "ast_hash": "aeb3866020248589ce9e3357b8fb3219",
     "semantic_hash": ""
   },
   "translator-service/ENDPOINTS.md": {
@@ -4638,15 +4638,15 @@
     "semantic_hash": ""
   },
   "translator-service/README.md": {
-    "mtime": 1795166797.1548643,
-    "seen": 1795208307.575041,
-    "ast_hash": "80c7cb5f1dc4401d30807db0f10d8142",
+    "mtime": 1795210807.4528453,
+    "seen": 1795213356.574348,
+    "ast_hash": "15f54369d9ceb85368ae68b2cfc9d9ff",
     "semantic_hash": ""
   },
   "translator-service/SPEC.md": {
-    "mtime": 1795166797.155592,
-    "seen": 1795208307.575043,
-    "ast_hash": "1c7e3a234d8192da0a2fb8ca3e996f36",
+    "mtime": 1795211364.011538,
+    "seen": 1795213356.5743492,
+    "ast_hash": "572612e09b2fe5036c0c030966dd2928",
     "semantic_hash": ""
   },
   "translator-service/TASKS.md": {
@@ -4656,9 +4656,9 @@
     "semantic_hash": ""
   },
   "translator-service/USER_MANUAL.md": {
-    "mtime": 1795207541.999096,
-    "seen": 1795208307.575058,
-    "ast_hash": "8bfe4f86cfc3084e4cce2e408e1cd4ae",
+    "mtime": 1795210807.4438562,
+    "seen": 1795213356.5743659,
+    "ast_hash": "244976a269b7a8b9418ffb222a52273b",
     "semantic_hash": ""
   },
   "translator-service/compute-runtime/README.md": {
@@ -6054,9 +6054,9 @@
     "semantic_hash": ""
   },
   "observability/otel-collector/INDEX.md": {
-    "mtime": 1794837645.6740696,
-    "seen": 1794840099.141338,
-    "ast_hash": "1a2c56997da8268407b9bec0fa407fd8",
+    "mtime": 1795210301.2257066,
+    "seen": 1795213356.571588,
+    "ast_hash": "b37e877e093490d20856e1d7bed882d9",
     "semantic_hash": ""
   },
   "observability/prometheus/INDEX.md": {
@@ -6084,9 +6084,9 @@
     "semantic_hash": ""
   },
   "public-egress-gateway/INDEX.md": {
-    "mtime": 1794837645.7946448,
-    "seen": 1794840099.141442,
-    "ast_hash": "fcd29628ebfed1713ea1533e99250157",
+    "mtime": 1795210807.4433618,
+    "seen": 1795213356.573285,
+    "ast_hash": "670dfaf4e0d00e87165065c08d56b291",
     "semantic_hash": ""
   },
   "spire/INDEX.md": {
@@ -6096,9 +6096,9 @@
     "semantic_hash": ""
   },
   "translator-service/INDEX.md": {
-    "mtime": 1794871945.3029494,
-    "seen": 1794873639.425416,
-    "ast_hash": "d9adfc42cc305c282a7b547bfd5bf9ce",
+    "mtime": 1795210807.4443438,
+    "seen": 1795213356.574347,
+    "ast_hash": "117063e29af9706968d646fe99e052bc",
     "semantic_hash": ""
   },
   "docs/schemas/clean-room-evidence-v1.json": {
@@ -6528,9 +6528,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1795207964.4912503,
-    "seen": 1795208307.556326,
-    "ast_hash": "876bdb4f44643ed203f0f2bbaddeabc8",
+    "mtime": 1795212080.6081655,
+    "seen": 1795213356.554558,
+    "ast_hash": "428f45d89ce6421dd67e34f4a202e51f",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
@@ -7335,6 +7335,60 @@
     "mtime": 1795209993.196162,
     "seen": 1795210013.313388,
     "ast_hash": "120fca188db63d5a989bb7061011cfbf",
+    "semantic_hash": ""
+  },
+  "docs/audit/telemetry-network-20261120.json": {
+    "mtime": 1795213196.1028616,
+    "seen": 1795213356.554945,
+    "ast_hash": "da1ce83e8d38ad1360513e06c0d28044",
+    "semantic_hash": ""
+  },
+  "observability/otel-collector/compose.otlp-network.yml": {
+    "mtime": 1795210301.2229252,
+    "seen": 1795213356.55763,
+    "ast_hash": "41195ab8f1e3832037d0f35a170f1837",
+    "semantic_hash": ""
+  },
+  "public-egress-gateway/compose.telemetry-network.yml": {
+    "mtime": 1795210559.8531172,
+    "seen": 1795213356.5607932,
+    "ast_hash": "ac9f3a8d923cb0965b280fa14de78040",
+    "semantic_hash": ""
+  },
+  "public-egress-gateway/deployment/prepare_telemetry_network.py": {
+    "mtime": 1795211364.3592699,
+    "seen": 1795213356.560811,
+    "ast_hash": "e51f61f2bffc8895357d27146fa492f3",
+    "semantic_hash": ""
+  },
+  "public-egress-gateway/test/test_telemetry_network.py": {
+    "mtime": 1795211364.3818624,
+    "seen": 1795213356.561229,
+    "ast_hash": "40aba44e2d88cc98b11beae051588bdc",
+    "semantic_hash": ""
+  },
+  "translator-service/compose.telemetry-network.yml": {
+    "mtime": 1795210559.8546062,
+    "seen": 1795213356.564229,
+    "ast_hash": "2669aabd9e6c16eaed6051548cd66b22",
+    "semantic_hash": ""
+  },
+  "translator-service/deployment/prepare_telemetry_network.py": {
+    "mtime": 1795211364.361797,
+    "seen": 1795213356.564354,
+    "ast_hash": "22daf74449df23cf66b7acaccf0a0c40",
+    "semantic_hash": ""
+  },
+  "translator-service/test/test_telemetry_network.py": {
+    "mtime": 1795211364.3888915,
+    "seen": 1795213356.565773,
+    "ast_hash": "103a3e7b281addaab8e200c65b294b93",
+    "semantic_hash": ""
+  },
+  "docs/audit/telemetry-network-20261120.md": {
+    "mtime": 1795213294.5955977,
+    "seen": 1795213356.569555,
+    "ast_hash": "61c16a4a1c16d9f0955e3ebf03ff853e",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

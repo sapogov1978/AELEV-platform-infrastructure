@@ -278,6 +278,7 @@ class TranslatorConfigurationTest(unittest.TestCase):
                 "compose.compute-provider.mtls.yml",
                 "compose.compute-worker.mtls.yml",
                 "compose.database-network.yml",
+                "compose.telemetry-network.yml",
             },
         )
         for name in (

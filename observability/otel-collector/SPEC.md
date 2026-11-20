@@ -1,5 +1,9 @@
 # otel-collector: спецификация самостоятельной поставки
 
+## Независимый сетевой OTLP ingress
+
+Явный `compose.otlp-network.yml` добавляет к каноническому `compose.yml` только публикацию прежних mTLS receivers 4317/4318. Обязательные `OTLP_BIND_ADDRESS`, `OTLP_GRPC_PORT`, `OTLP_HTTP_PORT` имеют собственный prefix `AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_`; прежний `BIND` продолжает управлять только health/metrics. Profile не меняет TLS, UID, pinned image, data volume, queue, backend endpoints, self-telemetry loopback, restart или старую модель. До реализации история сверена с самостоятельным 16-check proof: он не доказывает published OTLP ingress. Прогноз этого подшага — 15–20 минут на recipe/docs и actual Compose checks; native edges проверяются общим workflow, не отдельным стендом. Официальные основания: [Docker port publishing](https://docs.docker.com/engine/network/port-publishing/), [Compose merge](https://docs.docker.com/reference/compose-file/merge/) и [OTEL receiver mTLS](https://opentelemetry.io/docs/collector/configuration/#mtls-configuration-mutual-tls); внутренние — [00-INFRA-0009](../../docs/adr/00-INFRA-20261106-0009-independent-observability-and-telemetry.md) и [00-INFRA-0018](../../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md). Публикация receiver не меняет существующие routes Telemetry Delivery.
+
 ## Локальная живость и восстановление
 
 Постоянные роли создаются с `restart=no`. Автоматическое восстановление явно зарегистрированного экземпляра выполняет только существующий хостовый контроллер по 00-INFRA-20261106-0010-bounded-recovery-and-process-control; регистрация/замена сохраняет прежнюю историю, ручную остановку и защитные запреты. Этот режим не является бесконечным независимым restart-циклом Docker и не меняет зависимости или предметные очереди.
@@ -8,7 +12,7 @@
 
 
 
-По [00-INFRA-20261106-0009-independent-observability-and-telemetry](../../docs/adr/00-INFRA-20261106-0009-independent-observability-and-telemetry.md) единственный Compose этого владельца определяет нативный процесс без профиля, собственные конфигурацию, сеть, удостоверения, данные и явную подготовку тома, где он существует. Родитель observability только включает его без поправок. Защищённые адреса зависимостей настраиваются в собственном env и не требуют общей Docker-сети между узлами. Принимает и обрабатывает техническую телеметрию стандартными конвейерами. Устойчивая очередь экспортёров не заменяет исходный архив delivery.
+По [00-INFRA-20261106-0009-independent-observability-and-telemetry](../../docs/adr/00-INFRA-20261106-0009-independent-observability-and-telemetry.md) канонический Compose этого владельца определяет нативный процесс без профиля, собственные конфигурацию, сеть, удостоверения, данные и явную подготовку тома, где он существует. Родитель observability только включает его без поправок. Защищённые адреса зависимостей настраиваются в собственном env и не требуют общей Docker-сети между узлами. Принимает и обрабатывает техническую телеметрию стандартными конвейерами. Устойчивая очередь экспортёров не заменяет исходный архив delivery.
 
 Идентичность постоянных данных задаётся неизменным DATA_OWNER, а не текущим именем Compose-группы. Одновременные писатели запрещены; штатные stop/down не удаляют данные или журнал UI. Подготовка использует публичный закреплённый артефакт внутри собственного образа, не общий runtime. Секреты и производные runtime-файлы находятся только внутри поставки владельца.
 

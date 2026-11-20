@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "status": "TELEMETRY_NETWORK_HOST_PASS_NATIVE_PENDING",
+  "host_tests": 239,
+  "additional_subtests": 3,
+  "owner_results": {
+    "collector": {
+      "status": "HOST_GREEN",
+      "owner": "observability/otel-collector",
+      "tests": 15,
+      "default_model_bytes_preserved": true,
+      "default_model_sha256": "79ab1cd4176ea0cee7509e713f13fe78dff3bb40c72ce48a63a260ccd8641aec",
+      "file_sha256": {
+        "observability/otel-collector/compose.otlp-network.yml": "fc9bd476baf4c2014a03949e1df5c7c7eb814d85fb4937d47b9ba6bdcbbc72c0",
+        "observability/otel-collector/CHANGELOG.md": "55a7c037bf511b4e40011792e375643fc1ce65199d3f8678ae18841031dab9c0",
+        "observability/otel-collector/USER_MANUAL.md": "c4ad81bcba488516d933bff52dce0f0211058cfaa82ce480999ab03801d460f5",
+        "observability/otel-collector/README.md": "50e3b0c4a0aaa71d1b452a99d85fc0115d7fa1328f5174b9e14ed0d2fd7c9610",
+        "observability/otel-collector/INDEX.md": "ea0a4cf44b7e52e2b115f7d807e2cd7787a7b83f504d185f9e22eb1cddc8d437",
+        "observability/otel-collector/SPEC.md": "8932cd6950e8b6ee121ff7f9989e646bb84cc4e74c85092b800635319f5ed35b",
+        "observability/otel-collector/test/test_configuration.py": "005c2a49980074a9ef0c6485ffacf3b4b40331af68dd122e68383b7d8b7c24fe",
+        "observability/otel-collector/.pytest_cache/README.md": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+        "observability/otel-collector/deployment/otlp-network.env.example": "2ebc69b5a3a914522d2145fd25d3184f2001fa9d87e8a0aba26343f80b23f8c3"
+      },
+      "native_verified": false,
+      "containers_started": false
+    },
+    "public-egress-gateway": {
+      "status": "HOST_GREEN",
+      "generation": 2,
+      "prior_receipt_archive": "sender-green-v1",
+      "owner": "public-egress-gateway",
+      "commands": [
+        {
+          "check": "pytest",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/python",
+            "-B",
+            "-m",
+            "pytest",
+            "-o",
+            "addopts=",
+            "-q",
+            "test/test_telemetry_network.py",
+            "test/test_compose_telemetry.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "0cd084a7fad64cb130e95cae511a0b87879e9531cedda574b37094be17c3c8cc"
+        },
+        {
+          "check": "mypy",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/mypy",
+            "--strict",
+            "deployment/prepare_telemetry_network.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e"
+        },
+        {
+          "check": "ruff",
+          "command": [
+            "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/deep-asgi-20261119/host-venv/bin/ruff",
+            "check",
+            "deployment/prepare_telemetry_network.py",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+        },
+        {
+          "check": "black",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/black",
+            "--check",
+            "deployment/prepare_telemetry_network.py",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "file_sha256": {
+        "compose.telemetry-network.yml": "15dafaf5d801cd74794afc2b1c69540ddef79851fb4c4d4fb8d726949bde1c71",
+        "deployment/prepare_telemetry_network.py": "4d169a7d321c067cae6c3a51a9929ea0606d726d9def5e2f5969ec718e697e9f",
+        "deployment/telemetry-network.env.example": "58f9d3c8fc18b8f0a0539eda3c8a694b592153adddea138be9622056316afa2c",
+        "test/test_telemetry_network.py": "8c8cc507e0ddbf00c9e553f21cfb0d9c409de59963d3e43d9bb1b25c814293a7",
+        "README.md": "5c2ef5cbd103cfe92ff7bfadfa0f390d5eb8bbfe14f3650607641c8bc9660c44",
+        "SPEC.md": "faea3a150e8522a31f6777079cfe92c246a95c8357e8eb8655ed44be06184e97",
+        "CHANGELOG.md": "a039d95a690cec1855b519bf9ca11c474c326a9302e8d00c635f37907f3433af",
+        "INDEX.md": "072ad48687b52bbbf9c1c5e40c9d0a3ae2cc00c556eac91ec9a27fe7e844d50a"
+      },
+      "source_unchanged_during_checks": true,
+      "protected_base_files_unchanged_from_HEAD": {
+        "compose.yml": "190744fc9e750edd858d2cb80190319248d07b1f2290702d648f7299f163b85e",
+        ".env.example": "67fbb1375af3f63bceeea220088653eaf30e967aa926ff82e28013ac0f23ea4c",
+        "observability/prometheus.yml": "a0d8cac4607a5319b9805251f99295aba3a29f6b78d0ca545323d3c1633a1a43",
+        "observability/sender.local.json": "8aaa6a63b75a5ac0fdd7e8259f749cc09f231617624ea79dbeb787372b701f34"
+      },
+      "default_model_bytes_preserved": true,
+      "default_model_sha256": "7a3026fd638b86f28247577e2819aa7d30ea3e628f7b8f46dd3064a7697ba043",
+      "rendered_scrape_redirects_refused": true,
+      "native_verified": false,
+      "containers_started": false
+    },
+    "translator-service": {
+      "status": "HOST_GREEN",
+      "generation": 2,
+      "prior_receipt_archive": "sender-green-v1",
+      "owner": "translator-service",
+      "commands": [
+        {
+          "check": "pytest",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/python",
+            "-B",
+            "-m",
+            "pytest",
+            "-o",
+            "addopts=",
+            "-q",
+            "test/test_telemetry_network.py",
+            "test/test_configuration.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "a973b94d27b702a6745d12ae157fd1e8a4d8ec6bc8d455b7ea1a2ba2ef34d98d"
+        },
+        {
+          "check": "mypy",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/mypy",
+            "--strict",
+            "deployment/prepare_telemetry_network.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e"
+        },
+        {
+          "check": "ruff",
+          "command": [
+            "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/deep-asgi-20261119/host-venv/bin/ruff",
+            "check",
+            "deployment/prepare_telemetry_network.py",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+        },
+        {
+          "check": "black",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/black",
+            "--check",
+            "deployment/prepare_telemetry_network.py",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "file_sha256": {
+        "compose.telemetry-network.yml": "8d4aa55aac9ae03dd3fa6f31ecc3ed897017200a005778c37beb47101d3e74ac",
+        "deployment/prepare_telemetry_network.py": "ccbd2ff7a35e5bfacec6f5e1cdb2d36e5beadb50f0d5559fc0c1cc58ef69ce70",
+        "deployment/telemetry-network.env.example": "694c7053f48c59ee8a91fc8072d9af116976c52cdd2e6e9b3fccc07fb9fc114d",
+        "test/test_telemetry_network.py": "49d171509d09580f601c7eb116571eda93b483e6f5a9e9014b4edd90a0141995",
+        "README.md": "2edd77da62035f237780e1d756f8462411fee11a67ceb05fff397d0f9380f681",
+        "SPEC.md": "7f1c9b3693a6db907f10b9155ff9c7937a8736aa2cdb560de2182060db188782",
+        "CHANGELOG.md": "6af2bc959b6b704052737b5bd63175bd9252ae0876fe57fea69016e20e5abed7",
+        "INDEX.md": "f489d890a5a55d00993c84996a87733da34f89f362860515a4dfb8cb1a1395a3",
+        "test/test_configuration.py": "f7619327231894d2c74f4ef7f361b9db47b1d7babe9c451a65f9d9a79bbce9ce",
+        "USER_MANUAL.md": "eb36456a31edf18828d64c9d0a457bf73265ea6194f94d24d2c04a6df9710ac2"
+      },
+      "source_unchanged_during_checks": true,
+      "protected_base_files_unchanged_from_HEAD": {
+        "compose.remote.yml": "f6d0be4fa7a970ef0da73084328e039e55062d8b393a4c2d1b8de1672df5d06d",
+        ".env.example": "698c0c56e9904bd9c5b4b6bcd76e6d5417bc60378e60a417bd5bc2deea42dd6e",
+        "observability/prometheus.yml": "972223a243cc0fddd2ad71a1e1ff91c90066008e47837370fba52dfd05b64911",
+        "observability/sender.local.json": "8aaa6a63b75a5ac0fdd7e8259f749cc09f231617624ea79dbeb787372b701f34"
+      },
+      "default_model_bytes_preserved": true,
+      "default_model_sha256": "6b76625fb1585a8a1bc7ed3ccbb6cd76b585203c46067b15e9f6289235daf041",
+      "rendered_scrape_redirects_refused": true,
+      "native_verified": false,
+      "containers_started": false
+    },
+    "zone": {
+      "status": "HOST_GREEN",
+      "owner": "services/discovery-engine/zone-ingestion",
+      "tests": 51,
+      "commands": [
+        {
+          "check": "pytest",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/python",
+            "-B",
+            "-m",
+            "pytest",
+            "-o",
+            "addopts=",
+            "-q",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0
+        },
+        {
+          "check": "ruff",
+          "command": [
+            "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/deep-asgi-20261119/host-venv/bin/ruff",
+            "check",
+            "deployment/prepare_telemetry_network.py",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0
+        },
+        {
+          "check": "mypy",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/mypy",
+            "--strict",
+            "deployment/prepare_telemetry_network.py"
+          ],
+          "exit_code": 0
+        },
+        {
+          "check": "black",
+          "command": [
+            "/Users/ksap/Library/Caches/pypoetry/virtualenvs/aelev-platform-ui-api-CItjLNug-py3.13/bin/black",
+            "--check",
+            "deployment/prepare_telemetry_network.py",
+            "test/test_telemetry_network.py"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "file_sha256": {
+        "deployment/compose.telemetry-network.yml": "ab947a59cb9b44ba61534cb1278f1ade7e5433d1b9cec9b4e65415655a536895",
+        "deployment/prepare_telemetry_network.py": "3b4437bd847dfcd87fd6ba67b3081f742f895c8d3a211bc459e629ff97d9be71",
+        "deployment/telemetry-network.env.example": "34f25f30adbd062044476ec73a65f171844de04b783215442b4895fc38cd90da",
+        "test/test_telemetry_network.py": "5cc05d8e6c5204006e2dda5938f5f23233da84e64212426392f5deebf32f119b",
+        "README.md": "7f11df609f988d9da61fe111cfae45de6249c252b603ca612a1ccb68fe8a1413",
+        "SPEC.md": "d8dadf51a183ada3706610d0daf13e4b5e65746eee54c7f0ca0298ef901eb492",
+        "CHANGELOG.md": "1f0b8e60657e518be52821b53b03922551305fd25a1b26650ce70011a48f7c05",
+        "deployment/README.md": "39a463c71adaf6db6e12c3b1fecdc97ab9eddfe7b020688dc3d4ae98b54dae4c",
+        "deployment/USER_MANUAL.md": "034623d0358ce90af9a840509d1fd6eda86a67ce73d496d5389a88e1f640207f"
+      },
+      "source_unchanged_during_checks": true,
+      "old_model_bytes_preserved": {
+        "base": "96fd7705861558aa15ceeb893951d017610c6a182e033f46228916510afc3e33",
+        "operator": "98d8fea629a99ad6e9ed2802860f1abd1b60e20b06f81f4e1d2498b9d4a5891b"
+      },
+      "native_verified": false,
+      "containers_started": false
+    }
+  },
+  "catalog_compatibility": {
+    "status": "CATALOG_COMPATIBILITY_PASS",
+    "owners": [
+      {
+        "owner": "collector",
+        "receipt_sha256": "3e8bb281f6a4c006e8fbd41438535c7515ebc37dd086be2aaddc17e4537ef9d1",
+        "verified_source_files": 9
+      },
+      {
+        "owner": "public-egress-gateway",
+        "receipt_sha256": "4e3ab3a51b00da561b37d03c365d6ec07b9f34f28e202c2591c28e17e242c6b6",
+        "verified_source_files": 8
+      },
+      {
+        "owner": "translator-service",
+        "receipt_sha256": "0f400cff1fefee227d29396751d87bf27d3164c95955cbc5b1df5d6c61181e40",
+        "verified_source_files": 10
+      },
+      {
+        "owner": "zone",
+        "receipt_sha256": "8a08196d00c1ef8d3f369f00a9d43f3effe6776819f468f7ebb8f563db00ea3b",
+        "verified_source_files": 9
+      }
+    ],
+    "products": [
+      {
+        "product": "platform-infrastructure",
+        "roles_preserved": 96,
+        "before_sha256": "d0959158cffc2ac1b1eb6b5be78abf355995c4d7405cd3ac843604ccff57525b",
+        "after_sha256": "9314dccb4e66a5d2591f255c9aef212c3da502072bdd71c6cba484bd58c5917f",
+        "changed_roles": {
+          "otel-collector": {
+            "added_recipes": [
+              "observability/otel-collector/compose.otlp-network.yml"
+            ],
+            "added_variables": [
+              "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_BIND_ADDRESS",
+              "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_GRPC_PORT",
+              "AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_HTTP_PORT"
+            ]
+          },
+          "public-egress-gateway-telemetry-sender": {
+            "added_recipes": [
+              "public-egress-gateway/compose.telemetry-network.yml"
+            ],
+            "added_variables": [
+              "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_BIND_ADDRESS",
+              "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_HTTP_PORT"
+            ]
+          },
+          "translator-telemetry-sender": {
+            "added_recipes": [
+              "translator-service/compose.telemetry-network.yml"
+            ],
+            "added_variables": [
+              "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_BIND_ADDRESS",
+              "AELEV_INFRASTRUCTURE_TRANSLATOR_TELEMETRY_HTTP_PORT"
+            ]
+          }
+        },
+        "counts": {
+          "runtime": 57,
+          "node": 1,
+          "operation": 38
+        }
+      },
+      {
+        "product": "discovery-research-platform",
+        "roles_preserved": 101,
+        "before_sha256": "fc68d6d2f0f4a86f3c2d4c5cf5606bab5b1836c265fae06ccc775d077768b493",
+        "after_sha256": "fd9f75429735dd96004d024c936f91a1d185802c355b97e49a11d91103d2d91b",
+        "changed_roles": {
+          "zone-ingestion-telemetry-sender": {
+            "added_recipes": [
+              "services/discovery-engine/zone-ingestion/deployment/compose.telemetry-network.yml"
+            ],
+            "added_variables": [
+              "AELEV_ZIS_TELEMETRY_BIND_ADDRESS",
+              "AELEV_ZIS_TELEMETRY_HTTP_PORT"
+            ]
+          }
+        },
+        "counts": {
+          "runtime": 48,
+          "node": 0,
+          "operation": 53
+        }
+      }
+    ],
+    "native_verified": false,
+    "runtime_started": false,
+    "image_admission_verified": false
+  },
+  "base_models_unchanged": true,
+  "stack_or_sdk_changed": false,
+  "native_runtime_verified": false,
+  "full_platform_e2e_verified": false,
+  "inference_requested": false,
+  "queue_resume_issued": false,
+  "evidence": [
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/telemetry-network-20261120/collector-host-green.json",
+      "sha256": "3e8bb281f6a4c006e8fbd41438535c7515ebc37dd086be2aaddc17e4537ef9d1"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/telemetry-network-20261120/public-egress-gateway-host-green.json",
+      "sha256": "4e3ab3a51b00da561b37d03c365d6ec07b9f34f28e202c2591c28e17e242c6b6"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/telemetry-network-20261120/translator-service-host-green.json",
+      "sha256": "0f400cff1fefee227d29396751d87bf27d3164c95955cbc5b1df5d6c61181e40"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/telemetry-network-20261120/zone-host-green.json",
+      "sha256": "8a08196d00c1ef8d3f369f00a9d43f3effe6776819f468f7ebb8f563db00ea3b"
+    }
+  ]
+}

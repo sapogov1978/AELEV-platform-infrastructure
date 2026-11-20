@@ -15,6 +15,8 @@
 
 ## Запуск
 
+Для отдельно размещаемого telemetry sender доступен явный [сетевой профиль](USER_MANUAL.md#независимое-размещение-telemetry-sender): published mTLS4318, private per-instance конфигурация Delivery и scrape существующего operator HTTPS своим query certificate. Legacy endpoints и default Compose сохраняются.
+
 Проверенная линия Psycopg 3.3.9 [принята в main](../docs/audit/translator-psycopg-main-20261114.json) после [квалификации кандидата](../docs/audit/translator-psycopg-candidate-20261114.json). Отдельный signed main worker прошёл повторную native TLS/SQL/SVID и scoped security проверку; его exact digest и выпущенный сетевой provider закреплены в [сетевых шаблонах](compute-runtime/README.md#независимое-сетевое-размещение). Проверенный профиль — команда `runtime worker`, HTTPS/mTLS provider, PostgreSQL `verify-full` с client identity/password/certificate auth, без GSS/Kerberos и произвольных process/native commands. Другие роли, конфигурации и production-площадка этим не допускаются; рабочее переключение и RESUME не выполняются.
 
 Для независимо размещаемых worker/provider добавлен [сетевой mTLS-профиль](compute-runtime/README.md#независимое-сетевое-размещение) по [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md). Описанный ниже совместный UDS recipe сохраняется для существующих установок; его успех не доказывает независимый сетевой запуск.

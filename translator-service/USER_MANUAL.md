@@ -1,5 +1,31 @@
 # Руководство translator-service
 
+## Независимое размещение telemetry sender
+
+Дополнительный `compose.telemetry-network.yml` выбирается вместе с `compose.remote.yml` только для нужного sender instance. Его [отдельный env example](deployment/telemetry-network.env.example) перечисляет обязательные новые inputs с prefix `AELEV_INFRASTRUCTURE_TRANSLATOR_`: `TELEMETRY_BIND_ADDRESS`, `TELEMETRY_HTTP_PORT`, `TELEMETRY_CONFIGURATION_ROOT`, `TELEMETRY_DELIVERY_ORIGIN`, `TELEMETRY_SCRAPE_ORIGIN`, `TELEMETRY_SCRAPE_SERVER_NAME`. Origins содержат только HTTPS authority, без credentials/path/query/fragment; scrape получает `/metrics`, Delivery — прежние четыре protocol paths. Bind — явный IP назначенного узла, published port 1–65535 уникален в его inventory, server name — проверяемое SAN. Нет автоматического выбора Docker aliases или endpoints.
+
+Подготовьте собственный закрытый initial env и выполните offline renderer из каталога владельца:
+
+```sh
+python deployment/prepare_telemetry_network.py --environment-file /absolute/private/owner.env --output-directory /absolute/private/generated-telemetry
+```
+
+Все absolute paths задаёт оператор. Output parent уже существует; fresh output получает directory0700/files0600. Точный repeat сохраняет bytes/mtime, несовпадение/partial/foreign/symlink закрыто отказывается без repair/delete. Вывод содержит только status и SHA-256 файлов. Renderer не читает credential keys, не выполняет сеть, выдачу сертификатов или запуск.
+
+В prepared workflow source `generated-telemetry/sender.local.json` и `generated-telemetry/prometheus.yml` передаются прежним `preparations.private_files` как `secrets/telemetry-configuration/sender.local.json` и `secrets/telemetry-configuration/prometheus.yml`, каждый с mode0640. `TELEMETRY_CONFIGURATION_ROOT` указывает absolute `workspace/secrets/telemetry-configuration` соответствующего instance. SDK сохраняет executor GID: он должен совпадать с существующим `TELEMETRY_SECRET_GID` sender. Не меняйте SDK/UID, не делайте исходники общедоступными и не назначайте группу другой роли для обхода ошибки; несовпадение требует owner identity-delivery handoff.
+
+Translator scrape использует существующий published operator HTTPS `/metrics`: подготовьте отдельные sender-owned `api-ca.crt`, `api-query.crt`, `api-query.key` внутри его собственного telemetry `sender` secret directory. Это отдельная query identity, доверенная operator API; operator/publisher/private keys других ролей не копируются. Private HTTP8096 остаётся локальным.
+
+Recipe добавляет только published4318 и два exact `configs.file` overrides. Public rules, pinned image, UID10001, journal volume, limits/retry/restart, local-write/central-write/local-query и встроенный `https://localhost:4318/api/v1/write` сохраняются. Собственная telemetry-data-init должна завершиться в явном workflow DAG; канонический SDK запускает одну роль с `--no-deps`, не стартует другой runtime или его копию. Profiles не меняют backend routes центральной Delivery и не выдают RESUME.
+
+Проверка подготовленного рабочего env не запускает контейнеры:
+
+```sh
+docker compose --env-file .env --file compose.remote.yml --file compose.telemetry-network.yml config --quiet
+```
+
+`config` и host tests не доказывают текущий handshake/delivery. Published sender/API edges, mTLS negatives и общая наблюдаемость проверяются manager-owned полным workflow отдельно.
+
 Для независимо размещаемой собственной SQL-роли выберите `compose.remote.yml` и `compose.database-network.yml`. Задайте полный owner namespace `AELEV_INFRASTRUCTURE_TRANSLATOR_`: прежние `DATABASE_IMAGE`, `DATABASE_PORT`, `DATABASE_VOLUME`, `DATABASE_SECRET_ROOT`, `RESTART_POLICY=no`; новые `DATABASE_BIND_ADDRESS`, `DATABASE_SERVER_TLS_ROOT`, `DATABASE_TLS_VOLUME`, `DATABASE_TLS_EXTERNAL`. Bootstrap root содержит только `server.crt`, `server.key`, `client-ca.crt`, regular single-link files `0600/0640`. Одноразовый `translator-database-identity-preparer` использует external=false; runtime — true после его receipt при том же unique volume на назначенном SQL node. Initializer не выпускает/не продлевает leaf и не исправляет чужое или частично записанное состояние. Клиент каждой роли использует свой достижимый `DATABASE_HOST`/published port, `DATABASE_NETWORK_INTERNAL=false`, `DATABASE_SSLMODE=verify-full`, CA, client identity/password; server/client projects и сети могут быть разными. Legacy default не переключается. [Scope, официальные основания и текущие ограничения](database-network-plan-20261120.md).
 
 Независимое размещение provider и worker определяется [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md) и [сетевым руководством](compute-runtime/README.md#независимое-сетевое-размещение). Worker использует явные `AELEV_TRANSLATOR_PROVIDER_TRANSPORT=mtls`, `AELEV_TRANSLATOR_PROVIDER_URL=https://...` и `AELEV_TRANSLATOR_PROVIDER_TLS_ROOT`; в client identity policy `environment` совпадает с `AELEV_ENVIRONMENT`, а production допускает только `spire-file-v1`. TLS/config/transport failures оставляют job в прежнем retry; настройка сети не запускает обработку, не меняет очередь и не даёт `RESUME`.

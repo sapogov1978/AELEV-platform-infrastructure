@@ -1,0 +1,15 @@
+# Explicit ports and private per-instance files; base/default recipe is unchanged.
+services:
+  public-egress-gateway-telemetry-sender:
+    ports:
+      - "${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_BIND_ADDRESS:?set this sender instance's bind address}:${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_HTTP_PORT:?set this sender instance's published HTTP port}:4318"
+    configs:
+      - source: gateway-network-sender
+        target: /etc/aelev/sender.local.json
+      - source: gateway-network-prometheus
+        target: /etc/aelev/prometheus.yml
+configs:
+  gateway-network-sender:
+    file: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_CONFIGURATION_ROOT:?set this instance's prepared private configuration}/sender.local.json
+  gateway-network-prometheus:
+    file: ${AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_TELEMETRY_CONFIGURATION_ROOT:?set this instance's prepared private configuration}/prometheus.yml

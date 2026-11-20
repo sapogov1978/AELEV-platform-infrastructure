@@ -1,0 +1,6 @@
+# Explicit OTLP ingress for this independently placed collector instance.
+services:
+  otel-collector:
+    ports:
+      - "${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_BIND_ADDRESS:?set this instance's OTLP bind address}:${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_GRPC_PORT:?set this instance's published OTLP gRPC port}:4317"
+      - "${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_BIND_ADDRESS:?set this instance's OTLP bind address}:${AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_HTTP_PORT:?set this instance's published OTLP HTTP port}:4318"

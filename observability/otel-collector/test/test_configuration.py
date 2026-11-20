@@ -121,3 +121,76 @@ def test_remote_peer_targets_are_explicit_when_configured() -> None:
         assert env["PROMETHEUS_HEALTH_URL"].endswith(":19090/-/ready")
     if ROLE == "delivery":
         assert model()["services"][ROLE]["command"][0] == "run"
+
+
+def network_model(settings: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith(("AELEV_", "COMPOSE_"))
+    }
+    environment.update({SPEC["prefix"] + key: value for key, value in settings.items()})
+    return subprocess.run(
+        [
+            "docker",
+            "compose",
+            "--env-file",
+            ".env.example",
+            "--profile",
+            "ui",
+            "--profile",
+            "provision",
+            "--file",
+            "compose.yml",
+            "--file",
+            "compose.otlp-network.yml",
+            "config",
+            "--format",
+            "json",
+        ],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+@pytest.mark.parametrize(
+    "address,grpc,http",
+    [("127.0.0.1", "34317", "34318"), ("0.0.0.0", "35317", "35318")],
+)
+def test_otlp_profile_only_appends_explicit_receiver_ports(
+    address: str, grpc: str, http: str
+) -> None:
+    previous = model()
+    result = network_model(
+        {"OTLP_BIND_ADDRESS": address, "OTLP_GRPC_PORT": grpc, "OTLP_HTTP_PORT": http}
+    )
+    assert result.returncode == 0, result.stderr
+    actual = json.loads(result.stdout)
+    ports = actual["services"][ROLE]["ports"]
+    extra = [port for port in ports if port["target"] in {4317, 4318}]
+    assert {(port["host_ip"], port["published"], port["target"]) for port in extra} == {
+        (address, grpc, 4317),
+        (address, http, 4318),
+    }
+    actual["services"][ROLE]["ports"] = [
+        port for port in ports if port["target"] not in {4317, 4318}
+    ]
+    assert actual == previous
+
+
+@pytest.mark.parametrize(
+    "missing", ["OTLP_BIND_ADDRESS", "OTLP_GRPC_PORT", "OTLP_HTTP_PORT"]
+)
+def test_otlp_profile_refuses_missing_new_input(missing: str) -> None:
+    settings = {
+        "OTLP_BIND_ADDRESS": "127.0.0.1",
+        "OTLP_GRPC_PORT": "34317",
+        "OTLP_HTTP_PORT": "34318",
+    }
+    settings.pop(missing)
+    result = network_model(settings)
+    assert result.returncode != 0
+    assert SPEC["prefix"] + missing in result.stderr

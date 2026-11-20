@@ -1,5 +1,17 @@
 # OpenTelemetry Collector — руководство пользователя
 
+## Независимый OTLP ingress
+
+Добавьте к собственному рабочему env три значения из [deployment/otlp-network.env.example](deployment/otlp-network.env.example): `AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_BIND_ADDRESS`, `AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_GRPC_PORT`, `AELEV_INFRASTRUCTURE_OTEL_COLLECTOR_OTLP_HTTP_PORT`. Адрес принадлежит назначенному узлу; published ports 1–65535 уникальны в его inventory. DNS/SAN и reachability объявляются явно, а не выводятся из имени Docker service. Старый `BIND` остаётся адресом только health/metrics.
+
+Проверка из собственного каталога не запускает Engine или контейнеры:
+
+```sh
+docker compose --env-file .env --file compose.yml --file compose.otlp-network.yml config --quiet
+```
+
+Prepared workflow выбирает оба recipe для роли `otel-collector`, после прежней собственной configuration-init. Runtime/server identity, publisher CA, backend identities, data volume и file-storage остаются прежними; API target ports — 4317 для gRPC и 4318 для HTTP. Источник sender не получает health/query private key. Экспортёры используют существующие явные backend endpoints. Self OTLP `https://localhost:4318` остаётся внутренней связью процесса. Profile не вставляет Collector в прежний маршрут Delivery и не выполняет replay/RESUME. Native reachability/mTLS и delivery подтверждаются общим workflow отдельно от `config`.
+
 ## Локальная проба живости
 
 Нативный образ собирается командой `docker compose build otel-collector` из собственного каталога. `BASE_IMAGE` содержит прежний точный upstream digest, `IMAGE` — собственный образ с одной добавленной статической пробой. Проверяемый по SHA-256 архив находится в собственном `vendor`; соседние исходники и общий runtime не используются. `PUBLIC_HOST` должен совпадать с SAN собственного сервера, но соединение пробы всегда идёт к loopback. Она не следует redirects и не проверяет внешние зависимости; отрицательный readiness сам по себе не повод перезапускать живой процесс.

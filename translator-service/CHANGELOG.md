@@ -1,5 +1,9 @@
 # Изменения translator-service
 
+- 2026-11-20: финальная совместная сверка с существующим Zone pattern явно запрещает redirects только в новых rendered HTTPS scrape configs. Base source configs не изменены; semantic assertion и два повторных host receipts привязаны к финальным bytes, прежние receipts сохранены отдельно. Основание и прогноз5мин — в SPEC.
+
+- 2026-11-20: добавлен opt-in published telemetry sender и private per-instance HTTPS Delivery/scrape configs; `/metrics` читается через существующий operator mTLS endpoint своим query key. Private HTTP, default recipes/values, credentials scopes, image/UID, journal/retry и embedded loopback сохранены. Сверка истории/совместного scope, официальные/internal основания и прогноз до реализации отражены в SPEC; native qualification остаётся отдельным общим gate.
+
 - 2026-11-20: до native допуска red case доказал удаление preexisting `.prepare-PID` при отказе. Cleanup теперь ограничен stage, созданным данным invocation; terminating signal handling и refusal/repeat сохраняют прежние данные. Closed Compose enumeration явно включает новый database profile, остальные assertions не ослаблены. Прогноз targeted source/preservation проверок 15–20 + 20–30 минут в согласованном infrastructure lane; native UID/TLS и полный startup этим не объявлены.
 
 - 2026-11-20: проверка истории отделила прежний успешный TLS queue fixture от canonical database recipe без published TLS. Явный database-network profile и offline server identity task сохраняют image 17.6/digest, data volume, clients и legacy; server key принадлежит postgres UID из того же image. HBA требует TLS/client identity/password. До правки объявлены 45–60 минут source/checks и 30–45 native; основания и границы в database-network-plan-20261120.md. Native/startup/admission ещё не заявлены.

@@ -10,6 +10,7 @@
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
 | Настройки и запуск | `.env.example`, `compose.yml` |
+| Независимый опубликованный OTLP ingress | `compose.otlp-network.yml`, [инструкция](USER_MANUAL.md#независимый-otlp-ingress), `deployment/otlp-network.env.example` |
 | Проверки | `test/` |
 
 Внешний вход и доставка определены [контрактом телеметрии](../../docs/api/telemetry.md).

@@ -14,6 +14,7 @@
 | Runtime | `gateway.py`, `authorization.py`, `api_contract.py` |
 | Операторские утилиты и локальный источник аудита | `prepare.py`, `provision.py`, `renewal.py`, `renewal_schedule.py`, `health.py` |
 | Телеметрия владельца | `telemetry.py`, `observability/` |
+| Независимый sender endpoint и private configs | `compose.telemetry-network.yml`, `deployment/prepare_telemetry_network.py`, `deployment/telemetry-network.env.example` |
 | Проверки и результаты | [актуальная готовность](test/production-readiness-result.md), [test](test/README.md) |
 
 Архитектурное решение находится в [00-INFRA-20261106-0011-controlled-public-egress](../docs/adr/00-INFRA-20261106-0011-controlled-public-egress.md); разрешённые технические исключения из Kafka-only — в [docs/api/grpc.md](../docs/api/grpc.md).

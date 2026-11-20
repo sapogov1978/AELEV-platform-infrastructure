@@ -1,5 +1,7 @@
 # История изменений
 
+- 2026-11-20: после сверки прежних proofs добавлен opt-in published OTLP profile с отдельными bind/4317/4318 inputs; прежние health/metrics bindings, mTLS, image/UID/queue/backend routes и default Compose сохранены. Официальные/internal основания, совместный scope и прогноз 15–20 минут объявлены в SPEC до recipe; actual Compose preservation и native qualification учитываются отдельно.
+
 - 2026-11-14: собственная зависимость Platform UI client обновлена до immutable SDK 1.1.2 (SHA-256 d7fc03eee7df98d906a5390505a15e67c008fbeccd856f73ac0d5c67f62efb86): operator prepare явно задаёт SKI/AKI. Runtime/protocol Python-модули побайтно совместимы с 1.1.1; существующие credentials, UUID/sequence, журналы и восстановительные бюджеты этим handoff не меняются.
 
 - 2026-11-06: локальная библиотека `aelev-observability-tools` обновлена до patch-версии 1.0.1; тестовая PKI теперь содержит SKI/AKI для строгой X.509-проверки, без изменения production PKI и принятого стека.

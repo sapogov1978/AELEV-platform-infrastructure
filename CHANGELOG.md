@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-20 — Independent telemetry network profiles
+
+- Opt-in Gateway/Translator sender profiles publish explicit assigned ports and overlay private per-instance Delivery/scrape configuration; redirects are refused and Translator reuses its existing HTTPS mTLS diagnostic API. Collector publishes only explicit OTLP4317/4318. Default recipes/configs/images/SDK remain unchanged. [History, official/internal grounds, scope, 90–130 minute forecast and host evidence](docs/audit/telemetry-network-20261120.md).
+- Joint four-owner host phase passes239 tests and three subcases, actual byte-identical default model comparisons, strict style/types and preservation/refusal checks. Existing catalog builder preserves all96 Infrastructure and101 consumer role IDs/kinds; only four runtime roles gain recipes/variables. Native DAC/real routes, observations, full platform and admission remain open; no working runtime/credential/queue or OpenAI effects.
+
 ## 2026-11-20 — Canonical Translator SQL network scope
 
 - [Native component qualification PASS](docs/audit/translator-database-network-20261120.md): canonical owner prepare/task/start, disjoint-network verify-full SQL, seven categorized authentication refusals with server-side CN evidence, exact task/runtime replay and restart data preservation. Both SQL identity helpers pass 22 real Linux ownership/preservation/signal cases. Three failed harness observations/cleanup attempts remain recorded; the final 1,384-file archive is byte/UID/GID/mode verified before own-volume deletion. Engine/watch stopped, 161 other containers unchanged, source exact. Full platform, restore/soak, current provider admission, security and releases remain open; no canonical runtime/queues or OpenAI affected.
