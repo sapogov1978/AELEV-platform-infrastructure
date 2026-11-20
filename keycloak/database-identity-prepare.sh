@@ -12,8 +12,17 @@ fail() { echo "Keycloak database identity preparation refused: $1" >&2; exit 64;
 [ -d "$source_root" ] && [ ! -L "$source_root" ] || fail source-directory
 [ -d "$target_root" ] && [ ! -L "$target_root" ] || fail target-volume
 stage="$target_root/.prepare-$$"
+stage_owned=false
 mkdir "$target_root/.prepare-lock" 2>/dev/null || fail concurrent-or-interrupted-prepare
-trap 'rm -rf "$stage"; rmdir "$target_root/.prepare-lock"' EXIT HUP INT TERM
+# Cleanup owns only the stage successfully created by this invocation.
+cleanup() {
+    if [ "$stage_owned" = true ]; then
+        rm -rf "$stage"
+    fi
+    rmdir "$target_root/.prepare-lock"
+}
+trap cleanup EXIT
+trap 'exit 130' HUP INT TERM
 
 for name in server.crt server.key client-ca.crt; do
     source_file="$source_root/$name"
@@ -38,6 +47,7 @@ fi
 
 # Publish the complete set only after all source and empty-target checks.
 mkdir "$stage"
+stage_owned=true
 for name in server.crt server.key client-ca.crt; do
     cp "$source_root/$name" "$stage/$name"
     chown 70:70 "$stage/$name"
@@ -47,6 +57,7 @@ for name in server.crt server.key client-ca.crt; do
     mv "$stage/$name" "$target_root/$name"
 done
 rmdir "$stage"
+stage_owned=false
 chown 70:70 "$target_root"
 chmod 0700 "$target_root"
 echo KEYCLOAK_DATABASE_IDENTITY_PREPARED

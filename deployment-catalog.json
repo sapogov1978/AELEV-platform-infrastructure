@@ -36,6 +36,7 @@
     "translator-service/compose.compute-provider.mtls.yml": "0523764d87a2d145091bcfb4549a8d9fbff48bb287f394c0ca37c4f0dd125d0d",
     "translator-service/compose.compute-worker.mtls.yml": "ddaf932617f899cc0ab8a7822f7d28319de2018a14d22b590a370e448ed1e8da",
     "translator-service/compose.compute.yml": "0498391d73700184d4098afdb75aa63b1d92187799dc50e36533971ff0a21900",
+    "translator-service/compose.database-network.yml": "225edaf85553e6da78fc27c05fb8f84ba6f224f1e614759f86f903d84af7fb55",
     "translator-service/compose.local.yml": "c88f19b9a710acdcc7ea6608338b0c1b7c73b8cc0c2d221fc5036e857ebdb5aa",
     "translator-service/compose.remote.yml": "f6d0be4fa7a970ef0da73084328e039e55062d8b393a4c2d1b8de1672df5d06d",
     "translator-service/compose.yml": "b5900f7d54dcb2ee6378cb933d212ffbab310143082f315b2cabd7e50aca2f27"
@@ -2454,14 +2455,17 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "translator-service/compose.database-network.yml",
         "translator-service/compose.local.yml",
         "translator-service/compose.remote.yml"
       ],
       "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_BIND_ADDRESS",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_CPUS",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_IMAGE",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_MEMORY_LIMIT",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SECRET_ROOT",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_USER",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
@@ -2470,6 +2474,25 @@
       ],
       "compose_profiles": [
         "bundled-database"
+      ]
+    },
+    {
+      "id": "translator-database-identity-preparer",
+      "owner": "translator-service",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "translator-service/compose.database-network.yml",
+        "translator-service/compose.remote.yml"
+      ],
+      "configuration_variables": [
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_IMAGE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SERVER_TLS_ROOT"
+      ],
+      "compose_profiles": [
+        "provision"
       ]
     },
     {

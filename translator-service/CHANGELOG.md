@@ -1,5 +1,9 @@
 # Изменения translator-service
 
+- 2026-11-20: до native допуска red case доказал удаление preexisting `.prepare-PID` при отказе. Cleanup теперь ограничен stage, созданным данным invocation; terminating signal handling и refusal/repeat сохраняют прежние данные. Closed Compose enumeration явно включает новый database profile, остальные assertions не ослаблены. Прогноз targeted source/preservation проверок 15–20 + 20–30 минут в согласованном infrastructure lane; native UID/TLS и полный startup этим не объявлены.
+
+- 2026-11-20: проверка истории отделила прежний успешный TLS queue fixture от canonical database recipe без published TLS. Явный database-network profile и offline server identity task сохраняют image 17.6/digest, data volume, clients и legacy; server key принадлежит postgres UID из того же image. HBA требует TLS/client identity/password. До правки объявлены 45–60 минут source/checks и 30–45 native; основания и границы в database-network-plan-20261120.md. Native/startup/admission ещё не заявлены.
+
 - 2026-11-17: добавлен изолированный native Kafka/SQL/HTTPS queue driver с отдельными test identities, runtime ACL, crash после broker ACK и проверкой byte-identical replay без recompute. Финальные normal fixture и priority live получили PASS на одной оснастке; результат и ограничения закреплены в `../docs/audit/translator-network-queue-20261117.md`. Прогноз — 60–90 минут и ещё 20–30 на live; corrective scopes сохранены. Рабочий runtime, Process Control и canonical recipes не меняются.
 
 - 2026-11-14: в самостоятельных network templates закреплены квалифицированный main worker 03191fa и выпущенный provider 9d1929b. Новые слои main worker проверены повторно; результаты кандидата не перенесены автоматически. Полный installation workflow, canonical queue/quality и production site admission остаются отдельными gates.

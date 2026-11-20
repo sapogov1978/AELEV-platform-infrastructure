@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-20 — Canonical Translator SQL network scope
+
+- Exact-current host green: 47 tests (11 Translator preservation/signal, 11 Keycloak, 20 legacy Translator configuration, five Keycloak network), shell syntax/types/style and actual Compose before/after comparison pass. Ten source/test hashes match retained evidence; original failures remain. Catalog adds only `translator-database-identity-preparer` (96 total / 57 runtime unchanged). Native UID/TLS/replay and image/release admission remain pending; private host adapters do not prove Linux DAC.
+
+- Confirmed daily review authorizes owner-local completion plus a specific staging ownership/signal correction in Translator and Keycloak identity preparers. Only current-invocation temporary state may be removed; preexisting/foreign/partial contents require preserved refusal. Forecast remains 75–110 minutes including host/native checks; stack, endpoints, runtime storage and existing recovery budgets are unchanged. Shared catalog/graph/git/Docker are coordinated separately.
+
+- History confirms Translator SQL/TLS in the qualified queue fixture, while the canonical bundled database still lacks a routed TLS profile. [Pre-edit scope](translator-service/database-network-plan-20261120.md) reuses the existing Keycloak identity-delivery pattern and PostgreSQL built-in TLS/HBA with unchanged 17.6 image digest, storage and clients. Forecast 45–60 minutes source/checks plus 30–45 native; no runtime/startup/admission claim.
+
 ## 2026-11-20 — Explicit MinIO image receipt handoff
 
 - [Model comparison PASS](minio/test/prepared-image-result-20261120.json): exact ten image-field changes, all other effective fields equal, default recipe byte-identical and missing image input refused. Seven existing configuration tests pass; catalog remains 95 roles (57 runtime, one node, 37 operations). This is configuration evidence without runtime/image/release admission.

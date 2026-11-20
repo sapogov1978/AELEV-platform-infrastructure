@@ -277,6 +277,7 @@ class TranslatorConfigurationTest(unittest.TestCase):
                 "compose.compute.yml",
                 "compose.compute-provider.mtls.yml",
                 "compose.compute-worker.mtls.yml",
+                "compose.database-network.yml",
             },
         )
         for name in (
@@ -286,6 +287,9 @@ class TranslatorConfigurationTest(unittest.TestCase):
             "compose.compute.yml",
             "compose.compute-provider.mtls.yml",
             "compose.compute-worker.mtls.yml",
+            "compose.database-network.yml",
+            "database-identity-prepare.sh",
+            "database-pg_hba.conf",
             ".env.example",
             "README.md",
             "Dockerfile",

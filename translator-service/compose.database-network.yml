@@ -1,0 +1,63 @@
+# Select with compose.remote.yml on this SQL role's independently assigned node.
+services:
+  translator-database-identity-preparer:
+    image: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_IMAGE:?set pinned owner SQL image}
+    labels:
+      io.aelev.deployment.recipe-inputs: '["compose.remote.yml"]'
+    profiles: [provision]
+    user: "0:0"
+    entrypoint: [/bin/sh, /opt/translator/database-identity-prepare.sh]
+    network_mode: none
+    read_only: true
+    restart: "no"
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    volumes:
+      - type: bind
+        source: ./database-identity-prepare.sh
+        target: /opt/translator/database-identity-prepare.sh
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_SERVER_TLS_ROOT:?set only this server's bootstrap leaf/key/client CA}
+        target: /run/secrets/translator-database-server
+        read_only: true
+        bind: {create_host_path: false}
+      - translator-database-tls:/var/lib/translator-database-tls
+
+  translator-database:
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_min_protocol_version=TLSv1.2
+      - -c
+      - ssl_cert_file=/var/lib/translator-database-tls/server.crt
+      - -c
+      - ssl_key_file=/var/lib/translator-database-tls/server.key
+      - -c
+      - ssl_ca_file=/var/lib/translator-database-tls/client-ca.crt
+      - -c
+      - hba_file=/etc/translator-database/pg_hba.conf
+    ports:
+      - "${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_BIND_ADDRESS:?set SQL node listener bind}:${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_PORT:?set published SQL port}:5432"
+    volumes:
+      - translator-database-tls:/var/lib/translator-database-tls:ro
+      - type: bind
+        source: ./database-pg_hba.conf
+        target: /etc/translator-database/pg_hba.conf
+        read_only: true
+        bind: {create_host_path: false}
+
+networks:
+  translator-data:
+    name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_COMPOSE_PROJECT:?set stable SQL instance project}_translator-database
+    internal: false
+
+volumes:
+  translator-database-tls:
+    name: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_TLS_VOLUME:?set unique assigned-node TLS volume}
+    external: ${AELEV_INFRASTRUCTURE_TRANSLATOR_DATABASE_TLS_EXTERNAL:?false for initial task; true after its successful receipt}
