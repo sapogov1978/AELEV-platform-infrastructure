@@ -2,6 +2,8 @@
 
 ## 2026-11-20 — Canonical Translator SQL network scope
 
+- [Native component qualification PASS](docs/audit/translator-database-network-20261120.md): canonical owner prepare/task/start, disjoint-network verify-full SQL, seven categorized authentication refusals with server-side CN evidence, exact task/runtime replay and restart data preservation. Both SQL identity helpers pass 22 real Linux ownership/preservation/signal cases. Three failed harness observations/cleanup attempts remain recorded; the final 1,384-file archive is byte/UID/GID/mode verified before own-volume deletion. Engine/watch stopped, 161 other containers unchanged, source exact. Full platform, restore/soak, current provider admission, security and releases remain open; no canonical runtime/queues or OpenAI affected.
+
 - Exact-current host green: 47 tests (11 Translator preservation/signal, 11 Keycloak, 20 legacy Translator configuration, five Keycloak network), shell syntax/types/style and actual Compose before/after comparison pass. Ten source/test hashes match retained evidence; original failures remain. Catalog adds only `translator-database-identity-preparer` (96 total / 57 runtime unchanged). Native UID/TLS/replay and image/release admission remain pending; private host adapters do not prove Linux DAC.
 
 - Confirmed daily review authorizes owner-local completion plus a specific staging ownership/signal correction in Translator and Keycloak identity preparers. Only current-invocation temporary state may be removed; preexisting/foreign/partial contents require preserved refusal. Forecast remains 75–110 minutes including host/native checks; stack, endpoints, runtime storage and existing recovery budgets are unchanged. Shared catalog/graph/git/Docker are coordinated separately.

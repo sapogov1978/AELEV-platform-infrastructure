@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "status": "NATIVE_TRANSLATOR_DATABASE_COMPONENT_PASS",
+  "recorded_date": "2026-11-20",
+  "scope": "Canonical independently placed Translator SQL and both SQL identity helper preservation",
+  "tested_infrastructure_commit": "58baa8b42969effb3e8110e845f0e8e8a3ee8f6a",
+  "tested_research_commit": "92ea71856f24c77bad26220dce35fbb7ebc78deb",
+  "native_interpreter": "Python 3.13.7 Linux arm64",
+  "host_interpreter": "3.13.16",
+  "source_file_sha256": {
+    "translator-service/database-identity-prepare.sh": "461cde954d1cd90bbd7ca00aa7db88ba4d347652c0268c55da4f64b6adbe49ba",
+    "translator-service/database-pg_hba.conf": "63a5ae4772de9add66bfff9543d4be0da65da7327580232f1716a939d82aa611",
+    "translator-service/compose.database-network.yml": "225edaf85553e6da78fc27c05fb8f84ba6f224f1e614759f86f903d84af7fb55",
+    "translator-service/compose.remote.yml": "f6d0be4fa7a970ef0da73084328e039e55062d8b393a4c2d1b8de1672df5d06d",
+    "translator-service/test/test_database_identity.py": "dcbad20acd5ef41d3a826681d9925feccefb24e01fb75a609f3cdab306f49176",
+    "translator-service/test/test_configuration.py": "0aec9283c24fb1249584a3ede4ff8f877b66f0d46daf84e00a9f260a67188c81",
+    "keycloak/database-identity-prepare.sh": "363a1aab04822371a0f643d8fe82081776f6b90d30dfc9a82cc62b64b3d8c947",
+    "keycloak/test/test_database_identity.py": "9a7fde19141de22c1feea2472a8f9dc97d6dff81da0f033a7d3799a7517e35d4",
+    "keycloak/compose.network.yml": "28c709c84ed1af3c0b7117e6130b7c206f7c9bc58fe55501a35da80350cbb5bd",
+    "keycloak/test/test_network_configuration.py": "ffdf640f83105e176a532f680bfe415a9b23974622a3a6d4a015c8fbbbe3f5e8"
+  },
+  "source_manifest_sha256": {
+    "infrastructure": "2497a801c007c69247f216c41210b897ba831fc39dc077678d505009aa779bc8",
+    "research-platform": "d4a37afa448d125a3857cd2e314c494d6408afbe4e4a4a900dffdf2a1e62fd59"
+  },
+  "harness_sha256": {
+    "native_helper_cases.py": "68367b6f897d2891ee1da46318cf06149e636805fff1865b34b4781d5fd8ae9a",
+    "qualify_native_database.py": "79fd50c744e30875521cbf4a90f977186b5986dc5efaabbb8bdc53f55c8c7b1d"
+  },
+  "sql_image": "postgres@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+  "client_image": "sha256:b4dc07c18f3f4103e94578263d28e8238bd1f452f6c91e1ae306dc11781fee7f",
+  "actual_sql_uid": 70,
+  "actual_sql_gid": 70,
+  "host_checks": [
+    {
+      "name": "translator-identity",
+      "exit_code": 0,
+      "expected_test_count": 11
+    },
+    {
+      "name": "keycloak-identity",
+      "exit_code": 0,
+      "expected_test_count": 11
+    },
+    {
+      "name": "translator-configuration",
+      "exit_code": 0,
+      "expected_test_count": 20
+    },
+    {
+      "name": "keycloak-network",
+      "exit_code": 0,
+      "expected_test_count": 5
+    },
+    {
+      "name": "shell-syntax",
+      "exit_code": 0,
+      "expected_test_count": null
+    }
+  ],
+  "authentication_refusals": [
+    "wrong-name",
+    "wrong-ca",
+    "no-client",
+    "foreign-client",
+    "foreign-user",
+    "wrong-password",
+    "plaintext"
+  ],
+  "foreign_user_certificate_rejection": {
+    "expected_user": "translator_native",
+    "presented_certificate_cn": "different-user",
+    "server_container_id": "1b020bf4454822533283ac4ff72759fe4113e0bcb10a3bfd9f8266276268a239",
+    "server_log_sha256": "bc04d5402c941f8dcb85438a3a8fc7d344c237b77ba114e7af5d3fae67d52eed",
+    "verified": true
+  },
+  "native_helper_cases": [
+    {
+      "case": "fresh_and_repeat",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "native_uid_and_bootstrap_isolation",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "preexisting-stage",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "invalid-source",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "partial",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "foreign",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "stale-lock",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "signal_HUP",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "signal_INT",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "signal_TERM",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "signal_KILL",
+      "owner": "translator-service",
+      "passed": true
+    },
+    {
+      "case": "fresh_and_repeat",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "native_uid_and_bootstrap_isolation",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "preexisting-stage",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "invalid-source",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "partial",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "foreign",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "stale-lock",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "signal_HUP",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "signal_INT",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "signal_TERM",
+      "owner": "keycloak",
+      "passed": true
+    },
+    {
+      "case": "signal_KILL",
+      "owner": "keycloak",
+      "passed": true
+    }
+  ],
+  "original_task_operation": "feef8bc3-af72-514e-b671-e694ef598ca2",
+  "original_task_receipt_sha256": "59a11fd0b0b244f330194348d21c627c8a6b28c76c9a34c50459f7eda97dad07",
+  "prior_target_receipts_preserved": 11,
+  "new_read_only_replay_receipts": 5,
+  "task_replay_preserved": true,
+  "runtime_replay_incarnation_preserved": true,
+  "restart_data_preserved": true,
+  "sql_dump_recorded": true,
+  "backup_restore_verified": false,
+  "native_uid_and_foreign_uid_checks": true,
+  "desktop_shared_bind_used_for_private_inputs": false,
+  "signal_fault_injection": "Readonly cp delay gate; actual pinned-image UID, stat, permissions and shell",
+  "native_baseline_preserved": true,
+  "source_files_unchanged": true,
+  "private_archive": {
+    "status": "PRIVATE_ARCHIVE_BYTES_MODES_VERIFIED",
+    "qualification_status": "NATIVE_TRANSLATOR_DATABASE_COMPONENT_PASS",
+    "files": 1384,
+    "archive_sha256": "11be056830cb3a73ede110078906ca21d8e23c9011be1707393889077d321b09",
+    "archive_bytes": 32673792,
+    "volume": "aelev-translator-sql-3b924c4141-controller",
+    "volume_removed": true,
+    "original_baseline_preserved": true,
+    "separate_post_cleanup_receipt": null
+  },
+  "outer_preservation": {
+    "status": "PASS",
+    "other_containers_unchanged": 161,
+    "before_count": 162,
+    "after_count": 162,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "owned_engine_stopped": true,
+    "watch_stop_issued": true,
+    "private_registry_credential_copy_exists": false,
+    "minimum_free_gib": 38.88088607788086,
+    "disk_floor_gib": 15,
+    "foreign_resources_mutated_by_this_task": false
+  },
+  "retained_attempts": [
+    {
+      "attempt": 1,
+      "status": "BLOCKED",
+      "reason": "Client generalized CN-mismatch denial as password failure; require exact server-log evidence",
+      "archive": {
+        "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/attempt1-private.json",
+        "sha256": "7f9e25eeff4139e22e1b5d97297f492c20285aeac56206a1868a1d54cba55c32"
+      }
+    },
+    {
+      "attempt": 2,
+      "status": "BLOCKED",
+      "reason": "Harness read receipt fields from public projection instead of persisted SDK journal",
+      "archive": {
+        "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/attempt2-private.json",
+        "sha256": "1c64fd6b23dfb64b03d54c5741774389ac720dacf21329c2140f37b693d0fc8a"
+      }
+    },
+    {
+      "attempt": 3,
+      "status": "BLOCKED",
+      "reason": "All functional checks passed; detached signal fixtures retained eight anonymous volumes",
+      "archive": {
+        "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/attempt3-private.json",
+        "sha256": "1aab06cdf7f19b5c9b6d05141c5b2765a436fa357145e75dc3a35d10750904c9"
+      },
+      "separate_owned_cleanup": {
+        "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/attempt3-anonymous-volume-cleanup.json",
+        "sha256": "1aeb122f325e9f78f0ccebaf810067013babd31e4a64801def9377d010c1ff70"
+      }
+    }
+  ],
+  "effects": {
+    "canonical_runtime_changed": false,
+    "canonical_data_or_queues_changed": false,
+    "provider_credentials_used": false,
+    "inference_requested": false,
+    "queue_resume_issued": false,
+    "private_controller_volume_removed": true,
+    "owned_engine_stopped": true
+  },
+  "boundaries": {
+    "root_release_preflight_exercised": false,
+    "image_admission_verified": false,
+    "full_platform_e2e_verified": false,
+    "owner_quality_admission_verified": false,
+    "physical_distribution_verified": false,
+    "production_ready": false
+  },
+  "official_sources": [
+    "https://www.postgresql.org/docs/17/ssl-tcp.html",
+    "https://www.postgresql.org/docs/17/auth-pg-hba-conf.html",
+    "https://www.postgresql.org/docs/17/libpq-ssl.html",
+    "https://docs.docker.com/engine/storage/volumes/",
+    "https://docs.docker.com/reference/cli/docker/container/rm/",
+    "https://pubs.opengroup.org/onlinepubs/9799919799/utilities/trap.html"
+  ],
+  "evidence": [
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/host-green.json",
+      "sha256": "34ab660b9fcefe541b39e906bcf9e6df234c4113b5c02250afc6e74465bfefcb"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/attempt4-private.result.json",
+      "sha256": "fb720be763c8dc69c1f03b03c17f1bb8fbfa26cf05d287e9782de1c052a502b4"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/attempt4-private.json",
+      "sha256": "8311f374f57d111ebecacb87a4f2822d1428da4c87bcd23fc3bc657c9f0c7639"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/outer-preservation.json",
+      "sha256": "974bae3a78c43b6f1f6ed6ab517a81d5f3983736db66118b485420d0ab76ee61"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/model-result.json",
+      "sha256": "2a73b2ab19e5c24b8e2f5f3b088757c9f23500bed6918ecf102ef09a0ea2751c"
+    },
+    {
+      "path": "/Users/ksap/.local/share/aelev/evidence/infrastructure-acceptance-20261118-ibjg5ysk/translator-database-network-20261120/source-verification.json",
+      "sha256": "92eb5a216c4eb3d485d7636083cf0422fb5151d75be261392d922b48c3f91160"
+    }
+  ]
+}
