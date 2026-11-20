@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-20 — Explicit MinIO image receipt handoff
+
+- [Model comparison PASS](minio/test/prepared-image-result-20261120.json): exact ten image-field changes, all other effective fields equal, default recipe byte-identical and missing image input refused. Seven existing configuration tests pass; catalog remains 95 roles (57 runtime, one node, 37 operations). This is configuration evidence without runtime/image/release admission.
+
+- Full runtime model review found that MinIO's literal server tag cannot equal an immutable owner-build output. Opt-in image-only `minio/compose.owner-image.yml` binds eight servers and two administrative tasks while preserving default recipe/tag, stack, topology and role IDs. History/owner contracts checked first; forecast 25–35 minutes for joint compatibility/model checks. Official/internal grounds in [MinIO SPEC](minio/SPEC.md); no runtime or release change.
+
 ## 2026-11-19 — Exact SAST review after native workflow
 
 - Both canonical and retained pinned scans PASS: 188 files, zero High, 28 reviewed Medium. Six exact-finding mutations rejected; 15 Keycloak recovery tests and six consumer audit tests passed. Raw report/baseline hashes are retained in the linked JSON; historical failure reports and all runtime bytes preserved.

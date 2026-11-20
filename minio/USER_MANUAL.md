@@ -1,5 +1,7 @@
 # MinIO — руководство пользователя
 
+Для prepared owner workflow добавьте после `compose.yml` файл `compose.owner-image.yml` и явно задайте `AELEV_INFRASTRUCTURE_MINIO_IMAGE` точным native image ID из своей build receipt либо допущенным digest. Overlay меняет только image восьми servers и двух административных задач; issuer/credentials/data не переносит и контейнеры не запускает. Стандартный профиль без overlay сохраняет прежний tag/env. [SPEC](SPEC.md) и [owner-compose](../docs/api/owner-compose.md) определяют связывание и проверки.
+
 ## Структура поставки
 
 ```text

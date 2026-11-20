@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "IMAGE_OVERLAY_MODEL_COMPATIBILITY_PASS",
+  "date": "2026-11-20",
+  "source_parent": "234418fa96062122a8e28209125a7240a5932906",
+  "checks": {
+    "base_recipe_byte_unchanged": true,
+    "missing_explicit_image_refused": true,
+    "changed_fields": [
+      "image"
+    ],
+    "changed_roles": [
+      "bucket-provisioner",
+      "minio-site-a-1",
+      "minio-site-a-2",
+      "minio-site-a-3",
+      "minio-site-a-4",
+      "minio-site-b-1",
+      "minio-site-b-2",
+      "minio-site-b-3",
+      "minio-site-b-4",
+      "site-replication-applier"
+    ],
+    "all_other_model_fields_unchanged": true,
+    "existing_configuration_tests_passed": 7
+  },
+  "evidence_sha256": "47ed88bc08ef8f69115cee6818ed8207d25b74788d4f40f902034883bf2df17a",
+  "runtime_started": false,
+  "image_admission_verified": false,
+  "release_published": false
+}

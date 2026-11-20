@@ -1,0 +1,22 @@
+# Explicit image-only handoff from owner-build; legacy recipe/tag stays unchanged.
+services:
+  minio-site-a-1:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-a-2:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-a-3:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-a-4:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-b-1:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-b-2:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-b-3:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  minio-site-b-4:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  bucket-provisioner:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
+  site-replication-applier:
+    image: ${AELEV_INFRASTRUCTURE_MINIO_IMAGE:?set exact owner-build native image ID or admitted digest}
