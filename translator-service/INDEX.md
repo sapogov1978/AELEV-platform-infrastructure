@@ -20,6 +20,7 @@
 | Локальная и удалённая управляющие топологии | `compose.local.yml`, `compose.remote.yml`, `compose.yml` |
 | Контракт внешнего провайдера | [docs/api/translation.md](../docs/api/translation.md), [SPEC.md](SPEC.md); реализация остаётся непрозрачной |
 | Compute-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml` для совместимости; независимые `compose.compute-provider.mtls.yml` / `compose.compute-worker.mtls.yml` выбираются через `--role` и не требуют общего socket-тома |
+| Явное имя provider без внешнего DNS | Опциональный `compose.compute-client.hosts.yml` только для worker, [условия](USER_MANUAL.md#явное-сопоставление-имени-provider), `test/test_compute_hosts.py` |
 | Реализация, модель и версия провайдера | В этом репозитории отсутствуют; принадлежат выбранному поставщику |
 | Проверки совместимости провайдера | [актуальная проверка готовности](test/production-readiness-result.md), `test/` |
 | Сквозной сетевой queue/replay proof | [network queue qualification](test/network-queue-qualification.md), `test/network_queue_lifecycle.py` |

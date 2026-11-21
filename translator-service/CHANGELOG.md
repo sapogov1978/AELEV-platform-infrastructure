@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-21: добавлен опциональный `compose.compute-client.hosts.yml` только для worker: явное DNS-имя HTTPS provider сопоставляется с выделенным IPv4/IPv6 его узла. Отсутствие файла сохраняет прежний полный model без новых обязательных inputs; profile выбирается последним. CA/hostname/exact URI, production SVID, provider black box и независимое размещение сохраняются. История, scope, официальные/internal основания и прогноз45–60мин отражены в SPEC; host render не заявляет native readiness или admission.
+
 - 2026-11-21: подготовлен opt-in publisher-network profile для published operator mTLS GET `/healthz` с явными URL/SNI и собственными API query certificate/key/CA издателя. Прежняя HTTP ветка сохраняется только без нового profile; partial/invalid network inputs не выбирают legacy. SQL/Kafka/presence semantics, default recipes/env/templates и очередь сохраняются; source scope, официальные/internal основания и прогноз55–80мин записаны до реализации в SPEC. Новые source/image/native gates не наследуют прежний queue proof.
 
 - 2026-11-20: финальная совместная сверка с существующим Zone pattern явно запрещает redirects только в новых rendered HTTPS scrape configs. Base source configs не изменены; semantic assertion и два повторных host receipts привязаны к финальным bytes, прежние receipts сохранены отдельно. Основание и прогноз5мин — в SPEC.

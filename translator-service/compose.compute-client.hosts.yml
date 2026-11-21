@@ -1,0 +1,5 @@
+# Select last, only for a worker with an explicitly allocated provider node IP.
+services:
+  translator-worker:
+    extra_hosts:
+      - "${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_DNS_NAME:?set the HTTPS provider hostname}=${AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_NODE_ADDRESS:?set the assigned provider node IP}"

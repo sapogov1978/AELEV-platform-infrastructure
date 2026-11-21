@@ -30,6 +30,18 @@ docker compose --env-file .env --file compose.remote.yml --file compose.telemetr
 
 Независимое размещение provider и worker определяется [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md) и [сетевым руководством](compute-runtime/README.md#независимое-сетевое-размещение). Worker использует явные `AELEV_TRANSLATOR_PROVIDER_TRANSPORT=mtls`, `AELEV_TRANSLATOR_PROVIDER_URL=https://...` и `AELEV_TRANSLATOR_PROVIDER_TLS_ROOT`; в client identity policy `environment` совпадает с `AELEV_ENVIRONMENT`, а production допускает только `spire-file-v1`. TLS/config/transport failures оставляют job в прежнем retry; настройка сети не запускает обработку, не меняет очередь и не даёт `RESUME`.
 
+## Явное сопоставление имени provider
+
+При отсутствии внешнего DNS выберите `compose.compute-worker.mtls.yml`, затем последним `compose.compute-client.hosts.yml` в собственном списке recipes worker. В том же закрытом env задайте `AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_URL` с HTTPS FQDN и опубликованным портом, `AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_DNS_NAME` с точно тем же FQDN и `AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_NODE_ADDRESS` с назначенным IP узла provider. Допускаются IPv4 и IPv6; это адрес provider node, который может отличаться от worker node. FQDN должен присутствовать в запланированном DNS SAN удостоверения provider. Установщик обязан сверить эти значения с выделением endpoints до запуска. `localhost`, wildcard, multicast, неопределённый адрес и `host-gateway` не используются вместо выделенного node IP.
+
+Предварительный render из каталога владельца читает только явно выбранный env:
+
+```sh
+docker compose --env-file /operator/worker.env --file compose.compute-worker.mtls.yml --file compose.compute-client.hosts.yml config --quiet
+```
+
+Эта команда не запускает контейнеры; полный установщик использует тот же явный порядок файлов и прежние owner procedures. Standalone `station.py --role worker` сам не включает новый файл. Если внешний DNS уже работает, не выбирайте дополнительный profile и новые mapping inputs не требуются. Профиль добавляет только запись в `/etc/hosts` worker; он не меняет URL, CA, SVID, hostname/exact-URI checks, сеть, образ или lifecycle provider. Успех render не подтверждает текущую DNS/TLS-доступность, свежесть SVID, admission или продвижение очереди. Нужны отдельные native проверки. [Нормативные условия и основания](SPEC.md#явное-сопоставление-имени-provider).
+
 ## Отдельный образ издателя
 
 `AELEV_INFRASTRUCTURE_TRANSLATOR_UI_IMAGE` выбирает собственную цель `status-runtime`: артефакты и runtime reference provider в неё не входят. Закреплённый `aelev-platform-ui-client==1.1.2` проверяет живость командой `python -S /opt/aelev/publisher-health.py AELEV_INFRASTRUCTURE_TRANSLATOR_`, читая только подтверждённый heartbeat собственного журнала без загрузки приложения и сетевых запросов. Обновляйте только `translator-service-status-publisher`, сохраняя его том; перед этим согласуйте env и отдельные файловые identities с текущим Compose, не копируйте секреты другого владельца и не ослабляйте TLS. Такая проверка не подтверждает доступность провайдера и не устанавливает автовосстановление по `unhealthy`.

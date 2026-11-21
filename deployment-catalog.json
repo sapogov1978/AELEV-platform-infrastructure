@@ -41,6 +41,7 @@
     "spire/compose.group.yml": "ec178dbb9a283578992d90c419011c3807aef74101307d368c173f5ecd5b0611",
     "spire/compose.observation.yml": "47b6606b8412e3c7dc3e186bfaf1e8f31df53e9876b88fa153f4e3e2982794d5",
     "spire/compose.yml": "dd2933b2ad45d68d377c8b45fcc74008643511c0908559e3c1b0cf0a8ab502a5",
+    "translator-service/compose.compute-client.hosts.yml": "30cf085b21d5d67042050b8648f3d9f9af3b424ec3a4576c3a362000b5c788f0",
     "translator-service/compose.compute-provider.mtls.yml": "0523764d87a2d145091bcfb4549a8d9fbff48bb287f394c0ca37c4f0dd125d0d",
     "translator-service/compose.compute-worker.mtls.yml": "ddaf932617f899cc0ab8a7822f7d28319de2018a14d22b590a370e448ed1e8da",
     "translator-service/compose.compute.yml": "0498391d73700184d4098afdb75aa63b1d92187799dc50e36533971ff0a21900",
@@ -3016,6 +3017,7 @@
       "local_state": false,
       "credentials_required": true,
       "recipes": [
+        "translator-service/compose.compute-client.hosts.yml",
         "translator-service/compose.compute-worker.mtls.yml",
         "translator-service/compose.compute.yml"
       ],
@@ -3034,6 +3036,8 @@
         "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_DNS_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_NODE_ADDRESS",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_PROVIDER_URL",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_RESTART_POLICY",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_ROLE_CPUS",

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Explicit compute-client hostname mapping
+
+- Owner approved an optional hostname-to-assigned-node-IP profile for the Translator worker. Required DNS/IP values are explicit, support independently placed IPv4/IPv6 peers and preserve HTTPS/SPIFFE verification. The profile is selected last; genuine DNS deployments may omit it. [Official Compose extra_hosts contract](https://docs.docker.com/reference/compose-file/container-spec/#extra_hosts), [owner scope and 45–60 minute three-owner forecast](translator-service/SPEC.md); coordinated catalog/graph/source integration adds 20–35 minutes.
+- Eight daemon-free Compose cases prove mapping-only changes and byte-identical defaults. A separate private qualification input producer passes ten test methods and 34 negative parameter cases for URL/SAN/node-alias/address/port bindings; its outputs are desired inputs, not issued identities. The catalog changes only the existing Translator worker recipe and two variables, with 97 roles and 57 runtime roles retained. Native mapping, current SVIDs, complete owner inputs and final source/image admission remain separate gates.
+
 ## 2026-11-21 — Routed MinIO listeners preserve bootstrap equality
 
 - The current native eight-process qualification passed source/image, preparation, startup and independent-network gates, then failed readiness: the pinned MinIO bootstrap verifier rejects different `MINIO_ADDRESS` environment values within one site. The routed profile now passes each listener through the supported CLI `--address` flag. The ordered endpoint layout stays identical across each site's four processes. [Pinned bootstrap algorithm](https://github.com/minio/minio/blob/0d7408fc9969caf07de6a8c3a84f9fbb10a6739e/cmd/bootstrap-peer-server.go#L50-L134) and [owner scope, official/internal grounds and 35–50 minute forecast](minio/SPEC.md); catalog/graph integration adds 10–15 minutes and native qualification remains separate.
