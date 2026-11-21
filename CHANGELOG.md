@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Recovery test remains parseable by the pinned scanner
+
+- History confirms the required-keyword-only lambda in the recovery-host regression test predates the current owner integration. CPython 3.13 accepts it, but Semgrep 1.136.0 reports a parser warning and refuses the strict scan. Replace only that test callback with a local function preserving its signature, closure mutation and return value, as defined by the [Python language reference](https://docs.python.org/3.13/reference/expressions.html#lambdas). The [existing recovery regression](test_infrastructure/test_recovery_host.py) remains the behavior oracle; scanner version, rules, exclusions and runtime files are unchanged. Forecast: 10–15 minutes for the correction and narrow checks; 15–25 minutes for the new immutable source/build-plan binding required by the [owner-build contract](docs/api/owner-build.md).
+- Ten existing mock-only recovery-host tests pass, including the affected regression. The pinned Semgrep strict one-file and full 237-path scans pass with no findings or analyzer errors; the four newly added MinIO/compute-host test files also pass explicit strict scans. Black/Ruff/syntax checks pass; one preexisting dictionary layout in the same test file is normalized with an equal-AST check. The original partial scan, strict parser refusal and default-ignore coverage gap are retained separately. Final immutable source/image/release verification remains separate; runtime files and policies are unchanged.
+
 ## 2026-11-21 — Explicit compute-client hostname mapping
 
 - Owner approved an optional hostname-to-assigned-node-IP profile for the Translator worker. Required DNS/IP values are explicit, support independently placed IPv4/IPv6 peers and preserve HTTPS/SPIFFE verification. The profile is selected last; genuine DNS deployments may omit it. [Official Compose extra_hosts contract](https://docs.docker.com/reference/compose-file/container-spec/#extra_hosts), [owner scope and 45–60 minute three-owner forecast](translator-service/SPEC.md); coordinated catalog/graph/source integration adds 20–35 minutes.

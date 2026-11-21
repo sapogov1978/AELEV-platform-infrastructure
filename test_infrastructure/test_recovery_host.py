@@ -159,9 +159,7 @@ def fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
                 {
                     "schema_version": 1,
                     "daemon_id": "daemon",
-                    "targets": {
-                        "worker": {"attempts": 2, "target_digest": "d" * 64}
-                    },
+                    "targets": {"worker": {"attempts": 2, "target_digest": "d" * 64}},
                 }
             ).encode()
         raise AssertionError(arguments)
@@ -313,9 +311,11 @@ def test_failed_relocation_repair_preserves_block_and_restores_timer(
         lambda _: ("gui/501/exact", timer_path, timer_digest),
     )
     monkeypatch.setattr(host, "loaded", lambda _: loaded[0])
-    monkeypatch.setattr(
-        host, "switch", lambda _d, _p, *, enabled: loaded.__setitem__(0, enabled)
-    )
+
+    def switch(_d: Any, _p: Any, *, enabled: bool) -> None:
+        loaded[0] = enabled
+
+    monkeypatch.setattr(host, "switch", switch)
     monkeypatch.setattr(
         host,
         "inspect_container",
