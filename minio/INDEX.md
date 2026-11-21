@@ -10,6 +10,7 @@
 | Текущие задачи и допуск площадки | [TASKS.md](TASKS.md) |
 | История изменений | [CHANGELOG.md](CHANGELOG.md) |
 | Настройки и запуск | `.env.example`, `compose.yml` |
+| Независимые маршруты экземпляров | `compose.routed.yml`, `.env.routed.example`, `prepare-routed.py`, [руководство](USER_MANUAL.md#независимое-размещение-с-явными-маршрутами) |
 | Проверки и результаты | `test/` |
 
 Техническая идентичность и многоплощадочная топология определены [00-INFRA-20261106-0006-technical-storage-boundaries](../docs/adr/00-INFRA-20261106-0006-technical-storage-boundaries.md).

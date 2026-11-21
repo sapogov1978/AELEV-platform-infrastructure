@@ -206,7 +206,35 @@ python3 test/test_configuration.py
 
 ## Развёртывание на географически разнесённых серверах
 
-Один и тот же `compose.yml`, `.env` и комплект доверия доставляются на восемь серверов. На каждом сервере запускается только принадлежащий ему процесс, например `docker compose --env-file .env up -d minio-site-a-1`. Четыре сервера площадки A используют `minio-site-a-1`…`minio-site-a-4`, четыре сервера площадки B — `minio-site-b-1`…`minio-site-b-4`. Имена из `*_NODE_*_ENDPOINT` должны разрешаться между узлами соответствующей площадки, а каждый `*_SITE_*_ENDPOINT` должен указывать на балансировщик своей площадки, а не на отдельный узел.
+Для независимого размещения применяется явный routed профиль из следующего раздела. Одни public recipes доставляются на восемь назначенных узлов, а каждая инкарнация получает собственный полный env, project, имена локальных сетей/тома и leaf/private-key mount. На каждом узле штатный owner workflow запускает только выбранный процесс с `--no-deps --no-build --pull never --no-recreate`. Четыре процесса площадки A используют `minio-site-a-1`…`minio-site-a-4`, четыре процесса площадки B — `minio-site-b-1`…`minio-site-b-4`. Имена из `*_NODE_*_ENDPOINT` должны разрешаться между узлами соответствующей площадки, а каждый `*_SITE_*_ENDPOINT` должен указывать на явный стабильный endpoint/балансировщик своей площадки. Наличие восьми server instances не является доказательством существования двух таких endpoints.
+
+### Независимое размещение с явными маршрутами
+
+Выберите `compose.yml`, затем `compose.owner-image.yml`, затем `compose.routed.yml`; последний файл требует Compose с поддержкой `!override` (2.24.4 или новее). Он сохраняет server command, entrypoint, image, data/secret mounts и два владельческих network attachments. Полный env каждой инкарнации задаёт отдельные `COMPOSE_PROJECT`, `NETWORK`, `INGRESS_NETWORK` и её `*_VOLUME`. Эти ресурсы на одном daemon не разделяются с другой инкарнацией. Одноимённые локальные resources на разных daemon не превращаются в общий диск или private bridge.
+
+Для каждого существующего prefix `AELEV_INFRASTRUCTURE_MINIO_SITE_{A|B}_NODE_{1..4}` добавляются два поля:
+
+| Суффикс | Явное значение |
+|---|---|
+| `_DNS` | Уникальный lower-case FQDN данного экземпляра, покрытый его DNS SAN; без схемы, порта и path |
+| `_ADDRESS` | Реальный non-loopback IPv4/IPv6 назначенного узла; это маршрут других peers |
+
+Существующий `_PORT` одновременно определяет native `MINIO_ADDRESS`, published и container target port. Server `_ENDPOINT` равен `https://DNS:PORT/data`; все четыре server env площадки содержат один ordered peer list. `.env.routed.example` перечисляет имена дополнительных переменных без рабочих значений и не является полным env. Operator/consumer route-IP URLs сохраняются отдельно: они требуют соответствующий IP SAN. У publisher `_NODE_ENDPOINT` используется для собственного cluster health; передавайте его явные monitoring targets, а не копию server peer env.
+
+Публичный routing manifest версии 1 содержит `nodes` — ровно восемь объектов с ключами `id`, `dns`, `address`, `port`. `id` — существующий `minio-site-{a|b}-{1..4}`. Operator-only metadata вроде instance IDs и file byte counts проецируется явно; неизвестные keys отклоняются. Optional `public_certificates` отображает каждый тот же role ID в `{certificate:{path,sha256},ca:{path,sha256}}`. Здесь допустимы только public certificate/CA refs, без keys или root credentials. Для полного env-binding check optional `--environments` содержит JSON map всех восьми role IDs в их complete literal env mappings; validator сверяет generated routing values и локальные resource names.
+
+```sh
+python3.13 prepare-routed.py --input /absolute/private/routing.json \
+  --environments /absolute/private/owner-environments.json
+```
+
+Команда не пишет env и не запускает Docker или сеть. Её `environment` содержит только 32 публичных routing values для включения в новые private owner inputs; прочие env values она не выводит. При public TLS refs выполняется offline OpenSSL verify server chain/purpose/DNS/IP и сверяется SHA. Optional checks явно отражаются в result flags. Native DNS/IP, isolation, UID/DAC, site endpoints и readiness остаются false до отдельной квалификации. Повторное получение inputs не разрешает overwrite работающего env, data, сертификатов или ключей.
+
+Свой FQDN задаётся Docker hostname и должен разрешаться внутри процесса в его non-loopback container interface; `extra_hosts` содержит только семь других FQDN→nodeIP. Поэтому peers общаются через опубликованные порты назначенных узлов, даже когда физически находятся на одной машине. Пересоздание контейнера с новым собственным IP проверяется отдельным lifecycle gate; stale self IP не сохраняется в public inputs. `127.0.0.1`, `host.docker.internal`, общий peer bridge и internal CI/discovery bypass flags не являются заменой self recognition.
+
+Routed health сохраняет checks трёх файлов и копирует public CA в собственный `/tmp/minio-healthcheck/certs/CAs`. Source задаёт публичный `MC_HOST_AELEVHEALTH=https://SELF_DNS:PORT`, а fixed shell выполняет `exec /usr/bin/mc ready AELEVHEALTH`. Root credentials остаются файлами и не подставляются в alias. Сохраняются CA/hostname verification, write quorum и Docker timeout5s/interval10s/retries30/start_period20s. Curl, новый binary или новый MinIO image для этого профиля не требуются. Штатный browser остаётся выключен; console port не открывается автоматически.
+
+До startup root workflow закрепляет validator/source/env hashes, проверяет mount traversal/UID/GID, создаёт только новые ресурсы квалификации и запускает четыре peers до await quorum. После обеих площадок ожидаются реальные stable site endpoints, затем отдельно выполняются штатные site-replication/bucket operations. Native gates включают published TLS from independent observer, own/remote DNS, wrong CA/SAN/port, one-node recovery, two-node write-quorum refusal, object hashes и restart. Небольшая диагностика не заменяет описанный выше итоговый 2GiB lifecycle. Физически разные компьютеры остаются TODO-MVP; никаких runtime/quality/site admission или RESUME host validator не выдаёт.
 
 На разных Docker-серверах одинаковое имя локального тома не означает общий том: каждый Docker daemon создаёт собственное физическое хранилище. Сетевой диск, общий NFS-каталог или один физический диск, разделённый на четыре каталога, запрещены как имитация независимых томов. После готовности обоих пустых кластеров административная станция один раз запускает `docker compose --env-file .env -f compose.yml --profile provision run --rm --no-deps site-replication-applier`, чтобы Compose не пытался поднять удалённые узлы локально; затем владельцы ресурсов аналогично запускают `bucket-provisioner` с `--no-deps`. При первичном связывании данные могут находиться не более чем на одной площадке; остальные площадки должны быть пустыми.
 

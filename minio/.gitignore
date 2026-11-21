@@ -1,5 +1,6 @@
 .env*
 !.env.example
+!.env.routed.example
 secrets/*
 !secrets/README.md
 !secrets/USER_MANUAL.md

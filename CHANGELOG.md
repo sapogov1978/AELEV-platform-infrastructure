@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Explicit routed MinIO profile
+
+- History review distinguishes the prior same-bridge9000 lifecycle from independent published-node routing. Opt-in `minio/compose.routed.yml` binds each native listener to its explicit published port, resolves only its own FQDN locally and routes other peers through assigned node addresses. Existing disjoint networks, base Compose, Dockerfile, original health helper and image-only handoff remain byte-identical. The same `mc` supplies credential-free quorum health with verified CA/name and unchanged timing; no new binary, image, mode bypass or data migration. Owner SPEC/USER_MANUAL record official MinIO/mc/Docker grounds and the2–3hour implementation/45–90minute native forecast.
+- 31 host tests pass with real Compose CONFIG comparisons, typed public topology/certificate validation, existing behavior and refusals; catalog preserves all96 roles/57runtime and changes only eight server recipe/variable sets. Eight actual fresh public leaf/CA inputs pass validation without reading keys. Native self-DNS, published peer routes, quorum, site ingress/failover, replay and current image/security admission remain open; no working containers, data or credentials changed.
+
 ## 2026-11-20 — Independent telemetry network profiles
 
 - Opt-in Gateway/Translator sender profiles publish explicit assigned ports and overlay private per-instance Delivery/scrape configuration; redirects are refused and Translator reuses its existing HTTPS mTLS diagnostic API. Collector publishes only explicit OTLP4317/4318. Default recipes/configs/images/SDK remain unchanged. [History, official/internal grounds, scope, 90–130 minute forecast and host evidence](docs/audit/telemetry-network-20261120.md).
