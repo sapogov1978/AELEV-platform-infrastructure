@@ -9,7 +9,7 @@
     "keycloak/compose.network.yml": "28c709c84ed1af3c0b7117e6130b7c206f7c9bc58fe55501a35da80350cbb5bd",
     "keycloak/compose.yml": "472903dcae0e7374f6946219029c749dd7c60730d54d75a87fc3270ca28ad015",
     "minio/compose.owner-image.yml": "13c89112f29e65ec4ddd942df4bfa29a4ae4f3b0b31d7afceac9b1d0228c92d1",
-    "minio/compose.routed.yml": "07ea676941f9f5733147faa610bfa6e33e95e9dd0de5f679007bc004a95bcd2d",
+    "minio/compose.routed.yml": "6d4972118e768adab659fc29856be31cea252d2456adbc52d0a04344f8a9eec6",
     "minio/compose.yml": "0808ec3235dfa9e64aab6d18e787368c161217420cd2afa410dc0f52b6eea269",
     "observability/blackbox-exporter/compose.yml": "06b2d4f3afc1ff3c59bb61370f7a7650b6b3d26ff4bcf94fe64d7884a42d81d3",
     "observability/delivery/compose.yml": "8c2f1abb7e22828070e3a6a172ebe0cdad56ae603b01594921ec6dc35883291f",

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Routed MinIO listeners preserve bootstrap equality
+
+- The current native eight-process qualification passed source/image, preparation, startup and independent-network gates, then failed readiness: the pinned MinIO bootstrap verifier rejects different `MINIO_ADDRESS` environment values within one site. The routed profile now passes each listener through the supported CLI `--address` flag. The ordered endpoint layout stays identical across each site's four processes. [Pinned bootstrap algorithm](https://github.com/minio/minio/blob/0d7408fc9969caf07de6a8c3a84f9fbb10a6739e/cmd/bootstrap-peer-server.go#L50-L134) and [owner scope, official/internal grounds and 35–50 minute forecast](minio/SPEC.md); catalog/graph integration adds 10–15 minutes and native qualification remains separate.
+- 33 host tests and 21 subcases pass, including a regression that failed the old profile, exact eight-model changes limited to listener flags/environment, uniform same-site `MINIO_*` values and byte-identical legacy models/runtime files. The catalog retains 97 roles and 57 runtime roles. The failed native attempts and all eight test data volumes, networks and journals are retained; the members were stopped by exact ID. Current native readiness, lifecycle, image/security admission and full installation remain open.
+
 ## 2026-11-21 — Explicit PostgreSQL project IPAM
 
 - History confirms that the 14 November peer source-SAN support and native HA proof already exist. The remaining automation gap is a predictable Docker bridge gateway for initial certificate inputs. Opt-in `postgresql/compose.ipam.yml` declares only subnet/gateway on the existing project network; owner Compose creates it normally, without a fixture-only network bootstrap. Nine existing roles may select it; the independent SSH fencer does not. [Official/internal grounds, joint scope and 30–45 minute forecast](docs/api/postgresql-ipam.md); root review/integration adds 10–15 minutes.

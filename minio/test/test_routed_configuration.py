@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any
+from typing import Any, cast
 import unittest
 from unittest import mock
 
@@ -354,13 +354,14 @@ class RoutedComposeTest(unittest.TestCase):
             for key, value in os.environ.items()
             if not key.startswith(("AELEV_", "COMPOSE_", "MINIO_", "MC_"))
         }
+        env["DOCKER_HOST"] = "unix:///nonexistent-aelev-minio-compose-test.sock"
         result = subprocess.run(
             command, env=env, capture_output=True, text=True, timeout=30, check=False
         )
         self.assertEqual(
             result.returncode, 0, "Compose CONFIG-only normalization failed"
         )
-        return json.loads(result.stdout)
+        return cast(dict[str, Any], json.loads(result.stdout))
 
     def test_real_compose_merge_changes_only_selected_routing_fields(self) -> None:
         base, routed = self.model(False), self.model(True)
@@ -371,14 +372,20 @@ class RoutedComposeTest(unittest.TestCase):
                 self.assertEqual(new["image"], old["image"])
                 self.assertEqual(new["networks"], old["networks"])
                 self.assertEqual(new["volumes"], old["volumes"])
-                self.assertEqual(new["command"], old["command"])
+                port = new["ports"][0]["target"]
+                self.assertEqual(new["command"][1:3], ["--address", ":" + str(port)])
+                self.assertEqual(
+                    new["command"][:1] + new["command"][3:], old["command"]
+                )
+                new["command"] = old["command"]
                 self.assertNotIn("network_mode", new)
                 for key in ("hostname", "extra_hosts", "ports", "healthcheck"):
                     if key in old:
                         new[key] = old[key]
                     else:
                         new.pop(key, None)
-                for key in ("MINIO_ADDRESS", "MC_CONFIG_DIR", "MC_HOST_AELEVHEALTH"):
+                self.assertNotIn("MINIO_ADDRESS", new["environment"])
+                for key in ("MC_CONFIG_DIR", "MC_HOST_AELEVHEALTH"):
                     new["environment"].pop(key)
             self.assertEqual(new, old, name)
 
@@ -390,7 +397,9 @@ class RoutedComposeTest(unittest.TestCase):
         for name, peer in peers.items():
             row = model["services"][name]
             self.assertEqual(row["hostname"], peer.dns)
-            self.assertEqual(row["environment"]["MINIO_ADDRESS"], ":" + str(peer.port))
+            self.assertNotIn("MINIO_ADDRESS", row["environment"])
+            self.assertEqual(row["command"].count("--address"), 1)
+            self.assertEqual(row["command"][1:3], ["--address", ":" + str(peer.port)])
             self.assertEqual(len(row["ports"]), 1)
             self.assertEqual(row["ports"][0]["target"], peer.port)
             self.assertEqual(row["ports"][0]["published"], str(peer.port))
@@ -422,13 +431,46 @@ class RoutedComposeTest(unittest.TestCase):
             self.assertNotIn("--cluster-read", health["test"][1])
             site = name.split("-")[2]
             self.assertEqual(
-                row["command"][5:],
+                row["command"][7:],
                 [
                     other.origin + "/data"
                     for other in peers.values()
                     if other.id.startswith("minio-site-" + site + "-")
                 ],
             )
+
+    def test_independent_instances_keep_same_site_bootstrap_environment(self) -> None:
+        # Pinned MinIO compares MINIO_* values among peers of one site before
+        # initialization. Node-local listener ports must not change that map.
+        expected: dict[str, dict[str, str]] = {}
+        for role, generated in environments(manifest()).items():
+            row = self.model(True, {**self.values, **generated})["services"][role]
+            bootstrap = {
+                name: value
+                for name, value in row["environment"].items()
+                if name.startswith("MINIO_")
+            }
+            self.assertNotIn("MINIO_ADDRESS", bootstrap)
+            site = role.split("-")[2]
+            self.assertEqual(bootstrap, expected.setdefault(site, bootstrap), role)
+
+    def test_independent_instances_keep_same_site_endpoint_layout_with_local_cli_flags(
+        self,
+    ) -> None:
+        expected: dict[str, list[str]] = {}
+        ports: set[str] = set()
+        for role, generated in environments(manifest()).items():
+            row = self.model(True, {**self.values, **generated})["services"][role]
+            command = row["command"]
+            self.assertEqual(command[:2], ["server", "--address"])
+            self.assertEqual(
+                command[3:7], ["--certs-dir", "/certs", "--anonymous", "--json"]
+            )
+            self.assertNotIn(command[2], ports)
+            ports.add(command[2])
+            site = role.split("-")[2]
+            self.assertEqual(command[7:], expected.setdefault(site, command[7:]), role)
+            self.assertEqual(command[2], ":" + str(row["ports"][0]["target"]))
 
     def test_compose_refuses_missing_new_explicit_peer_input(self) -> None:
         values = dict(self.values)
