@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Fixed PostgreSQL node-fencer installation
+
+- History review reuses the existing signed fencer and SSH launcher; the remaining gap was installation of the restricted node capability. The new fixed owner operation installs an absent source-pinned launcher/configuration, initializes only fresh labelled volumes, preserves existing authorized keys and refuses partial/foreign state. Exact executor/catalog allowlists and the prepared consumer task connect this operation to independent SQL placements. [Scope, official/internal grounds, conflict boundaries and 190–270 minute forecast](docs/api/postgresql-node-installation.md).
+- Host qualification passes 104 tests and 37 subcases, strict types/style and preservation checks. Legacy launcher, fencing modules, SSH recipe, Dockerfile and dependency lock remain byte-identical; no new runtime role, image, package, SSH/account policy, recovery-budget reset or RESUME. Native installation, authenticated SSH, current readiness and full workflow remain separate pending gates.
+
 ## 2026-11-21 — Explicit routed MinIO profile
 
 - History review distinguishes the prior same-bridge9000 lifecycle from independent published-node routing. Opt-in `minio/compose.routed.yml` binds each native listener to its explicit published port, resolves only its own FQDN locally and routes other peers through assigned node addresses. Existing disjoint networks, base Compose, Dockerfile, original health helper and image-only handoff remain byte-identical. The same `mc` supplies credential-free quorum health with verified CA/name and unchanged timing; no new binary, image, mode bypass or data migration. Owner SPEC/USER_MANUAL record official MinIO/mc/Docker grounds and the2–3hour implementation/45–90minute native forecast.

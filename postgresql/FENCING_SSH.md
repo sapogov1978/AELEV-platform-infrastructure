@@ -1,5 +1,7 @@
 # Независимое размещение Docker fencer: кандидат
 
+Новая фиксированная [owner node-install operation](../docs/api/postgresql-node-installation.md) делает установку launcher/собственных volumes и существующий `initialize` явным source-pinned шагом с plan/task/status. Это новый operator API, а не утверждение, что историческая ручная установка уже была автоматической. Source/role/image/private guards, прежний launcher/фактическая история и native fencing algorithms сохраняются; OS/SSH/account policy остаются node prerequisite. Host проверки и actual native/DAG receipt отделены. Прогноз и официальные основания объявлены в API до code.
+
 Профиль реализует размещение по [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md): HTTPS/mTLS executor, его копии и каждый SQL-узел могут находиться на разных машинах. Допуск образов, автоматизированная установка и полное HA-испытание ещё требуются. Исходный Docker-профиль и рабочие установки сохраняются; общие гарантии определены в [FENCING.md](FENCING.md).
 
 ## Контракт и владение

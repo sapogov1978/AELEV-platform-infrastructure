@@ -1,5 +1,9 @@
 # История PostgreSQL
 
+- 2026-11-21: final boundary review запретил control characters в installation/authorized_keys paths до effects: shell quoting не защищает отдельную authorized_keys строку от LF/CR. Отказ сохраняет файлы; прежний generic node path contract и launcher не меняются. Основание — OpenSSH authorized_keys line format; прогноз5–10мин, host evidence v1 сохраняется отдельно от исправленного v2.
+
+- 2026-11-20: после history/source review реализуется фиксированная owner node-install operation с настоящим initialize и durable task receipt. Новый strict typed-task/catalog descriptor не изображает host procedure Compose-сервисом; old launcher/runtime/cef0751 image и budgets не меняются. Scope, официальные/internal основания, совместимость и прогноз owner90–120мин/DRP60–90мин/native40–60мин объявлены до code в API; OS/SSH capability и full native verification отделены.
+
 - 2026-11-18: Docker-fencer явно объявляет `compose.runtime.yml` companion для существующего каталога/owner SDK. Это разрешает рендер полноценной базовой модели при выборе роли из overlay; `--no-deps` и single-role execution сохраняются. Команды, образы и HA не меняются; прогноз общей metadata-поправки — 15–25 минут.
 
 - 2026-11-18: после проверки текущей и исходной истории два несекретных селектора `PROVISION_DATABASE`/`PROVISION_ROLE` явно передаются только одноразовому provisioner из закреплённого private env. Это устраняет зависимость подготовки ресурсов от ручного `run -e`, сохраняя file password, пустой отказ, CLI precedence и неизменные остальные service models. Прогноз до правок — 15–20 минут; общий SDK SQL-этап потребителей проверяется отдельно. Runtime images, SQL-права и HA не меняются.

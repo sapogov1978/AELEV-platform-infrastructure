@@ -19,6 +19,64 @@ except ModuleNotFoundError as error:
 
 @unittest.skipIf(build is None, "requires pinned tools/requirements-catalog.txt")
 class BuildDeploymentCatalogTest(unittest.TestCase):
+    def native_catalog(
+        self, *, changed: dict | None = None, listed: bool = True
+    ) -> dict:
+        from build_deployment_catalog import POSTGRESQL_NODE_DESCRIPTOR
+
+        native = self.root / "postgresql"
+        native.mkdir(exist_ok=True)
+        self.manifest.write_text(json.dumps({"owners": ["postgresql"]}))
+        recipe = native / "compose.yml"
+        recipe.write_text("services:\n  existing-runtime: {}\n")
+        document = {**POSTGRESQL_NODE_DESCRIPTOR, **(changed or {})}
+        (native / "fencing-node-installation.json").write_text(json.dumps(document))
+        for name in ("fencing_node_install.py", "fencing-node.py"):
+            (native / name).write_text("# fixed public operator source\n")
+        files = ["postgresql/compose.yml"]
+        if listed:
+            files += [
+                "postgresql/fencing-node-installation.json",
+                "postgresql/fencing_node_install.py",
+                "postgresql/fencing-node.py",
+            ]
+        with patch("build_deployment_catalog.subprocess.check_output") as discovered:
+            discovered.return_value = "\0".join(files).encode() + b"\0"
+            assert build is not None
+            return build(
+                self.root, self.manifest, "platform-infrastructure", set(), set(), set()
+            )
+
+    def test_native_node_descriptor_adds_one_operation_without_changing_old_role(
+        self,
+    ) -> None:
+        previous = self.native_catalog(listed=False)
+        actual = self.native_catalog()
+        self.assertEqual(previous["roles"][0], actual["roles"][0])
+        added = actual["roles"][1]
+        self.assertEqual(added["id"], "postgresql-fencing-node-install")
+        self.assertEqual(added["kind"], "operation")
+        self.assertEqual(
+            added["recipes"], ["postgresql/fencing-node-installation.json"]
+        )
+        for name, value in previous["sources"].items():
+            self.assertEqual(actual["sources"][name], value)
+        self.assertEqual(len(actual["sources"]), len(previous["sources"]) + 3)
+
+    def test_native_descriptor_unknown_handler_image_and_fields_are_rejected(
+        self,
+    ) -> None:
+        for changed in (
+            {"procedure": "arbitrary-shell"},
+            {"helper_image": "image:latest"},
+            {"schema_version": True},
+            {"extra": "sh"},
+        ):
+            with self.subTest(changed=changed), self.assertRaisesRegex(
+                ValueError, "descriptor"
+            ):
+                self.native_catalog(changed=changed)
+
     def test_overlay_role_can_declare_its_static_owner_base_recipe(self) -> None:
         result = self.catalog(
             "services:\n  api: {image: example}\n",

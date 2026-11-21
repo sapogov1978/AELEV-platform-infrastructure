@@ -29,6 +29,9 @@
     "postgresql/compose.runtime.yml": "c13e7538f2fdb6983da78c81a9f8342cd74f8d5367a66b6bb15b43f1bfe9b5e0",
     "postgresql/compose.watchdog.yml": "031b3ec799081c9cd242d526bf1f7748ec6e52718fe21a4ae1cedadad7d08e50",
     "postgresql/compose.yml": "55786804ad47768474345fff39cd28d4be26c33f8cfa187b8d7cc0cbc04fa2cb",
+    "postgresql/fencing-node-installation.json": "e2674fb9c73664055d84b38d9063519d0c699b6e867db7bc2b50b064c91a235f",
+    "postgresql/fencing-node.py": "5e331894ced22891b82168eb09ac1cc46b5d8753976d3b6cf99a94ce1ee8d7f9",
+    "postgresql/fencing_node_install.py": "c42548b78d3f0c2c5aef717ca0aa231f55dd8d74e2000476c0e365eb5a890eca",
     "public-egress-gateway/compose.telemetry-network.yml": "15dafaf5d801cd74794afc2b1c69540ddef79851fb4c4d4fb8d726949bde1c71",
     "public-egress-gateway/compose.yml": "190744fc9e750edd858d2cb80190319248d07b1f2290702d648f7299f163b85e",
     "spire/compose.agent.yml": "f67f798464e074de4461bfb295713bd96916598d8fd77acb22bbb0ae53f89b2a",
@@ -1754,6 +1757,19 @@
         "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_ETCD_HOST",
         "AELEV_INFRASTRUCTURE_POSTGRESQL_NODE_3_FENCING_URL"
       ],
+      "compose_profiles": []
+    },
+    {
+      "id": "postgresql-fencing-node-install",
+      "owner": "postgresql",
+      "kind": "operation",
+      "opaque": false,
+      "local_state": true,
+      "credentials_required": true,
+      "recipes": [
+        "postgresql/fencing-node-installation.json"
+      ],
+      "configuration_variables": [],
       "compose_profiles": []
     },
     {

@@ -135,6 +135,10 @@ def definition(value: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
     require(len(roles) == 1, "OWNER_COMPOSE_ROLE_INVALID")
     role = roles[0]
     require(
+        value["role"] != "platform-infrastructure/postgresql-fencing-node-install",
+        "OWNER_COMPOSE_NATIVE_OPERATION_REQUIRED",
+    )
+    require(
         role["kind"] in {"runtime", "operation", "node"}, "OWNER_COMPOSE_ROLE_INVALID"
     )
     recipes = value["recipes"]

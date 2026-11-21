@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "postgresql-fencing-node-install",
+  "owner": "postgresql",
+  "kind": "operation",
+  "procedure": "postgresql-fencing-node-install",
+  "entrypoint": "postgresql/fencing_node_install.py",
+  "actions": ["plan", "task", "status"],
+  "helper_image": "ghcr.io/sapogov1978/aelev-platform-infrastructure-postgresql-fencing@sha256:cef0751b964641f9563c9b7b4ca61bf1cae616deea5b85f857a3b5d39a573995"
+}

@@ -29,6 +29,20 @@ OPERATION = re.compile(
 )
 SCOPE_LABEL = "io.aelev.deployment.scope"
 RECIPE_INPUTS_LABEL = "io.aelev.deployment.recipe-inputs"
+POSTGRESQL_NODE_RECIPE = "postgresql/fencing-node-installation.json"
+POSTGRESQL_NODE_DESCRIPTOR = {
+    "schema_version": 1,
+    "id": "postgresql-fencing-node-install",
+    "owner": "postgresql",
+    "kind": "operation",
+    "procedure": "postgresql-fencing-node-install",
+    "entrypoint": "postgresql/fencing_node_install.py",
+    "actions": ["plan", "task", "status"],
+    "helper_image": (
+        "ghcr.io/sapogov1978/aelev-platform-infrastructure-postgresql-fencing@"
+        "sha256:cef0751b964641f9563c9b7b4ca61bf1cae616deea5b85f857a3b5d39a573995"
+    ),
+}
 
 
 def recipe_inputs(value: Any, directory: Path, files: set[Path]) -> set[Path]:
@@ -190,6 +204,41 @@ def build(
                     VARIABLE.findall(json.dumps(definition))
                 )
                 record["compose_profiles"].update(definition.get("profiles") or [])
+        descriptor = root / POSTGRESQL_NODE_RECIPE
+        if owner == "postgresql" and descriptor in files:
+            document = json.loads(descriptor.read_bytes())
+            if (
+                descriptor.is_symlink()
+                or not isinstance(document, dict)
+                or type(document.get("schema_version")) is not int
+                or document != POSTGRESQL_NODE_DESCRIPTOR
+                or document["id"] in found
+            ):
+                raise ValueError("invalid PostgreSQL node operation descriptor")
+            for relative in (
+                POSTGRESQL_NODE_RECIPE,
+                POSTGRESQL_NODE_DESCRIPTOR["entrypoint"],
+                "postgresql/fencing-node.py",
+            ):
+                candidate = root / relative
+                if (
+                    candidate not in files
+                    or candidate.is_symlink()
+                    or not candidate.is_file()
+                ):
+                    raise ValueError("incomplete PostgreSQL node operation source")
+                sources[relative] = hashlib.sha256(candidate.read_bytes()).hexdigest()
+            found[document["id"]] = {
+                "id": document["id"],
+                "owner": "postgresql",
+                "kind": "operation",
+                "opaque": False,
+                "local_state": True,
+                "credentials_required": True,
+                "recipes": [POSTGRESQL_NODE_RECIPE],
+                "configuration_variables": set(),
+                "compose_profiles": set(),
+            }
         for record in found.values():
             scope = scopes.get(record["id"], set())
             if len(scope) > 1:

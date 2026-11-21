@@ -29,12 +29,14 @@ PROCEDURES = {
     "owner-build": ("python", "tools/owner_build.py"),
     "owner-prepare": ("python", "tools/owner_prepare.py"),
     "spire-runtime": ("python", "tools/spire_runtime.py"),
+    "postgresql-fencing-node-install": ("python", "postgresql/fencing_node_install.py"),
 }
 OWNER_ACTIONS = {
     "owner-compose": {"plan", "start", "task", "status"},
     "owner-build": {"build"},
     "owner-prepare": {"prepare", "status"},
     "spire-runtime": {"plan", "start", "status"},
+    "postgresql-fencing-node-install": {"plan", "task", "status"},
 }
 ENVIRONMENT = {
     "DRP_SPIRE_DOCKER_SOCKET_APPROVAL",
@@ -575,6 +577,21 @@ def target(request: dict[str, Any], action: str) -> dict[str, Any]:
                 )
                 if projection is not None:
                     result["owner_result"] = projection
+                    if (
+                        request["procedure"] == "postgresql-fencing-node-install"
+                        and completed.returncode == 0
+                    ):
+                        expected = {
+                            "plan": {"OWNER_NATIVE_PLANNED"},
+                            "task": {"OWNER_TASK_COMPLETED"},
+                            "status": {"OWNER_TASK_COMPLETED", "OWNER_ROLE_ABSENT"},
+                        }[request["arguments"][0]]
+                        if (
+                            projection["status"] not in expected
+                            or "configuration_sha256" not in projection
+                        ):
+                            result["status"] = "RESULT_UNKNOWN"
+                            result["code"] = "NODE_OWNER_RESULT_UNVERIFIED"
                 elif completed.returncode == 0:
                     result["status"] = "RESULT_UNKNOWN"
                     result["code"] = "NODE_OWNER_RESULT_UNVERIFIED"

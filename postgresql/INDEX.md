@@ -8,6 +8,7 @@
 | Подготовка, эксплуатация и восстановление | [USER_MANUAL.md](USER_MANUAL.md) |
 | Нормативные гарантии | [SPEC.md](SPEC.md) |
 | Выбор и проверка ограждения | [FENCING.md](FENCING.md) |
+| Установка и guarded initialize узлового SSH launcher | [node-install API](../docs/api/postgresql-node-installation.md), `fencing_node_install.py`, `fencing-node-installation.json`, `test/test_fencing_node_install.py` |
 | Кандидат независимого SSH fencer и одноразовой узловой операции | [FENCING_SSH.md](FENCING_SSH.md), `compose.fencing-ssh.yml`, `fencing-node.py` |
 | Настоящий PostgreSQL/Patroni/etcd через published endpoints и SSH, crash/replay двух controllers | `test/fencing-ssh-lifecycle.py`, `.github/workflows/postgresql-fencing-ssh.yml` |
 | Детерминированный доэффектный crash point первого controller key | `test/ha_return_barrier.py`, `test/test_ha_return_barrier.py`; только SSH host fixture, без runtime override |

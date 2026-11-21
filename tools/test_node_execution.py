@@ -16,6 +16,84 @@ from tools import node_execution as node
 
 
 class NodeExecutionTest(unittest.TestCase):
+    def native_node_request(self, output: dict | None = None) -> dict:
+        request = copy.deepcopy(self.request)
+        entrypoint = self.source / "postgresql/fencing_node_install.py"
+        entrypoint.parent.mkdir()
+        entrypoint.write_text(
+            "import json,sys\nfrom pathlib import Path\n"
+            + "p=Path("
+            + repr(str(self.counter))
+            + ")\n"
+            + "if sys.argv[1]=='task':p.write_text(str(int(p.read_text())+1) if p.exists() else '1')\n"
+            + "print(json.dumps("
+            + repr(
+                output
+                or {"status": "OWNER_TASK_COMPLETED", "configuration_sha256": "a" * 64}
+            )
+            + "))\n"
+        )
+        request["procedure"] = "postgresql-fencing-node-install"
+        request["source_files"]["postgresql/fencing_node_install.py"] = node.checksum(
+            entrypoint.read_bytes()
+        )
+        config = self.root / "node-install.json"
+        body = {
+            "executor_root": request["source_root"],
+            "executor_files": request["source_files"],
+            "inputs": request["inputs"],
+        }
+        config.write_text(json.dumps(body))
+        config.chmod(0o600)
+        checksum = node.checksum(config.read_bytes())
+        request["inputs"][str(config)] = checksum
+        request["arguments"] = [
+            "task",
+            "--request",
+            str(config),
+            "--request-sha256",
+            checksum,
+        ]
+        return request
+
+    def test_fixed_postgresql_node_task_runs_once_with_private_receipt(self) -> None:
+        request = self.native_node_request()
+        first = node.invoke({"kind": "local"}, request, "execute")
+        second = node.invoke({"kind": "local"}, request, "execute")
+        self.assertEqual(first, second)
+        self.assertEqual(first["status"], "COMMAND_SUCCEEDED")
+        self.assertEqual(first["owner_result"]["status"], "OWNER_TASK_COMPLETED")
+        self.assertEqual(self.counter.read_text(), "1")
+        self.assertEqual(node.invoke({"kind": "local"}, request, "status"), first)
+
+    def test_postgresql_plan_cannot_be_used_as_task_completion(self) -> None:
+        request = self.native_node_request(
+            {"status": "OWNER_NATIVE_PLANNED", "configuration_sha256": "a" * 64}
+        )
+        result = node.invoke({"kind": "local"}, request, "execute")
+        self.assertEqual(result["status"], "RESULT_UNKNOWN")
+        self.assertEqual(result["code"], "NODE_OWNER_RESULT_UNVERIFIED")
+
+    def test_postgresql_task_needs_a_bound_configuration_projection(self) -> None:
+        request = self.native_node_request({"status": "OWNER_TASK_COMPLETED"})
+        self.assertEqual(
+            node.invoke({"kind": "local"}, request, "execute")["status"],
+            "RESULT_UNKNOWN",
+        )
+
+    def test_postgresql_native_action_and_definition_binding_are_closed(self) -> None:
+        request = self.native_node_request()
+        for arguments in (
+            ["install"],
+            ["task", "--command", "sh"],
+            ["task", "--request", "/foreign", "--request-sha256", "0" * 64],
+        ):
+            with self.subTest(arguments=arguments), self.assertRaises(
+                node.ExecutionError
+            ):
+                node.validate({**request, "arguments": arguments})
+        self.assertFalse(self.counter.exists())
+
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)

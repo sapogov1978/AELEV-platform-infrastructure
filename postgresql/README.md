@@ -10,6 +10,8 @@
 
 ## Запуск
 
+Первоначальную установку bounded SSH node operation предоставляет [публичный node-install API](../docs/api/postgresql-node-installation.md): source-pinned launcher, собственные labelled volumes и настоящий `initialize`. OS/SSH/admin policy узла подготавливает платформа; host tests не подменяют native installation receipt.
+
 После подготовки по [руководству](USER_MANUAL.md), из этого каталога:
 
 ```sh
