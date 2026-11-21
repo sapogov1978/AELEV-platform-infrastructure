@@ -32,6 +32,7 @@
     "postgresql/fencing-node-installation.json": "e2674fb9c73664055d84b38d9063519d0c699b6e867db7bc2b50b064c91a235f",
     "postgresql/fencing-node.py": "5e331894ced22891b82168eb09ac1cc46b5d8753976d3b6cf99a94ce1ee8d7f9",
     "postgresql/fencing_node_install.py": "c42548b78d3f0c2c5aef717ca0aa231f55dd8d74e2000476c0e365eb5a890eca",
+    "public-egress-gateway/compose.publisher-network.yml": "9fafcfd298eb22a1bb28b4b20eb2be65e8789ef83d2ff3fcf754578b387ce976",
     "public-egress-gateway/compose.telemetry-network.yml": "15dafaf5d801cd74794afc2b1c69540ddef79851fb4c4d4fb8d726949bde1c71",
     "public-egress-gateway/compose.yml": "190744fc9e750edd858d2cb80190319248d07b1f2290702d648f7299f163b85e",
     "spire/compose.agent.yml": "f67f798464e074de4461bfb295713bd96916598d8fd77acb22bbb0ae53f89b2a",
@@ -44,6 +45,7 @@
     "translator-service/compose.compute.yml": "0498391d73700184d4098afdb75aa63b1d92187799dc50e36533971ff0a21900",
     "translator-service/compose.database-network.yml": "225edaf85553e6da78fc27c05fb8f84ba6f224f1e614759f86f903d84af7fb55",
     "translator-service/compose.local.yml": "c88f19b9a710acdcc7ea6608338b0c1b7c73b8cc0c2d221fc5036e857ebdb5aa",
+    "translator-service/compose.publisher-network.yml": "cda7ef06115b9b21560fb1ebd56009f6c9a7936ad1623282264da21581b3ea8c",
     "translator-service/compose.remote.yml": "f6d0be4fa7a970ef0da73084328e039e55062d8b393a4c2d1b8de1672df5d06d",
     "translator-service/compose.telemetry-network.yml": "8d4aa55aac9ae03dd3fa6f31ecc3ed897017200a005778c37beb47101d3e74ac",
     "translator-service/compose.yml": "b5900f7d54dcb2ee6378cb933d212ffbab310143082f315b2cabd7e50aca2f27"
@@ -2132,6 +2134,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "public-egress-gateway/compose.publisher-network.yml",
         "public-egress-gateway/compose.yml"
       ],
       "configuration_variables": [
@@ -2140,6 +2143,9 @@
         "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_SERVER_NAME",
         "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_AUDIENCE",
         "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_CLIENT_ID",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_GATEWAY_PROBE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_GATEWAY_PROBE_SERVER_NAME",
+        "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_GATEWAY_PROBE_URL",
         "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IDENTITY_URL",
         "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_IMAGE",
         "AELEV_INFRASTRUCTURE_PUBLIC_EGRESS_GATEWAY_UI_INTERVAL_SECONDS",
@@ -2866,6 +2872,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "translator-service/compose.publisher-network.yml",
         "translator-service/compose.remote.yml"
       ],
       "configuration_variables": [
@@ -2891,6 +2898,11 @@
         "AELEV_INFRASTRUCTURE_TRANSLATOR_OTLP_HTTP_ENDPOINT",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_INTERVAL_SECONDS",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_PRESENCE_TTL_SECONDS",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_API_PROBE_CA_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_API_PROBE_CERT_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_API_PROBE_KEY_FILE",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_API_PROBE_SERVER_NAME",
+        "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_API_PROBE_URL",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_AUDIENCE",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_CLIENT_ID",
         "AELEV_INFRASTRUCTURE_TRANSLATOR_UI_DESCRIPTION_REVISION",

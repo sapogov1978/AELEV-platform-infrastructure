@@ -1,5 +1,7 @@
 # Изменения translator-service
 
+- 2026-11-21: подготовлен opt-in publisher-network profile для published operator mTLS GET `/healthz` с явными URL/SNI и собственными API query certificate/key/CA издателя. Прежняя HTTP ветка сохраняется только без нового profile; partial/invalid network inputs не выбирают legacy. SQL/Kafka/presence semantics, default recipes/env/templates и очередь сохраняются; source scope, официальные/internal основания и прогноз55–80мин записаны до реализации в SPEC. Новые source/image/native gates не наследуют прежний queue proof.
+
 - 2026-11-20: финальная совместная сверка с существующим Zone pattern явно запрещает redirects только в новых rendered HTTPS scrape configs. Base source configs не изменены; semantic assertion и два повторных host receipts привязаны к финальным bytes, прежние receipts сохранены отдельно. Основание и прогноз5мин — в SPEC.
 
 - 2026-11-20: добавлен opt-in published telemetry sender и private per-instance HTTPS Delivery/scrape configs; `/metrics` читается через существующий operator mTLS endpoint своим query key. Private HTTP, default recipes/values, credentials scopes, image/UID, journal/retry и embedded loopback сохранены. Сверка истории/совместного scope, официальные/internal основания и прогноз до реализации отражены в SPEC; native qualification остаётся отдельным общим gate.

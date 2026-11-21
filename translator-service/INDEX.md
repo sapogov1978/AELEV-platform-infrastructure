@@ -16,6 +16,7 @@
 | Порядок технических повторов и диагностика | [результат проверки и выкладки](test/stable-retry-result-20261018.md) |
 | Телеметрия владельца | `src/translator_service/observability.py`, `observability/` |
 | Независимый sender endpoint и private configs | `compose.telemetry-network.yml`, `deployment/prepare_telemetry_network.py`, `deployment/telemetry-network.env.example` |
+| Собственная mTLS API query identity издателя | `compose.publisher-network.yml`, `deployment/publisher-network.env.example`, `test/test_status_network.py` |
 | Локальная и удалённая управляющие топологии | `compose.local.yml`, `compose.remote.yml`, `compose.yml` |
 | Контракт внешнего провайдера | [docs/api/translation.md](../docs/api/translation.md), [SPEC.md](SPEC.md); реализация остаётся непрозрачной |
 | Compute-рецепт | [compute-runtime/README.md](compute-runtime/README.md), `compose.compute.yml` для совместимости; независимые `compose.compute-provider.mtls.yml` / `compose.compute-worker.mtls.yml` выбираются через `--role` и не требуют общего socket-тома |

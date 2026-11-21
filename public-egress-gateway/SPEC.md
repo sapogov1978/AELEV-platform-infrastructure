@@ -1,5 +1,9 @@
 # Спецификация Public Egress Gateway
 
+## Согласованный scope независимого издателя, 21 ноября 2026
+
+До реализации проверены CHANGELOG, прежние local status/telemetry proofs и выбранный `compose.yml`: `observe_provider()` всё ещё передаёт private Docker alias и порт8080. Opt-in `compose.publisher-network.yml` задаст явные HTTPS `/readyz`, SNI и публичную CA только издателю; существующий `health.probe` сохраняется, fetch key/grant не передаются. Default compose/env/templates, stack, журналы и wire status protocol сохраняются; отсутствие нового profile оставляет прежнюю ветку, partial/invalid network inputs запрещают fallback. Общий scope сверён с Translator и private input packs; новые source/image bindings издателя потребуют отдельной native квалификации. Прогноз обоих owners —55–80 минут source/host checks, native edge — в общем workflow. Официальные основания: [Compose networks](https://docs.docker.com/compose/how-tos/networking/), [Compose merge](https://docs.docker.com/reference/compose-file/merge/), [Python TLS/SNI](https://docs.python.org/3.13/library/ssl.html#ssl.SSLContext.wrap_socket). Внутренние: [00-INFRA-0008](../docs/adr/00-INFRA-20261106-0008-platform-ui-owner-injection.md), [00-INFRA-0018](../docs/adr/00-INFRA-20261113-0018-independent-roles-and-translation-mtls.md), [контракт UI](../docs/api/platform-ui-injection.md).
+
 Только новый rendered scrape задаёт `follow_redirects: false`: явный HTTPS target не переключается по HTTP redirect. Это прежний Zone operator-network pattern и документированное [Prometheus HTTP configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_config), где default равен true. Base scrape/remote_write не меняются. Совместная сверка перед финальным freeze: прогноз5мин на semantic assertion и повтор двух host checks.
 
 ## Независимое размещение telemetry sender

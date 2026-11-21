@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Independently routed publisher health checks
+
+- History review found two remaining private-alias probes in Gateway and Translator publishers. Opt-in `compose.publisher-network.yml` profiles use explicit HTTPS endpoints and verified names; Translator owns a separate API query mTLS identity. Incomplete profiles refuse fallback, redirects/malformed responses cannot report ONLINE, and legacy defaults are preserved. Owner SPEC/README contain official TLS/Compose references, scope and the 55–80 minute implementation forecast; root integration/checks add 15–25 minutes.
+- 232 host tests pass, including real loopback TLS/mTLS refusals, actual Compose CONFIG comparisons and telemetry regressions; 14 existing files remain byte-identical. Only two publisher catalog roles gain recipes/variables, with 97 total roles and 57 runtime roles unchanged. New publisher images, actual Linux material delivery, independent routes, current UI/quality/security admission and full startup remain pending. No working runtime, canonical credentials, queues or OpenAI requests changed.
+
 ## 2026-11-21 — Fixed PostgreSQL node-fencer installation
 
 - History review reuses the existing signed fencer and SSH launcher; the remaining gap was installation of the restricted node capability. The new fixed owner operation installs an absent source-pinned launcher/configuration, initializes only fresh labelled volumes, preserves existing authorized keys and refuses partial/foreign state. Exact executor/catalog allowlists and the prepared consumer task connect this operation to independent SQL placements. [Scope, official/internal grounds, conflict boundaries and 190–270 minute forecast](docs/api/postgresql-node-installation.md).

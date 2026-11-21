@@ -1,5 +1,7 @@
 # Changelog
 
+- 2026-11-21: подготовлен opt-in publisher-network profile с явными HTTPS readiness URL/SNI/public CA и existing bounded `health.probe`. Private Docker alias остаётся только прежней веткой без profile; partial/invalid network inputs не выбирают legacy. Default recipe/env/templates и fetch permissions не меняются; scope, официальные/internal основания и прогноз55–80мин зафиксированы до реализации в SPEC. Host/native/source-image gates ещё проверяются отдельно.
+
 - 2026-11-20: финальная совместная сверка с существующим Zone pattern явно запрещает redirects только в новых rendered HTTPS scrape configs. Base source configs не изменены; semantic assertion и два повторных host receipts привязаны к финальным bytes, прежние receipts сохранены отдельно. Основание и прогноз5мин — в SPEC.
 
 - 2026-11-20: после history/default-model проверки добавлен opt-in published telemetry sender с явными Delivery/scrape HTTPS inputs и private per-instance configs. Изменяются только port/config overlays; default, fetch grants/identity, UID, image, journal/retry и embedded loopback сохранены. Renderer bounded refusals/repeat и actual Compose preservation проверяются отдельно от общего native workflow; официальные/internal основания и прогноз до реализации — в SPEC.
