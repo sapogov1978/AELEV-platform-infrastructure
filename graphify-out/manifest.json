@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1795259023.0973945,
-    "seen": 1795259033.0829382,
-    "ast_hash": "d4c3ee85f07524fea612341b8c905f00",
+    "mtime": 1795260829.412722,
+    "seen": 1795260916.435935,
+    "ast_hash": "83e8c613bcbf0379b72bdf7cb02bc64e",
     "semantic_hash": ""
   },
   "CONVENTIONS.md": {
@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "minio/provision-bucket.sh": {
-    "mtime": 1794837645.5973032,
-    "seen": 1795254539.1697888,
-    "ast_hash": "b97fb265f5914be811b222d3a69756b6",
+    "mtime": 1795260156.451844,
+    "seen": 1795260916.426666,
+    "ast_hash": "66f1b38682d3fa1f3d9f189e338d5a7a",
     "semantic_hash": ""
   },
   "minio/pyproject.toml": {
@@ -3264,21 +3264,21 @@
     "semantic_hash": ""
   },
   "minio/CHANGELOG.md": {
-    "mtime": 1795253484.223175,
-    "seen": 1795254539.17035,
-    "ast_hash": "43a7a5028cf7c3419b3184d62431c1ee",
+    "mtime": 1795260467.9043083,
+    "seen": 1795260916.440042,
+    "ast_hash": "0f321e125e20d0492a18c5c46d77913f",
     "semantic_hash": ""
   },
   "minio/README.md": {
-    "mtime": 1795253484.2241683,
-    "seen": 1795254539.1703522,
-    "ast_hash": "867c4e2482fe0bc99ad6c871a01eb181",
+    "mtime": 1795259925.870541,
+    "seen": 1795260916.440044,
+    "ast_hash": "9f9ee957e3eaae4fe15f244537d76f0d",
     "semantic_hash": ""
   },
   "minio/SPEC.md": {
-    "mtime": 1795253484.225212,
-    "seen": 1795254539.1703522,
-    "ast_hash": "2f253a718b4583d80adedafd75fb135a",
+    "mtime": 1795260156.4524348,
+    "seen": 1795260916.440045,
+    "ast_hash": "83ebf332cfb846bae7355db8f36c2033",
     "semantic_hash": ""
   },
   "minio/TASKS.md": {
@@ -3288,9 +3288,9 @@
     "semantic_hash": ""
   },
   "minio/USER_MANUAL.md": {
-    "mtime": 1795253484.2257397,
-    "seen": 1795254539.170354,
-    "ast_hash": "e218a905d6aa5d97901538897ac310f6",
+    "mtime": 1795260754.3716059,
+    "seen": 1795260916.4400609,
+    "ast_hash": "1b88ed0650776b1a6fd3081c6433c68b",
     "semantic_hash": ""
   },
   "minio/test/multi-site-lifecycle-result.md": {
@@ -6018,9 +6018,9 @@
     "semantic_hash": ""
   },
   "minio/INDEX.md": {
-    "mtime": 1795225052.6648772,
-    "seen": 1795254539.170351,
-    "ast_hash": "31b0cf2546464573d6c1f0f7e78bbefa",
+    "mtime": 1795259925.8725903,
+    "seen": 1795260916.440043,
+    "ast_hash": "fddc0992a91afe37ca5ed76dd4dc7b5a",
     "semantic_hash": ""
   },
   "observability/INDEX.md": {
@@ -6528,9 +6528,9 @@
     "semantic_hash": ""
   },
   "deployment-catalog.json": {
-    "mtime": 1795254510.4643056,
-    "seen": 1795254539.169725,
-    "ast_hash": "42e80a1041c60740708c35819ffb96b0",
+    "mtime": 1795260740.9777381,
+    "seen": 1795260916.425341,
+    "ast_hash": "b51f572c8964bec42d88393c0ca3e145",
     "semantic_hash": ""
   },
   "docs/audit/spire-independent-source-20261114.json": {
@@ -7479,6 +7479,12 @@
     "mtime": 1795254356.7943952,
     "seen": 1795254539.170163,
     "ast_hash": "ecc81ff130313b99eab39027a5edda1a",
+    "semantic_hash": ""
+  },
+  "minio/test/test_bucket_file_secrets.py": {
+    "mtime": 1795260388.1354988,
+    "seen": 1795260916.426754,
+    "ast_hash": "affb886fa749b347143562e87a4d8675",
     "semantic_hash": ""
   },
   "platform-ui/package-lock.json": {

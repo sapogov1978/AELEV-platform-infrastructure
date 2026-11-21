@@ -170,7 +170,7 @@ docker compose --env-file .env up -d --wait
 docker compose --env-file .env --profile provision run --rm site-replication-applier
 ```
 
-Подготовка bucket выполняется после site replication отдельной одноразовой задачей владельца ресурса. Обычный запуск узлов не знает имён bucket и не запускает эту задачу.
+Подготовка bucket выполняется после site replication отдельной одноразовой задачей владельца ресурса. Обычный запуск узлов не знает имён bucket и не запускает эту задачу. Для полного prepared workflow используйте [файловые credentials](#файловые-credentials-bucket-provisioner); следующий inline-вход сохраняется для совместимости и не является способом доставки passwords через owner-prepare.
 
 ```sh
 : "${AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET:?load the owned bucket name}"
@@ -181,6 +181,24 @@ docker compose --env-file .env --profile provision run --rm bucket-provisioner
 ```
 
 Пример показывает имена переменных, а не допустимые рабочие секреты. Реальные значения передаются экспортированным окружением из утверждённого хранилища секретов и не сохраняются в истории shell или Git. Не выполняйте `up` всего профиля `provision`: `bucket-provisioner` требует точного входа владельца ресурса и не является инициализатором MinIO.
+
+## Файловые credentials bucket-provisioner
+
+Для prepared workflow с файловыми credentials выберите только для `bucket-provisioner` recipes `compose.yml`, `compose.owner-image.yml`, затем `compose.bucket-secrets.yml`. Обычный запуск nodes, site replication и отсутствие этого файла сохраняют прежнюю composition. Публичные `AELEV_INFRASTRUCTURE_MINIO_PROVISION_BUCKET` и `AELEV_INFRASTRUCTURE_MINIO_PROVISION_POLICY` задаются явно владельцем ресурса; endpoints остаются прежними published HTTPS site URLs.
+
+В отдельном закрытом env операции задайте `AELEV_INFRASTRUCTURE_MINIO_PROVISION_ACCESS_KEY_FILE=<own-workspace>/secrets/provision/access-key` и `AELEV_INFRASTRUCTURE_MINIO_PROVISION_SECRET_KEY_FILE=<own-workspace>/secrets/provision/secret-key`. Эти значения являются абсолютными путями, не credentials. Через existing owner-prepare private grants доставьте ровно `secrets/provision/access-key` и `secrets/provision/secret-key` с target mode `0600` либо явно согласованным `0640` для фактического UID/GID задачи. Source files — private regular single-link `0600`. Не копируйте root credentials, provider API key или ключ соседнего владельца; отдельную S3 user identity выдаёт владелец операции. Существующие root-user/root-password/public CA grants сохраняются.
+
+В контейнере профиль предоставляет только `/run/secrets/minio-provision-access-key` и `/run/secrets/minio-provision-secret-key` read-only, `create_host_path=false`. Каждая credential line непустая, состоит из printable ASCII `0x20–0x7e` и не длиннее 4095 bytes; raw file не длиннее 4096 bytes с необязательным одним завершающим LF. NUL/CR/embedded LF/другие control bytes/non-ASCII, symlink/nonregular/unreadable/empty files и неполная пара закрыто отклоняются до первого `mc`; непустые inline `*_ACCESS_KEY`/`*_SECRET_KEY` вместе с FILE запрещены. Эти же line checks применяются к подключённым root credentials в FILE-ветке. Base Compose может передать inline поля пустыми — это не plaintext credential.
+
+Root alias и новый user password передаются закреплённому `mc` двумя строками stdin без TTY; пароль не помещается в environment или argv. Username остаётся обычным идентификатором `policy attach --user`. Диагностика `mc` хранится только в собственном private `MC_CONFIG_DIR` на прежнем tmpfs; наружу выходят фиксированные error codes. FILE-ветка не игнорирует user-add failure и не выбирает inline fallback. Подробные основания, история пропущенных private inputs и прогноз 45–70 минут — в [SPEC](SPEC.md#файловые-credentials-одноразовой-bucket-задачи).
+
+Перед runtime installer проверяет полный набор входов и итоговые Compose models обеих операций: bucket/policy, оба FILE paths, пять bucket grants, прежние root/CA mounts, `MC_CONFIG_DIR=/tmp/mc` и доступный site A; replication — два разных HTTPS site endpoints и прежние три grants. Проверка raw `config` не подтверждает существование, mode, владельца или native доступность host files. Private source/prepare/node-artifact проверки и фактический UID остаются обязательными.
+
+```sh
+docker compose --env-file /operator/bucket.env -f compose.yml -f compose.owner-image.yml -f compose.bucket-secrets.yml --profile provision config --quiet
+```
+
+Сначала выполняются source/input/model gates и подготовка целевого workspace; затем отдельная точная задача через прежний owner-compose `task` с `--no-deps`. Не запускайте весь provision profile. Новый source fingerprint требует новой preparation и собственных receipts; старые R3 reports сохраняются. Эта проверка не создаёт bucket/user, не возобновляет очередь и не выдаёт production admission.
 
 ## Проверка конфигурации
 

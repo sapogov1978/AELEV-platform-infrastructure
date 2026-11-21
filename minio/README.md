@@ -2,6 +2,8 @@
 
 S3-совместимое объектное хранилище инфраструктуры.
 
+Одноразовая `bucket-provisioner` поддерживает opt-in [файловые credentials](USER_MANUAL.md#файловые-credentials-bucket-provisioner): два собственных read-only файла вместо inline password environment, non-TTY stdin для `mc` и закрытый отказ при partial/ambiguous inputs. Профиль не выбирается обычным запуском MinIO; bucket, policy и новые credentials принадлежат владельцу точной операции.
+
 Для полного подготовленного workflow доступен image-only `compose.owner-image.yml`; точный образ связывается с владельческой build receipt по [SPEC](SPEC.md). Обычный профиль и его тег сохраняются.
 
 Независимо размещённые экземпляры дополнительно выбирают `compose.routed.yml`: собственный native-порт передаётся через `server --address :PORT` и совпадает с published-портом, свой FQDN разрешается локально, остальные peers доступны через адреса назначенных узлов. Listener не задаётся различающимися `MINIO_ADDRESS`: закреплённый MinIO сверяет bootstrap environment peers. Публичные входы проверяет `prepare-routed.py`; подготовка и границы native-приёмки описаны в [руководстве](USER_MANUAL.md#независимое-размещение-с-явными-маршрутами).
