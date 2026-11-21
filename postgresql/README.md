@@ -10,6 +10,8 @@
 
 ## Запуск
 
+Для явной подсети собственной сети отдельного проекта можно выбрать [IPAM overlay](../docs/api/postgresql-ipam.md) после runtime recipe. Он требует только два явных IPAM inputs, сохраняет прежние модели без overlay и не относится к отдельному SSH fencer. CIDR/gateway, отсутствие пересечений и соответствие действительных etcd peer SAN проверяет deployment planner.
+
 Первоначальную установку bounded SSH node operation предоставляет [публичный node-install API](../docs/api/postgresql-node-installation.md): source-pinned launcher, собственные labelled volumes и настоящий `initialize`. OS/SSH/admin policy узла подготавливает платформа; host tests не подменяют native installation receipt.
 
 После подготовки по [руководству](USER_MANUAL.md), из этого каталога:

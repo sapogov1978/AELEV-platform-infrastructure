@@ -8,6 +8,7 @@
 | Отдельная native image build из закреплённых source files без старта | [owner-build.md](owner-build.md), [node-execution.md](node-execution.md) |
 | Выполнение одной выбранной роли из pinned owner Compose | [owner-compose.md](owner-compose.md), [node-execution.md](node-execution.md) |
 | Ограниченная установка PostgreSQL node fencer через административный SSH | [postgresql-node-installation.md](postgresql-node-installation.md), [node-execution.md](node-execution.md) |
+| Явные subnet/gateway существующей сети PostgreSQL проекта | [postgresql-ipam.md](postgresql-ipam.md) |
 | Локальная установка, full-local и BOM | [installation.md](installation.md) |
 | Kafka envelope и владельческие event families | [internal-events.md](internal-events.md) |
 | Запрос и результат технического перевода | [translation.md](translation.md), [schema artifact](../../translator-service/contracts/translation-v1.json) |

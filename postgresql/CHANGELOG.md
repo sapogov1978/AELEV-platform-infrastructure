@@ -1,5 +1,7 @@
 # История PostgreSQL
 
+- 2026-11-21: после history-first SAN/NAT review добавляется opt-in IPAM overlay с двумя явными subnet/gateway inputs для девяти прежних PostgreSQL network roles. Base models, names, ports, images, TLS/runtime и SSH fencer profile сохраняются; planner/native SAN gate отдельный. Scope, официальные/internal основания и прогноз30–45мин описаны до code в API. Host проверка — actual Compose CONFIG/default byte preservation; daemon/network effects здесь отсутствуют.
+
 - 2026-11-21: final boundary review запретил control characters в installation/authorized_keys paths до effects: shell quoting не защищает отдельную authorized_keys строку от LF/CR. Отказ сохраняет файлы; прежний generic node path contract и launcher не меняются. Основание — OpenSSH authorized_keys line format; прогноз5–10мин, host evidence v1 сохраняется отдельно от исправленного v2.
 
 - 2026-11-20: после history/source review реализуется фиксированная owner node-install operation с настоящим initialize и durable task receipt. Новый strict typed-task/catalog descriptor не изображает host procedure Compose-сервисом; old launcher/runtime/cef0751 image и budgets не меняются. Scope, официальные/internal основания, совместимость и прогноз owner90–120мин/DRP60–90мин/native40–60мин объявлены до code в API; OS/SSH capability и full native verification отделены.

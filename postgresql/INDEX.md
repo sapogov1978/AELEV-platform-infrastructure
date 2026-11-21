@@ -5,6 +5,7 @@
 | Что искать | Где находится |
 |---|---|
 | Назначение, кластер и запуск | [README.md](README.md) |
+| Явная собственная IPAM-сеть без смены defaults | [compose.ipam.yml](compose.ipam.yml), [API](../docs/api/postgresql-ipam.md) |
 | Подготовка, эксплуатация и восстановление | [USER_MANUAL.md](USER_MANUAL.md) |
 | Нормативные гарантии | [SPEC.md](SPEC.md) |
 | Выбор и проверка ограждения | [FENCING.md](FENCING.md) |

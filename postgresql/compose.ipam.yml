@@ -1,0 +1,18 @@
+# Opt-in addressing for one existing, independently placed owner project.
+services:
+  etcd-1: {}
+  etcd-2: {}
+  etcd-3: {}
+  postgresql-1: {}
+  postgresql-2: {}
+  postgresql-3: {}
+  postgresql-status-publisher: {}
+  postgresql-status-provision: {}
+  database-provisioner: {}
+
+networks:
+  postgresql:
+    ipam:
+      config:
+        - subnet: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NETWORK_SUBNET:?set this project network CIDR}
+          gateway: ${AELEV_INFRASTRUCTURE_POSTGRESQL_NETWORK_GATEWAY:?set this project network gateway}

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-21 — Explicit PostgreSQL project IPAM
+
+- History confirms that the 14 November peer source-SAN support and native HA proof already exist. The remaining automation gap is a predictable Docker bridge gateway for initial certificate inputs. Opt-in `postgresql/compose.ipam.yml` declares only subnet/gateway on the existing project network; owner Compose creates it normally, without a fixture-only network bootstrap. Nine existing roles may select it; the independent SSH fencer does not. [Official/internal grounds, joint scope and 30–45 minute forecast](docs/api/postgresql-ipam.md); root review/integration adds 10–15 minutes.
+- 16 host tests and 18 subcases pass, including three complete Compose model pairs with only IPAM changes, byte-identical defaults, required-input refusals and independent project/network names. All 97 role IDs/kinds, base recipes, names, images, ports, TLS, initial-PKI helper and stack remain intact. Actual network allocation, certificate reuse-key delivery and peer/NAT readiness remain native gates; no runtime, existing keys or recovery history changed.
+
 ## 2026-11-21 — Independently routed publisher health checks
 
 - History review found two remaining private-alias probes in Gateway and Translator publishers. Opt-in `compose.publisher-network.yml` profiles use explicit HTTPS endpoints and verified names; Translator owns a separate API query mTLS identity. Incomplete profiles refuse fallback, redirects/malformed responses cannot report ONLINE, and legacy defaults are preserved. Owner SPEC/README contain official TLS/Compose references, scope and the 55–80 minute implementation forecast; root integration/checks add 15–25 minutes.

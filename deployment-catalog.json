@@ -25,6 +25,7 @@
     "platform-ui/compose.yml": "9c0604bb99403f486ab051b8a855319bac52e7c8b6b5ec4c1ba2e5359f7f0711",
     "postgresql/compose.docker.yml": "e98a390424878b61da99f0aa0ef734631ae558a4bc89c7579d0a819ecef6356a",
     "postgresql/compose.fencing-ssh.yml": "7cc92cf2a11cbfe58615a05e0ba606965495c708f32eed30a17a4035c98714de",
+    "postgresql/compose.ipam.yml": "f5df0a6eb5ba41bfa7e81566f9f2706bf3be4147b107b12437d1ad3464d685fe",
     "postgresql/compose.kubernetes.yml": "bf60a6be265060f775a050e879e7c1481b92a406b964835846cca61c056b436d",
     "postgresql/compose.runtime.yml": "c13e7538f2fdb6983da78c81a9f8342cd74f8d5367a66b6bb15b43f1bfe9b5e0",
     "postgresql/compose.watchdog.yml": "031b3ec799081c9cd242d526bf1f7748ec6e52718fe21a4ae1cedadad7d08e50",
@@ -257,6 +258,7 @@
       "local_state": false,
       "credentials_required": true,
       "recipes": [
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.runtime.yml"
       ],
       "configuration_variables": [
@@ -400,6 +402,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.runtime.yml"
       ],
       "configuration_variables": [
@@ -425,6 +428,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.runtime.yml"
       ],
       "configuration_variables": [
@@ -450,6 +454,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.runtime.yml"
       ],
       "configuration_variables": [
@@ -1594,6 +1599,7 @@
       "credentials_required": true,
       "recipes": [
         "postgresql/compose.docker.yml",
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.kubernetes.yml",
         "postgresql/compose.runtime.yml",
         "postgresql/compose.watchdog.yml"
@@ -1640,6 +1646,7 @@
       "credentials_required": true,
       "recipes": [
         "postgresql/compose.docker.yml",
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.kubernetes.yml",
         "postgresql/compose.runtime.yml",
         "postgresql/compose.watchdog.yml"
@@ -1686,6 +1693,7 @@
       "credentials_required": true,
       "recipes": [
         "postgresql/compose.docker.yml",
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.kubernetes.yml",
         "postgresql/compose.runtime.yml",
         "postgresql/compose.watchdog.yml"
@@ -1782,6 +1790,7 @@
       "local_state": true,
       "credentials_required": true,
       "recipes": [
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.runtime.yml"
       ],
       "configuration_variables": [
@@ -1826,6 +1835,7 @@
       "credentials_required": true,
       "recipes": [
         "postgresql/compose.docker.yml",
+        "postgresql/compose.ipam.yml",
         "postgresql/compose.kubernetes.yml",
         "postgresql/compose.runtime.yml"
       ],
